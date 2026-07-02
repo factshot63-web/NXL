@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
+        <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#16161f">
+    <link rel="apple-touch-icon" href="image.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NXL Elmahalla - شبكة التقارب</title>
@@ -531,5 +537,19 @@
             btn.classList.replace('text-gray-400', 'text-[#ff2a85]');
         }
     </script>
+        <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(registration => {
+                        console.log('تم تفعيل PWA بنجاح!');
+                    })
+                    .catch(error => {
+                        console.log('حدث خطأ في PWA: ', error);
+                    });
+            });
+        }
+    </script>
+
 </body>
 </html>
