@@ -20,16 +20,30 @@
 
     <div id="auth-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#0d0d12] px-6">
         <div class="text-center max-w-md w-full bg-[#16161f] p-8 rounded-3xl border border-gray-800 shadow-2xl">
-            <div class="w-24 h-24 mx-auto rounded-full gradient-bg flex items-center justify-center mb-4 shadow-lg shadow-[#ff2a85]/20">
-                <span class="text-3xl font-black tracking-wider text-white">NXL</span>
+            <div class="w-20 h-20 mx-auto rounded-full gradient-bg flex items-center justify-center mb-4 shadow-lg shadow-[#ff2a85]/20">
+                <span class="text-2xl font-black tracking-wider text-white">NXL</span>
             </div>
-            <h1 class="text-2xl font-bold mb-2">مرحباً بك في <span class="gradient-text">NXL</span></h1>
+            <h1 class="text-2xl font-bold mb-1">مرحباً بك في <span class="gradient-text">NXL</span></h1>
             <p class="text-xs text-gray-400 mb-6">سهولة ارتباط .. قلوب بتتقرب</p>
             
-            <button id="google-login-btn" class="w-full py-3 px-4 bg-white text-black font-bold rounded-xl flex items-center justify-center gap-2 transition active:scale-95">
-                <svg class="w-5 h-5" viewBox="0 0 24 24"><path fill="#EA4335" d="M12 5.04c1.65 0 3.13.57 4.3 1.69l3.22-3.22C17.56 1.83 14.99 1 12 1 7.35 1 3.41 3.66 1.49 7.55l3.78 2.93c.9-2.69 3.42-4.44 6.73-4.44z"/><path fill="#4285F4" d="M23.49 12.27c0-.81-.07-1.59-.2-2.34H12v4.44h6.44c-.28 1.48-1.12 2.73-2.38 3.58l3.69 2.87c2.16-1.99 3.41-4.92 3.41-8.55z"/><path fill="#FBBC05" d="M5.27 10.48c-.23-.69-.36-1.42-.36-2.18s.13-1.49.36-2.18L1.49 7.55C.54 9.45 0 11.62 0 13.92s.54 4.47 1.49 6.37l3.78-2.93c-.23-.69-.36-1.42-.36-2.18z"/><path fill="#34A853" d="M12 23c3.24 0 5.97-1.07 7.96-2.92l-3.69-2.87c-1.03.69-2.34 1.1-3.97 1.1-3.31 0-5.83-2.05-6.83-5.04l-3.78 2.93C3.41 20.34 7.35 23 12 23z"/></svg>
-                دخول بواسطة جوجل
-            </button>
+            <div class="space-y-3">
+                <input type="email" id="auth-email" placeholder="البريد الإلكتروني" class="w-full bg-[#1f1f2e] text-sm rounded-xl px-4 py-3 text-white focus:outline-none border border-gray-700 dir-ltr text-left">
+                <input type="password" id="auth-password" placeholder="كلمة المرور (6 أحرف على الأقل)" class="w-full bg-[#1f1f2e] text-sm rounded-xl px-4 py-3 text-white focus:outline-none border border-gray-700 dir-ltr text-left">
+                
+                <p id="auth-error" class="text-red-500 text-xs hidden font-bold"></p>
+                <p id="auth-success" class="text-green-500 text-xs hidden font-bold"></p>
+
+                <button id="login-btn" class="w-full py-3 gradient-bg text-white font-bold rounded-xl flex items-center justify-center gap-2 transition active:scale-95 mt-2">
+                    تسجيل الدخول
+                </button>
+                <button id="signup-btn" class="w-full py-3 bg-gray-800 text-white font-bold rounded-xl flex items-center justify-center gap-2 transition active:scale-95 hover:bg-gray-700">
+                    إنشاء حساب جديد
+                </button>
+                
+                <div class="pt-3">
+                    <button id="forgot-pass-btn" class="text-xs text-gray-400 hover:text-white transition underline">نسيت كلمة المرور؟</button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -48,7 +62,7 @@
                     <input type="text" id="setup-username" placeholder="مثال: ahmed_nxl" class="w-full bg-[#1f1f2e] text-sm rounded-xl px-4 py-3 text-white focus:outline-none border border-gray-700 dir-ltr text-left">
                     <p id="username-error" class="text-red-500 text-xs mt-1 hidden">هذا الاسم مستخدم بالفعل، اختر غيره.</p>
                 </div>
-                <button id="save-profile-btn" class="w-full py-3 gradient-bg rounded-xl font-bold mt-2 active:scale-95 transition">دخول عالم NXL</button>
+                <button id="save-profile-btn" class="w-full py-3 gradient-bg rounded-xl font-bold mt-2 active:scale-95 transition text-white">دخول عالم NXL</button>
             </div>
         </div>
     </div>
@@ -90,15 +104,15 @@
             <div id="global-messages-box" class="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar h-[calc(100vh-210px)]"></div>
             <div class="p-3 bg-[#16161f] border-t border-gray-800 flex gap-2 items-center shrink-0">
                 <input type="text" id="global-msg-input" placeholder="رسالة عامة..." class="flex-1 bg-[#1f1f2e] text-sm rounded-xl px-4 py-3 text-white focus:outline-none">
-                <button id="send-global-btn" class="w-11 h-11 gradient-bg rounded-xl flex items-center justify-center active:scale-95">إرسال</button>
+                <button id="send-global-btn" class="w-11 h-11 gradient-bg rounded-xl flex items-center justify-center text-white font-bold active:scale-95">إرسال</button>
             </div>
         </section>
 
         <section id="tab-games" class="tab-content p-4 max-w-lg mx-auto space-y-6">
             <div class="bg-[#16161f] p-6 rounded-2xl border border-gray-800 text-center">
                 <h2 class="text-lg font-bold mb-1">❤️ حاسبة الحب NXL</h2>
-                <input type="text" id="love-name1" placeholder="اسمك" class="w-full bg-[#1f1f2e] text-center text-sm rounded-xl py-2 mt-3">
-                <input type="text" id="love-name2" placeholder="اسم الطرف التاني" class="w-full bg-[#1f1f2e] text-center text-sm rounded-xl py-2 mt-3">
+                <input type="text" id="love-name1" placeholder="اسمك" class="w-full bg-[#1f1f2e] text-center text-sm rounded-xl py-2 mt-3 text-white">
+                <input type="text" id="love-name2" placeholder="اسم الطرف التاني" class="w-full bg-[#1f1f2e] text-center text-sm rounded-xl py-2 mt-3 text-white">
                 <button id="calculate-love-btn" class="w-full py-2.5 gradient-bg rounded-xl text-sm font-bold text-white mt-4 active:scale-95">احسب النسبة</button>
                 <div id="love-result" class="mt-4 hidden">
                     <div class="text-4xl font-black gradient-text mb-1" id="love-percentage">0%</div>
@@ -118,7 +132,8 @@
         </section>
 
         <section id="tab-profile" class="tab-content p-4 max-w-lg mx-auto text-center">
-            <div class="bg-[#16161f] p-6 rounded-3xl border border-gray-800 mb-6">
+            <div class="bg-[#16161f] p-6 rounded-3xl border border-gray-800 mb-6 relative">
+                <button id="logout-btn" class="absolute top-4 left-4 text-xs bg-red-500/20 text-red-500 px-3 py-1 rounded-lg font-bold">خروج</button>
                 <div id="profile-avatar-container" class="w-20 h-20 mx-auto rounded-full bg-gray-800 border-2 border-[#ff2a85] overflow-hidden mb-3"></div>
                 <h2 id="profile-nickname" class="text-lg font-bold">اللقب</h2>
                 <p id="profile-username-display" class="text-sm text-[#ff7300] font-bold mb-1">@username</p>
@@ -131,14 +146,14 @@
 
     <div id="private-chat-window" class="fixed inset-0 z-40 bg-[#0d0d12] flex flex-col hidden">
         <header class="bg-[#16161f] py-3 px-4 border-b border-gray-800 flex items-center gap-3">
-            <button id="close-private-chat" class="p-1 text-gray-400 hover:text-white">&times; إغلاق</button>
+            <button id="close-private-chat" class="p-1 text-gray-400 hover:text-white font-bold">&times; رجوع</button>
             <div id="private-target-avatar" class="w-8 h-8 rounded-full overflow-hidden bg-gray-800"></div>
             <h3 id="private-target-name" class="text-sm font-bold">المستلم</h3>
         </header>
         <div id="private-messages-box" class="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar"></div>
         <div class="p-3 bg-[#16161f] border-t border-gray-800 flex gap-2">
             <input type="text" id="private-msg-input" placeholder="رسالة خاصة..." class="flex-1 bg-[#1f1f2e] text-sm rounded-xl px-4 py-3 text-white focus:outline-none">
-            <button id="send-private-btn" class="w-11 h-11 gradient-bg rounded-xl flex items-center justify-center active:scale-95">إرسال</button>
+            <button id="send-private-btn" class="w-11 h-11 gradient-bg rounded-xl flex items-center justify-center text-white font-bold active:scale-95">إرسال</button>
         </div>
     </div>
 
@@ -148,11 +163,11 @@
             <div id="modal-avatar" class="w-20 h-20 mx-auto rounded-full bg-gray-800 border-2 border-[#ff7300] overflow-hidden mb-3"></div>
             <h3 id="modal-nickname" class="font-bold text-lg">اللقب</h3>
             <p id="modal-username-txt" class="text-sm text-[#ff7300] mb-4">@username</p>
-            <button id="modal-chat-btn" class="w-full py-2.5 gradient-bg rounded-xl text-sm font-bold active:scale-95">مراسلة خاصة</button>
+            <button id="modal-chat-btn" class="w-full py-2.5 gradient-bg rounded-xl text-sm font-bold text-white active:scale-95">مراسلة خاصة</button>
         </div>
     </div>
 
-    <nav class="fixed bottom-0 left-0 right-0 h-16 bg-[#16161f]/95 border-t border-gray-800 flex justify-around items-center z-30 max-w-lg mx-auto rounded-t-2xl">
+    <nav class="fixed bottom-0 left-0 right-0 h-16 bg-[#16161f]/95 border-t border-gray-800 flex justify-around items-center z-30 max-w-lg mx-auto rounded-t-2xl backdrop-blur-md">
         <button onclick="switchTab('home', this)" class="nav-btn text-[#ff2a85] font-bold text-[10px]">الرئيسية</button>
         <button onclick="switchTab('global', this)" class="nav-btn text-gray-400 font-bold text-[10px]">شات عام</button>
         <button onclick="switchTab('games', this)" class="nav-btn text-gray-400 font-bold text-[10px]">ألعاب</button>
@@ -162,9 +177,9 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        // استخدام استيرادات Realtime Database حصراً
-        import { getDatabase, ref, set, push, onValue, get, child, query, limitToLast, orderByChild } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        // تحديث الاستيرادات لتشمل الإيميل والباسورد
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getDatabase, ref, set, push, onValue, get, child, query, limitToLast } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDHL6QiJ6a0MZcW3Y6RZ24ZHDQi2TyiFBw",
@@ -180,47 +195,108 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getDatabase(app);
-        const provider = new GoogleAuthProvider();
 
         let currentUser = null;
         let userData = null;
         let globalPostImageBase64 = "";
         let activeChatRef = null;
 
-        // 1. نظام الدخول واستكمال الحساب
+        // --- نظام تسجيل الدخول بالإيميل ---
+        const emailInput = document.getElementById('auth-email');
+        const passInput = document.getElementById('auth-password');
+        const errorText = document.getElementById('auth-error');
+        const successText = document.getElementById('auth-success');
+
+        function showMessage(msg, isError = true) {
+            errorText.classList.add('hidden');
+            successText.classList.add('hidden');
+            if(isError) {
+                errorText.innerText = msg;
+                errorText.classList.remove('hidden');
+            } else {
+                successText.innerText = msg;
+                successText.classList.remove('hidden');
+            }
+        }
+
+        // 1. إنشاء حساب جديد
+        document.getElementById('signup-btn').addEventListener('click', () => {
+            const email = emailInput.value.trim();
+            const pass = passInput.value;
+            
+            if(!email || pass.length < 6) return showMessage("يرجى إدخال بريد صحيح وكلمة مرور لا تقل عن 6 أحرف");
+            
+            createUserWithEmailAndPassword(auth, email, pass)
+                .catch(error => {
+                    if(error.code === 'auth/email-already-in-use') showMessage("هذا البريد مستخدم بالفعل!");
+                    else if(error.code === 'auth/invalid-email') showMessage("صيغة البريد الإلكتروني غير صحيحة");
+                    else showMessage("حدث خطأ: " + error.message);
+                });
+        });
+
+        // 2. تسجيل الدخول
+        document.getElementById('login-btn').addEventListener('click', () => {
+            const email = emailInput.value.trim();
+            const pass = passInput.value;
+            
+            if(!email || !pass) return showMessage("يرجى إدخال البريد الإلكتروني وكلمة المرور");
+
+            signInWithEmailAndPassword(auth, email, pass)
+                .catch(error => {
+                    showMessage("البريد الإلكتروني أو كلمة المرور غير صحيحة");
+                });
+        });
+
+        // 3. نسيت كلمة المرور
+        document.getElementById('forgot-pass-btn').addEventListener('click', () => {
+            const email = emailInput.value.trim();
+            if(!email) return showMessage("يرجى كتابة بريدك الإلكتروني في الخانة أولاً، ثم الضغط هنا");
+
+            sendPasswordResetEmail(auth, email)
+                .then(() => {
+                    showMessage("تم إرسال رابط استعادة كلمة المرور إلى بريدك الإلكتروني! تفقد صندوق الوارد.", false);
+                })
+                .catch(error => {
+                    if(error.code === 'auth/user-not-found') showMessage("لا يوجد حساب مرتبط بهذا البريد.");
+                    else showMessage("حدث خطأ في الإرسال.");
+                });
+        });
+
+        // 4. تسجيل الخروج
+        document.getElementById('logout-btn').addEventListener('click', () => {
+            signOut(auth).then(() => {
+                window.location.reload();
+            });
+        });
+
+        // مراقبة حالة المستخدم
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 currentUser = user;
                 document.getElementById('auth-screen').classList.add('hidden');
                 
-                // التأكد هل المستخدم له بيانات (لقب واسم مستخدم)
                 const userSnapshot = await get(child(ref(db), `users/${user.uid}`));
                 
                 if (userSnapshot.exists()) {
                     userData = userSnapshot.val();
                     initAppUI();
                 } else {
-                    // مستخدم جديد، نطلب منه اللقب واسم المستخدم
                     document.getElementById('setup-profile-screen').classList.remove('hidden');
                 }
             } else {
                 document.getElementById('auth-screen').classList.remove('hidden');
+                document.getElementById('setup-profile-screen').classList.add('hidden');
             }
         });
 
-        document.getElementById('google-login-btn').addEventListener('click', () => {
-            signInWithPopup(auth, provider).catch(e => alert("خطأ بالدخول"));
-        });
-
-        // حفظ الحساب الجديد
+        // حفظ الحساب الجديد (اسم المستخدم واللقب)
         document.getElementById('save-profile-btn').addEventListener('click', async () => {
             const nickname = document.getElementById('setup-nickname').value.trim();
             let username = document.getElementById('setup-username').value.trim().toLowerCase();
-            username = username.replace(/[^a-z0-9_]/g, ''); // تنظيف اسم المستخدم (حروف وأرقام فقط)
+            username = username.replace(/[^a-z0-9_]/g, '');
             
             if(!nickname || !username) return alert("اكمل البيانات!");
 
-            // فحص هل اسم المستخدم محجوز؟
             const unameCheck = await get(child(ref(db), `usernames/${username}`));
             if(unameCheck.exists()) {
                 document.getElementById('username-error').classList.remove('hidden');
@@ -238,7 +314,6 @@
                 joinedAt: Date.now()
             };
 
-            // حجز اسم المستخدم وحفظ بيانات العضو
             await set(ref(db, `usernames/${username}`), currentUser.uid);
             await set(ref(db, `users/${currentUser.uid}`), userData);
             
@@ -247,7 +322,6 @@
         });
 
         function initAppUI() {
-            // تحديث الواجهة
             document.getElementById('user-header-avatar').innerHTML = `<img src="${userData.avatarUrl}" class="w-full h-full object-cover">`;
             document.getElementById('user-header-avatar').classList.remove('hidden');
             document.getElementById('profile-avatar-container').innerHTML = `<img src="${userData.avatarUrl}" class="w-full h-full object-cover">`;
@@ -260,12 +334,11 @@
             startMyChatsList();
         }
 
-        // 2. الشات العام (فلترة 24 ساعة عبر الجافاسكريبت لعدم الحاجة لـ Indexing)
+        // --- باقي وظائف التطبيق (تعمل بدون تعديل) ---
+
         function startGlobalChat() {
             const box = document.getElementById('global-messages-box');
-            // قراءة آخر 50 رسالة فقط من الـ Realtime DB
             const chatQuery = query(ref(db, 'global_chat'), limitToLast(50));
-            
             onValue(chatQuery, (snapshot) => {
                 box.innerHTML = "";
                 const now = Date.now();
@@ -273,7 +346,6 @@
 
                 snapshot.forEach(childSnap => {
                     const msg = childSnap.val();
-                    // تجاهل الرسائل الأقدم من 24 ساعة
                     if(now - msg.timestamp > oneDay) return;
 
                     const isMe = msg.senderId === currentUser.uid;
@@ -296,18 +368,12 @@
             const text = inp.value.trim();
             if(!text) return;
             inp.value = "";
-            
-            // Push تُنشئ ID فريد تلقائياً في Realtime DB
             push(ref(db, 'global_chat'), {
-                senderId: currentUser.uid,
-                senderNickname: userData.nickname,
-                senderAvatar: userData.avatarUrl,
-                text: text,
-                timestamp: Date.now()
+                senderId: currentUser.uid, senderNickname: userData.nickname,
+                senderAvatar: userData.avatarUrl, text: text, timestamp: Date.now()
             });
         };
 
-        // 3. المنشورات (فلترة 72 ساعة) وتحويل الصور Base64
         document.getElementById('post-file').onchange = e => {
             const f = e.target.files[0];
             if(!f) return;
@@ -325,15 +391,10 @@
             if(!text && !globalPostImageBase64) return;
             document.getElementById('post-input').value = "";
             document.getElementById('post-preview-container').classList.add('hidden');
-            
             push(ref(db, 'posts'), {
-                userId: currentUser.uid,
-                userNickname: userData.nickname,
-                userUsername: userData.username,
-                userAvatar: userData.avatarUrl,
-                text: text,
-                image: globalPostImageBase64,
-                timestamp: Date.now()
+                userId: currentUser.uid, userNickname: userData.nickname,
+                userUsername: userData.username, userAvatar: userData.avatarUrl,
+                text: text, image: globalPostImageBase64, timestamp: Date.now()
             });
             globalPostImageBase64 = "";
         };
@@ -341,23 +402,18 @@
         function startPostsFeed() {
             const feed = document.getElementById('home-posts-feed');
             const grid = document.getElementById('profile-posts-grid');
-            
             const postsQuery = query(ref(db, 'posts'), limitToLast(100));
+            
             onValue(postsQuery, (snapshot) => {
-                feed.innerHTML = "";
-                grid.innerHTML = "";
+                feed.innerHTML = ""; grid.innerHTML = "";
                 const now = Date.now();
                 const threeDays = 72 * 60 * 60 * 1000;
-                
-                // جلب المنشورات وعكس الترتيب (الأحدث فوق)
                 let postsArray = [];
                 snapshot.forEach(c => { postsArray.push(c.val()); });
                 postsArray.reverse();
 
                 postsArray.forEach(post => {
-                    // مسح المنشورات الأقدم من 72 ساعة من العرض
                     if(now - post.timestamp > threeDays) return;
-
                     feed.innerHTML += `
                         <div class="bg-[#16161f] p-4 rounded-2xl border border-gray-800 space-y-2">
                             <div class="flex items-center gap-2 cursor-pointer" onclick="window.openUserModal('${post.userId}')">
@@ -370,7 +426,6 @@
                             ${post.image ? `<img src="${post.image}" class="w-full rounded-lg mt-2">` : ''}
                         </div>
                     `;
-
                     if(post.userId === currentUser.uid && post.image) {
                         grid.innerHTML += `<img src="${post.image}" class="w-full h-20 object-cover rounded-xl border border-gray-800">`;
                     }
@@ -378,56 +433,41 @@
             });
         }
 
-        // 4. محرك البحث عن المستخدمين بـ Username
         document.getElementById('search-user-btn').onclick = async () => {
             let val = document.getElementById('search-username-input').value.trim().toLowerCase();
-            val = val.replace('@', ''); // لو كتب @ نشيلها
+            val = val.replace('@', '');
             if(!val) return;
-
             const snap = await get(child(ref(db), `usernames/${val}`));
-            if(snap.exists()) {
-                const targetUid = snap.val();
-                window.openUserModal(targetUid);
-            } else {
-                alert("لم يتم العثور على هذا المستخدم!");
-            }
+            if(snap.exists()) window.openUserModal(snap.val());
+            else alert("لم يتم العثور على هذا المستخدم!");
         };
 
-        // 5. مودال عرض المستخدم والمحادثة الخاصة
         window.openUserModal = async (uid) => {
             const uSnap = await get(child(ref(db), `users/${uid}`));
             if(!uSnap.exists()) return;
             const u = uSnap.val();
-            
             document.getElementById('modal-nickname').innerText = u.nickname;
             document.getElementById('modal-username-txt').innerText = `@${u.username}`;
             document.getElementById('modal-avatar').innerHTML = `<img src="${u.avatarUrl}" class="w-full h-full object-cover">`;
-            
             document.getElementById('modal-chat-btn').onclick = () => {
                 document.getElementById('user-modal').classList.add('hidden');
                 openPrivateChat(u.uid, u.nickname, u.avatarUrl);
             };
-            
             document.getElementById('user-modal').classList.remove('hidden');
         };
         document.getElementById('close-modal-btn').onclick = () => document.getElementById('user-modal').classList.add('hidden');
 
-        // 6. المحادثات الخاصة
         function openPrivateChat(targetUid, targetName, targetAvatar) {
             document.getElementById('private-target-name').innerText = targetName;
             document.getElementById('private-target-avatar').innerHTML = `<img src="${targetAvatar}" class="w-full h-full">`;
             document.getElementById('private-chat-window').classList.remove('hidden');
-
             const chatId = currentUser.uid < targetUid ? `${currentUser.uid}_${targetUid}` : `${targetUid}_${currentUser.uid}`;
             
-            // حفظ المحادثة في قائمة كل طرف
             set(ref(db, `user_chats/${currentUser.uid}/${chatId}`), { targetUid, lastUpdate: Date.now() });
             set(ref(db, `user_chats/${targetUid}/${chatId}`), { targetUid: currentUser.uid, lastUpdate: Date.now() });
 
-            // استماع للرسائل
             const box = document.getElementById('private-messages-box');
-            if(activeChatRef) activeChatRef(); // إيقاف الاستماع القديم
-            
+            if(activeChatRef) activeChatRef();
             const msgsQuery = query(ref(db, `chats/${chatId}`), limitToLast(40));
             activeChatRef = onValue(msgsQuery, (snapshot) => {
                 box.innerHTML = "";
@@ -448,7 +488,6 @@
                 if(!text) return;
                 document.getElementById('private-msg-input').value = "";
                 push(ref(db, `chats/${chatId}`), { senderId: currentUser.uid, text: text, timestamp: Date.now() });
-                // تحديث وقت المحادثة للقائمة
                 set(ref(db, `user_chats/${currentUser.uid}/${chatId}/lastUpdate`), Date.now());
                 set(ref(db, `user_chats/${targetUid}/${chatId}/lastUpdate`), Date.now());
             };
@@ -457,17 +496,14 @@
 
         function startMyChatsList() {
             const list = document.getElementById('private-chats-list');
-            // استماع لقائمة المحادثات النشطة للمستخدم
             onValue(ref(db, `user_chats/${currentUser.uid}`), (snapshot) => {
                 list.innerHTML = "";
                 if(!snapshot.exists()) {
                     list.innerHTML = "<p class='text-xs text-gray-500 text-center py-4'>لا توجد محادثات. ابحث عن صديق وابدأ!</p>";
                     return;
                 }
-                
                 snapshot.forEach(c => {
                     const chatMeta = c.val();
-                    // جلب بيانات الطرف الآخر
                     get(child(ref(db), `users/${chatMeta.targetUid}`)).then(uSnap => {
                         if(uSnap.exists()) {
                             const u = uSnap.val();
@@ -489,7 +525,6 @@
             });
         }
 
-        // 7. الألعاب
         document.getElementById('calculate-love-btn').onclick = () => {
             const n1 = document.getElementById('love-name1').value.trim();
             const n2 = document.getElementById('love-name2').value.trim();
