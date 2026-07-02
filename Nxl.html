@@ -12,12 +12,11 @@
         .gradient-text { background: linear-gradient(135deg, #ff2a85 0%, #ff7300 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #ff2a85; border-radius: 10px; }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
     </style>
 </head>
 <body class="flex flex-col h-screen overflow-hidden select-none">
 
+    <!-- شاشة تسجيل الدخول وإنشاء الحساب بالإيميل -->
     <div id="auth-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#0d0d12] px-6">
         <div class="text-center max-w-md w-full bg-[#16161f] p-8 rounded-3xl border border-gray-800 shadow-2xl">
             <div class="w-20 h-20 mx-auto rounded-full gradient-bg flex items-center justify-center mb-4 shadow-lg shadow-[#ff2a85]/20">
@@ -47,6 +46,7 @@
         </div>
     </div>
 
+    <!-- شاشة استكمال الحساب -->
     <div id="setup-profile-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#0d0d12]/95 backdrop-blur-sm px-6 hidden">
         <div class="max-w-md w-full bg-[#16161f] p-8 rounded-3xl border border-[#ff7300] shadow-2xl">
             <h2 class="text-xl font-bold mb-1 text-center">خطوة أخيرة للبدء 🚀</h2>
@@ -67,6 +67,7 @@
         </div>
     </div>
 
+    <!-- الهيدر العلوي -->
     <header class="bg-[#16161f] py-3 px-4 border-b border-gray-800 flex justify-between items-center shrink-0">
         <div class="flex items-center gap-2">
             <div class="w-8 h-8 rounded-full gradient-bg flex items-center justify-center font-black text-xs text-white">NXL</div>
@@ -78,9 +79,11 @@
         <div id="user-header-avatar" class="w-8 h-8 rounded-full border border-gray-700 bg-gray-800 overflow-hidden hidden cursor-pointer" onclick="switchTab('profile', document.getElementById('nav-profile-btn'))"></div>
     </header>
 
+    <!-- المحتوى الأساسي -->
     <main class="flex-1 overflow-y-auto custom-scrollbar bg-[#0d0d12] pb-20">
         
-        <section id="tab-home" class="tab-content active p-4 max-w-lg mx-auto">
+        <!-- 1. الرئيسية -->
+        <section id="tab-home" class="tab-content p-4 max-w-lg mx-auto">
             <div class="bg-[#16161f] p-4 rounded-2xl mb-4 border border-gray-800">
                 <textarea id="post-input" placeholder="شارك لحظاتك... (تختفي بعد 72 ساعة)" class="w-full bg-[#1f1f2e] text-sm text-white rounded-xl p-3 focus:outline-none resize-none h-20"></textarea>
                 <div class="flex justify-between items-center mt-3">
@@ -97,7 +100,8 @@
             <div id="home-posts-feed" class="space-y-4"></div>
         </section>
 
-        <section id="tab-global" class="tab-content h-full flex flex-col max-w-lg mx-auto">
+        <!-- 2. الشات العام -->
+        <section id="tab-global" class="tab-content hidden h-full flex flex-col max-w-lg mx-auto">
             <div class="bg-[#16161f]/80 text-[11px] text-center text-gray-400 py-1.5 border-b border-gray-800">
                 الرسائل تختفي تلقائياً بعد 24 ساعة.
             </div>
@@ -108,7 +112,8 @@
             </div>
         </section>
 
-        <section id="tab-games" class="tab-content p-4 max-w-lg mx-auto space-y-6">
+        <!-- 3. الألعاب -->
+        <section id="tab-games" class="tab-content hidden p-4 max-w-lg mx-auto space-y-6">
             <div class="bg-[#16161f] p-6 rounded-2xl border border-gray-800 text-center">
                 <h2 class="text-lg font-bold mb-1">❤️ حاسبة الحب NXL</h2>
                 <input type="text" id="love-name1" placeholder="اسمك" class="w-full bg-[#1f1f2e] text-center text-sm rounded-xl py-2 mt-3 text-white">
@@ -121,17 +126,18 @@
             </div>
         </section>
 
-        <section id="tab-chats" class="tab-content p-4 max-w-lg mx-auto">
+        <!-- 4. شاتاتي (WhatsApp Style) -->
+        <section id="tab-chats" class="tab-content hidden p-4 max-w-lg mx-auto">
             <div class="bg-[#16161f] p-3 rounded-xl border border-gray-800 mb-4 flex gap-2">
                 <input type="text" id="search-username-input" placeholder="ابحث باسم المستخدم (@username)..." class="flex-1 bg-[#1f1f2e] text-xs rounded-lg px-3 py-2 text-white focus:outline-none text-left dir-ltr">
                 <button id="search-user-btn" class="bg-gray-700 text-white px-4 rounded-lg text-xs font-bold active:scale-95">بحث</button>
             </div>
-            
-            <h2 class="text-base font-bold mb-3 px-1">المحادثات الخاصة</h2>
-            <div id="private-chats-list" class="space-y-2"></div>
+            <h2 class="text-sm font-bold mb-3 px-1 text-gray-400">الدردشات الأخيرة</h2>
+            <div id="private-chats-list" class="space-y-1"></div>
         </section>
 
-        <section id="tab-profile" class="tab-content p-4 max-w-lg mx-auto text-center">
+        <!-- 5. ملفي -->
+        <section id="tab-profile" class="tab-content hidden p-4 max-w-lg mx-auto text-center">
             <div class="bg-[#16161f] p-6 rounded-3xl border border-gray-800 mb-6 relative">
                 <button id="logout-btn" class="absolute top-4 left-4 text-xs bg-red-500/20 text-red-500 px-3 py-1 rounded-lg font-bold">خروج</button>
                 <div id="profile-avatar-container" class="w-20 h-20 mx-auto rounded-full bg-gray-800 border-2 border-[#ff2a85] overflow-hidden mb-3"></div>
@@ -144,19 +150,33 @@
         </section>
     </main>
 
-    <div id="private-chat-window" class="fixed inset-0 z-40 bg-[#0d0d12] flex flex-col hidden">
-        <header class="bg-[#16161f] py-3 px-4 border-b border-gray-800 flex items-center gap-3">
-            <button id="close-private-chat" class="p-1 text-gray-400 hover:text-white font-bold">&times; رجوع</button>
-            <div id="private-target-avatar" class="w-8 h-8 rounded-full overflow-hidden bg-gray-800"></div>
-            <h3 id="private-target-name" class="text-sm font-bold">المستلم</h3>
+    <!-- شاشة المحادثة الخاصة الاحترافية (WhatsApp View) -->
+    <div id="private-chat-window" class="fixed inset-0 z-50 bg-[#0d0d12] flex flex-col hidden">
+        <header class="bg-[#16161f] py-3 px-4 border-b border-gray-800 flex items-center justify-between shrink-0">
+            <div class="flex items-center gap-3">
+                <button id="close-private-chat" class="text-gray-400 hover:text-white font-bold text-sm ml-1 flex items-center gap-1">
+                    <span>➡️</span> ووكي
+                </button>
+                <div id="private-target-avatar" class="w-10 h-10 rounded-full overflow-hidden bg-gray-800 border border-gray-700"></div>
+                <div>
+                    <h3 id="private-target-name" class="text-sm font-bold text-white">المستلم</h3>
+                    <p class="text-[10px] text-green-400 font-bold">نشط الآن في NXL</p>
+                </div>
+            </div>
         </header>
-        <div id="private-messages-box" class="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar"></div>
-        <div class="p-3 bg-[#16161f] border-t border-gray-800 flex gap-2">
-            <input type="text" id="private-msg-input" placeholder="رسالة خاصة..." class="flex-1 bg-[#1f1f2e] text-sm rounded-xl px-4 py-3 text-white focus:outline-none">
-            <button id="send-private-btn" class="w-11 h-11 gradient-bg rounded-xl flex items-center justify-center text-white font-bold active:scale-95">إرسال</button>
+        
+        <!-- صندوق رسائل يشبه واتساب تماما -->
+        <div id="private-messages-box" class="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar bg-[#09090d] flex flex-col"></div>
+        
+        <div class="p-3 bg-[#16161f] border-t border-gray-800 flex gap-2 shrink-0 items-center">
+            <input type="text" id="private-msg-input" placeholder="اكتب رسالة مقربة..." class="flex-1 bg-[#1f1f2e] text-sm rounded-xl px-4 py-3 text-white focus:outline-none">
+            <button id="send-private-btn" class="w-11 h-11 gradient-bg rounded-xl flex items-center justify-center text-white font-bold active:scale-95 shadow-md shadow-[#ff2a85]/20">
+                🚀
+            </button>
         </div>
     </div>
 
+    <!-- مودال المستخدم السريع -->
     <div id="user-modal" class="fixed inset-0 bg-black/80 z-50 flex items-center justify-center hidden px-4">
         <div class="bg-[#16161f] w-full max-w-sm rounded-3xl border border-gray-800 p-6 relative text-center">
             <button id="close-modal-btn" class="absolute top-4 left-4 text-gray-400 text-2xl">&times;</button>
@@ -167,6 +187,7 @@
         </div>
     </div>
 
+    <!-- شريط التنقل السفلي -->
     <nav class="fixed bottom-0 left-0 right-0 h-16 bg-[#16161f]/95 border-t border-gray-800 flex justify-around items-center z-30 max-w-lg mx-auto rounded-t-2xl backdrop-blur-md">
         <button onclick="switchTab('home', this)" class="nav-btn text-[#ff2a85] font-bold text-[10px]">الرئيسية</button>
         <button onclick="switchTab('global', this)" class="nav-btn text-gray-400 font-bold text-[10px]">شات عام</button>
@@ -175,9 +196,9 @@
         <button id="nav-profile-btn" onclick="switchTab('profile', this)" class="nav-btn text-gray-400 font-bold text-[10px]">ملفي</button>
     </nav>
 
+    <!-- Firebase SDK -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        // تحديث الاستيرادات لتشمل الإيميل والباسورد
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { getDatabase, ref, set, push, onValue, get, child, query, limitToLast } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
@@ -200,123 +221,63 @@
         let userData = null;
         let globalPostImageBase64 = "";
         let activeChatRef = null;
+        let openChatId = null; // لتتبع المحادثة المفتوحة حالياً لمنع إشعاراتها
 
-        // --- نظام تسجيل الدخول بالإيميل ---
         const emailInput = document.getElementById('auth-email');
         const passInput = document.getElementById('auth-password');
         const errorText = document.getElementById('auth-error');
         const successText = document.getElementById('auth-success');
 
         function showMessage(msg, isError = true) {
-            errorText.classList.add('hidden');
-            successText.classList.add('hidden');
-            if(isError) {
-                errorText.innerText = msg;
-                errorText.classList.remove('hidden');
-            } else {
-                successText.innerText = msg;
-                successText.classList.remove('hidden');
-            }
+            errorText.classList.add('hidden'); successText.classList.add('hidden');
+            if(isError) { errorText.innerText = msg; errorText.classList.remove('hidden'); }
+            else { successText.innerText = msg; successText.classList.remove('hidden'); }
         }
 
-        // 1. إنشاء حساب جديد
         document.getElementById('signup-btn').addEventListener('click', () => {
-            const email = emailInput.value.trim();
-            const pass = passInput.value;
-            
+            const email = emailInput.value.trim(); const pass = passInput.value;
             if(!email || pass.length < 6) return showMessage("يرجى إدخال بريد صحيح وكلمة مرور لا تقل عن 6 أحرف");
-            
-            createUserWithEmailAndPassword(auth, email, pass)
-                .catch(error => {
-                    if(error.code === 'auth/email-already-in-use') showMessage("هذا البريد مستخدم بالفعل!");
-                    else if(error.code === 'auth/invalid-email') showMessage("صيغة البريد الإلكتروني غير صحيحة");
-                    else showMessage("حدث خطأ: " + error.message);
-                });
+            createUserWithEmailAndPassword(auth, email, pass).catch(error => showMessage(error.message));
         });
 
-        // 2. تسجيل الدخول
         document.getElementById('login-btn').addEventListener('click', () => {
-            const email = emailInput.value.trim();
-            const pass = passInput.value;
-            
+            const email = emailInput.value.trim(); const pass = passInput.value;
             if(!email || !pass) return showMessage("يرجى إدخال البريد الإلكتروني وكلمة المرور");
-
-            signInWithEmailAndPassword(auth, email, pass)
-                .catch(error => {
-                    showMessage("البريد الإلكتروني أو كلمة المرور غير صحيحة");
-                });
+            signInWithEmailAndPassword(auth, email, pass).catch(() => showMessage("البريد الإلكتروني أو كلمة المرور غير صحيحة"));
         });
 
-        // 3. نسيت كلمة المرور
         document.getElementById('forgot-pass-btn').addEventListener('click', () => {
             const email = emailInput.value.trim();
             if(!email) return showMessage("يرجى كتابة بريدك الإلكتروني في الخانة أولاً، ثم الضغط هنا");
-
-            sendPasswordResetEmail(auth, email)
-                .then(() => {
-                    showMessage("تم إرسال رابط استعادة كلمة المرور إلى بريدك الإلكتروني! تفقد صندوق الوارد.", false);
-                })
-                .catch(error => {
-                    if(error.code === 'auth/user-not-found') showMessage("لا يوجد حساب مرتبط بهذا البريد.");
-                    else showMessage("حدث خطأ في الإرسال.");
-                });
+            sendPasswordResetEmail(auth, email).then(() => showMessage("تم إرسال رابط استعادة كلمة المرور لبريدك!", false)).catch(() => showMessage("حدث خطأ في الإرسال."));
         });
 
-        // 4. تسجيل الخروج
-        document.getElementById('logout-btn').addEventListener('click', () => {
-            signOut(auth).then(() => {
-                window.location.reload();
-            });
-        });
+        document.getElementById('logout-btn').addEventListener('click', () => { signOut(auth).then(() => window.location.reload()); });
 
-        // مراقبة حالة المستخدم
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 currentUser = user;
                 document.getElementById('auth-screen').classList.add('hidden');
-                
                 const userSnapshot = await get(child(ref(db), `users/${user.uid}`));
-                
-                if (userSnapshot.exists()) {
-                    userData = userSnapshot.val();
-                    initAppUI();
-                } else {
-                    document.getElementById('setup-profile-screen').classList.remove('hidden');
-                }
+                if (userSnapshot.exists()) { userData = userSnapshot.val(); initAppUI(); } 
+                else { document.getElementById('setup-profile-screen').classList.remove('hidden'); }
             } else {
                 document.getElementById('auth-screen').classList.remove('hidden');
                 document.getElementById('setup-profile-screen').classList.add('hidden');
             }
         });
 
-        // حفظ الحساب الجديد (اسم المستخدم واللقب)
         document.getElementById('save-profile-btn').addEventListener('click', async () => {
             const nickname = document.getElementById('setup-nickname').value.trim();
-            let username = document.getElementById('setup-username').value.trim().toLowerCase();
-            username = username.replace(/[^a-z0-9_]/g, '');
-            
+            let username = document.getElementById('setup-username').value.trim().toLowerCase().replace(/[^a-z0-9_]/g, '');
             if(!nickname || !username) return alert("اكمل البيانات!");
-
             const unameCheck = await get(child(ref(db), `usernames/${username}`));
-            if(unameCheck.exists()) {
-                document.getElementById('username-error').classList.remove('hidden');
-                return;
-            }
+            if(unameCheck.exists()) { document.getElementById('username-error').classList.remove('hidden'); return; }
 
             const avatarUrl = `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(username)}`;
-            
-            userData = {
-                uid: currentUser.uid,
-                nickname: nickname,
-                username: username,
-                avatarUrl: avatarUrl,
-                email: currentUser.email,
-                joinedAt: Date.now()
-            };
-
+            userData = { uid: currentUser.uid, nickname: nickname, username: username, avatarUrl: avatarUrl, email: currentUser.email, joinedAt: Date.now() };
             await set(ref(db, `usernames/${username}`), currentUser.uid);
             await set(ref(db, `users/${currentUser.uid}`), userData);
-            
             document.getElementById('setup-profile-screen').classList.add('hidden');
             initAppUI();
         });
@@ -329,25 +290,17 @@
             document.getElementById('profile-username-display').innerText = `@${userData.username}`;
             document.getElementById('profile-email').innerText = userData.email;
 
-            startGlobalChat();
-            startPostsFeed();
-            startMyChatsList();
+            startGlobalChat(); startPostsFeed(); startMyChatsList();
         }
 
-        // --- باقي وظائف التطبيق (تعمل بدون تعديل) ---
-
+        // --- الشات العام السليم والمحمي من التداخل ---
         function startGlobalChat() {
             const box = document.getElementById('global-messages-box');
             const chatQuery = query(ref(db, 'global_chat'), limitToLast(50));
             onValue(chatQuery, (snapshot) => {
-                box.innerHTML = "";
-                const now = Date.now();
-                const oneDay = 24 * 60 * 60 * 1000;
-
+                box.innerHTML = ""; const now = Date.now(); const oneDay = 24 * 60 * 60 * 1000;
                 snapshot.forEach(childSnap => {
-                    const msg = childSnap.val();
-                    if(now - msg.timestamp > oneDay) return;
-
+                    const msg = childSnap.val(); if(now - msg.timestamp > oneDay) return;
                     const isMe = msg.senderId === currentUser.uid;
                     box.innerHTML += `
                         <div class="flex gap-2 max-w-[85%] ${isMe ? 'mr-auto flex-row-reverse' : 'ml-auto'}">
@@ -356,195 +309,224 @@
                                 <div class="text-[10px] text-gray-500 px-1">${msg.senderNickname}</div>
                                 <div class="p-3 text-xs rounded-xl ${isMe ? 'gradient-bg text-white' : 'bg-[#1f1f2e]'}">${escapeHTML(msg.text)}</div>
                             </div>
-                        </div>
-                    `;
+                        </div>`;
                 });
                 box.scrollTop = box.scrollHeight;
             });
         }
 
         document.getElementById('send-global-btn').onclick = () => {
-            const inp = document.getElementById('global-msg-input');
-            const text = inp.value.trim();
-            if(!text) return;
-            inp.value = "";
-            push(ref(db, 'global_chat'), {
-                senderId: currentUser.uid, senderNickname: userData.nickname,
-                senderAvatar: userData.avatarUrl, text: text, timestamp: Date.now()
-            });
+            const inp = document.getElementById('global-msg-input'); const text = inp.value.trim(); if(!text) return; inp.value = "";
+            push(ref(db, 'global_chat'), { senderId: currentUser.uid, senderNickname: userData.nickname, senderAvatar: userData.avatarUrl, text: text, timestamp: Date.now() });
         };
 
+        // --- المنشورات ---
         document.getElementById('post-file').onchange = e => {
-            const f = e.target.files[0];
-            if(!f) return;
-            const r = new FileReader();
-            r.onload = () => {
-                globalPostImageBase64 = r.result;
-                document.getElementById('post-img-preview').src = globalPostImageBase64;
-                document.getElementById('post-preview-container').classList.remove('hidden');
-            };
-            r.readAsDataURL(f);
+            const f = e.target.files[0]; if(!f) return;
+            const r = new FileReader(); r.onload = () => { globalPostImageBase64 = r.result; document.getElementById('post-img-preview').src = globalPostImageBase64; document.getElementById('post-preview-container').classList.remove('hidden'); }; r.readAsDataURL(f);
         };
 
         document.getElementById('submit-post-btn').onclick = () => {
-            const text = document.getElementById('post-input').value.trim();
-            if(!text && !globalPostImageBase64) return;
-            document.getElementById('post-input').value = "";
-            document.getElementById('post-preview-container').classList.add('hidden');
-            push(ref(db, 'posts'), {
-                userId: currentUser.uid, userNickname: userData.nickname,
-                userUsername: userData.username, userAvatar: userData.avatarUrl,
-                text: text, image: globalPostImageBase64, timestamp: Date.now()
-            });
+            const text = document.getElementById('post-input').value.trim(); if(!text && !globalPostImageBase64) return;
+            document.getElementById('post-input').value = ""; document.getElementById('post-preview-container').classList.add('hidden');
+            push(ref(db, 'posts'), { userId: currentUser.uid, userNickname: userData.nickname, userUsername: userData.username, userAvatar: userData.avatarUrl, text: text, image: globalPostImageBase64, timestamp: Date.now() });
             globalPostImageBase64 = "";
         };
 
         function startPostsFeed() {
-            const feed = document.getElementById('home-posts-feed');
-            const grid = document.getElementById('profile-posts-grid');
+            const feed = document.getElementById('home-posts-feed'); const grid = document.getElementById('profile-posts-grid');
             const postsQuery = query(ref(db, 'posts'), limitToLast(100));
-            
             onValue(postsQuery, (snapshot) => {
-                feed.innerHTML = ""; grid.innerHTML = "";
-                const now = Date.now();
-                const threeDays = 72 * 60 * 60 * 1000;
-                let postsArray = [];
-                snapshot.forEach(c => { postsArray.push(c.val()); });
-                postsArray.reverse();
-
+                feed.innerHTML = ""; grid.innerHTML = ""; const now = Date.now(); const threeDays = 72 * 60 * 60 * 1000;
+                let postsArray = []; snapshot.forEach(c => { postsArray.push(c.val()); }); postsArray.reverse();
                 postsArray.forEach(post => {
                     if(now - post.timestamp > threeDays) return;
                     feed.innerHTML += `
                         <div class="bg-[#16161f] p-4 rounded-2xl border border-gray-800 space-y-2">
                             <div class="flex items-center gap-2 cursor-pointer" onclick="window.openUserModal('${post.userId}')">
                                 <img src="${post.userAvatar}" class="w-8 h-8 rounded-full bg-gray-800">
-                                <div>
-                                    <h4 class="text-xs font-bold">${post.userNickname} <span class="text-[#ff7300] font-normal text-[10px]">@${post.userUsername}</span></h4>
-                                </div>
+                                <div><h4 class="text-xs font-bold">${post.userNickname} <span class="text-[#ff7300] font-normal text-[10px]">@${post.userUsername}</span></h4></div>
                             </div>
                             ${post.text ? `<p class="text-xs text-gray-200">${escapeHTML(post.text)}</p>` : ''}
                             ${post.image ? `<img src="${post.image}" class="w-full rounded-lg mt-2">` : ''}
-                        </div>
-                    `;
-                    if(post.userId === currentUser.uid && post.image) {
-                        grid.innerHTML += `<img src="${post.image}" class="w-full h-20 object-cover rounded-xl border border-gray-800">`;
-                    }
+                        </div>`;
+                    if(post.userId === currentUser.uid && post.image) { grid.innerHTML += `<img src="${post.image}" class="w-full h-20 object-cover rounded-xl border border-gray-800">`; }
                 });
             });
         }
 
+        // --- البحث ---
         document.getElementById('search-user-btn').onclick = async () => {
-            let val = document.getElementById('search-username-input').value.trim().toLowerCase();
-            val = val.replace('@', '');
-            if(!val) return;
+            let val = document.getElementById('search-username-input').value.trim().toLowerCase().replace('@', ''); if(!val) return;
             const snap = await get(child(ref(db), `usernames/${val}`));
-            if(snap.exists()) window.openUserModal(snap.val());
-            else alert("لم يتم العثور على هذا المستخدم!");
+            if(snap.exists()) window.openUserModal(snap.val()); else alert("لم يتم العثور على هذا المستخدم!");
         };
 
         window.openUserModal = async (uid) => {
-            const uSnap = await get(child(ref(db), `users/${uid}`));
-            if(!uSnap.exists()) return;
+            if(uid === currentUser.uid) return;
+            const uSnap = await get(child(ref(db), `users/${uid}`)); if(!uSnap.exists()) return;
             const u = uSnap.val();
-            document.getElementById('modal-nickname').innerText = u.nickname;
-            document.getElementById('modal-username-txt').innerText = `@${u.username}`;
+            document.getElementById('modal-nickname').innerText = u.nickname; document.getElementById('modal-username-txt').innerText = `@${u.username}`;
             document.getElementById('modal-avatar').innerHTML = `<img src="${u.avatarUrl}" class="w-full h-full object-cover">`;
-            document.getElementById('modal-chat-btn').onclick = () => {
-                document.getElementById('user-modal').classList.add('hidden');
-                openPrivateChat(u.uid, u.nickname, u.avatarUrl);
-            };
+            document.getElementById('modal-chat-btn').onclick = () => { document.getElementById('user-modal').classList.add('hidden'); openPrivateChat(u.uid, u.nickname, u.avatarUrl); };
             document.getElementById('user-modal').classList.remove('hidden');
         };
         document.getElementById('close-modal-btn').onclick = () => document.getElementById('user-modal').classList.add('hidden');
 
+        // --- الشات الخاص الجبار (WhatsApp Style + تصفية 24 ساعة للرسائل فقط) ---
         function openPrivateChat(targetUid, targetName, targetAvatar) {
             document.getElementById('private-target-name').innerText = targetName;
             document.getElementById('private-target-avatar').innerHTML = `<img src="${targetAvatar}" class="w-full h-full">`;
             document.getElementById('private-chat-window').classList.remove('hidden');
-            const chatId = currentUser.uid < targetUid ? `${currentUser.uid}_${targetUid}` : `${targetUid}_${currentUser.uid}`;
             
-            set(ref(db, `user_chats/${currentUser.uid}/${chatId}`), { targetUid, lastUpdate: Date.now() });
-            set(ref(db, `user_chats/${targetUid}/${chatId}`), { targetUid: currentUser.uid, lastUpdate: Date.now() });
+            const chatId = currentUser.uid < targetUid ? `${currentUser.uid}_${targetUid}` : `${targetUid}_${currentUser.uid}`;
+            openChatId = chatId;
+
+            // تصفير إشعار الرسائل غير المقروءة لي بمجرد الدخول
+            set(ref(db, `user_chats/${currentUser.uid}/${chatId}/hasUnread`), false);
+            
+            // إنشاء الهيكل في شاتاتي للطرفين لكي لا يختفوا للأبد
+            set(ref(db, `user_chats/${currentUser.uid}/${chatId}/targetUid`), targetUid);
+            set(ref(db, `user_chats/${targetUid}/${chatId}/targetUid`), currentUser.uid);
 
             const box = document.getElementById('private-messages-box');
             if(activeChatRef) activeChatRef();
-            const msgsQuery = query(ref(db, `chats/${chatId}`), limitToLast(40));
+            
+            const msgsQuery = query(ref(db, `chats/${chatId}`), limitToLast(50));
             activeChatRef = onValue(msgsQuery, (snapshot) => {
                 box.innerHTML = "";
+                const now = Date.now();
+                const oneDay = 24 * 60 * 60 * 1000;
+
                 snapshot.forEach(c => {
                     const m = c.val();
+                    // تصفية وحذف الرسائل القديمة من واجهة العرض بعد 24 ساعة
+                    if(now - m.timestamp > oneDay) return;
+
                     const isMe = m.senderId === currentUser.uid;
+                    const timeStr = new Date(m.timestamp).toLocaleTimeString('ar-EG', {hour: '2-digit', minute:'2-digit'});
+
                     box.innerHTML += `
-                        <div class="flex max-w-[80%] ${isMe ? 'mr-auto' : 'ml-auto'}">
-                            <div class="p-3 text-xs rounded-xl ${isMe ? 'gradient-bg text-white' : 'bg-[#1f1f2e]'}">${escapeHTML(m.text)}</div>
-                        </div>
-                    `;
+                        <div class="flex w-full mb-1 ${isMe ? 'justify-start' : 'justify-end'}">
+                            <div class="max-w-[75%] p-3 rounded-2xl shadow-sm relative ${isMe ? 'gradient-bg text-white rounded-tr-none' : 'bg-[#1f1f2e] text-white rounded-tl-none'}">
+                                <p class="text-xs font-semibold leading-relaxed pb-3 pl-4 break-words">${escapeHTML(m.text)}</p>
+                                <span class="absolute bottom-1 left-2 text-[8px] text-gray-300 opacity-80 select-none dir-ltr">${timeStr}</span>
+                            </div>
+                        </div>`;
                 });
                 box.scrollTop = box.scrollHeight;
+                // تصفير التنبيه مجدداً أثناء فتح الشات وقراءة الرسائل الحية
+                set(ref(db, `user_chats/${currentUser.uid}/${chatId}/hasUnread`), false);
             });
 
             document.getElementById('send-private-btn').onclick = () => {
-                const text = document.getElementById('private-msg-input').value.trim();
-                if(!text) return;
-                document.getElementById('private-msg-input').value = "";
-                push(ref(db, `chats/${chatId}`), { senderId: currentUser.uid, text: text, timestamp: Date.now() });
-                set(ref(db, `user_chats/${currentUser.uid}/${chatId}/lastUpdate`), Date.now());
-                set(ref(db, `user_chats/${targetUid}/${chatId}/lastUpdate`), Date.now());
+                const inp = document.getElementById('private-msg-input'); const text = inp.value.trim(); if(!text) return; inp.value = "";
+                const timeNow = Date.now();
+                
+                push(ref(db, `chats/${chatId}`), { senderId: currentUser.uid, text: text, timestamp: timeNow });
+                
+                // تحديث آخر توقيت للترتيب التلقائي كـ واتساب
+                set(ref(db, `user_chats/${currentUser.uid}/${chatId}/lastUpdate`), timeNow);
+                set(ref(db, `user_chats/${targetUid}/${chatId}/lastUpdate`), timeNow);
+                
+                // تفعيل إشعار "غير مقروء" للطرف الآخر
+                set(ref(db, `user_chats/${targetUid}/${chatId}/hasUnread`), true);
             };
         }
-        document.getElementById('close-private-chat').onclick = () => document.getElementById('private-chat-window').classList.add('hidden');
+        
+        document.getElementById('close-private-chat').onclick = () => { 
+            document.getElementById('private-chat-window').classList.add('hidden'); 
+            openChatId = null; 
+        };
 
+        // عرض قائمة الدردشات على طريقة WhatsApp والترتيب الفوري والأحدث فوق
         function startMyChatsList() {
             const list = document.getElementById('private-chats-list');
             onValue(ref(db, `user_chats/${currentUser.uid}`), (snapshot) => {
                 list.innerHTML = "";
                 if(!snapshot.exists()) {
-                    list.innerHTML = "<p class='text-xs text-gray-500 text-center py-4'>لا توجد محادثات. ابحث عن صديق وابدأ!</p>";
+                    list.innerHTML = "<p class='text-xs text-gray-500 text-center py-8'>لا توجد محادثات نشطة. ابحث عن اسم مستخدم وابدأ الكلام!</p>";
                     return;
                 }
+
+                let chatItems = [];
+                let loadedCount = 0;
+                const totalChats = snapshot.numChildren();
+
                 snapshot.forEach(c => {
                     const chatMeta = c.val();
+                    const chatId = c.key;
+                    
                     get(child(ref(db), `users/${chatMeta.targetUid}`)).then(uSnap => {
                         if(uSnap.exists()) {
                             const u = uSnap.val();
-                            list.innerHTML += `
-                                <div class="bg-[#16161f] p-3 rounded-xl flex items-center justify-between border border-gray-800 cursor-pointer" onclick="openPrivateChat('${u.uid}','${u.nickname}','${u.avatarUrl}')">
-                                    <div class="flex items-center gap-3">
-                                        <img src="${u.avatarUrl}" class="w-10 h-10 rounded-full bg-gray-800">
-                                        <div>
-                                            <p class="text-xs font-bold">${u.nickname}</p>
-                                            <p class="text-[10px] text-[#ff7300]">@${u.username}</p>
+                            chatItems.push({
+                                chatId: chatId,
+                                lastUpdate: chatMeta.lastUpdate || 0,
+                                hasUnread: chatMeta.hasUnread || false,
+                                user: u
+                            });
+                        }
+                        loadedCount++;
+                        // بمجرد تحميل كافة المحادثات من الداتابيز نقوم بترتيبها وعرضها
+                        if(loadedCount === totalChats) {
+                            // الترتيب: الأحدث (lastUpdate الأكبر) في الأعلى
+                            chatItems.sort((a, b) => b.lastUpdate - a.lastUpdate);
+                            
+                            list.innerHTML = ""; // مسح القائمة لإعادة البناء المرتبة
+                            chatItems.forEach(item => {
+                                const u = item.user;
+                                list.innerHTML += `
+                                    <div class="bg-[#16161f] p-3 rounded-xl flex items-center justify-between border border-gray-800/60 cursor-pointer transition active:scale-[0.99] hover:bg-[#1a1a26]" onclick="window.handleOpenChat('${u.uid}','${u.nickname}','${u.avatarUrl}')">
+                                        <div class="flex items-center gap-3">
+                                            <img src="${u.avatarUrl}" class="w-11 h-11 rounded-full bg-gray-800 border border-gray-700">
+                                            <div>
+                                                <p class="text-xs font-bold text-white flex items-center gap-1">${u.nickname}</p>
+                                                <p class="text-[10px] text-gray-400">@${u.username}</p>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <span class="text-[10px] bg-[#1f1f2e] px-2 py-1 rounded">مراسلة</span>
-                                </div>
-                            `;
+                                        <div class="flex flex-col items-end gap-1">
+                                            ${item.hasUnread ? '<span class="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse shadow-md shadow-green-500/50"></span>' : ''}
+                                            <span class="text-[9px] text-gray-500 bg-[#1f1f2e] px-2 py-0.5 rounded-md font-medium">مراسلة</span>
+                                        </div>
+                                    </div>`;
+                            });
                         }
                     });
                 });
             });
         }
 
+        window.handleOpenChat = (uid, name, avatar) => { openPrivateChat(uid, name, avatar); };
+
+        // --- حاسبة الحب اللحظية ---
         document.getElementById('calculate-love-btn').onclick = () => {
-            const n1 = document.getElementById('love-name1').value.trim();
-            const n2 = document.getElementById('love-name2').value.trim();
-            if(!n1 || !n2) return;
-            const str = [n1, n2].sort().join("").toLowerCase();
-            let h = 0; for(let i=0; i<str.length; i++) h = str.charCodeAt(i) + ((h<<5)-h);
+            const n1 = document.getElementById('love-name1').value.trim(); const n2 = document.getElementById('love-name2').value.trim(); if(!n1 || !n2) return;
+            const str = [n1, n2].sort().join("").toLowerCase(); let h = 0; for(let i=0; i<str.length; i++) h = str.charCodeAt(i) + ((h<<5)-h);
             const score = Math.abs(h % 41) + 60;
             document.getElementById('love-percentage').innerText = `${score}%`;
             document.getElementById('love-status').innerText = score > 90 ? "حب أسطوري متطابق! 🔥" : "توافق رائع وقوي ✨";
             document.getElementById('love-result').classList.remove('hidden');
         };
 
-        function escapeHTML(str) {
-            return str.replace(/[&<>'"]/g, t => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[t] || t));
-        }
+        function escapeHTML(str) { return str.replace(/[&<>'"]/g, t => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[t] || t)); }
     </script>
+    
     <script>
-        function switchTab(tId, btn) {
-            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-            document.getElementById(`tab-${tId}`).classList.add('active');
+        // نظام التبديل النظيف والمانع لتداخل الشات العام
+        window.switchTab = function(tId, btn) {
+            document.querySelectorAll('.tab-content').forEach(t => {
+                t.classList.add('hidden');
+            });
+            
+            const target = document.getElementById(`tab-${tId}`);
+            if(tId === 'global') {
+                target.classList.remove('hidden');
+                target.classList.add('flex', 'flex-col');
+            } else {
+                target.classList.remove('hidden');
+            }
+            
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.replace('text-[#ff2a85]', 'text-gray-400'));
             btn.classList.replace('text-gray-400', 'text-[#ff2a85]');
         }
