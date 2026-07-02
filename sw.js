@@ -1,4 +1,4 @@
-const CACHE_NAME = 'nxl-cache-v1';
+const CACHE_NAME = 'nxl-cache-v2';
 const urlsToCache = [
   './Nxl.html',
   './manifest.json',
