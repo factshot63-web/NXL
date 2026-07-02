@@ -16,7 +16,6 @@
 </head>
 <body class="flex flex-col h-screen overflow-hidden select-none">
 
-    <!-- شاشة تسجيل الدخول وإنشاء الحساب بالإيميل -->
     <div id="auth-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#0d0d12] px-6">
         <div class="text-center max-w-md w-full bg-[#16161f] p-8 rounded-3xl border border-gray-800 shadow-2xl">
             <div class="w-20 h-20 mx-auto rounded-full gradient-bg flex items-center justify-center mb-4 shadow-lg shadow-[#ff2a85]/20">
@@ -46,7 +45,6 @@
         </div>
     </div>
 
-    <!-- شاشة استكمال الحساب -->
     <div id="setup-profile-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#0d0d12]/95 backdrop-blur-sm px-6 hidden">
         <div class="max-w-md w-full bg-[#16161f] p-8 rounded-3xl border border-[#ff7300] shadow-2xl">
             <h2 class="text-xl font-bold mb-1 text-center">خطوة أخيرة للبدء 🚀</h2>
@@ -67,7 +65,6 @@
         </div>
     </div>
 
-    <!-- الهيدر العلوي -->
     <header class="bg-[#16161f] py-3 px-4 border-b border-gray-800 flex justify-between items-center shrink-0">
         <div class="flex items-center gap-2">
             <div class="w-8 h-8 rounded-full gradient-bg flex items-center justify-center font-black text-xs text-white">NXL</div>
@@ -79,10 +76,8 @@
         <div id="user-header-avatar" class="w-8 h-8 rounded-full border border-gray-700 bg-gray-800 overflow-hidden hidden cursor-pointer" onclick="switchTab('profile', document.getElementById('nav-profile-btn'))"></div>
     </header>
 
-    <!-- المحتوى الأساسي -->
     <main class="flex-1 overflow-y-auto custom-scrollbar bg-[#0d0d12] pb-20">
         
-        <!-- 1. الرئيسية -->
         <section id="tab-home" class="tab-content p-4 max-w-lg mx-auto">
             <div class="bg-[#16161f] p-4 rounded-2xl mb-4 border border-gray-800">
                 <textarea id="post-input" placeholder="شارك لحظاتك... (تختفي بعد 72 ساعة)" class="w-full bg-[#1f1f2e] text-sm text-white rounded-xl p-3 focus:outline-none resize-none h-20"></textarea>
@@ -100,7 +95,6 @@
             <div id="home-posts-feed" class="space-y-4"></div>
         </section>
 
-        <!-- 2. الشات العام -->
         <section id="tab-global" class="tab-content hidden h-full flex flex-col max-w-lg mx-auto">
             <div class="bg-[#16161f]/80 text-[11px] text-center text-gray-400 py-1.5 border-b border-gray-800">
                 الرسائل تختفي تلقائياً بعد 24 ساعة.
@@ -112,7 +106,6 @@
             </div>
         </section>
 
-        <!-- 3. الألعاب -->
         <section id="tab-games" class="tab-content hidden p-4 max-w-lg mx-auto space-y-6">
             <div class="bg-[#16161f] p-6 rounded-2xl border border-gray-800 text-center">
                 <h2 class="text-lg font-bold mb-1">❤️ حاسبة الحب NXL</h2>
@@ -126,17 +119,15 @@
             </div>
         </section>
 
-        <!-- 4. شاتاتي (WhatsApp Style) -->
         <section id="tab-chats" class="tab-content hidden p-4 max-w-lg mx-auto">
             <div class="bg-[#16161f] p-3 rounded-xl border border-gray-800 mb-4 flex gap-2">
                 <input type="text" id="search-username-input" placeholder="ابحث باسم المستخدم (@username)..." class="flex-1 bg-[#1f1f2e] text-xs rounded-lg px-3 py-2 text-white focus:outline-none text-left dir-ltr">
                 <button id="search-user-btn" class="bg-gray-700 text-white px-4 rounded-lg text-xs font-bold active:scale-95">بحث</button>
             </div>
-            <h2 class="text-sm font-bold mb-3 px-1 text-gray-400">الدردشات الأخيرة</h2>
+            <h2 class="text-sm font-bold mb-3 px-1 text-gray-400">الدردشات الخاصة بك</h2>
             <div id="private-chats-list" class="space-y-1"></div>
         </section>
 
-        <!-- 5. ملفي -->
         <section id="tab-profile" class="tab-content hidden p-4 max-w-lg mx-auto text-center">
             <div class="bg-[#16161f] p-6 rounded-3xl border border-gray-800 mb-6 relative">
                 <button id="logout-btn" class="absolute top-4 left-4 text-xs bg-red-500/20 text-red-500 px-3 py-1 rounded-lg font-bold">خروج</button>
@@ -150,12 +141,11 @@
         </section>
     </main>
 
-    <!-- شاشة المحادثة الخاصة الاحترافية (WhatsApp View) -->
     <div id="private-chat-window" class="fixed inset-0 z-50 bg-[#0d0d12] flex flex-col hidden">
         <header class="bg-[#16161f] py-3 px-4 border-b border-gray-800 flex items-center justify-between shrink-0">
             <div class="flex items-center gap-3">
                 <button id="close-private-chat" class="text-gray-400 hover:text-white font-bold text-sm ml-1 flex items-center gap-1">
-                    <span>➡️</span> ووكي
+                    <span>➡️</span> رجوع
                 </button>
                 <div id="private-target-avatar" class="w-10 h-10 rounded-full overflow-hidden bg-gray-800 border border-gray-700"></div>
                 <div>
@@ -165,7 +155,6 @@
             </div>
         </header>
         
-        <!-- صندوق رسائل يشبه واتساب تماما -->
         <div id="private-messages-box" class="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar bg-[#09090d] flex flex-col"></div>
         
         <div class="p-3 bg-[#16161f] border-t border-gray-800 flex gap-2 shrink-0 items-center">
@@ -176,7 +165,6 @@
         </div>
     </div>
 
-    <!-- مودال المستخدم السريع -->
     <div id="user-modal" class="fixed inset-0 bg-black/80 z-50 flex items-center justify-center hidden px-4">
         <div class="bg-[#16161f] w-full max-w-sm rounded-3xl border border-gray-800 p-6 relative text-center">
             <button id="close-modal-btn" class="absolute top-4 left-4 text-gray-400 text-2xl">&times;</button>
@@ -187,7 +175,6 @@
         </div>
     </div>
 
-    <!-- شريط التنقل السفلي -->
     <nav class="fixed bottom-0 left-0 right-0 h-16 bg-[#16161f]/95 border-t border-gray-800 flex justify-around items-center z-30 max-w-lg mx-auto rounded-t-2xl backdrop-blur-md">
         <button onclick="switchTab('home', this)" class="nav-btn text-[#ff2a85] font-bold text-[10px]">الرئيسية</button>
         <button onclick="switchTab('global', this)" class="nav-btn text-gray-400 font-bold text-[10px]">شات عام</button>
@@ -196,11 +183,11 @@
         <button id="nav-profile-btn" onclick="switchTab('profile', this)" class="nav-btn text-gray-400 font-bold text-[10px]">ملفي</button>
     </nav>
 
-    <!-- Firebase SDK -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getDatabase, ref, set, push, onValue, get, child, query, limitToLast } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        // لاحظ إضافة 'update' هنا للقيام بالحفظ الجذري
+        import { getDatabase, ref, set, update, push, onValue, get, child, query, limitToLast } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDHL6QiJ6a0MZcW3Y6RZ24ZHDQi2TyiFBw",
@@ -221,8 +208,9 @@
         let userData = null;
         let globalPostImageBase64 = "";
         let activeChatRef = null;
-        let openChatId = null; // لتتبع المحادثة المفتوحة حالياً لمنع إشعاراتها
+        let openChatId = null; 
 
+        // دوال الإشعارات والأخطاء
         const emailInput = document.getElementById('auth-email');
         const passInput = document.getElementById('auth-password');
         const errorText = document.getElementById('auth-error');
@@ -293,7 +281,7 @@
             startGlobalChat(); startPostsFeed(); startMyChatsList();
         }
 
-        // --- الشات العام السليم والمحمي من التداخل ---
+        // --- الشات العام ---
         function startGlobalChat() {
             const box = document.getElementById('global-messages-box');
             const chatQuery = query(ref(db, 'global_chat'), limitToLast(50));
@@ -363,17 +351,20 @@
         };
 
         window.openUserModal = async (uid) => {
-            if(uid === currentUser.uid) return;
+            if(uid === currentUser.uid) return; // لا يراسل نفسه
             const uSnap = await get(child(ref(db), `users/${uid}`)); if(!uSnap.exists()) return;
             const u = uSnap.val();
             document.getElementById('modal-nickname').innerText = u.nickname; document.getElementById('modal-username-txt').innerText = `@${u.username}`;
             document.getElementById('modal-avatar').innerHTML = `<img src="${u.avatarUrl}" class="w-full h-full object-cover">`;
-            document.getElementById('modal-chat-btn').onclick = () => { document.getElementById('user-modal').classList.add('hidden'); openPrivateChat(u.uid, u.nickname, u.avatarUrl); };
+            document.getElementById('modal-chat-btn').onclick = () => { 
+                document.getElementById('user-modal').classList.add('hidden'); 
+                openPrivateChat(u.uid, u.nickname, u.avatarUrl); 
+            };
             document.getElementById('user-modal').classList.remove('hidden');
         };
         document.getElementById('close-modal-btn').onclick = () => document.getElementById('user-modal').classList.add('hidden');
 
-        // --- الشات الخاص الجبار (WhatsApp Style + تصفية 24 ساعة للرسائل فقط) ---
+        // --- الشات الخاص الجبار وتثبيت المستخدمين ---
         function openPrivateChat(targetUid, targetName, targetAvatar) {
             document.getElementById('private-target-name').innerText = targetName;
             document.getElementById('private-target-avatar').innerHTML = `<img src="${targetAvatar}" class="w-full h-full">`;
@@ -382,15 +373,15 @@
             const chatId = currentUser.uid < targetUid ? `${currentUser.uid}_${targetUid}` : `${targetUid}_${currentUser.uid}`;
             openChatId = chatId;
 
-            // تصفير إشعار الرسائل غير المقروءة لي بمجرد الدخول
-            set(ref(db, `user_chats/${currentUser.uid}/${chatId}/hasUnread`), false);
-            
-            // إنشاء الهيكل في شاتاتي للطرفين لكي لا يختفوا للأبد
-            set(ref(db, `user_chats/${currentUser.uid}/${chatId}/targetUid`), targetUid);
-            set(ref(db, `user_chats/${targetUid}/${chatId}/targetUid`), currentUser.uid);
+            // التحديث الجذري (Atomic Update): يضمن تسجيل المحادثة في حسابك وحسابه فور الفتح ولا تمسح أي رسائل
+            const initialUpdates = {};
+            initialUpdates[`user_chats/${currentUser.uid}/${chatId}/targetUid`] = targetUid;
+            initialUpdates[`user_chats/${currentUser.uid}/${chatId}/hasUnread`] = false;
+            initialUpdates[`user_chats/${targetUid}/${chatId}/targetUid`] = currentUser.uid;
+            update(ref(db), initialUpdates);
 
             const box = document.getElementById('private-messages-box');
-            if(activeChatRef) activeChatRef();
+            if(activeChatRef) activeChatRef(); // تنظيف المراقبة القديمة
             
             const msgsQuery = query(ref(db, `chats/${chatId}`), limitToLast(50));
             activeChatRef = onValue(msgsQuery, (snapshot) => {
@@ -400,8 +391,7 @@
 
                 snapshot.forEach(c => {
                     const m = c.val();
-                    // تصفية وحذف الرسائل القديمة من واجهة العرض بعد 24 ساعة
-                    if(now - m.timestamp > oneDay) return;
+                    if(now - m.timestamp > oneDay) return; // فلترة 24 ساعة للرسائل فقط
 
                     const isMe = m.senderId === currentUser.uid;
                     const timeStr = new Date(m.timestamp).toLocaleTimeString('ar-EG', {hour: '2-digit', minute:'2-digit'});
@@ -415,22 +405,24 @@
                         </div>`;
                 });
                 box.scrollTop = box.scrollHeight;
-                // تصفير التنبيه مجدداً أثناء فتح الشات وقراءة الرسائل الحية
-                set(ref(db, `user_chats/${currentUser.uid}/${chatId}/hasUnread`), false);
+                // تصفير إشعار القراءة طالما أنت فاتح الشات
+                update(ref(db), { [`user_chats/${currentUser.uid}/${chatId}/hasUnread`]: false });
             });
 
             document.getElementById('send-private-btn').onclick = () => {
                 const inp = document.getElementById('private-msg-input'); const text = inp.value.trim(); if(!text) return; inp.value = "";
                 const timeNow = Date.now();
                 
+                // حفظ الرسالة
                 push(ref(db, `chats/${chatId}`), { senderId: currentUser.uid, text: text, timestamp: timeNow });
                 
-                // تحديث آخر توقيت للترتيب التلقائي كـ واتساب
-                set(ref(db, `user_chats/${currentUser.uid}/${chatId}/lastUpdate`), timeNow);
-                set(ref(db, `user_chats/${targetUid}/${chatId}/lastUpdate`), timeNow);
+                // تحديث بيانات ترتيب المحادثات والإشعارات لكلا الطرفين بضربة واحدة وبدون مسح الهيكل
+                const metaUpdates = {};
+                metaUpdates[`user_chats/${currentUser.uid}/${chatId}/lastUpdate`] = timeNow;
+                metaUpdates[`user_chats/${targetUid}/${chatId}/lastUpdate`] = timeNow;
+                metaUpdates[`user_chats/${targetUid}/${chatId}/hasUnread`] = true;
                 
-                // تفعيل إشعار "غير مقروء" للطرف الآخر
-                set(ref(db, `user_chats/${targetUid}/${chatId}/hasUnread`), true);
+                update(ref(db), metaUpdates);
             };
         }
         
@@ -439,60 +431,67 @@
             openChatId = null; 
         };
 
-        // عرض قائمة الدردشات على طريقة WhatsApp والترتيب الفوري والأحدث فوق
+        // --- قائمة شتاتي المطورة بالـ Promise.all لتفادي توقف الكود ---
         function startMyChatsList() {
             const list = document.getElementById('private-chats-list');
-            onValue(ref(db, `user_chats/${currentUser.uid}`), (snapshot) => {
-                list.innerHTML = "";
+            
+            onValue(ref(db, `user_chats/${currentUser.uid}`), async (snapshot) => {
                 if(!snapshot.exists()) {
-                    list.innerHTML = "<p class='text-xs text-gray-500 text-center py-8'>لا توجد محادثات نشطة. ابحث عن اسم مستخدم وابدأ الكلام!</p>";
+                    list.innerHTML = "<div class='text-center py-10'><p class='text-3xl mb-2'>💬</p><p class='text-xs text-gray-500'>قائمة شتاتي فارغة.<br>ابحث عن صديقك وابدأ المحادثة الآن!</p></div>";
                     return;
                 }
 
-                let chatItems = [];
-                let loadedCount = 0;
-                const totalChats = snapshot.numChildren();
-
+                const chatPromises = [];
                 snapshot.forEach(c => {
                     const chatMeta = c.val();
                     const chatId = c.key;
                     
-                    get(child(ref(db), `users/${chatMeta.targetUid}`)).then(uSnap => {
-                        if(uSnap.exists()) {
-                            const u = uSnap.val();
-                            chatItems.push({
-                                chatId: chatId,
-                                lastUpdate: chatMeta.lastUpdate || 0,
-                                hasUnread: chatMeta.hasUnread || false,
-                                user: u
-                            });
-                        }
-                        loadedCount++;
-                        // بمجرد تحميل كافة المحادثات من الداتابيز نقوم بترتيبها وعرضها
-                        if(loadedCount === totalChats) {
-                            // الترتيب: الأحدث (lastUpdate الأكبر) في الأعلى
-                            chatItems.sort((a, b) => b.lastUpdate - a.lastUpdate);
-                            
-                            list.innerHTML = ""; // مسح القائمة لإعادة البناء المرتبة
-                            chatItems.forEach(item => {
-                                const u = item.user;
-                                list.innerHTML += `
-                                    <div class="bg-[#16161f] p-3 rounded-xl flex items-center justify-between border border-gray-800/60 cursor-pointer transition active:scale-[0.99] hover:bg-[#1a1a26]" onclick="window.handleOpenChat('${u.uid}','${u.nickname}','${u.avatarUrl}')">
-                                        <div class="flex items-center gap-3">
-                                            <img src="${u.avatarUrl}" class="w-11 h-11 rounded-full bg-gray-800 border border-gray-700">
-                                            <div>
-                                                <p class="text-xs font-bold text-white flex items-center gap-1">${u.nickname}</p>
-                                                <p class="text-[10px] text-gray-400">@${u.username}</p>
-                                            </div>
-                                        </div>
-                                        <div class="flex flex-col items-end gap-1">
-                                            ${item.hasUnread ? '<span class="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse shadow-md shadow-green-500/50"></span>' : ''}
-                                            <span class="text-[9px] text-gray-500 bg-[#1f1f2e] px-2 py-0.5 rounded-md font-medium">مراسلة</span>
-                                        </div>
-                                    </div>`;
-                            });
-                        }
-                    });
+                    // الشرط ده بيحمي التطبيق لو فيه داتا قديمة متسجلة غلط عندك
+                    if(chatMeta && chatMeta.targetUid) {
+                        const p = get(child(ref(db), `users/${chatMeta.targetUid}`)).then(uSnap => {
+                            if(uSnap.exists()) {
+                                return {
+                                    chatId: chatId,
+                                    lastUpdate: chatMeta.lastUpdate || 0,
+                                    hasUnread: chatMeta.hasUnread || false,
+                                    user: uSnap.val()
+                                };
+                            }
+                            return null;
+                        });
+                        chatPromises.push(p);
+                    }
+                });
+
+                // الانتظار حتى تحميل كل المستخدمين بأمان تام
+                const results = await Promise.all(chatPromises);
+                const validChats = results.filter(r => r !== null);
+                
+                // الترتيب: الأحدث دائماً في الأعلى
+                validChats.sort((a, b) => b.lastUpdate - a.lastUpdate);
+                
+                list.innerHTML = "";
+                if(validChats.length === 0) {
+                     list.innerHTML = "<div class='text-center py-10'><p class='text-3xl mb-2'>💬</p><p class='text-xs text-gray-500'>لا توجد محادثات نشطة.</p></div>";
+                     return;
+                }
+                
+                validChats.forEach(item => {
+                    const u = item.user;
+                    list.innerHTML += `
+                        <div class="bg-[#16161f] p-3 rounded-xl flex items-center justify-between border border-gray-800/60 cursor-pointer transition active:scale-[0.99] hover:bg-[#1a1a26]" onclick="window.handleOpenChat('${u.uid}','${u.nickname}','${u.avatarUrl}')">
+                            <div class="flex items-center gap-3">
+                                <img src="${u.avatarUrl}" class="w-11 h-11 rounded-full bg-gray-800 border border-gray-700">
+                                <div>
+                                    <p class="text-xs font-bold text-white flex items-center gap-1">${u.nickname}</p>
+                                    <p class="text-[10px] text-gray-400">@${u.username}</p>
+                                </div>
+                            </div>
+                            <div class="flex flex-col items-end gap-1">
+                                ${item.hasUnread ? '<span class="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse shadow-md shadow-green-500/50"></span>' : ''}
+                                <span class="text-[9px] text-gray-500 bg-[#1f1f2e] px-2 py-0.5 rounded-md font-medium">مراسلة</span>
+                            </div>
+                        </div>`;
                 });
             });
         }
@@ -513,10 +512,11 @@
     </script>
     
     <script>
-        // نظام التبديل النظيف والمانع لتداخل الشات العام
+        // نظام التبديل النظيف
         window.switchTab = function(tId, btn) {
             document.querySelectorAll('.tab-content').forEach(t => {
                 t.classList.add('hidden');
+                t.classList.remove('flex', 'flex-col');
             });
             
             const target = document.getElementById(`tab-${tId}`);
