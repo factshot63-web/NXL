@@ -1,0 +1,22 @@
+{
+  "name": "NXL Elmahalla",
+  "short_name": "NXL",
+  "description": "شبكة التقارب - سهولة ارتباط .. قلوب بتتقرب",
+  "start_url": "./Nxl.html",
+  "display": "standalone",
+  "background_color": "#0d0d12",
+  "theme_color": "#16161f",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "image.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "image.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
