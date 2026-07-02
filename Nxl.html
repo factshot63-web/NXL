@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NXL Elmahalla - التقارب والحرية</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Cairo', sans-serif; background-color: #0d0d12; color: #ffffff; }
+        .gradient-bg { background: linear-gradient(135deg, #ff2a85 0%, #ff7300 100%); }
+        .gradient-text { background: linear-gradient(135deg, #ff2a85 0%, #ff7300 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #ff2a85; border-radius: 10px; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+    </style>
+</head>
+<body class="flex flex-col h-screen overflow-hidden select-none">
+
+    <div id="auth-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#0d0d12] px-6">
+        <div class="text-center max-w-md w-full bg-[#16161f] p-8 rounded-3xl border border-gray-8xl shadow-2xl">
+            <div class="w-24 h-24 mx-auto rounded-full gradient-bg flex items-center justify-center mb-4 shadow-lg shadow-[#ff2a85]/20">
+                <span class="text-3xl font-black tracking-wider text-white">NXL</span>
+            </div>
+            <h1 class="text-2xl font-bold mb-2">مرحباً بك في <span class="gradient-text">NXL Elmahalla</span></h1>
+            <p class="text-xs text-gray-400 mb-6">سهولة ارتباط .. قلوب بتتقرب</p>
+            
+            <div class="bg-[#1f1f2e] text-right p-4 rounded-xl text-xs text-gray-300 mb-6 leading-relaxed border border-gray-700">
+                <p class="font-bold text-[#ff7300] mb-2">🚨 تنويه هام للجميع:</p>
+                نحن نؤمن هنا بالتقارب والحرية المطلقة، لذلك فإن الخصوصية تعتبر محدودة وتعتمد كلياً على ما تختاره أنت لمشاركته. أي شخص في التطبيق يمكنه رؤية منشوراتك وصورك والدردشة معك بمجرد الضغط على أفاتارك. ادخل واستمتع بالحرية والتواصل الحقيقي!
+            </div>
+
+            <button id="google-login-btn" class="w-full py-3 px-4 bg-white text-black font-bold rounded-xl flex items-center justify-center gap-2 transition transform active:scale-95 hover:bg-gray-100">
+                <svg class="w-5 h-5" viewBox="0 0 24 24"><path fill="#EA4335" d="M12 5.04c1.65 0 3.13.57 4.3 1.69l3.22-3.22C17.56 1.83 14.99 1 12 1 7.35 1 3.41 3.66 1.49 7.55l3.78 2.93c.9-2.69 3.42-4.44 6.73-4.44z"/><path fill="#4285F4" d="M23.49 12.27c0-.81-.07-1.59-.2-2.34H12v4.44h6.44c-.28 1.48-1.12 2.73-2.38 3.58l3.69 2.87c2.16-1.99 3.41-4.92 3.41-8.55z"/><path fill="#FBBC05" d="M5.27 10.48c-.23-.69-.36-1.42-.36-2.18s.13-1.49.36-2.18L1.49 7.55C.54 9.45 0 11.62 0 13.92s.54 4.47 1.49 6.37l3.78-2.93c-.23-.69-.36-1.42-.36-2.18z"/><path fill="#34A853" d="M12 23c3.24 0 5.97-1.07 7.96-2.92l-3.69-2.87c-1.03.69-2.34 1.1-3.97 1.1-3.31 0-5.83-2.05-6.83-5.04l-3.78 2.93C3.41 20.34 7.35 23 12 23z"/></svg>
+                تسجيل الدخول بواسطة جوجل
+            </button>
+        </div>
+    </div>
+
+    <header class="bg-[#16161f] py-3 px-4 border-b border-gray-800 flex justify-between items-center shrink-0">
+        <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-full gradient-bg flex items-center justify-center font-black text-xs tracking-tight text-white">NXL</div>
+            <div>
+                <h1 class="text-sm font-bold tracking-wide">NXL ELMAHALLA</h1>
+                <p class="text-[9px] text-gray-400 -mt-1">سهولة ارتباط .. قلوب بتتقرب</p>
+            </div>
+        </div>
+        <div id="user-header-avatar" class="w-8 h-8 rounded-full border border-gray-700 bg-gray-800 overflow-hidden hidden"></div>
+    </header>
+
+    <main class="flex-1 overflow-y-auto custom-scrollbar bg-[#0d0d12] pb-20">
+        
+        <section id="tab-home" class="tab-content active p-4 max-w-lg mx-auto">
+            <div class="bg-[#16161f] p-4 rounded-2xl mb-4 border border-gray-8xl">
+                <textarea id="post-input" placeholder="شارك لقطة أو كلمة بحرية وثقة..." class="w-full bg-[#1f1f2e] text-sm text-white rounded-xl p-3 focus:outline-none resize-none h-20 placeholder-gray-500"></textarea>
+                <div class="flex justify-between items-center mt-3">
+                    <label class="cursor-pointer text-xs text-gray-400 hover:text-white flex items-center gap-1 bg-[#1f1f2e] px-3 py-1.5 rounded-lg">
+                        <svg class="w-4 h-4 text-[#ff7300]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                        <span>إضافة صورة (Base64)</span>
+                        <input type="file" id="post-file" accept="image/*" class="hidden">
+                    </label>
+                    <button id="submit-post-btn" class="gradient-bg text-xs font-bold text-white px-5 py-2 rounded-xl active:scale-95 transition">نشر الآن</button>
+                </div>
+                <div id="post-preview-container" class="mt-2 hidden">
+                    <img id="post-img-preview" class="w-20 h-20 object-cover rounded-lg border border-gray-700">
+                </div>
+            </div>
+            <div id="home-posts-feed" class="space-y-4"></div>
+        </section>
+
+        <section id="tab-global" class="tab-content h-full flex flex-col max-w-lg mx-auto">
+            <div class="bg-[#16161f]/80 text-[11px] text-center text-gray-400 py-1.5 border-b border-gray-8xl backdrop-blur-md">
+                ✨ تختفي الرسائل تلقائياً بعد مرور 24 ساعة لضمان الخصوصية والسرعة المطلقة.
+            </div>
+            <div id="global-messages-box" class="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar h-[calc(100vh-210px)]"></div>
+            <div class="p-3 bg-[#16161f] border-t border-gray-800 flex gap-2 items-center shrink-0">
+                <input type="text" id="global-msg-input" placeholder="اكتب رسالة عامة..." class="flex-1 bg-[#1f1f2e] text-sm rounded-xl px-4 py-3 text-white focus:outline-none">
+                <button id="send-global-btn" class="w-11 h-11 gradient-bg rounded-xl flex items-center justify-center active:scale-95 transition">
+                    <svg class="w-5 h-5 text-white transform rotate-180" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                </button>
+            </div>
+        </section>
+
+        <section id="tab-games" class="tab-content p-4 max-w-lg mx-auto space-y-6">
+            <div class="bg-[#16161f] p-6 rounded-2xl border border-gray-8xl text-center">
+                <h2 class="text-lg font-bold mb-1 flex items-center justify-center gap-2"><span class="text-xl">❤️</span> حاسبة الحب الذكية NXL</h2>
+                <p class="text-xs text-gray-400 mb-4">اكتب اسمك واسم الطرف الآخر واكتشف التوافق فوراً بدون لاج</p>
+                <div class="space-y-3">
+                    <input type="text" id="love-name1" placeholder="اسمك أنت" class="w-full bg-[#1f1f2e] text-center text-sm rounded-xl py-2.5 focus:outline-none border border-gray-800">
+                    <input type="text" id="love-name2" placeholder="اسم الطرف التاني" class="w-full bg-[#1f1f2e] text-center text-sm rounded-xl py-2.5 focus:outline-none border border-gray-800">
+                    <button id="calculate-love-btn" class="w-full py-2.5 gradient-bg rounded-xl text-sm font-bold text-white transition active:scale-95 shadow-md">احسب النسبة الآن</button>
+                </div>
+                <div id="love-result" class="mt-5 hidden transition-all">
+                    <div class="text-4xl font-black gradient-text mb-1 animate-pulse" id="love-percentage">0%</div>
+                    <div class="text-xs text-gray-300 font-medium" id="love-status"></div>
+                </div>
+            </div>
+
+            <div class="bg-[#16161f] p-6 rounded-2xl border border-gray-8xl text-center">
+                <h2 class="text-base font-bold mb-1 flex items-center justify-center gap-2">⚡ اختبار سرعة البديهة والـ Reaction</h2>
+                <p class="text-xs text-gray-400 mb-4">اضغط على المربع فور تحوله للون الأخضر وقس سرعة استجابتك!</p>
+                <div id="reaction-box" class="w-full h-32 bg-[#1f1f2e] rounded-xl flex items-center justify-center font-bold text-sm cursor-pointer transition active:scale-95 border border-gray-8xl">
+                    اضغط هنا للبدء
+                </div>
+                <div id="reaction-score" class="text-xs text-green-400 font-bold mt-2 h-4"></div>
+            </div>
+        </section>
+
+        <section id="tab-chats" class="tab-content p-4 max-w-lg mx-auto">
+            <h2 class="text-base font-bold mb-3 px-1">المحادثات الخاصة الناشطة</h2>
+            <div id="private-chats-list" class="space-y-2">
+                <p class="text-xs text-gray-500 text-center py-8">اضغط على أفاتار أي شخص في الشات العام أو المنشورات لبدء محادثة خاصة فورية ومباشرة معه.</p>
+            </div>
+        </section>
+
+        <section id="tab-profile" class="tab-content p-4 max-w-lg mx-auto text-center">
+            <div class="bg-[#16161f] p-6 rounded-3xl border border-gray-8xl mb-6">
+                <div id="profile-avatar-container" class="w-20 h-20 mx-auto rounded-full bg-gray-800 border-2 border-[#ff2a85] overflow-hidden mb-3"></div>
+                <h2 id="profile-username" class="text-lg font-bold">اسم المستخدم</h2>
+                <p id="profile-email" class="text-xs text-gray-500 mb-4">example@gmail.com</p>
+                <div class="text-right bg-[#1f1f2e] p-3 rounded-xl text-xs text-gray-400">
+                    📍 <span class="font-bold text-white">معرّف الحساب النظيف:</span> يتم إنشاء وتثبيت صورتك الأفاتار الفنية بناءً على اسمك الفريد المسجل عبر جوجل لضمان الهوية النقية للمنصة بدون استهلاك للـ Storage.
+                </div>
+            </div>
+            <h3 class="text-sm font-bold text-right mb-3 px-1">منشوراتي المرفوعة:</h3>
+            <div id="profile-posts-grid" class="grid grid-cols-3 gap-2"></div>
+        </section>
+    </main>
+
+    <div id="private-chat-window" class="fixed inset-0 z-40 bg-[#0d0d12] flex flex-col hidden">
+        <header class="bg-[#16161f] py-3 px-4 border-b border-gray-800 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <button id="close-private-chat" class="p-1 hover:bg-[#1f1f2e] rounded-lg">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+                </button>
+                <div id="private-target-avatar" class="w-8 h-8 rounded-full overflow-hidden bg-gray-800 border border-gray-700"></div>
+                <h3 id="private-target-name" class="text-sm font-bold">المستلم</h3>
+            </div>
+        </header>
+        <div id="private-messages-box" class="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar"></div>
+        <div class="p-3 bg-[#16161f] border-t border-gray-850 flex gap-2 items-center">
+            <input type="text" id="private-msg-input" placeholder="أرسل رسالة خاصة آمنة..." class="flex-1 bg-[#1f1f2e] text-sm rounded-xl px-4 py-3 text-white focus:outline-none">
+            <button id="send-private-btn" class="w-11 h-11 gradient-bg rounded-xl flex items-center justify-center active:scale-95 transition">
+                <svg class="w-5 h-5 text-white transform rotate-180" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+            </button>
+        </div>
+    </div>
+
+    <div id="user-modal" class="fixed inset-0 bg-black/70 z-50 flex items-center justify-center hidden px-4">
+        <div class="bg-[#16161f] w-full max-w-sm rounded-3xl border border-gray-800 overflow-hidden p-6 relative">
+            <button id="close-modal-btn" class="absolute top-4 left-4 text-gray-400 hover:text-white text-xl">&times;</button>
+            <div id="modal-avatar" class="w-20 h-20 mx-auto rounded-full bg-gray-800 border-2 border-[#ff7300] overflow-hidden mb-3"></div>
+            <h3 id="modal-username" class="text-center font-bold text-base mb-4">اسم الشخص</h3>
+            <button id="modal-chat-btn" class="w-full py-2.5 mb-4 gradient-bg rounded-xl font- Cairo text-sm font-bold active:scale-95 transition">إرسال رسالة خاصة ومباشرة</button>
+            <h4 class="text-xs font-bold text-gray-400 mb-2 text-right">أحدث الصور والمنشورات:</h4>
+            <div id="modal-posts-grid" class="grid grid-cols-3 gap-2 max-h-40 overflow-y-auto custom-scrollbar"></div>
+        </div>
+    </div>
+
+    <nav class="fixed bottom-0 left-0 right-0 h-16 bg-[#16161f]/95 border-t border-gray-850 flex justify-around items-center z-30 backdrop-blur-lg max-w-lg mx-auto rounded-t-2xl">
+        <button onclick="switchTab('home', this)" class="nav-btn flex flex-col items-center justify-center gap-1 flex-1 text-[#ff2a85]">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+            <span class="text-[10px] font-bold">الرئيسية</span>
+        </button>
+        <button onclick="switchTab('global', this)" class="nav-btn flex flex-col items-center justify-center gap-1 flex-1 text-gray-400">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"/></svg>
+            <span class="text-[10px] font-bold">شات عام</span>
+        </button>
+        <button onclick="switchTab('games', this)" class="nav-btn flex flex-col items-center justify-center gap-1 flex-1 text-gray-400">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <span class="text-[10px] font-bold">الألعاب</span>
+        </button>
+        <button onclick="switchTab('chats', this)" class="nav-btn flex flex-col items-center justify-center gap-1 flex-1 text-gray-400">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+            <span class="text-[10px] font-bold">شاتاتي</span>
+        </button>
+        <button onclick="switchTab('profile', this)" class="nav-btn flex flex-col items-center justify-center gap-1 flex-1 text-gray-400">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+            <span class="text-[10px] font-bold">ملفي</span>
+        </button>
+    </nav>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, collection, addDoc, query, where, orderBy, limit, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // إعدادات Firebase الخاصة بمشروعك
+        const firebaseConfig = {
+            apiKey: "AIzaSyDHL6QiJ6a0MZcW3Y6RZ24ZHDQi2TyiFBw",
+            authDomain: "nxlelmhla.firebaseapp.com",
+            databaseURL: "https://nxlelmhla-default-rtdb.firebaseio.com",
+            projectId: "nxlelmhla",
+            storageBucket: "nxlelmhla.firebasestorage.app",
+            messagingSenderId: "501510494869",
+            appId: "1:501510494869:web:a6b7e16233206d755b999c",
+            measurementId: "G-RWQWW3TNF2"
+        };
+
+        // تهيئة السيرفرات
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const provider = new GoogleAuthProvider();
+
+        let currentUser = null;
+        let activePrivateChatUnsubscribe = null;
+        let globalPostImageBase64 = "";
+
+        // ------------------ التحقق من حالة المستخدم ودخوله ------------------
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUser = user;
+                const avatarStyle = 'adventurer'; // ستايل أفاتار NXL المميز والمرح
+                const avatarUrl = `https://api.dicebear.com/7.x/${avatarStyle}/svg?seed=${encodeURIComponent(user.uid)}`;
+                
+                // حفظ وحقن بيانات العضو داخل الـ Firestore بشكل فوري
+                const userDocRef = doc(db, "users", user.uid);
+                await setDoc(userDocRef, {
+                    uid: user.uid,
+                    displayName: user.displayName,
+                    avatarUrl: avatarUrl,
+                    email: user.email,
+                    joinedAt: Date.now()
+                }, { merge: true });
+
+                // إخفاء شاشة تسجيل الدخول وبدء التنصت على البيانات اللحظية بقوة
+                document.getElementById('auth-screen').classList.add('hidden');
+                document.getElementById('user-header-avatar').innerHTML = `<img src="${avatarUrl}" class="w-full h-full object-cover">`;
+                document.getElementById('user-header-avatar').classList.remove('hidden');
+                
+                // ملء بيانات الملف الشخصي
+                document.getElementById('profile-avatar-container').innerHTML = `<img src="${avatarUrl}" class="w-full h-full object-cover">`;
+                document.getElementById('profile-username').innerText = user.displayName;
+                document.getElementById('profile-email').innerText = user.email;
+
+                startGlobalChatListener();
+                startFeedListener();
+                startActiveChatsListListener();
+                loadProfilePosts();
+            } else {
+                document.getElementById('auth-screen').classList.remove('hidden');
+            }
+        });
+
+        document.getElementById('google-login-btn').addEventListener('click', () => {
+            signInWithPopup(auth, provider).catch(err => console.error("خطأ بتسجيل الدخول: ", err));
+        });
+
+        // ------------------ إدارة جلب وعرض الشات العام (أخر 24 ساعة فقط - خفيف جداً) ------------------
+        function startGlobalChatListener() {
+            const messagesBox = document.getElementById('global-messages-box');
+            // احتساب الـ 24 ساعة الماضية لتفادي قراءة البيانات القديمة والبطء
+            const oneDayAgo = Date.now() - (24 * 60 * 60 * 1000);
+
+            const q = query(
+                collection(db, "global_chat"),
+                where("createdAt", ">=", oneDayAgo),
+                orderBy("createdAt", "asc"),
+                limit(50)
+            );
+
+            onSnapshot(q, (snapshot) => {
+                messagesBox.innerHTML = "";
+                if(snapshot.empty) {
+                    messagesBox.innerHTML = `<div class="text-center text-xs text-gray-600 py-10">الشات هادئ حالياً.. ابدأ وتحدث الآن بجرأة وثقة!</div>`;
+                    return;
+                }
+                snapshot.forEach((doc) => {
+                    const data = doc.data();
+                    const isMe = data.senderId === currentUser.uid;
+                    const msgEl = document.createElement('div');
+                    msgEl.className = `flex gap-2.5 max-w-[85%] ${isMe ? 'mr-auto flex-row-reverse' : 'ml-auto'}`;
+                    msgEl.innerHTML = `
+                        <div class="w-8 h-8 rounded-full overflow-hidden bg-gray-800 shrink-0 cursor-pointer border border-gray-700" onclick="window.openUserModal('${data.senderId}')">
+                            <img src="${data.senderAvatar}" class="w-full h-full object-cover">
+                        </div>
+                        <div>
+                            <div class="text-[10px] text-gray-500 mb-0.5 px-1">${data.senderName}</div>
+                            <div class="p-3 text-xs rounded-2xl leading-relaxed break-all ${isMe ? 'gradient-bg text-white rounded-tr-none' : 'bg-[#16161f] text-gray-200 rounded-tl-none border border-gray-800'}">
+                                ${escapeHTML(data.message)}
+                            </div>
+                        </div>
+                    `;
+                    messagesBox.appendChild(msgEl);
+                });
+                messagesBox.scrollTop = messagesBox.scrollHeight;
+            }, (error) => console.error("خطأ استماع الشات العام: ", error));
+        }
+
+        // إرسال رسالة للشات العام
+        document.getElementById('send-global-btn').addEventListener('click', sendGlobalMessage);
+        document.getElementById('global-msg-input').addEventListener('keypress', (e) => { if(e.key === 'Enter') sendGlobalMessage(); });
+
+        async function sendGlobalMessage() {
+            const input = document.getElementById('global-msg-input');
+            const text = input.value.trim();
+            if(!text || !currentUser) return;
+
+            input.value = "";
+            const userDoc = await getDoc(doc(db, "users", currentUser.uid));
+            const userData = userDoc.data();
+
+            await addDoc(collection(db, "global_chat"), {
+                senderId: currentUser.uid,
+                senderName: userData.displayName,
+                senderAvatar: userData.avatarUrl,
+                message: text,
+                createdAt: Date.now()
+            });
+        }
+
+        // ------------------ التبويب الرئيسي (المنشورات ومشاركة الصور بـ Base64) ------------------
+        document.getElementById('post-file').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if(!file) return;
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                globalPostImageBase64 = reader.result;
+                document.getElementById('post-img-preview').src = globalPostImageBase64;
+                document.getElementById('post-preview-container').classList.remove('hidden');
+            };
+            reader.readAsDataURL(file);
+        });
+
+        document.getElementById('submit-post-btn').addEventListener('click', async () => {
+            const textInput = document.getElementById('post-input');
+            const text = textInput.value.trim();
+            if(!text && !globalPostImageBase64) return;
+
+            const userDoc = await getDoc(doc(db, "users", currentUser.uid));
+            const userData = userDoc.data();
+
+            await addDoc(collection(db, "posts"), {
+                userId: currentUser.uid,
+                userName: userData.displayName,
+                userAvatar: userData.avatarUrl,
+                text: text,
+                image: globalPostImageBase64,
+                createdAt: Date.now()
+            });
+
+            textInput.value = "";
+            globalPostImageBase64 = "";
+            document.getElementById('post-preview-container').classList.add('hidden');
+            loadProfilePosts();
+        });
+
+        function startFeedListener() {
+            const feedBox = document.getElementById('home-posts-feed');
+            const q = query(collection(db, "posts"), orderBy("createdAt", "desc"), limit(25));
+            onSnapshot(q, (snapshot) => {
+                feedBox.innerHTML = "";
+                snapshot.forEach(doc => {
+                    const post = doc.data();
+                    const card = document.createElement('div');
+                    card.className = "bg-[#16161f] p-4 rounded-2xl border border-gray-800 space-y-3";
+                    card.innerHTML = `
+                        <div class="flex items-center gap-3">
+                            <div class="w-9 h-9 rounded-full overflow-hidden bg-gray-800 border border-gray-700 cursor-pointer" onclick="window.openUserModal('${post.userId}')">
+                                <img src="${post.userAvatar}" class="w-full h-full object-cover">
+                            </div>
+                            <div>
+                                <h4 class="text-xs font-bold">${post.userName}</h4>
+                                <p class="text-[9px] text-gray-500">${new Date(post.createdAt).toLocaleTimeString('ar-EG', {hour:'2-digit', minute:'2-digit'})}</p>
+                            </div>
+                        </div>
+                        ${post.text ? `<p class="text-xs text-gray-200 leading-relaxed">${escapeHTML(post.text)}</p>` : ''}
+                        ${post.image ? `<img src="${post.image}" class="w-full max-h-64 object-cover rounded-xl border border-gray-800">` : ''}
+                    `;
+                    feedBox.appendChild(card);
+                });
+            });
+        }
+
+        // ------------------ شاتاتي والمحادثات الخاصة ------------------
+        window.openPrivateChat = async function(targetUserId, targetName, targetAvatar) {
+            document.getElementById('user-modal').classList.add('hidden');
+            document.getElementById('private-target-name').innerText = targetName;
+            document.getElementById('private-target-avatar').innerHTML = `<img src="${targetAvatar}" class="w-full h-full object-cover">`;
+            document.getElementById('private-chat-window').classList.remove('hidden');
+
+            if(activePrivateChatUnsubscribe) activePrivateChatUnsubscribe();
+
+            // إنشاء معرّف محادثة موحد وثابت بين أي شخصين بدون تكرار (دمج مرتب أبجدياً)
+            const chatId = currentUser.uid < targetUserId ? `${currentUser.uid}_${targetUserId}` : `${targetUserId}_${currentUser.uid}`;
+            
+            // تسجيل الرابط في قائمة الشاتات النشطة لكلا الطرفين لسهولة الوصول
+            await setDoc(doc(db, "active_chats", chatId), {
+                chatId: chatId,
+                users: [currentUser.uid, targetUserId],
+                lastUpdate: Date.now()
+            }, { merge: true });
+
+            const box = document.getElementById('private-messages-box');
+            const q = query(collection(db, "active_chats", chatId, "messages"), orderBy("createdAt", "asc"), limit(40));
+
+            activePrivateChatUnsubscribe = onSnapshot(q, (snapshot) => {
+                box.innerHTML = "";
+                snapshot.forEach(doc => {
+                    const m = doc.data();
+                    const isMe = m.senderId === currentUser.uid;
+                    const div = document.createElement('div');
+                    div.className = `flex max-w-[80%] ${isMe ? 'mr-auto' : 'ml-auto'}`;
+                    div.innerHTML = `
+                        <div class="p-3 text-xs rounded-2xl ${isMe ? 'gradient-bg text-white rounded-tr-none' : 'bg-[#16161f] text-gray-200 rounded-tl-none border border-gray-800'}">
+                            ${escapeHTML(m.message)}
+                        </div>
+                    `;
+                    box.appendChild(div);
+                });
+                box.scrollTop = box.scrollHeight;
+            });
+
+            // زر الإرسال الخاص
+            document.getElementById('send-private-btn').onclick = () => sendPrivateMessage(chatId);
+        };
+
+        async function sendPrivateMessage(chatId) {
+            const input = document.getElementById('private-msg-input');
+            const val = input.value.trim();
+            if(!val) return;
+            input.value = "";
+
+            await addDoc(collection(db, "active_chats", chatId, "messages"), {
+                senderId: currentUser.uid,
+                message: val,
+                createdAt: Date.now()
+            });
+
+            await setDoc(doc(db, "active_chats", chatId), { lastUpdate: Date.now() }, { merge: true });
+        }
+
+        document.getElementById('close-private-chat').addEventListener('click', () => {
+            document.getElementById('private-chat-window').classList.add('hidden');
+            if(activePrivateChatUnsubscribe) activePrivateChatUnsubscribe();
+        });
+
+        function startActiveChatsListListener() {
+            const listContainer = document.getElementById('private-chats-list');
+            const q = query(collection(db, "active_chats"), where("users", "array-contains", currentUser.uid), orderBy("lastUpdate", "desc"));
+            
+            onSnapshot(q, (snapshot) => {
+                if(snapshot.empty) return;
+                listContainer.innerHTML = "";
+                snapshot.forEach(async docSnapshot => {
+                    const chatData = docSnapshot.data();
+                    const targetId = chatData.users.find(id => id !== currentUser.uid);
+                    if(!targetId) return;
+
+                    const targetUserDoc = await getDoc(doc(db, "users", targetId));
+                    if(!targetUserDoc.exists()) return;
+                    const u = targetUserDoc.data();
+
+                    const item = document.createElement('div');
+                    item.className = "bg-[#16161f] p-3 rounded-xl flex items-center justify-between border border-gray-800 cursor-pointer hover:bg-[#1f1f2e]";
+                    item.onclick = () => window.openPrivateChat(u.uid, u.displayName, u.avatarUrl);
+                    item.innerHTML = `
+                        <div class="flex items-center gap-3">
+                            <img src="${u.avatarUrl}" class="w-9 h-9 rounded-full bg-gray-800">
+                            <span class="text-xs font-bold text-gray-200">${u.displayName}</span>
+                        </div>
+                        <span class="text-[10px] text-gray-500">مراسلة الآن</span>
+                    `;
+                    listContainer.appendChild(item);
+                });
+            });
+        }
+
+        // ------------------ مودال استعراض الحساب والمنشورات السريع والذكي ------------------
+        window.openUserModal = async function(userId) {
+            const userDoc = await getDoc(doc(db, "users", userId));
+            if(!userDoc.exists()) return;
+            const u = userDoc.data();
+
+            document.getElementById('modal-username').innerText = u.displayName;
+            document.getElementById('modal-avatar').innerHTML = `<img src="${u.avatarUrl}" class="w-full h-full object-cover">`;
+            
+            const grid = document.getElementById('modal-posts-grid');
+            grid.innerHTML = "";
+
+            const q = query(collection(db, "posts"), where("userId", "==", userId), limit(6));
+            const querySnapshot = await getDoc(q); // قراءة سريعة لمرة واحدة
+            
+            let hasImages = false;
+            if(querySnapshot && querySnapshot.forEach) {
+                querySnapshot.forEach(doc => {
+                    const post = doc.data();
+                    if(post.image) {
+                        hasImages = true;
+                        grid.innerHTML += `<img src="${post.image}" class="w-full h-12 object-cover rounded-lg border border-gray-800">`;
+                    }
+                });
+            }
+            if(!hasImages) grid.innerHTML = `<p class="text-[10px] text-gray-500 text-center col-span-3 py-3">لا توجد صور مرفوعة بعد.</p>`;
+
+            document.getElementById('modal-chat-btn').onclick = () => window.openPrivateChat(u.uid, u.displayName, u.avatarUrl);
+            document.getElementById('user-modal').classList.remove('hidden');
+        };
+
+        document.getElementById('close-modal-btn').addEventListener('click', () => document.getElementById('user-modal').classList.add('hidden'));
+
+        async function loadProfilePosts() {
+            if(!currentUser) return;
+            const grid = document.getElementById('profile-posts-grid');
+            grid.innerHTML = "";
+            const q = query(collection(db, "posts"), where("userId", "==", currentUser.uid));
+            // لضمان استجابة صاروخية نقرأها مباشرة
+            onSnapshot(q, (snap) => {
+                grid.innerHTML = "";
+                snap.forEach(doc => {
+                    const p = doc.data();
+                    if(p.image) {
+                        grid.innerHTML += `<img src="${p.image}" class="w-full h-20 object-cover rounded-xl border border-gray-800 shadow">`;
+                    }
+                });
+            });
+        }
+
+        // ------------------ تبويب الألعاب وحاسبة الحب الذكية واللحظية ------------------
+        document.getElementById('calculate-love-btn').addEventListener('click', () => {
+            const n1 = document.getElementById('love-name1').value.trim();
+            const n2 = document.getElementById('love-name2').value.trim();
+            if(!n1 || !n2) return;
+
+            // خوارزمية ذكية مدمجة (Deterministic Hashing) تعطي نتيجة ثابتة لنفس الأسمين للأبد دون لاج ودون اتصال داتابيز!
+            const combinedStr = [n1, n2].sort().join("").toLowerCase().replace(/\s+/g, '');
+            let hash = 0;
+            for (let i = 0; i < combinedStr.length; i++) {
+                hash = combinedStr.charCodeAt(i) + ((hash << 5) - hash);
+            }
+            const score = Math.abs(hash % 41) + 60; // توليد رقم ثابت وحماسي بين 60% و 100% لزيادة البهجة
+
+            let status = "توافق مذهل! أنتم ثنائي مثالي يعكس طاقة قلوب NXL المتجانسة. ✨";
+            if(score < 75) status = "ارتباط رائع وقوي، يحتاج فقط إلى القليل من المرونة والتفاهم المشترك.";
+            else if(score > 90) status = "حب حقيقي وأسطوري! القلوب متطابقة ومتقاربة لأبعد الحدود! 🔥❤️";
+
+            document.getElementById('love-percentage').innerText = `${score}%`;
+            document.getElementById('love-status').innerText = status;
+            document.getElementById('love-result').classList.remove('hidden');
+        });
+
+        // لعبة قياس سرعة رد الفعل السريع (Reaction Test)
+        let reactionTimeout = null;
+        let reactionStartTime = 0;
+        const reactionBox = document.getElementById('reaction-box');
+        const reactionScore = document.getElementById('reaction-score');
+
+        reactionBox.addEventListener('click', () => {
+            if (reactionBox.classList.contains('bg-[#1f1f2e]')) {
+                // بدء الاختبار
+                reactionBox.innerText = "انتظر ظهور اللون الأخضر...";
+                reactionBox.style.backgroundColor = "#b45309"; // لون برتقالي انتظار
+                reactionScore.innerText = "";
+                
+                const randomDelay = Math.random() * 3000 + 1500; // بين 1.5 و 4.5 ثانية
+                reactionTimeout = setTimeout(() => {
+                    reactionBox.style.backgroundColor = "#10b981"; // أخضر فوري
+                    reactionBox.innerText = "اضغط الآن بسرعة!!!";
+                    reactionStartTime = Date.now();
+                }, randomDelay);
+            } else if (reactionBox.style.backgroundColor === "rgb(16, 185, 129)") {
+                // تم الضغط في الوقت الصحيح الأخضر
+                const duration = Date.now() - reactionStartTime;
+                reactionScore.innerText = `⏱️ سرعة استجابتك: ${duration} مللي ثانية!`;
+                resetReactionBox();
+            } else {
+                // ضغط مبكر خاطئ
+                clearTimeout(reactionTimeout);
+                reactionScore.innerText = "❌ ضغطت بدري جداً! حاول مرة أخرى بتركيز.";
+                resetReactionBox();
+            }
+        });
+
+        function resetReactionBox() {
+            reactionBox.style.backgroundColor = "";
+            reactionBox.className = "w-full h-32 bg-[#1f1f2e] rounded-xl flex items-center justify-center font-bold text-sm cursor-pointer transition active:scale-95 border border-gray-8xl";
+            reactionBox.innerText = "اضغط هنا للبدء من جديد";
+        }
+
+        // دالة لمنع حقن الأكواد الخبيثة وسد الثغرات
+        function escapeHTML(str) {
+            return str.replace(/[&<>'"]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag));
+        }
+    </script>
+
+    <script>
+        function switchTab(tabId, btnElement) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.getElementById(`tab-${tabId}`).classList.add('active');
+            
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('text-[#ff2a85]');
+                btn.classList.add('text-gray-400');
+            });
+            btnElement.classList.remove('text-gray-400');
+            btnElement.classList.add('text-[#ff2a85]');
+        }
+    </script>
+</body>
+</html>
