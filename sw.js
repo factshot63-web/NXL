@@ -2,7 +2,7 @@ const CACHE_NAME = 'nxl-cache-v1';
 const urlsToCache = [
   './Nxl.html',
   './manifest.json',
-  './image.png'
+  './image.PNG'
 ];
 
 self.addEventListener('install', event => {
