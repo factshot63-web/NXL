@@ -28,7 +28,7 @@
 
     <div id="auth-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#0d0d12] px-6">
         <div class="text-center max-w-md w-full bg-[#16161f] p-8 rounded-3xl border border-gray-800 shadow-2xl">
-            <div class="w-20 h-20 mx-auto rounded-full gradient-bg flex items-center justify-center mb-4 shadow-lg shadow-[#ff2a85]/20">
+            <div class="w-20 h-20 mx-auto rounded-full gradient-bg flex items-center justify-center mb-4 shadow-xl shadow-[#ff2a85]/40 animate-pulse">
                 <span class="text-2xl font-black tracking-wider text-white">NXL</span>
             </div>
             <h1 class="text-2xl font-bold mb-1">مرحباً بك في <span class="gradient-text">NXL</span></h1>
@@ -41,7 +41,7 @@
                 <p id="auth-error" class="text-red-500 text-xs hidden font-bold"></p>
                 <p id="auth-success" class="text-green-500 text-xs hidden font-bold"></p>
 
-                <button id="login-btn" class="w-full py-3 gradient-bg text-white font-bold rounded-xl flex items-center justify-center gap-2 transition active:scale-95 mt-2">
+                <button id="login-btn" class="w-full py-3 gradient-bg text-white font-bold rounded-xl flex items-center justify-center gap-2 transition active:scale-95 mt-2 shadow-lg shadow-[#ff2a85]/20">
                     تسجيل الدخول
                 </button>
                 <button id="signup-btn" class="w-full py-3 bg-gray-800 text-white font-bold rounded-xl flex items-center justify-center gap-2 transition active:scale-95 hover:bg-gray-700">
@@ -77,7 +77,7 @@
 
     <header class="bg-[#16161f] py-3 px-4 border-b border-gray-800 flex justify-between items-center shrink-0">
         <div class="flex items-center gap-2">
-            <div class="w-8 h-8 rounded-full gradient-bg flex items-center justify-center font-black text-xs text-white">NXL</div>
+            <div class="w-8 h-8 rounded-full gradient-bg flex items-center justify-center font-black text-xs text-white shadow-md shadow-[#ff2a85]/30">NXL</div>
             <div>
                 <h1 class="text-sm font-bold tracking-wide">NXL ELMAHALLA</h1>
                 <p class="text-[9px] text-gray-400 -mt-1">سهولة ارتباط .. قلوب بتتقرب</p>
@@ -85,7 +85,7 @@
         </div>
         <div class="flex items-center gap-3">
             <button id="notifyBtn" class="text-lg hidden active:scale-95" title="تفعيل الإشعارات">🔔</button>
-            <div id="user-header-avatar" class="w-8 h-8 rounded-full border border-gray-700 bg-gray-800 overflow-hidden hidden cursor-pointer" onclick="switchTab('profile', document.getElementById('nav-profile-btn'))"></div>
+            <div id="user-header-avatar" class="w-8 h-8 rounded-full border border-gray-700 bg-gray-800 overflow-hidden hidden cursor-pointer transition hover:border-[#ff2a85]" onclick="switchTab('profile', document.getElementById('nav-profile-btn'))"></div>
         </div>
     </header>
 
@@ -95,11 +95,11 @@
             <div class="bg-[#16161f] p-4 rounded-2xl mb-4 border border-gray-800">
                 <textarea id="post-input" placeholder="شارك لحظاتك... (تختفي بعد 72 ساعة)" class="w-full bg-[#1f1f2e] text-sm text-white rounded-xl p-3 focus:outline-none resize-none h-20"></textarea>
                 <div class="flex justify-between items-center mt-3">
-                    <label class="cursor-pointer text-xs text-gray-400 bg-[#1f1f2e] px-3 py-1.5 rounded-lg flex gap-1">
+                    <label class="cursor-pointer text-xs text-gray-400 bg-[#1f1f2e] px-3 py-1.5 rounded-lg flex gap-1 hover:bg-gray-800 transition">
                         🖼️ إضافة صورة
                         <input type="file" id="post-file" accept="image/*" class="hidden">
                     </label>
-                    <button id="submit-post-btn" class="gradient-bg text-xs font-bold text-white px-5 py-2 rounded-xl active:scale-95">نشر</button>
+                    <button id="submit-post-btn" class="gradient-bg text-xs font-bold text-white px-5 py-2 rounded-xl active:scale-95 shadow-md shadow-[#ff2a85]/20">نشر</button>
                 </div>
                 <div id="post-preview-container" class="mt-2 hidden">
                     <img id="post-img-preview" class="w-20 h-20 object-cover rounded-lg border border-gray-700">
@@ -125,20 +125,20 @@
 
                 <div class="flex gap-2 items-center">
                     <input type="text" id="global-msg-input" placeholder="رسالة عامة..." class="flex-1 bg-[#1f1f2e] text-sm rounded-xl px-4 py-3 text-white focus:outline-none">
-                    <button id="send-global-btn" class="w-11 h-11 gradient-bg rounded-xl flex items-center justify-center text-white font-bold active:scale-95">🚀</button>
+                    <button id="send-global-btn" class="w-11 h-11 gradient-bg rounded-xl flex items-center justify-center text-white font-bold active:scale-95 shadow-md shadow-[#ff2a85]/20">🚀</button>
                 </div>
             </div>
         </section>
 
         <section id="tab-games" class="tab-content hidden p-4 max-w-lg mx-auto space-y-6">
-            <div class="bg-[#16161f] p-6 rounded-2xl border border-gray-800 text-center">
-                <h2 class="text-lg font-bold mb-1">❤️ حاسبة الحب NXL</h2>
-                <input type="text" id="love-name1" placeholder="اسمك" class="w-full bg-[#1f1f2e] text-center text-sm rounded-xl py-2 mt-3 text-white">
-                <input type="text" id="love-name2" placeholder="اسم الطرف التاني" class="w-full bg-[#1f1f2e] text-center text-sm rounded-xl py-2 mt-3 text-white">
-                <button id="calculate-love-btn" class="w-full py-2.5 gradient-bg rounded-xl text-sm font-bold text-white mt-4 active:scale-95">احسب النسبة</button>
-                <div id="love-result" class="mt-4 hidden">
-                    <div class="text-4xl font-black gradient-text mb-1" id="love-percentage">0%</div>
-                    <div class="text-xs text-gray-300" id="love-status"></div>
+            <div class="bg-[#16161f] p-6 rounded-2xl border border-gray-800 text-center relative overflow-hidden">
+                <h2 class="text-lg font-bold mb-1 relative z-10">❤️ حاسبة الحب NXL</h2>
+                <input type="text" id="love-name1" placeholder="اسمك" class="w-full bg-[#1f1f2e] text-center text-sm rounded-xl py-2 mt-3 text-white relative z-10">
+                <input type="text" id="love-name2" placeholder="اسم الطرف التاني" class="w-full bg-[#1f1f2e] text-center text-sm rounded-xl py-2 mt-3 text-white relative z-10">
+                <button id="calculate-love-btn" class="w-full py-2.5 gradient-bg rounded-xl text-sm font-bold text-white mt-4 active:scale-95 shadow-md shadow-[#ff2a85]/20 relative z-10">احسب النسبة</button>
+                <div id="love-result" class="mt-4 hidden relative z-10">
+                    <div class="text-5xl font-black gradient-text mb-1 drop-shadow-lg" id="love-percentage">0%</div>
+                    <div class="text-xs text-gray-300 font-bold" id="love-status"></div>
                 </div>
             </div>
         </section>
@@ -146,7 +146,7 @@
         <section id="tab-chats" class="tab-content hidden p-4 max-w-lg mx-auto">
             <div class="bg-[#16161f] p-3 rounded-xl border border-gray-800 mb-4 flex gap-2">
                 <input type="text" id="search-username-input" placeholder="ابحث باسم المستخدم (@username)..." class="flex-1 bg-[#1f1f2e] text-xs rounded-lg px-3 py-2 text-white focus:outline-none text-left dir-ltr">
-                <button id="search-user-btn" class="bg-gray-700 text-white px-4 rounded-lg text-xs font-bold active:scale-95">بحث</button>
+                <button id="search-user-btn" class="bg-gray-700 hover:bg-[#ff2a85] text-white px-4 rounded-lg text-xs font-bold active:scale-95 transition-colors">بحث</button>
             </div>
             <h2 class="text-sm font-bold mb-3 px-1 text-gray-400">الدردشات الخاصة بك</h2>
             <div id="private-chats-list" class="space-y-1"></div>
@@ -154,13 +154,13 @@
 
         <section id="tab-profile" class="tab-content hidden p-4 max-w-lg mx-auto text-center">
             <div class="bg-[#16161f] p-6 rounded-3xl border border-gray-800 mb-6 relative">
-                <button id="logout-btn" class="absolute top-4 left-4 text-xs bg-red-500/20 text-red-500 px-3 py-1 rounded-lg font-bold">خروج</button>
-                <div id="profile-avatar-container" class="w-20 h-20 mx-auto rounded-full bg-gray-800 border-2 border-[#ff2a85] overflow-hidden mb-3"></div>
+                <button id="logout-btn" class="absolute top-4 left-4 text-xs bg-red-500/20 text-red-500 hover:bg-red-500 hover:text-white transition px-3 py-1 rounded-lg font-bold">خروج</button>
+                <div id="profile-avatar-container" class="w-20 h-20 mx-auto rounded-full bg-gray-800 border-2 border-[#ff2a85] overflow-hidden mb-3 shadow-lg shadow-[#ff2a85]/30"></div>
                 <h2 id="profile-nickname" class="text-lg font-bold">اللقب</h2>
                 <p id="profile-username-display" class="text-sm text-[#ff7300] font-bold mb-1">@username</p>
                 <p id="profile-email" class="text-xs text-gray-500 mb-4">email</p>
             </div>
-            <h3 class="text-sm font-bold text-right mb-3 px-1">صوري المرفوعة:</h3>
+            <h3 class="text-sm font-bold text-right mb-3 px-1 text-gray-400">صوري المرفوعة:</h3>
             <div id="profile-posts-grid" class="grid grid-cols-3 gap-2"></div>
         </section>
     </main>
@@ -168,13 +168,13 @@
     <div id="private-chat-window" class="fixed inset-0 z-50 bg-[#0d0d12] flex flex-col hidden">
         <header class="bg-[#16161f] py-3 px-4 border-b border-gray-800 flex items-center justify-between shrink-0">
             <div class="flex items-center gap-3">
-                <button id="close-private-chat" class="text-gray-400 hover:text-white font-bold text-sm ml-1 flex items-center gap-1">
+                <button id="close-private-chat" class="text-gray-400 hover:text-white font-bold text-sm ml-1 flex items-center gap-1 transition">
                     <span>➡️</span> رجوع
                 </button>
                 <div id="private-target-avatar" class="w-10 h-10 rounded-full overflow-hidden bg-gray-800 border border-gray-700"></div>
                 <div>
                     <h3 id="private-target-name" class="text-sm font-bold text-white">المستلم</h3>
-                    <p class="text-[10px] text-green-400 font-bold">نشط الآن في NXL</p>
+                    <p class="text-[10px] text-green-400 font-bold animate-pulse">نشط الآن في NXL</p>
                 </div>
             </div>
         </header>
@@ -189,29 +189,28 @@
         </div>
     </div>
 
-    <div id="user-modal" class="fixed inset-0 bg-black/80 z-50 flex items-center justify-center hidden px-4">
-        <div class="bg-[#16161f] w-full max-w-sm rounded-3xl border border-gray-800 p-6 relative text-center">
-            <button id="close-modal-btn" class="absolute top-4 left-4 text-gray-400 text-2xl">&times;</button>
-            <div id="modal-avatar" class="w-20 h-20 mx-auto rounded-full bg-gray-800 border-2 border-[#ff7300] overflow-hidden mb-3"></div>
+    <div id="user-modal" class="fixed inset-0 bg-black/80 z-50 flex items-center justify-center hidden px-4 backdrop-blur-sm">
+        <div class="bg-[#16161f] w-full max-w-sm rounded-3xl border border-gray-800 p-6 relative text-center shadow-2xl shadow-[#ff7300]/20">
+            <button id="close-modal-btn" class="absolute top-4 left-4 text-gray-400 hover:text-white transition text-2xl">&times;</button>
+            <div id="modal-avatar" class="w-20 h-20 mx-auto rounded-full bg-gray-800 border-2 border-[#ff7300] overflow-hidden mb-3 shadow-lg shadow-[#ff7300]/30"></div>
             <h3 id="modal-nickname" class="font-bold text-lg">اللقب</h3>
-            <p id="modal-username-txt" class="text-sm text-[#ff7300] mb-4">@username</p>
-            <button id="modal-chat-btn" class="w-full py-2.5 gradient-bg rounded-xl text-sm font-bold text-white active:scale-95">مراسلة خاصة</button>
+            <p id="modal-username-txt" class="text-sm text-[#ff7300] mb-4 font-medium">@username</p>
+            <button id="modal-chat-btn" class="w-full py-2.5 gradient-bg rounded-xl text-sm font-bold text-white active:scale-95 shadow-md shadow-[#ff2a85]/30">مراسلة خاصة</button>
         </div>
     </div>
 
     <nav class="fixed bottom-0 left-0 right-0 h-16 bg-[#16161f]/95 border-t border-gray-800 flex justify-around items-center z-30 max-w-lg mx-auto rounded-t-2xl backdrop-blur-md">
-        <button onclick="switchTab('home', this)" class="nav-btn text-[#ff2a85] font-bold text-[10px]">الرئيسية</button>
-        <button onclick="switchTab('global', this)" class="nav-btn text-gray-400 font-bold text-[10px]">شات عام</button>
-        <button onclick="switchTab('games', this)" class="nav-btn text-gray-400 font-bold text-[10px]">ألعاب</button>
-        <button onclick="switchTab('chats', this)" class="nav-btn text-gray-400 font-bold text-[10px]">شاتاتي</button>
-        <button id="nav-profile-btn" onclick="switchTab('profile', this)" class="nav-btn text-gray-400 font-bold text-[10px]">ملفي</button>
+        <button onclick="switchTab('home', this)" class="nav-btn text-[#ff2a85] font-bold text-[10px] transition-colors">الرئيسية</button>
+        <button onclick="switchTab('global', this)" class="nav-btn text-gray-400 hover:text-gray-200 font-bold text-[10px] transition-colors">شات عام</button>
+        <button onclick="switchTab('games', this)" class="nav-btn text-gray-400 hover:text-gray-200 font-bold text-[10px] transition-colors">ألعاب</button>
+        <button onclick="switchTab('chats', this)" class="nav-btn text-gray-400 hover:text-gray-200 font-bold text-[10px] transition-colors">شاتاتي</button>
+        <button id="nav-profile-btn" onclick="switchTab('profile', this)" class="nav-btn text-gray-400 hover:text-gray-200 font-bold text-[10px] transition-colors">ملفي</button>
     </nav>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { getDatabase, ref, set, update, push, onValue, get, child, query, limitToLast } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
-        // الإضافة الجديدة لمكتبة الإشعارات
         import { getMessaging, getToken } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging.js";
 
         const firebaseConfig = {
@@ -228,7 +227,7 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getDatabase(app);
-        const messaging = getMessaging(app); // تشغيل الإشعارات
+        const messaging = getMessaging(app); 
 
         let currentUser = null;
         let userData = null;
@@ -236,10 +235,8 @@
         let activeChatRef = null;
         let openChatId = null; 
         
-        // متغيرات للتحكم في الرد
         let replyingToMsg = null;
 
-        // دوال الإشعارات والأخطاء
         const emailInput = document.getElementById('auth-email');
         const passInput = document.getElementById('auth-password');
         const errorText = document.getElementById('auth-error');
@@ -275,7 +272,7 @@
             if (user) {
                 currentUser = user;
                 document.getElementById('auth-screen').classList.add('hidden');
-                document.getElementById('notifyBtn').classList.remove('hidden'); // إظهار جرس الإشعارات
+                document.getElementById('notifyBtn').classList.remove('hidden'); 
                 const userSnapshot = await get(child(ref(db), `users/${user.uid}`));
                 if (userSnapshot.exists()) { userData = userSnapshot.val(); initAppUI(); } 
                 else { document.getElementById('setup-profile-screen').classList.remove('hidden'); }
@@ -286,7 +283,7 @@
             }
         });
 
-        // تفعيل الإشعارات بالـ VAPID Key الخاص بك
+        // 🟢 التعديل الأول: تفعيل الإشعارات مع تفصيل دقيق لرسالة الخطأ 
         document.getElementById('notifyBtn').addEventListener('click', async () => {
             if (!currentUser) return;
             const permission = await Notification.requestPermission();
@@ -298,8 +295,9 @@
                     await set(ref(db, 'users/' + currentUser.uid + '/notificationToken'), token);
                     alert("تم تفعيل الإشعارات وحفظها بنجاح! 🔔");
                 } catch (error) {
-                    console.error("خطأ في التنبيهات:", error);
-                    alert("حدث خطأ أثناء التفعيل.");
+                    console.error("تفاصيل الخطأ التقني:", error);
+                    // هنا سيظهر لك السبب الحقيقي للخطأ بدلاً من مجرد "حدث خطأ"
+                    alert("تعذر التفعيل، الخطأ هو: " + error.message);
                 }
             } else {
                 alert("لم توافق على تفعيل التنبيهات.");
@@ -332,7 +330,6 @@
             startGlobalChat(); startPostsFeed(); startMyChatsList();
         }
 
-        // --- نظام الرد (إلغاء الرد وتجهيز الرد) ---
         document.getElementById('cancelReplyBtn').addEventListener('click', () => {
             replyingToMsg = null;
             document.getElementById('reply-banner').classList.add('hidden');
@@ -346,7 +343,6 @@
             document.getElementById('global-msg-input').focus();
         };
 
-        // --- الشات العام (مطور بنظام الرد) ---
         function startGlobalChat() {
             const box = document.getElementById('global-messages-box');
             const chatQuery = query(ref(db, 'global_chat'), limitToLast(50));
@@ -359,7 +355,6 @@
                     
                     const isMe = msg.senderId === currentUser.uid;
                     
-                    // بناء شكل الرد داخل الرسالة لو موجود
                     let replyHTML = '';
                     if (msg.replyTo) {
                         replyHTML = `
@@ -372,13 +367,13 @@
 
                     box.innerHTML += `
                         <div class="flex gap-2 w-full mb-1 ${isMe ? 'flex-row-reverse' : ''}">
-                            <img src="${msg.senderAvatar}" class="w-8 h-8 rounded-full cursor-pointer bg-gray-800 shrink-0" onclick="window.openUserModal('${msg.senderId}')">
+                            <img src="${msg.senderAvatar}" class="w-8 h-8 rounded-full cursor-pointer bg-gray-800 shrink-0 border border-gray-700" onclick="window.openUserModal('${msg.senderId}')">
                             <div class="flex flex-col ${isMe ? 'items-end' : 'items-start'} max-w-[75%]">
                                 <div class="flex items-center gap-2 mb-0.5">
-                                    <span class="text-[10px] text-gray-500 px-1">${msg.senderNickname}</span>
+                                    <span class="text-[10px] text-gray-500 px-1 font-bold">${msg.senderNickname}</span>
                                     <button onclick="window.prepareReply('${msgId}', '${msg.senderNickname}', '${escapeHTML(msg.text)}')" class="text-[9px] text-gray-500 hover:text-[#ff2a85] transition active:scale-95">↩️ رد</button>
                                 </div>
-                                <div class="p-2.5 text-xs rounded-xl ${isMe ? 'gradient-bg text-white rounded-tr-none' : 'bg-[#1f1f2e] text-white rounded-tl-none'} w-full break-words">
+                                <div class="p-2.5 text-xs rounded-xl ${isMe ? 'gradient-bg text-white rounded-tr-none shadow-sm shadow-[#ff2a85]/10' : 'bg-[#1f1f2e] text-white rounded-tl-none'} w-full break-words">
                                     ${replyHTML}
                                     ${escapeHTML(msg.text)}
                                 </div>
@@ -400,19 +395,13 @@
                 timestamp: Date.now() 
             };
 
-            // لو كان المستخدم بيرد على رسالة، بنضيفها للبيانات
-            if (replyingToMsg) {
-                msgData.replyTo = replyingToMsg;
-            }
+            if (replyingToMsg) { msgData.replyTo = replyingToMsg; }
 
             push(ref(db, 'global_chat'), msgData).then(() => {
-                // تصفير شريط الرد بعد الإرسال
-                replyingToMsg = null;
-                document.getElementById('reply-banner').classList.add('hidden');
+                replyingToMsg = null; document.getElementById('reply-banner').classList.add('hidden');
             });
         };
 
-        // --- المنشورات ---
         document.getElementById('post-file').onchange = e => {
             const f = e.target.files[0]; if(!f) return;
             const r = new FileReader(); r.onload = () => { globalPostImageBase64 = r.result; document.getElementById('post-img-preview').src = globalPostImageBase64; document.getElementById('post-preview-container').classList.remove('hidden'); }; r.readAsDataURL(f);
@@ -421,33 +410,107 @@
         document.getElementById('submit-post-btn').onclick = () => {
             const text = document.getElementById('post-input').value.trim(); if(!text && !globalPostImageBase64) return;
             document.getElementById('post-input').value = ""; document.getElementById('post-preview-container').classList.add('hidden');
-            push(ref(db, 'posts'), { userId: currentUser.uid, userNickname: userData.nickname, userUsername: userData.username, userAvatar: userData.avatarUrl, text: text, image: globalPostImageBase64, timestamp: Date.now() });
+            push(ref(db, 'posts'), { 
+                userId: currentUser.uid, 
+                userNickname: userData.nickname, 
+                userUsername: userData.username, 
+                userAvatar: userData.avatarUrl, 
+                text: text, 
+                image: globalPostImageBase64, 
+                timestamp: Date.now(),
+                likeCount: 0 
+            });
             globalPostImageBase64 = "";
         };
 
+        // 🟢 التعديل الثاني: إضافة ميزة النقر المزدوج للإعجاب (Gamification / UI Effect)
         function startPostsFeed() {
             const feed = document.getElementById('home-posts-feed'); const grid = document.getElementById('profile-posts-grid');
             const postsQuery = query(ref(db, 'posts'), limitToLast(100));
+            
             onValue(postsQuery, (snapshot) => {
                 feed.innerHTML = ""; grid.innerHTML = ""; const now = Date.now(); const threeDays = 72 * 60 * 60 * 1000;
-                let postsArray = []; snapshot.forEach(c => { postsArray.push(c.val()); }); postsArray.reverse();
+                let postsArray = []; 
+                snapshot.forEach(c => { 
+                    let p = c.val(); p.id = c.key; // جلب المعرف لربطه بالإعجابات
+                    postsArray.push(p); 
+                }); 
+                postsArray.reverse();
+                
                 postsArray.forEach(post => {
                     if(now - post.timestamp > threeDays) return;
+                    
+                    const isLiked = post.likes && post.likes[currentUser.uid];
+                    const likeIcon = isLiked ? '❤️' : '🤍';
+                    const likeColor = isLiked ? 'text-[#ff2a85]' : 'text-gray-500 hover:text-gray-300';
+                    
                     feed.innerHTML += `
-                        <div class="bg-[#16161f] p-4 rounded-2xl border border-gray-800 space-y-2">
-                            <div class="flex items-center gap-2 cursor-pointer" onclick="window.openUserModal('${post.userId}')">
-                                <img src="${post.userAvatar}" class="w-8 h-8 rounded-full bg-gray-800">
+                        <div class="bg-[#16161f] p-4 rounded-2xl border border-gray-800 space-y-2 relative overflow-hidden transition-all duration-300 hover:border-[#ff2a85]/30 select-none" ondblclick="window.likePost('${post.id}')">
+                            <div class="flex items-center gap-2 cursor-pointer relative z-10" onclick="window.openUserModal('${post.userId}')">
+                                <img src="${post.userAvatar}" class="w-8 h-8 rounded-full bg-gray-800 border border-gray-700">
                                 <div><h4 class="text-xs font-bold">${post.userNickname} <span class="text-[#ff7300] font-normal text-[10px]">@${post.userUsername}</span></h4></div>
                             </div>
-                            ${post.text ? `<p class="text-xs text-gray-200">${escapeHTML(post.text)}</p>` : ''}
-                            ${post.image ? `<img src="${post.image}" class="w-full rounded-lg mt-2">` : ''}
+                            
+                            ${post.text ? `<p class="text-xs text-gray-200 relative z-10 leading-relaxed">${escapeHTML(post.text)}</p>` : ''}
+                            ${post.image ? `<img src="${post.image}" class="w-full rounded-lg mt-2 relative z-10 pointer-events-none border border-gray-800/50">` : ''}
+                            
+                            <div class="flex justify-between items-center mt-3 pt-3 border-t border-gray-800/60 relative z-10">
+                                <button onclick="window.likePost('${post.id}')" class="flex items-center gap-1.5 text-xs font-bold transition-colors ${likeColor} active:scale-90">
+                                    <span class="text-sm">${likeIcon}</span>
+                                    <span>${post.likeCount || 0}</span>
+                                </button>
+                                <span class="text-[9px] text-gray-500">انقر مرتين للإعجاب</span>
+                            </div>
+
+                            <!-- تأثير الأنيميشن الهولوجرامي السري -->
+                            <div id="heart-anim-${post.id}" class="absolute inset-0 z-0 flex items-center justify-center opacity-0 pointer-events-none transition-all duration-500 ease-out">
+                                <div class="text-8xl drop-shadow-[0_0_20px_rgba(255,42,133,0.9)] transform scale-50 transition-transform duration-300">❤️</div>
+                            </div>
                         </div>`;
-                    if(post.userId === currentUser.uid && post.image) { grid.innerHTML += `<img src="${post.image}" class="w-full h-20 object-cover rounded-xl border border-gray-800">`; }
+                        
+                    if(post.userId === currentUser.uid && post.image) { 
+                        grid.innerHTML += `<img src="${post.image}" class="w-full h-20 object-cover rounded-xl border border-gray-800 shadow-sm">`; 
+                    }
                 });
             });
         }
 
-        // --- البحث ---
+        // 🟢 دالة الإعجاب التفاعلية المرتبطة بقاعدة البيانات
+        window.likePost = async (postId) => {
+            const postRef = ref(db, `posts/${postId}`);
+            const snap = await get(postRef);
+            if(snap.exists()) {
+                let p = snap.val();
+                let likes = p.likes || {};
+                let likeCount = p.likeCount || 0;
+                let userLikedNow = false;
+
+                if(likes[currentUser.uid]) {
+                    delete likes[currentUser.uid];
+                    likeCount--;
+                } else {
+                    likes[currentUser.uid] = true;
+                    likeCount++;
+                    userLikedNow = true;
+                }
+
+                await update(postRef, { likes, likeCount });
+
+                // تشغيل الأنيميشن الفاخر فقط عند الضغط وإعطاء إعجاب جديد
+                if(userLikedNow) {
+                    const animWrap = document.getElementById(`heart-anim-${postId}`);
+                    if(animWrap) {
+                        animWrap.classList.remove('opacity-0');
+                        animWrap.firstElementChild.classList.replace('scale-50', 'scale-125');
+                        setTimeout(() => {
+                            animWrap.classList.add('opacity-0');
+                            animWrap.firstElementChild.classList.replace('scale-125', 'scale-50');
+                        }, 700);
+                    }
+                }
+            }
+        };
+
         document.getElementById('search-user-btn').onclick = async () => {
             let val = document.getElementById('search-username-input').value.trim().toLowerCase().replace('@', ''); if(!val) return;
             const snap = await get(child(ref(db), `usernames/${val}`));
@@ -455,7 +518,7 @@
         };
 
         window.openUserModal = async (uid) => {
-            if(uid === currentUser.uid) return; // لا يراسل نفسه
+            if(uid === currentUser.uid) return;
             const uSnap = await get(child(ref(db), `users/${uid}`)); if(!uSnap.exists()) return;
             const u = uSnap.val();
             document.getElementById('modal-nickname').innerText = u.nickname; document.getElementById('modal-username-txt').innerText = `@${u.username}`;
@@ -468,7 +531,6 @@
         };
         document.getElementById('close-modal-btn').onclick = () => document.getElementById('user-modal').classList.add('hidden');
 
-        // --- الشات الخاص الجبار وتثبيت المستخدمين ---
         function openPrivateChat(targetUid, targetName, targetAvatar) {
             document.getElementById('private-target-name').innerText = targetName;
             document.getElementById('private-target-avatar').innerHTML = `<img src="${targetAvatar}" class="w-full h-full">`;
@@ -501,7 +563,7 @@
 
                     box.innerHTML += `
                         <div class="flex w-full mb-1 ${isMe ? 'justify-start' : 'justify-end'}">
-                            <div class="max-w-[75%] p-3 rounded-2xl shadow-sm relative ${isMe ? 'gradient-bg text-white rounded-tr-none' : 'bg-[#1f1f2e] text-white rounded-tl-none'}">
+                            <div class="max-w-[75%] p-3 rounded-2xl shadow-sm relative ${isMe ? 'gradient-bg text-white rounded-tr-none shadow-[#ff2a85]/10' : 'bg-[#1f1f2e] text-white rounded-tl-none'}">
                                 <p class="text-xs font-semibold leading-relaxed pb-3 pl-4 break-words">${escapeHTML(m.text)}</p>
                                 <span class="absolute bottom-1 left-2 text-[8px] text-gray-300 opacity-80 select-none dir-ltr">${timeStr}</span>
                             </div>
@@ -531,7 +593,6 @@
             openChatId = null; 
         };
 
-        // --- قائمة شتاتي المطورة ---
         function startMyChatsList() {
             const list = document.getElementById('private-chats-list');
             
@@ -576,7 +637,7 @@
                 validChats.forEach(item => {
                     const u = item.user;
                     list.innerHTML += `
-                        <div class="bg-[#16161f] p-3 rounded-xl flex items-center justify-between border border-gray-800/60 cursor-pointer transition active:scale-[0.99] hover:bg-[#1a1a26]" onclick="window.handleOpenChat('${u.uid}','${u.nickname}','${u.avatarUrl}')">
+                        <div class="bg-[#16161f] p-3 rounded-xl flex items-center justify-between border border-gray-800/60 cursor-pointer transition active:scale-[0.99] hover:bg-[#1a1a26] hover:border-gray-700" onclick="window.handleOpenChat('${u.uid}','${u.nickname}','${u.avatarUrl}')">
                             <div class="flex items-center gap-3">
                                 <img src="${u.avatarUrl}" class="w-11 h-11 rounded-full bg-gray-800 border border-gray-700">
                                 <div>
@@ -595,7 +656,6 @@
 
         window.handleOpenChat = (uid, name, avatar) => { openPrivateChat(uid, name, avatar); };
 
-        // --- حاسبة الحب اللحظية ---
         document.getElementById('calculate-love-btn').onclick = () => {
             const n1 = document.getElementById('love-name1').value.trim(); const n2 = document.getElementById('love-name2').value.trim(); if(!n1 || !n2) return;
             const str = [n1, n2].sort().join("").toLowerCase(); let h = 0; for(let i=0; i<str.length; i++) h = str.charCodeAt(i) + ((h<<5)-h);
@@ -609,7 +669,6 @@
     </script>
     
     <script>
-        // نظام التبديل النظيف
         window.switchTab = function(tId, btn) {
             document.querySelectorAll('.tab-content').forEach(t => {
                 t.classList.add('hidden');
