@@ -17,24 +17,24 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
     
     <style>
-        body { font-family: 'Cairo', sans-serif; background-color: #0d0d12; color: #ffffff; }
+        body { font-family: 'Cairo', sans-serif; background-color: #09090d; color: #ffffff; }
         .gradient-bg { background: linear-gradient(135deg, #ff2a85 0%, #ff7300 100%); }
         .gradient-text { background: linear-gradient(135deg, #ff2a85 0%, #ff7300 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #ff2a85; border-radius: 10px; }
         
-        /* حركة بسيطة للنوت */
         @keyframes popIn {
             0% { transform: scale(0); opacity: 0; }
             80% { transform: scale(1.1); opacity: 1; }
             100% { transform: scale(1); opacity: 1; }
         }
         .note-bubble { animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        .matte-glass { background: rgba(22, 22, 31, 0.85); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); }
     </style>
 </head>
 <body class="flex flex-col h-screen overflow-hidden select-none">
 
-    <div id="auth-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#0d0d12] px-6">
+    <div id="auth-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#09090d] px-6">
         <div class="text-center max-w-md w-full bg-[#16161f] p-8 rounded-3xl border border-gray-800 shadow-2xl">
             <div class="w-20 h-20 mx-auto rounded-full gradient-bg flex items-center justify-center mb-4 shadow-xl shadow-[#ff2a85]/40 animate-pulse">
                 <span class="text-2xl font-black tracking-wider text-white">NXL</span>
@@ -63,7 +63,7 @@
         </div>
     </div>
 
-    <div id="setup-profile-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#0d0d12]/95 backdrop-blur-sm px-6 hidden">
+    <div id="setup-profile-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#09090d]/95 backdrop-blur-sm px-6 hidden">
         <div class="max-w-md w-full bg-[#16161f] p-8 rounded-3xl border border-[#ff7300] shadow-2xl">
             <h2 class="text-xl font-bold mb-1 text-center">خطوة أخيرة للبدء 🚀</h2>
             <p class="text-xs text-gray-400 text-center mb-6">اختر هويتك في NXL ليتمكن الجميع من البحث عنك</p>
@@ -83,7 +83,7 @@
         </div>
     </div>
 
-    <header class="bg-[#16161f] py-3 px-4 border-b border-gray-800 flex justify-between items-center shrink-0">
+    <header class="bg-[#16161f] py-3 px-4 border-b border-gray-800 flex justify-between items-center shrink-0 shadow-md">
         <div class="flex items-center gap-2">
             <div class="w-8 h-8 rounded-full gradient-bg flex items-center justify-center font-black text-xs text-white shadow-md shadow-[#ff2a85]/30">NXL</div>
             <div>
@@ -97,13 +97,13 @@
         </div>
     </header>
 
-    <main class="flex-1 overflow-y-auto custom-scrollbar bg-[#0d0d12] pb-20">
+    <main class="flex-1 overflow-y-auto custom-scrollbar bg-[#09090d] pb-20 relative">
         
         <section id="tab-home" class="tab-content p-4 max-w-lg mx-auto">
-            <div class="bg-[#16161f] p-4 rounded-2xl mb-4 border border-gray-800">
+            <div class="bg-[#16161f] p-4 rounded-2xl mb-4 border border-gray-800 shadow-lg">
                 <textarea id="post-input" placeholder="شارك لحظاتك... (تختفي بعد 72 ساعة)" class="w-full bg-[#1f1f2e] text-sm text-white rounded-xl p-3 focus:outline-none resize-none h-20"></textarea>
                 <div class="flex justify-between items-center mt-3">
-                    <label class="cursor-pointer text-xs text-gray-400 bg-[#1f1f2e] px-3 py-1.5 rounded-lg flex gap-1 hover:bg-gray-800 transition">
+                    <label class="cursor-pointer text-xs text-gray-400 bg-[#1f1f2e] px-3 py-1.5 rounded-lg flex gap-1 hover:bg-gray-800 transition border border-gray-700">
                         🖼️ إضافة صورة
                         <input type="file" id="post-file" accept="image/*" class="hidden">
                     </label>
@@ -117,8 +117,8 @@
         </section>
 
         <section id="tab-global" class="tab-content hidden h-full flex flex-col max-w-lg mx-auto">
-            <div class="bg-[#16161f]/80 text-[11px] text-center text-gray-400 py-1.5 border-b border-gray-800">
-                الرسائل تختفي تلقائياً بعد 24 ساعة.
+            <div class="bg-[#16161f]/80 text-[11px] text-center text-[#ff7300] font-bold py-1.5 border-b border-gray-800 backdrop-blur-sm">
+                الرسائل تختفي تلقائياً بعد 24 ساعة 🔥
             </div>
             <div id="global-messages-box" class="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar h-[calc(100vh-210px)]"></div>
             
@@ -132,18 +132,17 @@
                 </div>
 
                 <div class="flex gap-2 items-center">
-                    <input type="text" id="global-msg-input" placeholder="رسالة عامة..." class="flex-1 bg-[#1f1f2e] text-sm rounded-xl px-4 py-3 text-white focus:outline-none">
+                    <input type="text" id="global-msg-input" placeholder="رسالة عامة..." class="flex-1 bg-[#1f1f2e] text-sm rounded-xl px-4 py-3 text-white focus:outline-none border border-gray-800">
                     <button id="send-global-btn" class="w-11 h-11 gradient-bg rounded-xl flex items-center justify-center text-white font-bold active:scale-95 shadow-md shadow-[#ff2a85]/20">🚀</button>
                 </div>
             </div>
         </section>
 
         <section id="tab-games" class="tab-content hidden p-4 max-w-lg mx-auto space-y-6">
-            
-            <div class="bg-[#16161f] p-6 rounded-2xl border border-gray-800 text-center relative overflow-hidden">
+            <div class="bg-[#16161f] p-6 rounded-2xl border border-gray-800 text-center relative overflow-hidden shadow-lg">
                 <h2 class="text-lg font-bold mb-1 relative z-10">❤️ حاسبة الحب NXL</h2>
-                <input type="text" id="love-name1" placeholder="اسمك" class="w-full bg-[#1f1f2e] text-center text-sm rounded-xl py-2 mt-3 text-white relative z-10">
-                <input type="text" id="love-name2" placeholder="اسم الطرف التاني" class="w-full bg-[#1f1f2e] text-center text-sm rounded-xl py-2 mt-3 text-white relative z-10">
+                <input type="text" id="love-name1" placeholder="اسمك" class="w-full bg-[#1f1f2e] border border-gray-700 text-center text-sm rounded-xl py-2 mt-3 text-white relative z-10">
+                <input type="text" id="love-name2" placeholder="اسم الطرف التاني" class="w-full bg-[#1f1f2e] border border-gray-700 text-center text-sm rounded-xl py-2 mt-3 text-white relative z-10">
                 <button id="calculate-love-btn" class="w-full py-2.5 gradient-bg rounded-xl text-sm font-bold text-white mt-4 active:scale-95 shadow-md shadow-[#ff2a85]/20 relative z-10">احسب النسبة</button>
                 
                 <div id="love-result" class="mt-4 hidden relative z-10">
@@ -156,29 +155,27 @@
                 </div>
             </div>
 
-            <div class="bg-[#16161f] p-6 rounded-2xl border border-gray-800 text-center relative overflow-hidden">
+            <div class="bg-[#16161f] p-6 rounded-2xl border border-gray-800 text-center relative overflow-hidden shadow-lg">
                 <div class="absolute -top-10 -right-10 w-24 h-24 bg-[#ff7300] rounded-full blur-3xl opacity-20"></div>
                 <h2 class="text-lg font-bold mb-1 relative z-10">💳 بطاقة NXL VIP</h2>
                 <p class="text-[10px] text-gray-400 mb-4 relative z-10">أثبت إنك جزء من مجتمعنا! استخرج بطاقتك الفخمة وشاركها ستوري.</p>
-                <button id="generate-vip-btn" class="w-full py-2.5 bg-gradient-to-r from-gray-800 to-[#16161f] border border-[#ff7300] rounded-xl text-sm font-bold text-white active:scale-95 shadow-lg shadow-[#ff7300]/20 flex items-center justify-center gap-2 relative z-10">
+                <button id="generate-vip-btn" class="w-full py-2.5 bg-gradient-to-r from-gray-800 to-[#1f1f2e] border border-[#ff7300] rounded-xl text-sm font-bold text-white active:scale-95 shadow-lg shadow-[#ff7300]/20 flex items-center justify-center gap-2 relative z-10">
                     <span>✨</span> استخراج ومشاركة
                 </button>
             </div>
-
         </section>
 
         <section id="tab-chats" class="tab-content hidden p-4 max-w-lg mx-auto">
-            
-            <div class="bg-[#16161f] p-3 rounded-xl border border-[#ff2a85]/40 mb-4 flex gap-2 items-center">
+            <div class="bg-[#16161f] p-3 rounded-xl border border-[#ff2a85]/40 mb-4 flex gap-2 items-center shadow-md">
                 <div id="my-note-avatar" class="w-9 h-9 rounded-full bg-gray-800 border border-gray-700 shrink-0 overflow-hidden"></div>
-                <input type="text" id="my-note-input" placeholder="نوت (تختفي بعد 7 ساعات)..." class="flex-1 bg-[#1f1f2e] text-xs rounded-lg px-3 py-2 text-white focus:outline-none">
+                <input type="text" id="my-note-input" placeholder="نوت (تختفي بعد 7 ساعات)..." class="flex-1 bg-[#1f1f2e] text-xs rounded-lg px-3 py-2 text-white focus:outline-none border border-gray-800">
                 <button id="save-note-btn" class="gradient-bg text-white px-3 py-2 rounded-lg text-xs font-bold active:scale-95 transition-colors">نشر</button>
             </div>
 
-            <div class="relative bg-[#16161f] p-3 rounded-xl border border-gray-800 mb-4 z-20">
+            <div class="relative bg-[#16161f] p-3 rounded-xl border border-gray-800 mb-4 z-20 shadow-md">
                 <div class="flex gap-2">
                     <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">🔍</span>
-                    <input type="text" id="search-username-input" autocomplete="off" placeholder="ابحث بالاسم أو اليوزر..." class="flex-1 bg-[#1f1f2e] text-xs rounded-lg px-3 py-2.5 text-white focus:outline-none pl-8">
+                    <input type="text" id="search-username-input" autocomplete="off" placeholder="ابحث بالاسم أو اليوزر..." class="flex-1 bg-[#1f1f2e] text-xs rounded-lg px-3 py-2.5 text-white focus:outline-none pl-8 border border-gray-700">
                 </div>
                 <div id="search-dropdown" class="absolute left-0 right-0 top-full mt-2 bg-[#16161f] border border-gray-800 rounded-xl shadow-2xl overflow-hidden hidden max-h-48 overflow-y-auto"></div>
             </div>
@@ -188,20 +185,26 @@
         </section>
 
         <section id="tab-profile" class="tab-content hidden p-4 max-w-lg mx-auto text-center">
-            <div class="bg-[#16161f] p-6 rounded-3xl border border-gray-800 mb-6 relative">
-                <button id="logout-btn" class="absolute top-4 left-4 text-xs bg-red-500/20 text-red-500 hover:bg-red-500 hover:text-white transition px-3 py-1 rounded-lg font-bold">خروج</button>
+            <div class="bg-[#16161f] p-6 rounded-3xl border border-gray-800 mb-6 relative shadow-xl">
+                <button id="logout-btn" class="absolute top-4 left-4 text-xs bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white border border-red-500/30 transition px-3 py-1 rounded-lg font-bold">خروج</button>
                 <div id="profile-avatar-container" class="w-20 h-20 mx-auto rounded-full bg-gray-800 border-2 border-[#ff2a85] overflow-hidden mb-3 shadow-lg shadow-[#ff2a85]/30"></div>
-                <h2 id="profile-nickname" class="text-lg font-bold">اللقب</h2>
+                <h2 id="profile-nickname" class="text-xl font-bold">اللقب</h2>
                 <p id="profile-username-display" class="text-sm text-[#ff7300] font-bold mb-1">@username</p>
-                <p id="profile-email" class="text-xs text-gray-500 mb-4">email</p>
+                
+                <div class="mt-3 inline-block bg-[#1f1f2e] border border-gray-700 px-4 py-2 rounded-xl">
+                    <p class="text-xs text-gray-400 font-bold mb-1">🔥 نقاط التفاعل في المنصة</p>
+                    <p class="text-lg font-black gradient-text" id="profile-points">0 EXP</p>
+                </div>
+                
+                <p id="profile-email" class="text-xs text-gray-500 mt-4">email</p>
             </div>
             <h3 class="text-sm font-bold text-right mb-3 px-1 text-gray-400">صوري المرفوعة:</h3>
             <div id="profile-posts-grid" class="grid grid-cols-3 gap-2"></div>
         </section>
     </main>
 
-    <div id="private-chat-window" class="fixed inset-0 z-50 bg-[#0d0d12] flex flex-col hidden">
-        <header class="bg-[#16161f] py-3 px-4 border-b border-gray-800 flex items-center justify-between shrink-0">
+    <div id="private-chat-window" class="fixed inset-0 z-50 bg-[#09090d] flex flex-col hidden">
+        <header class="bg-[#16161f] py-3 px-4 border-b border-gray-800 flex items-center justify-between shrink-0 shadow-md">
             <div class="flex items-center gap-3">
                 <button id="close-private-chat" class="text-gray-400 hover:text-white font-bold text-sm ml-1 flex items-center gap-1 transition">
                     <span>➡️</span> رجوع
@@ -212,15 +215,27 @@
                     <p id="private-target-status" class="text-[10px] text-green-400 font-bold transition-colors duration-300">نشط الآن في NXL</p>
                 </div>
             </div>
+            <button id="delete-chat-btn" class="text-red-500 hover:bg-red-500/20 p-2 rounded-lg transition active:scale-90" title="حذف المحادثة بالكامل للطرفين">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+            </button>
         </header>
         
-        <div id="private-messages-box" class="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar bg-[#09090d] flex flex-col"></div>
+        <div id="private-messages-box" class="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar bg-[#09090d] flex flex-col">
+            </div>
         
-        <div class="p-3 bg-[#16161f] border-t border-gray-800 flex gap-2 shrink-0 items-center">
-            <input type="text" id="private-msg-input" placeholder="اكتب رسالة مقربة..." class="flex-1 bg-[#1f1f2e] text-sm rounded-xl px-4 py-3 text-white focus:outline-none">
-            <button id="send-private-btn" class="w-11 h-11 gradient-bg rounded-xl flex items-center justify-center text-white font-bold active:scale-95 shadow-md shadow-[#ff2a85]/20">
-                🚀
-            </button>
+        <div class="p-3 bg-[#16161f] border-t border-gray-800 flex flex-col shrink-0">
+            <div id="private-reply-banner" class="hidden flex justify-between items-center bg-[#1f1f2e] p-2 rounded-xl mb-2 border-r-4 border-[#ff2a85] text-xs">
+                <div class="truncate w-5/6 text-gray-300">
+                    <span class="font-bold text-[#ff2a85]">رد على رسالة</span>:
+                    <span id="private-reply-to-text" class="text-[10px] truncate ml-1"></span>
+                </div>
+                <button id="cancelPrivateReplyBtn" class="text-red-500 font-bold px-2 text-lg active:scale-95">×</button>
+            </div>
+
+            <div class="flex gap-2 items-center">
+                <input type="text" id="private-msg-input" placeholder="اكتب رسالة مقربة..." class="flex-1 bg-[#1f1f2e] text-sm rounded-xl px-4 py-3 text-white focus:outline-none border border-gray-800">
+                <button id="send-private-btn" class="w-11 h-11 gradient-bg rounded-xl flex items-center justify-center text-white font-bold active:scale-95 shadow-md shadow-[#ff2a85]/20">🚀</button>
+            </div>
         </div>
     </div>
 
@@ -234,18 +249,24 @@
         </div>
     </div>
 
-    <nav class="fixed bottom-0 left-0 right-0 h-16 bg-[#16161f]/95 border-t border-gray-800 flex justify-around items-center z-30 max-w-lg mx-auto rounded-t-2xl backdrop-blur-md">
-        <button onclick="switchTab('home', this)" class="nav-btn text-[#ff2a85] font-bold text-[10px] transition-colors">الرئيسية</button>
-        <button onclick="switchTab('global', this)" class="nav-btn text-gray-400 hover:text-gray-200 font-bold text-[10px] transition-colors">شات عام</button>
-        <button onclick="switchTab('games', this)" class="nav-btn text-gray-400 hover:text-gray-200 font-bold text-[10px] transition-colors">ألعاب</button>
-        <button onclick="switchTab('chats', this)" class="nav-btn text-gray-400 hover:text-gray-200 font-bold text-[10px] transition-colors">شاتاتي</button>
-        <button id="nav-profile-btn" onclick="switchTab('profile', this)" class="nav-btn text-gray-400 hover:text-gray-200 font-bold text-[10px] transition-colors">ملفي</button>
+    <nav class="fixed bottom-0 left-0 right-0 h-16 matte-glass border-t border-gray-800 flex justify-around items-center z-30 max-w-lg mx-auto rounded-t-2xl">
+        <button onclick="switchTab('home', this)" class="nav-btn text-[#ff2a85] font-bold text-[10px] transition-colors relative">الرئيسية</button>
+        <button onclick="switchTab('global', this)" class="nav-btn text-gray-400 hover:text-gray-200 font-bold text-[10px] transition-colors relative">
+            شات عام
+            <span id="global-unread-dot" class="hidden absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full border border-[#16161f] animate-pulse"></span>
+        </button>
+        <button onclick="switchTab('games', this)" class="nav-btn text-gray-400 hover:text-gray-200 font-bold text-[10px] transition-colors relative">ألعاب</button>
+        <button onclick="switchTab('chats', this)" class="nav-btn text-gray-400 hover:text-gray-200 font-bold text-[10px] transition-colors relative">
+            شاتاتي
+            <span id="chats-unread-dot" class="hidden absolute -top-1 -right-1 w-2.5 h-2.5 bg-green-500 rounded-full border border-[#16161f] animate-pulse"></span>
+        </button>
+        <button id="nav-profile-btn" onclick="switchTab('profile', this)" class="nav-btn text-gray-400 hover:text-gray-200 font-bold text-[10px] transition-colors relative">ملفي</button>
     </nav>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getDatabase, ref, set, update, push, onValue, get, child, query, limitToLast, remove, onDisconnect } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        import { getDatabase, ref, set, update, push, onValue, get, child, query, limitToLast, remove, onDisconnect, increment } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
         import { getMessaging, getToken } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging.js";
 
         const firebaseConfig = {
@@ -271,6 +292,8 @@
         let openChatId = null; 
         let targetTypingUnsubscribe = null;
         let replyingToMsg = null;
+        let privateReplyingToMsg = null;
+        window.activeTabId = 'home'; // التبويب النشط لمعرفة الإشعارات
 
         const emailInput = document.getElementById('auth-email');
         const passInput = document.getElementById('auth-password');
@@ -308,9 +331,16 @@
                 currentUser = user;
                 document.getElementById('auth-screen').classList.add('hidden');
                 document.getElementById('notifyBtn').classList.remove('hidden'); 
-                const userSnapshot = await get(child(ref(db), `users/${user.uid}`));
-                if (userSnapshot.exists()) { userData = userSnapshot.val(); initAppUI(); } 
-                else { document.getElementById('setup-profile-screen').classList.remove('hidden'); }
+                
+                // استماع لحظي لبيانات المستخدم لتحديث النقاط Gamification
+                onValue(ref(db, `users/${user.uid}`), (snapshot) => {
+                    if (snapshot.exists()) {
+                        userData = snapshot.val();
+                        initAppUI();
+                    } else {
+                        document.getElementById('setup-profile-screen').classList.remove('hidden');
+                    }
+                });
             } else {
                 document.getElementById('auth-screen').classList.remove('hidden');
                 document.getElementById('setup-profile-screen').classList.add('hidden');
@@ -326,12 +356,15 @@
             if(unameCheck.exists()) { document.getElementById('username-error').classList.remove('hidden'); return; }
 
             const avatarUrl = `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(username)}`;
-            userData = { uid: currentUser.uid, nickname: nickname, username: username, avatarUrl: avatarUrl, email: currentUser.email, joinedAt: Date.now() };
+            userData = { uid: currentUser.uid, nickname: nickname, username: username, avatarUrl: avatarUrl, email: currentUser.email, joinedAt: Date.now(), points: 0 };
             await set(ref(db, `usernames/${username}`), currentUser.uid);
             await set(ref(db, `users/${currentUser.uid}`), userData);
             document.getElementById('setup-profile-screen').classList.add('hidden');
-            initAppUI();
         });
+
+        function addExpPoints(amount = 1) {
+            update(ref(db, `users/${currentUser.uid}`), { points: increment(amount) });
+        }
 
         function initAppUI() {
             document.getElementById('user-header-avatar').innerHTML = `<img src="${userData.avatarUrl}" class="w-full h-full object-cover">`;
@@ -342,13 +375,17 @@
             document.getElementById('profile-nickname').innerText = userData.nickname;
             document.getElementById('profile-username-display').innerText = `@${userData.username}`;
             document.getElementById('profile-email').innerText = userData.email;
+            document.getElementById('profile-points').innerText = `${userData.points || 0} EXP`;
             
-            // جلب النوت الخاصة بي إذا كانت موجودة
             if (userData.note && (Date.now() - userData.note.timestamp < 7 * 60 * 60 * 1000)) {
                 document.getElementById('my-note-input').value = userData.note.text;
             }
 
-            startGlobalChat(); startPostsFeed(); startMyChatsList();
+            // يتم استدعاؤها مرة واحدة للـ Listeners
+            if (!window.listenersStarted) {
+                startGlobalChat(); startPostsFeed(); startMyChatsList();
+                window.listenersStarted = true;
+            }
         }
 
         /* ---------------- ميزة النوت (7 ساعات) ---------------- */
@@ -358,15 +395,13 @@
                 await update(ref(db, `users/${currentUser.uid}`), { note: null });
                 alert("تم حذف النوت الخاص بك.");
             } else {
-                await update(ref(db, `users/${currentUser.uid}/note`), {
-                    text: noteText,
-                    timestamp: Date.now()
-                });
+                await update(ref(db, `users/${currentUser.uid}/note`), { text: noteText, timestamp: Date.now() });
+                addExpPoints(2);
                 alert("تم نشر النوت! سيختفي تلقائياً بعد 7 ساعات.");
             }
         };
 
-        /* ---------------- ميزة البحث اللحظي (Autocomplete) ---------------- */
+        /* ---------------- ميزة البحث اللحظي ---------------- */
         const searchInput = document.getElementById('search-username-input');
         const searchDropdown = document.getElementById('search-dropdown');
         let searchTimeout = null;
@@ -374,21 +409,15 @@
         searchInput.addEventListener('input', (e) => {
             clearTimeout(searchTimeout);
             const val = e.target.value.trim().toLowerCase().replace('@', '');
-            
-            if (!val) { 
-                searchDropdown.classList.add('hidden'); 
-                return; 
-            }
+            if (!val) { searchDropdown.classList.add('hidden'); return; }
             
             searchTimeout = setTimeout(async () => {
                 const snapshot = await get(ref(db, 'users'));
                 searchDropdown.innerHTML = '';
-                
                 if (snapshot.exists()) {
                     let matches = 0;
                     snapshot.forEach(child => {
                         const u = child.val();
-                        // فلترة النتائج بالاسم أو اليوزر وتخطي المستخدم الحالي
                         if ((u.username.toLowerCase().includes(val) || u.nickname.toLowerCase().includes(val)) && u.uid !== currentUser.uid) {
                             matches++;
                             searchDropdown.innerHTML += `
@@ -402,30 +431,40 @@
                             `;
                         }
                     });
-                    
-                    if (matches > 0) {
-                        searchDropdown.classList.remove('hidden');
-                    } else {
-                        searchDropdown.innerHTML = '<div class="p-3 text-xs text-gray-500 text-center">لم يتم العثور على أحد مطابق</div>';
-                        searchDropdown.classList.remove('hidden');
-                    }
+                    if (matches > 0) { searchDropdown.classList.remove('hidden'); } 
+                    else { searchDropdown.innerHTML = '<div class="p-3 text-xs text-gray-500 text-center">لم يتم العثور على أحد مطابق</div>'; searchDropdown.classList.remove('hidden'); }
                 }
-            }, 300); // 300 ملي ثانية انتظار
+            }, 300);
         });
 
-        // إخفاء القائمة عند الضغط خارجها
         document.addEventListener('click', (e) => {
-            if (!e.target.closest('.relative.z-20')) {
-                searchDropdown.classList.add('hidden');
-            }
+            if (!e.target.closest('.relative.z-20')) { searchDropdown.classList.add('hidden'); }
         });
 
+        /* ---------------- وظيفة التفاعل بالريأكت (إيموجي) ---------------- */
+        window.addReaction = async (path, msgId) => {
+            const emoji = prompt("أدخل إيموجي (من كيبورد الهاتف للتفاعل):");
+            if(emoji && emoji.trim() !== '') {
+                // نأخذ أول حرفين كحد أقصى لضمان أنه إيموجي فقط
+                const currentEmoji = emoji.trim().substring(0, 2);
+                await update(ref(db, `${path}/${msgId}/reactions`), { [currentUser.uid]: currentEmoji });
+                addExpPoints(1); // بونص تفاعل
+            }
+        };
 
-        /* ---------------- باقي وظائف التطبيق الأساسية ---------------- */
+        function renderReactions(reactionsObj) {
+            if (!reactionsObj) return '';
+            let html = `<div class="flex gap-1 mt-1.5 flex-wrap">`;
+            for(let uid in reactionsObj) {
+                html += `<span class="bg-black/30 border border-gray-700/50 text-[11px] px-1.5 py-0.5 rounded-full cursor-pointer hover:scale-110 transition shadow-sm">${escapeHTML(reactionsObj[uid])}</span>`;
+            }
+            html += `</div>`;
+            return html;
+        }
 
+        /* ---------------- الشات العام ---------------- */
         document.getElementById('cancelReplyBtn').addEventListener('click', () => {
-            replyingToMsg = null;
-            document.getElementById('reply-banner').classList.add('hidden');
+            replyingToMsg = null; document.getElementById('reply-banner').classList.add('hidden');
         });
 
         window.prepareReply = function(msgId, senderName, msgText) {
@@ -441,19 +480,20 @@
             const chatQuery = query(ref(db, 'global_chat'), limitToLast(50));
             onValue(chatQuery, (snapshot) => {
                 box.innerHTML = ""; const now = Date.now(); const oneDay = 24 * 60 * 60 * 1000;
+                let lastSenderId = null;
                 snapshot.forEach(childSnap => {
-                    const msgId = childSnap.key;
-                    const msg = childSnap.val(); 
-                    if(now - msg.timestamp > oneDay) return;
+                    const msgId = childSnap.key; const msg = childSnap.val(); 
+                    if(now - msg.timestamp > oneDay) return; // الحذف التلقائي بعد 24 ساعة
                     
                     const isMe = msg.senderId === currentUser.uid;
+                    lastSenderId = msg.senderId;
                     
                     let replyHTML = '';
                     if (msg.replyTo) {
                         replyHTML = `
                             <div class="bg-black/20 border-r-2 border-[#ff7300] p-1.5 mb-1.5 rounded text-[9px] text-gray-300 w-full text-right">
-                                <strong class="text-[#ff7300] block mb-0.5">${msg.replyTo.name}</strong>
-                                <span class="truncate block max-w-[150px]">${msg.replyTo.text}</span>
+                                <strong class="text-[#ff7300] block mb-0.5">${escapeHTML(msg.replyTo.name)}</strong>
+                                <span class="truncate block max-w-[150px]">${escapeHTML(msg.replyTo.text)}</span>
                             </div>
                         `;
                     }
@@ -464,16 +504,23 @@
                             <div class="flex flex-col ${isMe ? 'items-end' : 'items-start'} max-w-[75%]">
                                 <div class="flex items-center gap-2 mb-0.5">
                                     <span class="text-[10px] text-gray-500 px-1 font-bold">${msg.senderNickname}</span>
-                                    <button onclick="window.prepareReply('${msgId}', '${msg.senderNickname}', '${escapeHTML(msg.text)}')" class="text-[9px] text-gray-500 hover:text-[#ff2a85] transition active:scale-95">↩️ رد</button>
+                                    <button onclick="window.prepareReply('${msgId}', '${msg.senderNickname}', '${escapeHTML(msg.text)}')" class="text-[9px] text-gray-500 hover:text-white transition active:scale-95">↩️ رد</button>
+                                    <button onclick="window.addReaction('global_chat', '${msgId}')" class="text-[10px] text-gray-500 hover:text-[#ff7300] transition active:scale-95">😄 تفاعل</button>
                                 </div>
-                                <div class="p-2.5 text-xs rounded-xl ${isMe ? 'gradient-bg text-white rounded-tr-none shadow-sm shadow-[#ff2a85]/10' : 'bg-[#1f1f2e] text-white rounded-tl-none'} w-full break-words">
+                                <div class="p-2.5 text-xs rounded-xl ${isMe ? 'gradient-bg text-white rounded-tr-none shadow-sm shadow-[#ff2a85]/10' : 'bg-[#1f1f2e] border border-gray-800 text-white rounded-tl-none'} w-full break-words relative">
                                     ${replyHTML}
                                     ${escapeHTML(msg.text)}
+                                    ${renderReactions(msg.reactions)}
                                 </div>
                             </div>
                         </div>`;
                 });
                 box.scrollTop = box.scrollHeight;
+                
+                // إظهار نقطة الإشعار الحمراء إذا كنت في تبويب آخر وآخر رسالة ليست منك
+                if (window.activeTabId !== 'global' && lastSenderId !== currentUser.uid && lastSenderId !== null) {
+                    document.getElementById('global-unread-dot').classList.remove('hidden');
+                }
             });
         }
 
@@ -481,9 +528,10 @@
             const inp = document.getElementById('global-msg-input'); const text = inp.value.trim(); if(!text) return; inp.value = "";
             const msgData = { senderId: currentUser.uid, senderNickname: userData.nickname, senderAvatar: userData.avatarUrl, text: text, timestamp: Date.now() };
             if (replyingToMsg) { msgData.replyTo = replyingToMsg; }
-            push(ref(db, 'global_chat'), msgData).then(() => { replyingToMsg = null; document.getElementById('reply-banner').classList.add('hidden'); });
+            push(ref(db, 'global_chat'), msgData).then(() => { replyingToMsg = null; document.getElementById('reply-banner').classList.add('hidden'); addExpPoints(1); });
         };
 
+        /* ---------------- المنشورات ---------------- */
         document.getElementById('post-file').onchange = e => {
             const f = e.target.files[0]; if(!f) return;
             const r = new FileReader(); r.onload = () => { globalPostImageBase64 = r.result; document.getElementById('post-img-preview').src = globalPostImageBase64; document.getElementById('post-preview-container').classList.remove('hidden'); }; r.readAsDataURL(f);
@@ -494,6 +542,7 @@
             document.getElementById('post-input').value = ""; document.getElementById('post-preview-container').classList.add('hidden');
             push(ref(db, 'posts'), { userId: currentUser.uid, userNickname: userData.nickname, userUsername: userData.username, userAvatar: userData.avatarUrl, text: text, image: globalPostImageBase64, timestamp: Date.now(), likeCount: 0 });
             globalPostImageBase64 = "";
+            addExpPoints(3); // نقاط أكثر للمنشور
         };
 
         function startPostsFeed() {
@@ -511,7 +560,7 @@
                     const deleteBtn = (post.userId === currentUser.uid) ? `<button onclick="window.deletePost('${post.id}')" class="absolute left-3 top-3 z-20 text-red-500 hover:text-red-400 bg-red-500/10 hover:bg-red-500/20 rounded-full w-7 h-7 flex items-center justify-center transition">🗑️</button>` : '';
 
                     feed.innerHTML += `
-                        <div class="bg-[#16161f] p-4 rounded-2xl border border-gray-800 space-y-2 relative overflow-hidden transition-all duration-300 hover:border-[#ff2a85]/30 select-none" ondblclick="window.likePost('${post.id}')">
+                        <div class="bg-[#16161f] p-4 rounded-2xl border border-gray-800 shadow-sm space-y-2 relative overflow-hidden transition-all duration-300 hover:border-[#ff2a85]/30 select-none" ondblclick="window.likePost('${post.id}')">
                             ${deleteBtn}
                             <div class="flex items-center gap-2 cursor-pointer relative z-10" onclick="window.openUserModal('${post.userId}')">
                                 <img src="${post.userAvatar}" class="w-8 h-8 rounded-full bg-gray-800 border border-gray-700">
@@ -538,7 +587,7 @@
             const postRef = ref(db, `posts/${postId}`); const snap = await get(postRef);
             if(snap.exists()) {
                 let p = snap.val(); let likes = p.likes || {}; let likeCount = p.likeCount || 0; let userLikedNow = false;
-                if(likes[currentUser.uid]) { delete likes[currentUser.uid]; likeCount--; } else { likes[currentUser.uid] = true; likeCount++; userLikedNow = true; }
+                if(likes[currentUser.uid]) { delete likes[currentUser.uid]; likeCount--; } else { likes[currentUser.uid] = true; likeCount++; userLikedNow = true; addExpPoints(1); }
                 await update(postRef, { likes, likeCount });
                 if(userLikedNow) {
                     const animWrap = document.getElementById(`heart-anim-${postId}`);
@@ -558,6 +607,28 @@
         };
         document.getElementById('close-modal-btn').onclick = () => document.getElementById('user-modal').classList.add('hidden');
 
+        /* ---------------- الشات الخاص وحذف المحادثة ---------------- */
+        document.getElementById('cancelPrivateReplyBtn').addEventListener('click', () => {
+            privateReplyingToMsg = null; document.getElementById('private-reply-banner').classList.add('hidden');
+        });
+
+        window.preparePrivateReply = function(msgId, msgText) {
+            privateReplyingToMsg = { id: msgId, text: msgText };
+            document.getElementById('private-reply-to-text').innerText = msgText;
+            document.getElementById('private-reply-banner').classList.remove('hidden');
+            document.getElementById('private-msg-input').focus();
+        };
+
+        // زر حذف المحادثة بالكامل من الطرفين
+        document.getElementById('delete-chat-btn').addEventListener('click', async () => {
+            if(!openChatId) return;
+            if(confirm("هل أنت متأكد من حذف هذه المحادثة بالكامل؟ سيتم مسحها لك وللطرف الآخر.")) {
+                await remove(ref(db, `chats/${openChatId}`));
+                document.getElementById('private-chat-window').classList.add('hidden');
+                openChatId = null;
+            }
+        });
+
         function openPrivateChat(targetUid, targetName, targetAvatar) {
             document.getElementById('private-target-name').innerText = targetName;
             document.getElementById('private-target-avatar').innerHTML = `<img src="${targetAvatar}" class="w-full h-full">`;
@@ -569,7 +640,7 @@
             initialUpdates[`user_chats/${currentUser.uid}/${chatId}/targetUid`] = targetUid;
             initialUpdates[`user_chats/${targetUid}/${chatId}/targetUid`] = currentUser.uid;
             update(ref(db), initialUpdates);
-            update(ref(db), { [`user_chats/${currentUser.uid}/${chatId}/hasUnread`]: false });
+            update(ref(db), { [`user_chats/${currentUser.uid}/${chatId}/hasUnread`]: false }); // قراءة الرسائل
 
             const box = document.getElementById('private-messages-box');
             if(activeChatRef) activeChatRef(); if(targetTypingUnsubscribe) targetTypingUnsubscribe();
@@ -592,26 +663,70 @@
 
             const msgsQuery = query(ref(db, `chats/${chatId}`), limitToLast(50));
             activeChatRef = onValue(msgsQuery, (snapshot) => {
-                box.innerHTML = ""; const now = Date.now(); const oneDay = 24 * 60 * 60 * 1000;
+                // رسالة التشفير E2EE في أعلى المحادثة
+                box.innerHTML = `
+                    <div class="flex justify-center mb-6 mt-2">
+                        <div class="bg-yellow-500/10 border border-yellow-500/30 text-yellow-500 text-[10px] font-bold px-4 py-2 rounded-xl flex items-center gap-1.5 shadow-md text-center max-w-xs">
+                            <span>🔒</span> الرسائل والمكالمات في هذه المحادثة مشفرة ومحمية. كما تُحذف الرسائل تلقائياً بعد مرور ٢٤ ساعة.
+                        </div>
+                    </div>`; 
+
+                const now = Date.now(); const oneDay = 24 * 60 * 60 * 1000;
+                
                 snapshot.forEach(c => {
-                    const m = c.val(); if(now - m.timestamp > oneDay) return; 
+                    const msgId = c.key;
+                    const m = c.val(); 
+                    if(now - m.timestamp > oneDay) return; // الحذف التلقائي بعد 24 ساعة للمحتوى
+
                     const isMe = m.senderId === currentUser.uid;
                     const timeStr = new Date(m.timestamp).toLocaleTimeString('ar-EG', {hour: '2-digit', minute:'2-digit'});
+                    
+                    let replyHTML = '';
+                    if (m.replyTo) {
+                        replyHTML = `
+                            <div class="bg-black/20 border-r-2 border-[#ff7300] p-1.5 mb-1.5 rounded text-[9px] text-gray-300 w-full text-right">
+                                <span class="truncate block max-w-[150px]">${escapeHTML(m.replyTo.text)}</span>
+                            </div>
+                        `;
+                    }
+
                     box.innerHTML += `
-                        <div class="flex w-full mb-1 ${isMe ? 'justify-start' : 'justify-end'}">
-                            <div class="max-w-[75%] p-3 rounded-2xl shadow-sm relative ${isMe ? 'gradient-bg text-white rounded-tr-none shadow-[#ff2a85]/10' : 'bg-[#1f1f2e] text-white rounded-tl-none'}">
-                                <p class="text-xs font-semibold leading-relaxed pb-3 pl-4 break-words">${escapeHTML(m.text)}</p>
-                                <span class="absolute bottom-1 left-2 text-[8px] text-gray-300 opacity-80 select-none dir-ltr">${timeStr}</span>
+                        <div class="flex w-full mb-1 ${isMe ? 'justify-start' : 'justify-end'} group">
+                            <div class="flex gap-2 items-center ${isMe ? 'flex-row' : 'flex-row-reverse'} max-w-[85%]">
+                                <div class="flex flex-col gap-1 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <button onclick="window.preparePrivateReply('${msgId}', '${escapeHTML(m.text)}')" class="text-gray-500 hover:text-white bg-[#1f1f2e] p-1.5 rounded-full text-[10px]">↩️</button>
+                                    <button onclick="window.addReaction('chats/${chatId}', '${msgId}')" class="text-gray-500 hover:text-[#ff7300] bg-[#1f1f2e] p-1.5 rounded-full text-[10px]">😄</button>
+                                </div>
+
+                                <div class="p-3 rounded-2xl shadow-sm relative ${isMe ? 'gradient-bg text-white rounded-tr-none shadow-[#ff2a85]/10' : 'bg-[#1f1f2e] border border-gray-800 text-white rounded-tl-none'}">
+                                    ${replyHTML}
+                                    <p class="text-xs font-semibold leading-relaxed pb-3 px-1 break-words">${escapeHTML(m.text)}</p>
+                                    ${renderReactions(m.reactions)}
+                                    <span class="absolute bottom-1 left-3 text-[8px] text-gray-300/60 select-none dir-ltr font-bold">${timeStr}</span>
+                                </div>
                             </div>
                         </div>`;
                 });
                 box.scrollTop = box.scrollHeight;
+                
+                // تحديث حالة القراءة إذا كنت فاتح الشات
+                if(document.getElementById('private-chat-window').classList.contains('hidden') === false) {
+                     update(ref(db), { [`user_chats/${currentUser.uid}/${chatId}/hasUnread`]: false });
+                }
             });
 
             document.getElementById('send-private-btn').onclick = () => {
                 const text = msgInput.value.trim(); if(!text) return; msgInput.value = ""; const timeNow = Date.now();
                 set(myTypingRef, false); clearTimeout(typingTimeout);
-                push(ref(db, `chats/${chatId}`), { senderId: currentUser.uid, text: text, timestamp: timeNow });
+                
+                const msgData = { senderId: currentUser.uid, text: text, timestamp: timeNow };
+                if (privateReplyingToMsg) { msgData.replyTo = privateReplyingToMsg; }
+                
+                push(ref(db, `chats/${chatId}`), msgData).then(() => {
+                    privateReplyingToMsg = null; document.getElementById('private-reply-banner').classList.add('hidden');
+                    addExpPoints(1);
+                });
+                
                 update(ref(db), { [`user_chats/${currentUser.uid}/${chatId}/lastUpdate`]: timeNow, [`user_chats/${targetUid}/${chatId}/lastUpdate`]: timeNow, [`user_chats/${targetUid}/${chatId}/hasUnread`]: true });
             };
         }
@@ -625,9 +740,12 @@
                 if(!snapshot.exists()) { list.innerHTML = "<div class='text-center py-10'><p class='text-3xl mb-2'>💬</p><p class='text-xs text-gray-500'>قائمة شتاتي فارغة.<br>ابحث عن صديقك وابدأ المحادثة الآن!</p></div>"; return; }
 
                 const chatPromises = [];
+                let totalUnread = false;
+
                 snapshot.forEach(c => {
                     const chatMeta = c.val(); const chatId = c.key;
                     if(chatMeta && chatMeta.targetUid) {
+                        if (chatMeta.hasUnread) totalUnread = true; // فحص هل هناك رسائل غير مقروءة
                         const p = get(child(ref(db), `users/${chatMeta.targetUid}`)).then(uSnap => {
                             if(uSnap.exists()) return { chatId: chatId, lastUpdate: chatMeta.lastUpdate || 0, hasUnread: chatMeta.hasUnread || false, user: uSnap.val() };
                             return null;
@@ -635,6 +753,11 @@
                         chatPromises.push(p);
                     }
                 });
+
+                // تفعيل إشعار التبويب الخاص بالشاتاتي (النقطة الخضراء)
+                if (totalUnread && window.activeTabId !== 'chats' && !openChatId) {
+                    document.getElementById('chats-unread-dot').classList.remove('hidden');
+                }
 
                 const results = await Promise.all(chatPromises); const validChats = results.filter(r => r !== null);
                 validChats.sort((a, b) => b.lastUpdate - a.lastUpdate);
@@ -644,14 +767,13 @@
                 
                 validChats.forEach(item => {
                     const u = item.user;
-                    // تحقق مما إذا كان هناك نوت نشط
                     let noteHTML = '';
                     if (u.note && u.note.text && (Date.now() - u.note.timestamp < 7 * 60 * 60 * 1000)) {
                         noteHTML = `<div class="absolute -top-1 -right-2 bg-white text-black text-[9px] px-2 py-0.5 rounded-xl rounded-br-none shadow-md truncate max-w-[80px] font-bold border border-gray-300 z-10 note-bubble">${escapeHTML(u.note.text)}</div>`;
                     }
 
                     list.innerHTML += `
-                        <div class="bg-[#16161f] p-3 rounded-xl flex items-center justify-between border border-gray-800/60 cursor-pointer transition active:scale-[0.99] hover:bg-[#1a1a26] hover:border-gray-700" onclick="window.handleOpenChat('${u.uid}','${u.nickname}','${u.avatarUrl}')">
+                        <div class="bg-[#16161f] p-3 rounded-xl flex items-center justify-between border border-gray-800/60 cursor-pointer transition active:scale-[0.99] hover:bg-[#1f1f2e] shadow-sm hover:shadow-md" onclick="window.handleOpenChat('${u.uid}','${escapeHTML(u.nickname)}','${u.avatarUrl}')">
                             <div class="flex items-center gap-3">
                                 <div class="relative">
                                     <img src="${u.avatarUrl}" class="w-11 h-11 rounded-full bg-gray-800 border border-gray-700">
@@ -664,7 +786,7 @@
                             </div>
                             <div class="flex flex-col items-end gap-1">
                                 ${item.hasUnread ? '<span class="w-3 h-3 rounded-full bg-green-500 animate-pulse shadow-md shadow-green-500/50"></span>' : ''}
-                                <span class="text-[9px] text-gray-500 bg-[#1f1f2e] px-2 py-0.5 rounded-md font-medium">مراسلة</span>
+                                <span class="text-[9px] text-gray-500 bg-[#1f1f2e] border border-gray-800 px-2 py-0.5 rounded-md font-medium">مراسلة</span>
                             </div>
                         </div>`;
                 });
@@ -674,7 +796,6 @@
 
         /* ---------------- ألعاب وحركات NXL ---------------- */
         
-        // 1. حاسبة الحب
         document.getElementById('calculate-love-btn').onclick = () => {
             const n1 = document.getElementById('love-name1').value.trim(); const n2 = document.getElementById('love-name2').value.trim(); if(!n1 || !n2) return;
             const str = [n1, n2].sort().join("").toLowerCase(); let h = 0; for(let i=0; i<str.length; i++) h = str.charCodeAt(i) + ((h<<5)-h);
@@ -682,9 +803,9 @@
             document.getElementById('love-percentage').innerText = `${score}%`;
             document.getElementById('love-status').innerText = score > 90 ? "حب أسطوري متطابق! 🔥" : "توافق رائع وقوي ✨";
             document.getElementById('love-result').classList.remove('hidden');
+            addExpPoints(1);
         };
 
-        // 2. مشاركة ستوري الحب
         document.getElementById('share-ig-btn').onclick = async () => {
             const n1 = document.getElementById('love-name1').value.trim();
             const n2 = document.getElementById('love-name2').value.trim();
@@ -692,7 +813,7 @@
             const status = document.getElementById('love-status').innerText;
             
             const canvas = document.createElement('canvas'); canvas.width = 1080; canvas.height = 1920; const ctx = canvas.getContext('2d');
-            ctx.fillStyle = '#0d0d12'; ctx.fillRect(0, 0, 1080, 1920);
+            ctx.fillStyle = '#09090d'; ctx.fillRect(0, 0, 1080, 1920);
             
             const grad = ctx.createLinearGradient(140, 450, 940, 1450);
             grad.addColorStop(0, '#ff2a85'); grad.addColorStop(1, '#ff7300');
@@ -717,55 +838,37 @@
             }, 'image/jpeg', 0.95);
         };
 
-        // 3. (الميزة الجديدة) - استخراج بطاقة VIP NXL للستوري
         document.getElementById('generate-vip-btn').onclick = async () => {
             const canvas = document.createElement('canvas'); canvas.width = 1080; canvas.height = 1920; const ctx = canvas.getContext('2d');
             
-            // خلفية سوداء عميقة
             ctx.fillStyle = '#09090d'; ctx.fillRect(0, 0, 1080, 1920);
-            
-            // توهج خلفي نيون
             const glow = ctx.createRadialGradient(540, 960, 100, 540, 960, 800);
-            glow.addColorStop(0, 'rgba(255, 42, 133, 0.2)');
-            glow.addColorStop(1, 'rgba(9, 9, 13, 1)');
+            glow.addColorStop(0, 'rgba(255, 42, 133, 0.2)'); glow.addColorStop(1, 'rgba(9, 9, 13, 1)');
             ctx.fillStyle = glow; ctx.fillRect(0, 0, 1080, 1920);
             
-            // جسم البطاقة (زجاجي ومضيء)
-            ctx.fillStyle = '#16161f';
-            ctx.shadowColor = '#ff2a85'; ctx.shadowBlur = 40;
-            ctx.beginPath(); ctx.roundRect(140, 450, 800, 950, 40); ctx.fill();
-            ctx.shadowBlur = 0; 
+            ctx.fillStyle = '#16161f'; ctx.shadowColor = '#ff2a85'; ctx.shadowBlur = 40;
+            ctx.beginPath(); ctx.roundRect(140, 450, 800, 950, 40); ctx.fill(); ctx.shadowBlur = 0; 
             
-            // شريط برتقالي أنيق أعلى البطاقة
             ctx.fillStyle = '#ff7300';
             ctx.beginPath(); ctx.roundRect(140, 450, 800, 20, {tl: 40, tr: 40, bl: 0, br: 0}); ctx.fill();
             
-            // دائرة الصورة الرمزية (Typographic Logo لتجنب مشاكل الصور)
-            ctx.fillStyle = '#1f1f2e';
-            ctx.beginPath(); ctx.arc(540, 750, 160, 0, Math.PI * 2); ctx.fill();
+            ctx.fillStyle = '#1f1f2e'; ctx.beginPath(); ctx.arc(540, 750, 160, 0, Math.PI * 2); ctx.fill();
             ctx.strokeStyle = '#ff2a85'; ctx.lineWidth = 15; ctx.stroke();
             
-            // أول حرف من اللقب ليكون هوية فخمة
             const firstLetter = userData.nickname.charAt(0).toUpperCase() || "N";
             ctx.fillStyle = '#ffffff'; ctx.textAlign = 'center'; ctx.font = 'bold 150px Cairo, sans-serif';
             ctx.fillText(firstLetter, 540, 800);
 
-            // النصوص الأساسية للبطاقة
-            ctx.fillStyle = "#ffffff"; ctx.font = "bold 80px Cairo, sans-serif";
-            ctx.fillText(userData.nickname, 540, 1020);
+            ctx.fillStyle = "#ffffff"; ctx.font = "bold 80px Cairo, sans-serif"; ctx.fillText(userData.nickname, 540, 1020);
+            ctx.fillStyle = "#ff7300"; ctx.font = "55px Cairo, sans-serif"; ctx.fillText("@" + userData.username, 540, 1110);
+            ctx.fillStyle = "#444444"; ctx.font = "bold 45px Cairo, sans-serif"; ctx.fillText("⭐ VIP MEMBER - شبكة التقارب ⭐", 540, 1250);
             
-            ctx.fillStyle = "#ff7300"; ctx.font = "55px Cairo, sans-serif";
-            ctx.fillText("@" + userData.username, 540, 1110);
+            // إضافة مستوى Gamification على الكارت
+            ctx.fillStyle = "#ff2a85"; ctx.font = "bold 55px Cairo, sans-serif"; 
+            ctx.fillText("🔥 " + (userData.points || 0) + " EXP", 540, 1350);
+
+            ctx.fillStyle = "#ff2a85"; ctx.font = "900 120px sans-serif"; ctx.fillText("NXL", 540, 1750);
             
-            // ختم VIP
-            ctx.fillStyle = "#444444"; ctx.font = "bold 45px Cairo, sans-serif";
-            ctx.fillText("⭐ VIP MEMBER - شبكة التقارب ⭐", 540, 1250);
-            
-            // لوجو NXL الساطع أسفل الستوري
-            ctx.fillStyle = "#ff2a85"; ctx.font = "900 120px sans-serif";
-            ctx.fillText("NXL", 540, 1750);
-            
-            // تصدير للستوري
             canvas.toBlob(async (blob) => {
                 const file = new File([blob], 'NXL_VIP_CARD.jpg', { type: 'image/jpeg' });
                 if (navigator.canShare && navigator.canShare({ files: [file] })) {
@@ -774,6 +877,7 @@
                     const link = document.createElement('a'); link.download = 'NXL_VIP_CARD.jpg'; link.href = URL.createObjectURL(blob); link.click();
                 }
             }, 'image/jpeg', 0.95);
+            addExpPoints(5);
         };
 
         function escapeHTML(str) { return str.replace(/[&<>'"]/g, t => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[t] || t)); }
@@ -781,6 +885,11 @@
     
     <script>
         window.switchTab = function(tId, btn) {
+            // تحديث التبويب النشط لإخفاء النقطة عند الدخول
+            window.activeTabId = tId;
+            if (tId === 'global') { document.getElementById('global-unread-dot').classList.add('hidden'); }
+            if (tId === 'chats') { document.getElementById('chats-unread-dot').classList.add('hidden'); }
+
             document.querySelectorAll('.tab-content').forEach(t => { t.classList.add('hidden'); t.classList.remove('flex', 'flex-col'); });
             const target = document.getElementById(`tab-${tId}`);
             if(tId === 'global') { target.classList.remove('hidden'); target.classList.add('flex', 'flex-col'); } else { target.classList.remove('hidden'); }
