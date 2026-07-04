@@ -83,7 +83,10 @@
                 <p class="text-[9px] text-gray-400 -mt-1">سهولة ارتباط .. قلوب بتتقرب</p>
             </div>
         </div>
-        <div id="user-header-avatar" class="w-8 h-8 rounded-full border border-gray-700 bg-gray-800 overflow-hidden hidden cursor-pointer" onclick="switchTab('profile', document.getElementById('nav-profile-btn'))"></div>
+        <div class="flex items-center gap-3">
+            <button id="notifyBtn" class="text-lg hidden active:scale-95" title="تفعيل الإشعارات">🔔</button>
+            <div id="user-header-avatar" class="w-8 h-8 rounded-full border border-gray-700 bg-gray-800 overflow-hidden hidden cursor-pointer" onclick="switchTab('profile', document.getElementById('nav-profile-btn'))"></div>
+        </div>
     </header>
 
     <main class="flex-1 overflow-y-auto custom-scrollbar bg-[#0d0d12] pb-20">
@@ -110,9 +113,20 @@
                 الرسائل تختفي تلقائياً بعد 24 ساعة.
             </div>
             <div id="global-messages-box" class="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar h-[calc(100vh-210px)]"></div>
-            <div class="p-3 bg-[#16161f] border-t border-gray-800 flex gap-2 items-center shrink-0">
-                <input type="text" id="global-msg-input" placeholder="رسالة عامة..." class="flex-1 bg-[#1f1f2e] text-sm rounded-xl px-4 py-3 text-white focus:outline-none">
-                <button id="send-global-btn" class="w-11 h-11 gradient-bg rounded-xl flex items-center justify-center text-white font-bold active:scale-95">إرسال</button>
+            
+            <div class="p-3 bg-[#16161f] border-t border-gray-800 flex flex-col shrink-0">
+                <div id="reply-banner" class="hidden flex justify-between items-center bg-[#1f1f2e] p-2 rounded-xl mb-2 border-r-4 border-[#ff2a85] text-xs">
+                    <div class="truncate w-5/6 text-gray-300">
+                        <span class="font-bold text-[#ff2a85]" id="reply-to-name"></span>:
+                        <span id="reply-to-text" class="text-[10px]"></span>
+                    </div>
+                    <button id="cancelReplyBtn" class="text-red-500 font-bold px-2 text-lg active:scale-95">×</button>
+                </div>
+
+                <div class="flex gap-2 items-center">
+                    <input type="text" id="global-msg-input" placeholder="رسالة عامة..." class="flex-1 bg-[#1f1f2e] text-sm rounded-xl px-4 py-3 text-white focus:outline-none">
+                    <button id="send-global-btn" class="w-11 h-11 gradient-bg rounded-xl flex items-center justify-center text-white font-bold active:scale-95">🚀</button>
+                </div>
             </div>
         </section>
 
@@ -196,8 +210,9 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        // لاحظ إضافة 'update' هنا للقيام بالحفظ الجذري
         import { getDatabase, ref, set, update, push, onValue, get, child, query, limitToLast } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        // الإضافة الجديدة لمكتبة الإشعارات
+        import { getMessaging, getToken } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDHL6QiJ6a0MZcW3Y6RZ24ZHDQi2TyiFBw",
@@ -213,12 +228,16 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getDatabase(app);
+        const messaging = getMessaging(app); // تشغيل الإشعارات
 
         let currentUser = null;
         let userData = null;
         let globalPostImageBase64 = "";
         let activeChatRef = null;
         let openChatId = null; 
+        
+        // متغيرات للتحكم في الرد
+        let replyingToMsg = null;
 
         // دوال الإشعارات والأخطاء
         const emailInput = document.getElementById('auth-email');
@@ -256,12 +275,34 @@
             if (user) {
                 currentUser = user;
                 document.getElementById('auth-screen').classList.add('hidden');
+                document.getElementById('notifyBtn').classList.remove('hidden'); // إظهار جرس الإشعارات
                 const userSnapshot = await get(child(ref(db), `users/${user.uid}`));
                 if (userSnapshot.exists()) { userData = userSnapshot.val(); initAppUI(); } 
                 else { document.getElementById('setup-profile-screen').classList.remove('hidden'); }
             } else {
                 document.getElementById('auth-screen').classList.remove('hidden');
                 document.getElementById('setup-profile-screen').classList.add('hidden');
+                document.getElementById('notifyBtn').classList.add('hidden');
+            }
+        });
+
+        // تفعيل الإشعارات بالـ VAPID Key الخاص بك
+        document.getElementById('notifyBtn').addEventListener('click', async () => {
+            if (!currentUser) return;
+            const permission = await Notification.requestPermission();
+            if (permission === 'granted') {
+                try {
+                    const token = await getToken(messaging, { 
+                        vapidKey: 'BJ4OfxLpm3Aj_pSMmAZzzTaFWhQ3PLEGXFBgizptvIMNkx6DrzGJ5jLdmp_aWyg4aNggVG86U9jKU-53Q_fjY1w' 
+                    });
+                    await set(ref(db, 'users/' + currentUser.uid + '/notificationToken'), token);
+                    alert("تم تفعيل الإشعارات وحفظها بنجاح! 🔔");
+                } catch (error) {
+                    console.error("خطأ في التنبيهات:", error);
+                    alert("حدث خطأ أثناء التفعيل.");
+                }
+            } else {
+                alert("لم توافق على تفعيل التنبيهات.");
             }
         });
 
@@ -291,21 +332,56 @@
             startGlobalChat(); startPostsFeed(); startMyChatsList();
         }
 
-        // --- الشات العام ---
+        // --- نظام الرد (إلغاء الرد وتجهيز الرد) ---
+        document.getElementById('cancelReplyBtn').addEventListener('click', () => {
+            replyingToMsg = null;
+            document.getElementById('reply-banner').classList.add('hidden');
+        });
+
+        window.prepareReply = function(msgId, senderName, msgText) {
+            replyingToMsg = { id: msgId, name: senderName, text: msgText };
+            document.getElementById('reply-to-name').innerText = senderName;
+            document.getElementById('reply-to-text').innerText = msgText;
+            document.getElementById('reply-banner').classList.remove('hidden');
+            document.getElementById('global-msg-input').focus();
+        };
+
+        // --- الشات العام (مطور بنظام الرد) ---
         function startGlobalChat() {
             const box = document.getElementById('global-messages-box');
             const chatQuery = query(ref(db, 'global_chat'), limitToLast(50));
             onValue(chatQuery, (snapshot) => {
                 box.innerHTML = ""; const now = Date.now(); const oneDay = 24 * 60 * 60 * 1000;
                 snapshot.forEach(childSnap => {
-                    const msg = childSnap.val(); if(now - msg.timestamp > oneDay) return;
+                    const msgId = childSnap.key;
+                    const msg = childSnap.val(); 
+                    if(now - msg.timestamp > oneDay) return;
+                    
                     const isMe = msg.senderId === currentUser.uid;
+                    
+                    // بناء شكل الرد داخل الرسالة لو موجود
+                    let replyHTML = '';
+                    if (msg.replyTo) {
+                        replyHTML = `
+                            <div class="bg-black/20 border-r-2 border-[#ff7300] p-1.5 mb-1.5 rounded text-[9px] text-gray-300 w-full text-right">
+                                <strong class="text-[#ff7300] block mb-0.5">${msg.replyTo.name}</strong>
+                                <span class="truncate block max-w-[150px]">${msg.replyTo.text}</span>
+                            </div>
+                        `;
+                    }
+
                     box.innerHTML += `
-                        <div class="flex gap-2 max-w-[85%] ${isMe ? 'mr-auto flex-row-reverse' : 'ml-auto'}">
-                            <img src="${msg.senderAvatar}" class="w-8 h-8 rounded-full cursor-pointer bg-gray-800" onclick="window.openUserModal('${msg.senderId}')">
-                            <div>
-                                <div class="text-[10px] text-gray-500 px-1">${msg.senderNickname}</div>
-                                <div class="p-3 text-xs rounded-xl ${isMe ? 'gradient-bg text-white' : 'bg-[#1f1f2e]'}">${escapeHTML(msg.text)}</div>
+                        <div class="flex gap-2 w-full mb-1 ${isMe ? 'flex-row-reverse' : ''}">
+                            <img src="${msg.senderAvatar}" class="w-8 h-8 rounded-full cursor-pointer bg-gray-800 shrink-0" onclick="window.openUserModal('${msg.senderId}')">
+                            <div class="flex flex-col ${isMe ? 'items-end' : 'items-start'} max-w-[75%]">
+                                <div class="flex items-center gap-2 mb-0.5">
+                                    <span class="text-[10px] text-gray-500 px-1">${msg.senderNickname}</span>
+                                    <button onclick="window.prepareReply('${msgId}', '${msg.senderNickname}', '${escapeHTML(msg.text)}')" class="text-[9px] text-gray-500 hover:text-[#ff2a85] transition active:scale-95">↩️ رد</button>
+                                </div>
+                                <div class="p-2.5 text-xs rounded-xl ${isMe ? 'gradient-bg text-white rounded-tr-none' : 'bg-[#1f1f2e] text-white rounded-tl-none'} w-full break-words">
+                                    ${replyHTML}
+                                    ${escapeHTML(msg.text)}
+                                </div>
                             </div>
                         </div>`;
                 });
@@ -315,7 +391,25 @@
 
         document.getElementById('send-global-btn').onclick = () => {
             const inp = document.getElementById('global-msg-input'); const text = inp.value.trim(); if(!text) return; inp.value = "";
-            push(ref(db, 'global_chat'), { senderId: currentUser.uid, senderNickname: userData.nickname, senderAvatar: userData.avatarUrl, text: text, timestamp: Date.now() });
+            
+            const msgData = { 
+                senderId: currentUser.uid, 
+                senderNickname: userData.nickname, 
+                senderAvatar: userData.avatarUrl, 
+                text: text, 
+                timestamp: Date.now() 
+            };
+
+            // لو كان المستخدم بيرد على رسالة، بنضيفها للبيانات
+            if (replyingToMsg) {
+                msgData.replyTo = replyingToMsg;
+            }
+
+            push(ref(db, 'global_chat'), msgData).then(() => {
+                // تصفير شريط الرد بعد الإرسال
+                replyingToMsg = null;
+                document.getElementById('reply-banner').classList.add('hidden');
+            });
         };
 
         // --- المنشورات ---
@@ -383,7 +477,6 @@
             const chatId = currentUser.uid < targetUid ? `${currentUser.uid}_${targetUid}` : `${targetUid}_${currentUser.uid}`;
             openChatId = chatId;
 
-            // التحديث الجذري (Atomic Update): يضمن تسجيل المحادثة في حسابك وحسابه فور الفتح ولا تمسح أي رسائل
             const initialUpdates = {};
             initialUpdates[`user_chats/${currentUser.uid}/${chatId}/targetUid`] = targetUid;
             initialUpdates[`user_chats/${currentUser.uid}/${chatId}/hasUnread`] = false;
@@ -391,7 +484,7 @@
             update(ref(db), initialUpdates);
 
             const box = document.getElementById('private-messages-box');
-            if(activeChatRef) activeChatRef(); // تنظيف المراقبة القديمة
+            if(activeChatRef) activeChatRef(); 
             
             const msgsQuery = query(ref(db, `chats/${chatId}`), limitToLast(50));
             activeChatRef = onValue(msgsQuery, (snapshot) => {
@@ -401,7 +494,7 @@
 
                 snapshot.forEach(c => {
                     const m = c.val();
-                    if(now - m.timestamp > oneDay) return; // فلترة 24 ساعة للرسائل فقط
+                    if(now - m.timestamp > oneDay) return; 
 
                     const isMe = m.senderId === currentUser.uid;
                     const timeStr = new Date(m.timestamp).toLocaleTimeString('ar-EG', {hour: '2-digit', minute:'2-digit'});
@@ -415,7 +508,6 @@
                         </div>`;
                 });
                 box.scrollTop = box.scrollHeight;
-                // تصفير إشعار القراءة طالما أنت فاتح الشات
                 update(ref(db), { [`user_chats/${currentUser.uid}/${chatId}/hasUnread`]: false });
             });
 
@@ -423,10 +515,8 @@
                 const inp = document.getElementById('private-msg-input'); const text = inp.value.trim(); if(!text) return; inp.value = "";
                 const timeNow = Date.now();
                 
-                // حفظ الرسالة
                 push(ref(db, `chats/${chatId}`), { senderId: currentUser.uid, text: text, timestamp: timeNow });
                 
-                // تحديث بيانات ترتيب المحادثات والإشعارات لكلا الطرفين بضربة واحدة وبدون مسح الهيكل
                 const metaUpdates = {};
                 metaUpdates[`user_chats/${currentUser.uid}/${chatId}/lastUpdate`] = timeNow;
                 metaUpdates[`user_chats/${targetUid}/${chatId}/lastUpdate`] = timeNow;
@@ -441,7 +531,7 @@
             openChatId = null; 
         };
 
-        // --- قائمة شتاتي المطورة بالـ Promise.all لتفادي توقف الكود ---
+        // --- قائمة شتاتي المطورة ---
         function startMyChatsList() {
             const list = document.getElementById('private-chats-list');
             
@@ -456,7 +546,6 @@
                     const chatMeta = c.val();
                     const chatId = c.key;
                     
-                    // الشرط ده بيحمي التطبيق لو فيه داتا قديمة متسجلة غلط عندك
                     if(chatMeta && chatMeta.targetUid) {
                         const p = get(child(ref(db), `users/${chatMeta.targetUid}`)).then(uSnap => {
                             if(uSnap.exists()) {
@@ -473,11 +562,9 @@
                     }
                 });
 
-                // الانتظار حتى تحميل كل المستخدمين بأمان تام
                 const results = await Promise.all(chatPromises);
                 const validChats = results.filter(r => r !== null);
                 
-                // الترتيب: الأحدث دائماً في الأعلى
                 validChats.sort((a, b) => b.lastUpdate - a.lastUpdate);
                 
                 list.innerHTML = "";
