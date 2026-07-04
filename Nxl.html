@@ -22,6 +22,14 @@
         .gradient-text { background: linear-gradient(135deg, #ff2a85 0%, #ff7300 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #ff2a85; border-radius: 10px; }
+        
+        /* حركة بسيطة للنوت */
+        @keyframes popIn {
+            0% { transform: scale(0); opacity: 0; }
+            80% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .note-bubble { animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
     </style>
 </head>
 <body class="flex flex-col h-screen overflow-hidden select-none">
@@ -131,6 +139,7 @@
         </section>
 
         <section id="tab-games" class="tab-content hidden p-4 max-w-lg mx-auto space-y-6">
+            
             <div class="bg-[#16161f] p-6 rounded-2xl border border-gray-800 text-center relative overflow-hidden">
                 <h2 class="text-lg font-bold mb-1 relative z-10">❤️ حاسبة الحب NXL</h2>
                 <input type="text" id="love-name1" placeholder="اسمك" class="w-full bg-[#1f1f2e] text-center text-sm rounded-xl py-2 mt-3 text-white relative z-10">
@@ -142,17 +151,38 @@
                     <div class="text-xs text-gray-300 font-bold mb-4" id="love-status"></div>
                     
                     <button id="share-ig-btn" class="w-full py-2.5 bg-gradient-to-r from-purple-600 to-[#ff2a85] rounded-xl text-sm font-bold text-white active:scale-95 shadow-lg shadow-purple-500/30 flex items-center justify-center gap-2">
-                        <span>📸</span> شاركها ستوري (إنستجرام)
+                        <span>📸</span> شاركها ستوري
                     </button>
                 </div>
             </div>
+
+            <div class="bg-[#16161f] p-6 rounded-2xl border border-gray-800 text-center relative overflow-hidden">
+                <div class="absolute -top-10 -right-10 w-24 h-24 bg-[#ff7300] rounded-full blur-3xl opacity-20"></div>
+                <h2 class="text-lg font-bold mb-1 relative z-10">💳 بطاقة NXL VIP</h2>
+                <p class="text-[10px] text-gray-400 mb-4 relative z-10">أثبت إنك جزء من مجتمعنا! استخرج بطاقتك الفخمة وشاركها ستوري.</p>
+                <button id="generate-vip-btn" class="w-full py-2.5 bg-gradient-to-r from-gray-800 to-[#16161f] border border-[#ff7300] rounded-xl text-sm font-bold text-white active:scale-95 shadow-lg shadow-[#ff7300]/20 flex items-center justify-center gap-2 relative z-10">
+                    <span>✨</span> استخراج ومشاركة
+                </button>
+            </div>
+
         </section>
 
         <section id="tab-chats" class="tab-content hidden p-4 max-w-lg mx-auto">
-            <div class="bg-[#16161f] p-3 rounded-xl border border-gray-800 mb-4 flex gap-2">
-                <input type="text" id="search-username-input" placeholder="ابحث باسم المستخدم (@username)..." class="flex-1 bg-[#1f1f2e] text-xs rounded-lg px-3 py-2 text-white focus:outline-none text-left dir-ltr">
-                <button id="search-user-btn" class="bg-gray-700 hover:bg-[#ff2a85] text-white px-4 rounded-lg text-xs font-bold active:scale-95 transition-colors">بحث</button>
+            
+            <div class="bg-[#16161f] p-3 rounded-xl border border-[#ff2a85]/40 mb-4 flex gap-2 items-center">
+                <div id="my-note-avatar" class="w-9 h-9 rounded-full bg-gray-800 border border-gray-700 shrink-0 overflow-hidden"></div>
+                <input type="text" id="my-note-input" placeholder="نوت (تختفي بعد 7 ساعات)..." class="flex-1 bg-[#1f1f2e] text-xs rounded-lg px-3 py-2 text-white focus:outline-none">
+                <button id="save-note-btn" class="gradient-bg text-white px-3 py-2 rounded-lg text-xs font-bold active:scale-95 transition-colors">نشر</button>
             </div>
+
+            <div class="relative bg-[#16161f] p-3 rounded-xl border border-gray-800 mb-4 z-20">
+                <div class="flex gap-2">
+                    <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">🔍</span>
+                    <input type="text" id="search-username-input" autocomplete="off" placeholder="ابحث بالاسم أو اليوزر..." class="flex-1 bg-[#1f1f2e] text-xs rounded-lg px-3 py-2.5 text-white focus:outline-none pl-8">
+                </div>
+                <div id="search-dropdown" class="absolute left-0 right-0 top-full mt-2 bg-[#16161f] border border-gray-800 rounded-xl shadow-2xl overflow-hidden hidden max-h-48 overflow-y-auto"></div>
+            </div>
+
             <h2 class="text-sm font-bold mb-3 px-1 text-gray-400">الدردشات الخاصة بك</h2>
             <div id="private-chats-list" class="space-y-1"></div>
         </section>
@@ -240,7 +270,6 @@
         let activeChatRef = null;
         let openChatId = null; 
         let targetTypingUnsubscribe = null;
-        
         let replyingToMsg = null;
 
         const emailInput = document.getElementById('auth-email');
@@ -289,25 +318,6 @@
             }
         });
 
-        document.getElementById('notifyBtn').addEventListener('click', async () => {
-            if (!currentUser) return;
-            const permission = await Notification.requestPermission();
-            if (permission === 'granted') {
-                try {
-                    const token = await getToken(messaging, { 
-                        vapidKey: 'BJ4OfxLpm3Aj_pSMmAZzzTaFWhQ3PLEGXFBgizptvIMNkx6DrzGJ5jLdmp_aWyg4aNggVG86U9jKU-53Q_fjY1w' 
-                    });
-                    await set(ref(db, 'users/' + currentUser.uid + '/notificationToken'), token);
-                    alert("تم تفعيل الإشعارات وحفظها بنجاح! 🔔");
-                } catch (error) {
-                    console.error("تفاصيل الخطأ التقني:", error);
-                    alert("تعذر التفعيل، الخطأ هو: " + error.message);
-                }
-            } else {
-                alert("لم توافق على تفعيل التنبيهات.");
-            }
-        });
-
         document.getElementById('save-profile-btn').addEventListener('click', async () => {
             const nickname = document.getElementById('setup-nickname').value.trim();
             let username = document.getElementById('setup-username').value.trim().toLowerCase().replace(/[^a-z0-9_]/g, '');
@@ -327,12 +337,91 @@
             document.getElementById('user-header-avatar').innerHTML = `<img src="${userData.avatarUrl}" class="w-full h-full object-cover">`;
             document.getElementById('user-header-avatar').classList.remove('hidden');
             document.getElementById('profile-avatar-container').innerHTML = `<img src="${userData.avatarUrl}" class="w-full h-full object-cover">`;
+            document.getElementById('my-note-avatar').innerHTML = `<img src="${userData.avatarUrl}" class="w-full h-full object-cover">`;
+            
             document.getElementById('profile-nickname').innerText = userData.nickname;
             document.getElementById('profile-username-display').innerText = `@${userData.username}`;
             document.getElementById('profile-email').innerText = userData.email;
+            
+            // جلب النوت الخاصة بي إذا كانت موجودة
+            if (userData.note && (Date.now() - userData.note.timestamp < 7 * 60 * 60 * 1000)) {
+                document.getElementById('my-note-input').value = userData.note.text;
+            }
 
             startGlobalChat(); startPostsFeed(); startMyChatsList();
         }
+
+        /* ---------------- ميزة النوت (7 ساعات) ---------------- */
+        document.getElementById('save-note-btn').onclick = async () => {
+            const noteText = document.getElementById('my-note-input').value.trim();
+            if (!noteText) {
+                await update(ref(db, `users/${currentUser.uid}`), { note: null });
+                alert("تم حذف النوت الخاص بك.");
+            } else {
+                await update(ref(db, `users/${currentUser.uid}/note`), {
+                    text: noteText,
+                    timestamp: Date.now()
+                });
+                alert("تم نشر النوت! سيختفي تلقائياً بعد 7 ساعات.");
+            }
+        };
+
+        /* ---------------- ميزة البحث اللحظي (Autocomplete) ---------------- */
+        const searchInput = document.getElementById('search-username-input');
+        const searchDropdown = document.getElementById('search-dropdown');
+        let searchTimeout = null;
+
+        searchInput.addEventListener('input', (e) => {
+            clearTimeout(searchTimeout);
+            const val = e.target.value.trim().toLowerCase().replace('@', '');
+            
+            if (!val) { 
+                searchDropdown.classList.add('hidden'); 
+                return; 
+            }
+            
+            searchTimeout = setTimeout(async () => {
+                const snapshot = await get(ref(db, 'users'));
+                searchDropdown.innerHTML = '';
+                
+                if (snapshot.exists()) {
+                    let matches = 0;
+                    snapshot.forEach(child => {
+                        const u = child.val();
+                        // فلترة النتائج بالاسم أو اليوزر وتخطي المستخدم الحالي
+                        if ((u.username.toLowerCase().includes(val) || u.nickname.toLowerCase().includes(val)) && u.uid !== currentUser.uid) {
+                            matches++;
+                            searchDropdown.innerHTML += `
+                                <div class="flex items-center gap-3 p-3 hover:bg-[#1f1f2e] cursor-pointer border-b border-gray-800 transition" onclick="window.openUserModal('${u.uid}'); document.getElementById('search-dropdown').classList.add('hidden');">
+                                    <img src="${u.avatarUrl}" class="w-8 h-8 rounded-full bg-gray-800 shrink-0">
+                                    <div>
+                                        <p class="text-xs font-bold text-white">${u.nickname}</p>
+                                        <p class="text-[10px] text-[#ff7300]">@${u.username}</p>
+                                    </div>
+                                </div>
+                            `;
+                        }
+                    });
+                    
+                    if (matches > 0) {
+                        searchDropdown.classList.remove('hidden');
+                    } else {
+                        searchDropdown.innerHTML = '<div class="p-3 text-xs text-gray-500 text-center">لم يتم العثور على أحد مطابق</div>';
+                        searchDropdown.classList.remove('hidden');
+                    }
+                }
+            }, 300); // 300 ملي ثانية انتظار
+        });
+
+        // إخفاء القائمة عند الضغط خارجها
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.relative.z-20')) {
+                searchDropdown.classList.add('hidden');
+            }
+        });
+
+
+        /* ---------------- باقي وظائف التطبيق الأساسية ---------------- */
 
         document.getElementById('cancelReplyBtn').addEventListener('click', () => {
             replyingToMsg = null;
@@ -390,20 +479,9 @@
 
         document.getElementById('send-global-btn').onclick = () => {
             const inp = document.getElementById('global-msg-input'); const text = inp.value.trim(); if(!text) return; inp.value = "";
-            
-            const msgData = { 
-                senderId: currentUser.uid, 
-                senderNickname: userData.nickname, 
-                senderAvatar: userData.avatarUrl, 
-                text: text, 
-                timestamp: Date.now() 
-            };
-
+            const msgData = { senderId: currentUser.uid, senderNickname: userData.nickname, senderAvatar: userData.avatarUrl, text: text, timestamp: Date.now() };
             if (replyingToMsg) { msgData.replyTo = replyingToMsg; }
-
-            push(ref(db, 'global_chat'), msgData).then(() => {
-                replyingToMsg = null; document.getElementById('reply-banner').classList.add('hidden');
-            });
+            push(ref(db, 'global_chat'), msgData).then(() => { replyingToMsg = null; document.getElementById('reply-banner').classList.add('hidden'); });
         };
 
         document.getElementById('post-file').onchange = e => {
@@ -414,42 +492,23 @@
         document.getElementById('submit-post-btn').onclick = () => {
             const text = document.getElementById('post-input').value.trim(); if(!text && !globalPostImageBase64) return;
             document.getElementById('post-input').value = ""; document.getElementById('post-preview-container').classList.add('hidden');
-            push(ref(db, 'posts'), { 
-                userId: currentUser.uid, 
-                userNickname: userData.nickname, 
-                userUsername: userData.username, 
-                userAvatar: userData.avatarUrl, 
-                text: text, 
-                image: globalPostImageBase64, 
-                timestamp: Date.now(),
-                likeCount: 0 
-            });
+            push(ref(db, 'posts'), { userId: currentUser.uid, userNickname: userData.nickname, userUsername: userData.username, userAvatar: userData.avatarUrl, text: text, image: globalPostImageBase64, timestamp: Date.now(), likeCount: 0 });
             globalPostImageBase64 = "";
         };
 
         function startPostsFeed() {
             const feed = document.getElementById('home-posts-feed'); const grid = document.getElementById('profile-posts-grid');
             const postsQuery = query(ref(db, 'posts'), limitToLast(100));
-            
             onValue(postsQuery, (snapshot) => {
                 feed.innerHTML = ""; grid.innerHTML = ""; const now = Date.now(); const threeDays = 72 * 60 * 60 * 1000;
-                let postsArray = []; 
-                snapshot.forEach(c => { 
-                    let p = c.val(); p.id = c.key; 
-                    postsArray.push(p); 
-                }); 
-                postsArray.reverse();
+                let postsArray = []; snapshot.forEach(c => { let p = c.val(); p.id = c.key; postsArray.push(p); }); postsArray.reverse();
                 
                 postsArray.forEach(post => {
                     if(now - post.timestamp > threeDays) return;
-                    
                     const isLiked = post.likes && post.likes[currentUser.uid];
                     const likeIcon = isLiked ? '❤️' : '🤍';
                     const likeColor = isLiked ? 'text-[#ff2a85]' : 'text-gray-500 hover:text-gray-300';
-                    
-                    const deleteBtn = (post.userId === currentUser.uid) 
-                        ? `<button onclick="window.deletePost('${post.id}')" class="absolute left-3 top-3 z-20 text-red-500 hover:text-red-400 bg-red-500/10 hover:bg-red-500/20 rounded-full w-7 h-7 flex items-center justify-center transition" title="حذف المنشور">🗑️</button>` 
-                        : '';
+                    const deleteBtn = (post.userId === currentUser.uid) ? `<button onclick="window.deletePost('${post.id}')" class="absolute left-3 top-3 z-20 text-red-500 hover:text-red-400 bg-red-500/10 hover:bg-red-500/20 rounded-full w-7 h-7 flex items-center justify-center transition">🗑️</button>` : '';
 
                     feed.innerHTML += `
                         <div class="bg-[#16161f] p-4 rounded-2xl border border-gray-800 space-y-2 relative overflow-hidden transition-all duration-300 hover:border-[#ff2a85]/30 select-none" ondblclick="window.likePost('${post.id}')">
@@ -458,69 +517,34 @@
                                 <img src="${post.userAvatar}" class="w-8 h-8 rounded-full bg-gray-800 border border-gray-700">
                                 <div><h4 class="text-xs font-bold">${post.userNickname} <span class="text-[#ff7300] font-normal text-[10px]">@${post.userUsername}</span></h4></div>
                             </div>
-                            
                             ${post.text ? `<p class="text-xs text-gray-200 relative z-10 leading-relaxed">${escapeHTML(post.text)}</p>` : ''}
                             ${post.image ? `<img src="${post.image}" class="w-full rounded-lg mt-2 relative z-10 pointer-events-none border border-gray-800/50">` : ''}
-                            
                             <div class="flex justify-between items-center mt-3 pt-3 border-t border-gray-800/60 relative z-10">
-                                <button onclick="window.likePost('${post.id}')" class="flex items-center gap-1.5 text-xs font-bold transition-colors ${likeColor} active:scale-90">
-                                    <span class="text-sm">${likeIcon}</span>
-                                    <span>${post.likeCount || 0}</span>
-                                </button>
+                                <button onclick="window.likePost('${post.id}')" class="flex items-center gap-1.5 text-xs font-bold transition-colors ${likeColor} active:scale-90"><span class="text-sm">${likeIcon}</span><span>${post.likeCount || 0}</span></button>
                                 <span class="text-[9px] text-gray-500">انقر مرتين للإعجاب</span>
                             </div>
-
                             <div id="heart-anim-${post.id}" class="absolute inset-0 z-0 flex items-center justify-center opacity-0 pointer-events-none transition-all duration-500 ease-out">
                                 <div class="text-8xl drop-shadow-[0_0_20px_rgba(255,42,133,0.9)] transform scale-50 transition-transform duration-300">❤️</div>
                             </div>
                         </div>`;
-                        
-                    if(post.userId === currentUser.uid && post.image) { 
-                        grid.innerHTML += `<img src="${post.image}" class="w-full h-20 object-cover rounded-xl border border-gray-800 shadow-sm">`; 
-                    }
+                    if(post.userId === currentUser.uid && post.image) { grid.innerHTML += `<img src="${post.image}" class="w-full h-20 object-cover rounded-xl border border-gray-800 shadow-sm">`; }
                 });
             });
         }
 
-        window.deletePost = async (postId) => {
-            if(confirm("هل أنت متأكد من حذف هذا المنشور نهائياً؟")) {
-                try { await remove(ref(db, `posts/${postId}`)); } 
-                catch (error) { alert("حدث خطأ أثناء الحذف: " + error.message); }
-            }
-        };
+        window.deletePost = async (postId) => { if(confirm("هل أنت متأكد من حذف هذا المنشور؟")) { try { await remove(ref(db, `posts/${postId}`)); } catch (error) { alert("حدث خطأ"); } } };
 
         window.likePost = async (postId) => {
-            const postRef = ref(db, `posts/${postId}`);
-            const snap = await get(postRef);
+            const postRef = ref(db, `posts/${postId}`); const snap = await get(postRef);
             if(snap.exists()) {
-                let p = snap.val();
-                let likes = p.likes || {};
-                let likeCount = p.likeCount || 0;
-                let userLikedNow = false;
-
-                if(likes[currentUser.uid]) { delete likes[currentUser.uid]; likeCount--; } 
-                else { likes[currentUser.uid] = true; likeCount++; userLikedNow = true; }
-
+                let p = snap.val(); let likes = p.likes || {}; let likeCount = p.likeCount || 0; let userLikedNow = false;
+                if(likes[currentUser.uid]) { delete likes[currentUser.uid]; likeCount--; } else { likes[currentUser.uid] = true; likeCount++; userLikedNow = true; }
                 await update(postRef, { likes, likeCount });
-
                 if(userLikedNow) {
                     const animWrap = document.getElementById(`heart-anim-${postId}`);
-                    if(animWrap) {
-                        animWrap.classList.remove('opacity-0');
-                        animWrap.firstElementChild.classList.replace('scale-50', 'scale-125');
-                        setTimeout(() => {
-                            animWrap.classList.add('opacity-0');
-                            animWrap.firstElementChild.classList.replace('scale-125', 'scale-50');
-                        }, 700);
-                    }
+                    if(animWrap) { animWrap.classList.remove('opacity-0'); animWrap.firstElementChild.classList.replace('scale-50', 'scale-125'); setTimeout(() => { animWrap.classList.add('opacity-0'); animWrap.firstElementChild.classList.replace('scale-125', 'scale-50'); }, 700); }
                 }
             }
-        };
-
-        document.getElementById('search-user-btn').onclick = async () => {
-            let val = document.getElementById('search-username-input').value.trim().toLowerCase().replace('@', ''); if(!val) return;
-            const snap = await get(child(ref(db), `usernames/${val}`));
-            if(snap.exists()) window.openUserModal(snap.val()); else alert("لم يتم العثور على هذا المستخدم!");
         };
 
         window.openUserModal = async (uid) => {
@@ -529,10 +553,7 @@
             const u = uSnap.val();
             document.getElementById('modal-nickname').innerText = u.nickname; document.getElementById('modal-username-txt').innerText = `@${u.username}`;
             document.getElementById('modal-avatar').innerHTML = `<img src="${u.avatarUrl}" class="w-full h-full object-cover">`;
-            document.getElementById('modal-chat-btn').onclick = () => { 
-                document.getElementById('user-modal').classList.add('hidden'); 
-                openPrivateChat(u.uid, u.nickname, u.avatarUrl); 
-            };
+            document.getElementById('modal-chat-btn').onclick = () => { document.getElementById('user-modal').classList.add('hidden'); openPrivateChat(u.uid, u.nickname, u.avatarUrl); };
             document.getElementById('user-modal').classList.remove('hidden');
         };
         document.getElementById('close-modal-btn').onclick = () => document.getElementById('user-modal').classList.add('hidden');
@@ -541,7 +562,6 @@
             document.getElementById('private-target-name').innerText = targetName;
             document.getElementById('private-target-avatar').innerHTML = `<img src="${targetAvatar}" class="w-full h-full">`;
             document.getElementById('private-chat-window').classList.remove('hidden');
-            
             const chatId = currentUser.uid < targetUid ? `${currentUser.uid}_${targetUid}` : `${targetUid}_${currentUser.uid}`;
             openChatId = chatId;
 
@@ -549,59 +569,34 @@
             initialUpdates[`user_chats/${currentUser.uid}/${chatId}/targetUid`] = targetUid;
             initialUpdates[`user_chats/${targetUid}/${chatId}/targetUid`] = currentUser.uid;
             update(ref(db), initialUpdates);
-
-            // إزالة حالة "رسالة غير مقروءة" بمجرد فتح الشات
             update(ref(db), { [`user_chats/${currentUser.uid}/${chatId}/hasUnread`]: false });
 
             const box = document.getElementById('private-messages-box');
-            if(activeChatRef) activeChatRef(); 
-            if(targetTypingUnsubscribe) targetTypingUnsubscribe();
+            if(activeChatRef) activeChatRef(); if(targetTypingUnsubscribe) targetTypingUnsubscribe();
             
-            // --- ميزة (يكتب الآن...) ---
             const myTypingRef = ref(db, `typing/${chatId}/${currentUser.uid}`);
             const targetTypingRef = ref(db, `typing/${chatId}/${targetUid}`);
-            
-            // تنظيف حالة الكتابة الخاصة بي عند انقطاع الاتصال فجأة
             onDisconnect(myTypingRef).set(false);
 
-            // الاستماع لحالة كتابة الطرف الآخر
             targetTypingUnsubscribe = onValue(targetTypingRef, (snap) => {
                 const statusEl = document.getElementById('private-target-status');
-                if(snap.val() === true) {
-                    statusEl.innerText = "يكتب الآن...";
-                    statusEl.classList.replace('text-green-400', 'text-[#ff7300]');
-                    statusEl.classList.add('animate-pulse');
-                } else {
-                    statusEl.innerText = "نشط الآن في NXL";
-                    statusEl.classList.replace('text-[#ff7300]', 'text-green-400');
-                    statusEl.classList.remove('animate-pulse');
-                }
+                if(snap.val() === true) { statusEl.innerText = "يكتب الآن..."; statusEl.classList.replace('text-green-400', 'text-[#ff7300]'); statusEl.classList.add('animate-pulse'); } 
+                else { statusEl.innerText = "نشط الآن في NXL"; statusEl.classList.replace('text-[#ff7300]', 'text-green-400'); statusEl.classList.remove('animate-pulse'); }
             });
 
-            // إرسال حالة الكتابة الخاصة بي عند الضغط على الكيبورد
-            let typingTimeout;
-            const msgInput = document.getElementById('private-msg-input');
-            const handleTyping = () => {
-                set(myTypingRef, true);
-                clearTimeout(typingTimeout);
+            let typingTimeout; const msgInput = document.getElementById('private-msg-input');
+            msgInput.addEventListener('input', () => {
+                set(myTypingRef, true); clearTimeout(typingTimeout);
                 typingTimeout = setTimeout(() => { set(myTypingRef, false); }, 2000);
-            };
-            msgInput.addEventListener('input', handleTyping);
-            // -----------------------------
+            });
 
             const msgsQuery = query(ref(db, `chats/${chatId}`), limitToLast(50));
             activeChatRef = onValue(msgsQuery, (snapshot) => {
-                box.innerHTML = "";
-                const now = Date.now();
-                const oneDay = 24 * 60 * 60 * 1000;
-
+                box.innerHTML = ""; const now = Date.now(); const oneDay = 24 * 60 * 60 * 1000;
                 snapshot.forEach(c => {
-                    const m = c.val();
-                    if(now - m.timestamp > oneDay) return; 
-
+                    const m = c.val(); if(now - m.timestamp > oneDay) return; 
                     const isMe = m.senderId === currentUser.uid;
                     const timeStr = new Date(m.timestamp).toLocaleTimeString('ar-EG', {hour: '2-digit', minute:'2-digit'});
-
                     box.innerHTML += `
                         <div class="flex w-full mb-1 ${isMe ? 'justify-start' : 'justify-end'}">
                             <div class="max-w-[75%] p-3 rounded-2xl shadow-sm relative ${isMe ? 'gradient-bg text-white rounded-tr-none shadow-[#ff2a85]/10' : 'bg-[#1f1f2e] text-white rounded-tl-none'}">
@@ -614,81 +609,54 @@
             });
 
             document.getElementById('send-private-btn').onclick = () => {
-                const text = msgInput.value.trim(); if(!text) return; msgInput.value = "";
-                const timeNow = Date.now();
-                
-                // إيقاف "يكتب الآن" بمجرد الإرسال
-                set(myTypingRef, false);
-                clearTimeout(typingTimeout);
-
+                const text = msgInput.value.trim(); if(!text) return; msgInput.value = ""; const timeNow = Date.now();
+                set(myTypingRef, false); clearTimeout(typingTimeout);
                 push(ref(db, `chats/${chatId}`), { senderId: currentUser.uid, text: text, timestamp: timeNow });
-                
-                const metaUpdates = {};
-                metaUpdates[`user_chats/${currentUser.uid}/${chatId}/lastUpdate`] = timeNow;
-                metaUpdates[`user_chats/${targetUid}/${chatId}/lastUpdate`] = timeNow;
-                // تفعيل النقطة الخضراء عند المستلم (رسالة جديدة)
-                metaUpdates[`user_chats/${targetUid}/${chatId}/hasUnread`] = true;
-                
-                update(ref(db), metaUpdates);
+                update(ref(db), { [`user_chats/${currentUser.uid}/${chatId}/lastUpdate`]: timeNow, [`user_chats/${targetUid}/${chatId}/lastUpdate`]: timeNow, [`user_chats/${targetUid}/${chatId}/hasUnread`]: true });
             };
         }
         
-        document.getElementById('close-private-chat').onclick = () => { 
-            document.getElementById('private-chat-window').classList.add('hidden');
-            // إنهاء حالة الكتابة عند إغلاق الشات
-            if(openChatId && currentUser) {
-                set(ref(db, `typing/${openChatId}/${currentUser.uid}`), false);
-            }
-            openChatId = null; 
-        };
+        document.getElementById('close-private-chat').onclick = () => { document.getElementById('private-chat-window').classList.add('hidden'); if(openChatId && currentUser) { set(ref(db, `typing/${openChatId}/${currentUser.uid}`), false); } openChatId = null; };
 
         function startMyChatsList() {
             const list = document.getElementById('private-chats-list');
             
             onValue(ref(db, `user_chats/${currentUser.uid}`), async (snapshot) => {
-                if(!snapshot.exists()) {
-                    list.innerHTML = "<div class='text-center py-10'><p class='text-3xl mb-2'>💬</p><p class='text-xs text-gray-500'>قائمة شتاتي فارغة.<br>ابحث عن صديقك وابدأ المحادثة الآن!</p></div>";
-                    return;
-                }
+                if(!snapshot.exists()) { list.innerHTML = "<div class='text-center py-10'><p class='text-3xl mb-2'>💬</p><p class='text-xs text-gray-500'>قائمة شتاتي فارغة.<br>ابحث عن صديقك وابدأ المحادثة الآن!</p></div>"; return; }
 
                 const chatPromises = [];
                 snapshot.forEach(c => {
-                    const chatMeta = c.val();
-                    const chatId = c.key;
-                    
+                    const chatMeta = c.val(); const chatId = c.key;
                     if(chatMeta && chatMeta.targetUid) {
                         const p = get(child(ref(db), `users/${chatMeta.targetUid}`)).then(uSnap => {
-                            if(uSnap.exists()) {
-                                return {
-                                    chatId: chatId,
-                                    lastUpdate: chatMeta.lastUpdate || 0,
-                                    hasUnread: chatMeta.hasUnread || false,
-                                    user: uSnap.val()
-                                };
-                            }
+                            if(uSnap.exists()) return { chatId: chatId, lastUpdate: chatMeta.lastUpdate || 0, hasUnread: chatMeta.hasUnread || false, user: uSnap.val() };
                             return null;
                         });
                         chatPromises.push(p);
                     }
                 });
 
-                const results = await Promise.all(chatPromises);
-                const validChats = results.filter(r => r !== null);
-                
+                const results = await Promise.all(chatPromises); const validChats = results.filter(r => r !== null);
                 validChats.sort((a, b) => b.lastUpdate - a.lastUpdate);
                 
                 list.innerHTML = "";
-                if(validChats.length === 0) {
-                     list.innerHTML = "<div class='text-center py-10'><p class='text-3xl mb-2'>💬</p><p class='text-xs text-gray-500'>لا توجد محادثات نشطة.</p></div>";
-                     return;
-                }
+                if(validChats.length === 0) { list.innerHTML = "<div class='text-center py-10'><p class='text-3xl mb-2'>💬</p><p class='text-xs text-gray-500'>لا توجد محادثات نشطة.</p></div>"; return; }
                 
                 validChats.forEach(item => {
                     const u = item.user;
+                    // تحقق مما إذا كان هناك نوت نشط
+                    let noteHTML = '';
+                    if (u.note && u.note.text && (Date.now() - u.note.timestamp < 7 * 60 * 60 * 1000)) {
+                        noteHTML = `<div class="absolute -top-1 -right-2 bg-white text-black text-[9px] px-2 py-0.5 rounded-xl rounded-br-none shadow-md truncate max-w-[80px] font-bold border border-gray-300 z-10 note-bubble">${escapeHTML(u.note.text)}</div>`;
+                    }
+
                     list.innerHTML += `
                         <div class="bg-[#16161f] p-3 rounded-xl flex items-center justify-between border border-gray-800/60 cursor-pointer transition active:scale-[0.99] hover:bg-[#1a1a26] hover:border-gray-700" onclick="window.handleOpenChat('${u.uid}','${u.nickname}','${u.avatarUrl}')">
                             <div class="flex items-center gap-3">
-                                <img src="${u.avatarUrl}" class="w-11 h-11 rounded-full bg-gray-800 border border-gray-700">
+                                <div class="relative">
+                                    <img src="${u.avatarUrl}" class="w-11 h-11 rounded-full bg-gray-800 border border-gray-700">
+                                    ${noteHTML}
+                                </div>
                                 <div>
                                     <p class="text-xs font-bold text-white flex items-center gap-1">${u.nickname}</p>
                                     <p class="text-[10px] text-gray-400">@${u.username}</p>
@@ -702,9 +670,11 @@
                 });
             });
         }
-
         window.handleOpenChat = (uid, name, avatar) => { openPrivateChat(uid, name, avatar); };
 
+        /* ---------------- ألعاب وحركات NXL ---------------- */
+        
+        // 1. حاسبة الحب
         document.getElementById('calculate-love-btn').onclick = () => {
             const n1 = document.getElementById('love-name1').value.trim(); const n2 = document.getElementById('love-name2').value.trim(); if(!n1 || !n2) return;
             const str = [n1, n2].sort().join("").toLowerCase(); let h = 0; for(let i=0; i<str.length; i++) h = str.charCodeAt(i) + ((h<<5)-h);
@@ -714,115 +684,118 @@
             document.getElementById('love-result').classList.remove('hidden');
         };
 
-        // --- ميزة مشاركة ستوري إنستجرام ---
+        // 2. مشاركة ستوري الحب
         document.getElementById('share-ig-btn').onclick = async () => {
             const n1 = document.getElementById('love-name1').value.trim();
             const n2 = document.getElementById('love-name2').value.trim();
             const perc = document.getElementById('love-percentage').innerText;
             const status = document.getElementById('love-status').innerText;
             
-            // إنشاء قماش (Canvas) لعمل تصميم احترافي للستوري
-            const canvas = document.createElement('canvas');
-            canvas.width = 1080; canvas.height = 1920;
-            const ctx = canvas.getContext('2d');
+            const canvas = document.createElement('canvas'); canvas.width = 1080; canvas.height = 1920; const ctx = canvas.getContext('2d');
+            ctx.fillStyle = '#0d0d12'; ctx.fillRect(0, 0, 1080, 1920);
             
-            // الخلفية الأساسية
-            ctx.fillStyle = '#0d0d12'; 
-            ctx.fillRect(0, 0, 1080, 1920);
-            
-            // صندوق متدرج أنيق في المنتصف
             const grad = ctx.createLinearGradient(140, 450, 940, 1450);
-            grad.addColorStop(0, '#ff2a85'); 
-            grad.addColorStop(1, '#ff7300');
-            ctx.fillStyle = grad;
-            ctx.beginPath();
-            ctx.roundRect(140, 450, 800, 1000, 60); 
-            ctx.fill();
+            grad.addColorStop(0, '#ff2a85'); grad.addColorStop(1, '#ff7300');
+            ctx.fillStyle = grad; ctx.beginPath(); ctx.roundRect(140, 450, 800, 1000, 60); ctx.fill();
             
-            // النصوص والتنسيقات
-            ctx.textAlign = "center";
-            ctx.fillStyle = "#ffffff";
-            
-            ctx.font = "bold 65px Cairo, sans-serif";
-            ctx.fillText("NXL ELMAHALLA", 540, 580);
-            
-            ctx.font = "bold 55px Cairo, sans-serif";
-            ctx.fillText("❤️ مقياس الحب ❤️", 540, 700);
-            
-            ctx.font = "bold 90px Cairo, sans-serif";
-            ctx.fillText(`${n1}  +  ${n2}`, 540, 920);
+            ctx.textAlign = "center"; ctx.fillStyle = "#ffffff";
+            ctx.font = "bold 65px Cairo, sans-serif"; ctx.fillText("NXL ELMAHALLA", 540, 580);
+            ctx.font = "bold 55px Cairo, sans-serif"; ctx.fillText("❤️ مقياس الحب ❤️", 540, 700);
+            ctx.font = "bold 90px Cairo, sans-serif"; ctx.fillText(`${n1}  +  ${n2}`, 540, 920);
             
             ctx.font = "900 220px Cairo, sans-serif";
-            // إضافة ظل للرقم ليكون فخماً
             ctx.shadowColor = "rgba(0,0,0,0.5)"; ctx.shadowBlur = 20; ctx.shadowOffsetY = 10;
-            ctx.fillText(perc, 540, 1200);
-            ctx.shadowBlur = 0; ctx.shadowOffsetY = 0; // إيقاف الظل
+            ctx.fillText(perc, 540, 1200); ctx.shadowBlur = 0; ctx.shadowOffsetY = 0; 
             
-            ctx.font = "bold 55px Cairo, sans-serif";
-            ctx.fillText(status, 540, 1360);
+            ctx.font = "bold 55px Cairo, sans-serif"; ctx.fillText(status, 540, 1360);
+            ctx.fillStyle = "#666666"; ctx.font = "bold 45px Cairo, sans-serif"; ctx.fillText("NXL - سهولة ارتباط .. قلوب بتتقرب", 540, 1800);
             
-            ctx.fillStyle = "#666666";
-            ctx.font = "bold 45px Cairo, sans-serif";
-            ctx.fillText("NXL - سهولة ارتباط .. قلوب بتتقرب", 540, 1800);
-            
-            // تحويل الـ Canvas إلى صورة ومشاركتها
             canvas.toBlob(async (blob) => {
-                const file = new File([blob], 'NXL_Love_Story.jpg', { type: 'image/jpeg' });
-                
-                // محاولة استخدام ميزة المشاركة للهواتف (Native Share)
+                const file = new File([blob], 'NXL_Love.jpg', { type: 'image/jpeg' });
+                if (navigator.canShare && navigator.canShare({ files: [file] })) { try { await navigator.share({ title: 'مقياس الحب', files: [file] }); } catch(e) {} } 
+                else { const link = document.createElement('a'); link.download = 'NXL_Love.jpg'; link.href = URL.createObjectURL(blob); link.click(); }
+            }, 'image/jpeg', 0.95);
+        };
+
+        // 3. (الميزة الجديدة) - استخراج بطاقة VIP NXL للستوري
+        document.getElementById('generate-vip-btn').onclick = async () => {
+            const canvas = document.createElement('canvas'); canvas.width = 1080; canvas.height = 1920; const ctx = canvas.getContext('2d');
+            
+            // خلفية سوداء عميقة
+            ctx.fillStyle = '#09090d'; ctx.fillRect(0, 0, 1080, 1920);
+            
+            // توهج خلفي نيون
+            const glow = ctx.createRadialGradient(540, 960, 100, 540, 960, 800);
+            glow.addColorStop(0, 'rgba(255, 42, 133, 0.2)');
+            glow.addColorStop(1, 'rgba(9, 9, 13, 1)');
+            ctx.fillStyle = glow; ctx.fillRect(0, 0, 1080, 1920);
+            
+            // جسم البطاقة (زجاجي ومضيء)
+            ctx.fillStyle = '#16161f';
+            ctx.shadowColor = '#ff2a85'; ctx.shadowBlur = 40;
+            ctx.beginPath(); ctx.roundRect(140, 450, 800, 950, 40); ctx.fill();
+            ctx.shadowBlur = 0; 
+            
+            // شريط برتقالي أنيق أعلى البطاقة
+            ctx.fillStyle = '#ff7300';
+            ctx.beginPath(); ctx.roundRect(140, 450, 800, 20, {tl: 40, tr: 40, bl: 0, br: 0}); ctx.fill();
+            
+            // دائرة الصورة الرمزية (Typographic Logo لتجنب مشاكل الصور)
+            ctx.fillStyle = '#1f1f2e';
+            ctx.beginPath(); ctx.arc(540, 750, 160, 0, Math.PI * 2); ctx.fill();
+            ctx.strokeStyle = '#ff2a85'; ctx.lineWidth = 15; ctx.stroke();
+            
+            // أول حرف من اللقب ليكون هوية فخمة
+            const firstLetter = userData.nickname.charAt(0).toUpperCase() || "N";
+            ctx.fillStyle = '#ffffff'; ctx.textAlign = 'center'; ctx.font = 'bold 150px Cairo, sans-serif';
+            ctx.fillText(firstLetter, 540, 800);
+
+            // النصوص الأساسية للبطاقة
+            ctx.fillStyle = "#ffffff"; ctx.font = "bold 80px Cairo, sans-serif";
+            ctx.fillText(userData.nickname, 540, 1020);
+            
+            ctx.fillStyle = "#ff7300"; ctx.font = "55px Cairo, sans-serif";
+            ctx.fillText("@" + userData.username, 540, 1110);
+            
+            // ختم VIP
+            ctx.fillStyle = "#444444"; ctx.font = "bold 45px Cairo, sans-serif";
+            ctx.fillText("⭐ VIP MEMBER - شبكة التقارب ⭐", 540, 1250);
+            
+            // لوجو NXL الساطع أسفل الستوري
+            ctx.fillStyle = "#ff2a85"; ctx.font = "900 120px sans-serif";
+            ctx.fillText("NXL", 540, 1750);
+            
+            // تصدير للستوري
+            canvas.toBlob(async (blob) => {
+                const file = new File([blob], 'NXL_VIP_CARD.jpg', { type: 'image/jpeg' });
                 if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                    try {
-                        await navigator.share({
-                            title: 'نتيجة مقياس الحب NXL',
-                            files: [file]
-                        });
-                    } catch(e) { console.log("تم إلغاء المشاركة"); }
+                    try { await navigator.share({ title: 'NXL VIP', files: [file] }); } catch(e) {}
                 } else {
-                    // إذا كان المتصفح لا يدعم المشاركة المباشرة (مثل بعض أجهزة الكمبيوتر)، قم بتحميل الصورة
-                    const link = document.createElement('a');
-                    link.download = 'NXL_Love_Story.jpg';
-                    link.href = URL.createObjectURL(blob);
-                    link.click();
+                    const link = document.createElement('a'); link.download = 'NXL_VIP_CARD.jpg'; link.href = URL.createObjectURL(blob); link.click();
                 }
             }, 'image/jpeg', 0.95);
         };
-        // -------------------------------------
 
         function escapeHTML(str) { return str.replace(/[&<>'"]/g, t => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[t] || t)); }
     </script>
     
     <script>
         window.switchTab = function(tId, btn) {
-            document.querySelectorAll('.tab-content').forEach(t => {
-                t.classList.add('hidden');
-                t.classList.remove('flex', 'flex-col');
-            });
-            
+            document.querySelectorAll('.tab-content').forEach(t => { t.classList.add('hidden'); t.classList.remove('flex', 'flex-col'); });
             const target = document.getElementById(`tab-${tId}`);
-            if(tId === 'global') {
-                target.classList.remove('hidden');
-                target.classList.add('flex', 'flex-col');
-            } else {
-                target.classList.remove('hidden');
-            }
-            
+            if(tId === 'global') { target.classList.remove('hidden'); target.classList.add('flex', 'flex-col'); } else { target.classList.remove('hidden'); }
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.replace('text-[#ff2a85]', 'text-gray-400'));
             btn.classList.replace('text-gray-400', 'text-[#ff2a85]');
         }
     </script>
-        <script>
+    <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('./sw.js')
-                    .then(registration => {
-                        console.log('تم تفعيل PWA بنجاح!');
-                    })
-                    .catch(error => {
-                        console.log('حدث خطأ في PWA: ', error);
-                    });
+                    .then(registration => { console.log('تم تفعيل PWA بنجاح!'); })
+                    .catch(error => { console.log('حدث خطأ في PWA: ', error); });
             });
         }
     </script>
-
 </body>
 </html>
