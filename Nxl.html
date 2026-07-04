@@ -210,7 +210,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getDatabase, ref, set, update, push, onValue, get, child, query, limitToLast } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        import { getDatabase, ref, set, update, push, onValue, get, child, query, limitToLast, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
         import { getMessaging, getToken } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging.js";
 
         const firebaseConfig = {
@@ -283,7 +283,6 @@
             }
         });
 
-        // 🟢 التعديل الأول: تفعيل الإشعارات مع تفصيل دقيق لرسالة الخطأ 
         document.getElementById('notifyBtn').addEventListener('click', async () => {
             if (!currentUser) return;
             const permission = await Notification.requestPermission();
@@ -296,7 +295,6 @@
                     alert("تم تفعيل الإشعارات وحفظها بنجاح! 🔔");
                 } catch (error) {
                     console.error("تفاصيل الخطأ التقني:", error);
-                    // هنا سيظهر لك السبب الحقيقي للخطأ بدلاً من مجرد "حدث خطأ"
                     alert("تعذر التفعيل، الخطأ هو: " + error.message);
                 }
             } else {
@@ -423,7 +421,6 @@
             globalPostImageBase64 = "";
         };
 
-        // 🟢 التعديل الثاني: إضافة ميزة النقر المزدوج للإعجاب (Gamification / UI Effect)
         function startPostsFeed() {
             const feed = document.getElementById('home-posts-feed'); const grid = document.getElementById('profile-posts-grid');
             const postsQuery = query(ref(db, 'posts'), limitToLast(100));
@@ -432,7 +429,7 @@
                 feed.innerHTML = ""; grid.innerHTML = ""; const now = Date.now(); const threeDays = 72 * 60 * 60 * 1000;
                 let postsArray = []; 
                 snapshot.forEach(c => { 
-                    let p = c.val(); p.id = c.key; // جلب المعرف لربطه بالإعجابات
+                    let p = c.val(); p.id = c.key; 
                     postsArray.push(p); 
                 }); 
                 postsArray.reverse();
@@ -444,8 +441,14 @@
                     const likeIcon = isLiked ? '❤️' : '🤍';
                     const likeColor = isLiked ? 'text-[#ff2a85]' : 'text-gray-500 hover:text-gray-300';
                     
+                    // زر الحذف الجديد (يظهر فقط إذا كان البوست يخص المستخدم الحالي)
+                    const deleteBtn = (post.userId === currentUser.uid) 
+                        ? `<button onclick="window.deletePost('${post.id}')" class="absolute left-3 top-3 z-20 text-red-500 hover:text-red-400 bg-red-500/10 hover:bg-red-500/20 rounded-full w-7 h-7 flex items-center justify-center transition" title="حذف المنشور">🗑️</button>` 
+                        : '';
+
                     feed.innerHTML += `
                         <div class="bg-[#16161f] p-4 rounded-2xl border border-gray-800 space-y-2 relative overflow-hidden transition-all duration-300 hover:border-[#ff2a85]/30 select-none" ondblclick="window.likePost('${post.id}')">
+                            ${deleteBtn}
                             <div class="flex items-center gap-2 cursor-pointer relative z-10" onclick="window.openUserModal('${post.userId}')">
                                 <img src="${post.userAvatar}" class="w-8 h-8 rounded-full bg-gray-800 border border-gray-700">
                                 <div><h4 class="text-xs font-bold">${post.userNickname} <span class="text-[#ff7300] font-normal text-[10px]">@${post.userUsername}</span></h4></div>
@@ -462,7 +465,6 @@
                                 <span class="text-[9px] text-gray-500">انقر مرتين للإعجاب</span>
                             </div>
 
-                            <!-- تأثير الأنيميشن الهولوجرامي السري -->
                             <div id="heart-anim-${post.id}" class="absolute inset-0 z-0 flex items-center justify-center opacity-0 pointer-events-none transition-all duration-500 ease-out">
                                 <div class="text-8xl drop-shadow-[0_0_20px_rgba(255,42,133,0.9)] transform scale-50 transition-transform duration-300">❤️</div>
                             </div>
@@ -475,7 +477,17 @@
             });
         }
 
-        // 🟢 دالة الإعجاب التفاعلية المرتبطة بقاعدة البيانات
+        // دالة حذف المنشور الجديدة
+        window.deletePost = async (postId) => {
+            if(confirm("هل أنت متأكد من حذف هذا المنشور نهائياً؟")) {
+                try {
+                    await remove(ref(db, `posts/${postId}`));
+                } catch (error) {
+                    alert("حدث خطأ أثناء الحذف: " + error.message);
+                }
+            }
+        };
+
         window.likePost = async (postId) => {
             const postRef = ref(db, `posts/${postId}`);
             const snap = await get(postRef);
@@ -496,7 +508,6 @@
 
                 await update(postRef, { likes, likeCount });
 
-                // تشغيل الأنيميشن الفاخر فقط عند الضغط وإعطاء إعجاب جديد
                 if(userLikedNow) {
                     const animWrap = document.getElementById(`heart-anim-${postId}`);
                     if(animWrap) {
