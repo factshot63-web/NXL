@@ -215,15 +215,20 @@
                     <p id="private-target-status" class="text-[10px] text-green-400 font-bold transition-colors duration-300">نشط الآن في NXL</p>
                 </div>
             </div>
-            <button id="delete-chat-btn" class="text-red-500 hover:bg-red-500/20 p-2 rounded-lg transition active:scale-90" title="حذف المحادثة بالكامل للطرفين">
+            <button id="delete-chat-btn" class="text-red-500 hover:bg-red-500/20 p-2 rounded-lg transition active:scale-90" title="إزالة المستخدم من قائمة محادثاتك">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
             </button>
         </header>
         
         <div id="private-messages-box" class="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar bg-[#09090d] flex flex-col">
-            </div>
+        </div>
         
         <div class="p-3 bg-[#16161f] border-t border-gray-800 flex flex-col shrink-0">
+            <div id="private-img-preview-container" class="hidden relative bg-[#1f1f2e] p-2 rounded-xl mb-2 border border-gray-800 w-max">
+                <img id="private-img-preview" class="h-16 w-16 object-cover rounded-lg">
+                <button id="cancel-private-img" class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold shadow-md active:scale-90">×</button>
+            </div>
+
             <div id="private-reply-banner" class="hidden flex justify-between items-center bg-[#1f1f2e] p-2 rounded-xl mb-2 border-r-4 border-[#ff2a85] text-xs">
                 <div class="truncate w-5/6 text-gray-300">
                     <span class="font-bold text-[#ff2a85]">رد على رسالة</span>:
@@ -233,6 +238,9 @@
             </div>
 
             <div class="flex gap-2 items-center">
+                <input type="file" id="private-img-input" accept="image/*" class="hidden">
+                <button id="private-img-btn" class="text-gray-400 hover:text-[#ff2a85] px-1 text-xl transition active:scale-95" title="إرسال صورة">🖼️</button>
+
                 <input type="text" id="private-msg-input" placeholder="اكتب رسالة مقربة..." class="flex-1 bg-[#1f1f2e] text-sm rounded-xl px-4 py-3 text-white focus:outline-none border border-gray-800">
                 <button id="send-private-btn" class="w-11 h-11 gradient-bg rounded-xl flex items-center justify-center text-white font-bold active:scale-95 shadow-md shadow-[#ff2a85]/20">🚀</button>
             </div>
@@ -288,12 +296,13 @@
         let currentUser = null;
         let userData = null;
         let globalPostImageBase64 = "";
+        let privatePostImageBase64 = ""; // متغير صورة الشات الخاص
         let activeChatRef = null;
         let openChatId = null; 
         let targetTypingUnsubscribe = null;
         let replyingToMsg = null;
         let privateReplyingToMsg = null;
-        window.activeTabId = 'home'; // التبويب النشط لمعرفة الإشعارات
+        window.activeTabId = 'home'; 
 
         const emailInput = document.getElementById('auth-email');
         const passInput = document.getElementById('auth-password');
@@ -332,7 +341,6 @@
                 document.getElementById('auth-screen').classList.add('hidden');
                 document.getElementById('notifyBtn').classList.remove('hidden'); 
                 
-                // استماع لحظي لبيانات المستخدم لتحديث النقاط Gamification
                 onValue(ref(db, `users/${user.uid}`), (snapshot) => {
                     if (snapshot.exists()) {
                         userData = snapshot.val();
@@ -381,7 +389,6 @@
                 document.getElementById('my-note-input').value = userData.note.text;
             }
 
-            // يتم استدعاؤها مرة واحدة للـ Listeners
             if (!window.listenersStarted) {
                 startGlobalChat(); startPostsFeed(); startMyChatsList();
                 window.listenersStarted = true;
@@ -441,14 +448,13 @@
             if (!e.target.closest('.relative.z-20')) { searchDropdown.classList.add('hidden'); }
         });
 
-        /* ---------------- وظيفة التفاعل بالريأكت (إيموجي) ---------------- */
+        /* ---------------- وظيفة التفاعل بالريأكت ---------------- */
         window.addReaction = async (path, msgId) => {
             const emoji = prompt("أدخل إيموجي (من كيبورد الهاتف للتفاعل):");
             if(emoji && emoji.trim() !== '') {
-                // نأخذ أول حرفين كحد أقصى لضمان أنه إيموجي فقط
                 const currentEmoji = emoji.trim().substring(0, 2);
                 await update(ref(db, `${path}/${msgId}/reactions`), { [currentUser.uid]: currentEmoji });
-                addExpPoints(1); // بونص تفاعل
+                addExpPoints(1); 
             }
         };
 
@@ -483,7 +489,7 @@
                 let lastSenderId = null;
                 snapshot.forEach(childSnap => {
                     const msgId = childSnap.key; const msg = childSnap.val(); 
-                    if(now - msg.timestamp > oneDay) return; // الحذف التلقائي بعد 24 ساعة
+                    if(now - msg.timestamp > oneDay) return; 
                     
                     const isMe = msg.senderId === currentUser.uid;
                     lastSenderId = msg.senderId;
@@ -517,7 +523,6 @@
                 });
                 box.scrollTop = box.scrollHeight;
                 
-                // إظهار نقطة الإشعار الحمراء إذا كنت في تبويب آخر وآخر رسالة ليست منك
                 if (window.activeTabId !== 'global' && lastSenderId !== currentUser.uid && lastSenderId !== null) {
                     document.getElementById('global-unread-dot').classList.remove('hidden');
                 }
@@ -542,7 +547,7 @@
             document.getElementById('post-input').value = ""; document.getElementById('post-preview-container').classList.add('hidden');
             push(ref(db, 'posts'), { userId: currentUser.uid, userNickname: userData.nickname, userUsername: userData.username, userAvatar: userData.avatarUrl, text: text, image: globalPostImageBase64, timestamp: Date.now(), likeCount: 0 });
             globalPostImageBase64 = "";
-            addExpPoints(3); // نقاط أكثر للمنشور
+            addExpPoints(3); 
         };
 
         function startPostsFeed() {
@@ -607,7 +612,24 @@
         };
         document.getElementById('close-modal-btn').onclick = () => document.getElementById('user-modal').classList.add('hidden');
 
-        /* ---------------- الشات الخاص وحذف المحادثة ---------------- */
+        /* ---------------- إرسال صور في الخاص ---------------- */
+        document.getElementById('private-img-btn').onclick = () => document.getElementById('private-img-input').click();
+        document.getElementById('private-img-input').onchange = e => {
+            const f = e.target.files[0]; if(!f) return;
+            const r = new FileReader();
+            r.onload = () => {
+                privatePostImageBase64 = r.result;
+                document.getElementById('private-img-preview').src = privatePostImageBase64;
+                document.getElementById('private-img-preview-container').classList.remove('hidden');
+            };
+            r.readAsDataURL(f);
+        };
+        document.getElementById('cancel-private-img').onclick = () => {
+            privatePostImageBase64 = ""; document.getElementById('private-img-input').value = "";
+            document.getElementById('private-img-preview-container').classList.add('hidden');
+        };
+
+        /* ---------------- الشات الخاص ---------------- */
         document.getElementById('cancelPrivateReplyBtn').addEventListener('click', () => {
             privateReplyingToMsg = null; document.getElementById('private-reply-banner').classList.add('hidden');
         });
@@ -619,11 +641,11 @@
             document.getElementById('private-msg-input').focus();
         };
 
-        // زر حذف المحادثة بالكامل من الطرفين
+        // حذف المستخدم من قائمة الشات (الخاص بي فقط)
         document.getElementById('delete-chat-btn').addEventListener('click', async () => {
             if(!openChatId) return;
-            if(confirm("هل أنت متأكد من حذف هذه المحادثة بالكامل؟ سيتم مسحها لك وللطرف الآخر.")) {
-                await remove(ref(db, `chats/${openChatId}`));
+            if(confirm("هل تريد إزالة هذا المستخدم من قائمة محادثاتك؟ (سيتم حذفه من القائمة لديك فقط)")) {
+                await remove(ref(db, `user_chats/${currentUser.uid}/${openChatId}`));
                 document.getElementById('private-chat-window').classList.add('hidden');
                 openChatId = null;
             }
@@ -640,7 +662,7 @@
             initialUpdates[`user_chats/${currentUser.uid}/${chatId}/targetUid`] = targetUid;
             initialUpdates[`user_chats/${targetUid}/${chatId}/targetUid`] = currentUser.uid;
             update(ref(db), initialUpdates);
-            update(ref(db), { [`user_chats/${currentUser.uid}/${chatId}/hasUnread`]: false }); // قراءة الرسائل
+            update(ref(db), { [`user_chats/${currentUser.uid}/${chatId}/hasUnread`]: false }); 
 
             const box = document.getElementById('private-messages-box');
             if(activeChatRef) activeChatRef(); if(targetTypingUnsubscribe) targetTypingUnsubscribe();
@@ -661,9 +683,9 @@
                 typingTimeout = setTimeout(() => { set(myTypingRef, false); }, 2000);
             });
 
-            const msgsQuery = query(ref(db, `chats/${chatId}`), limitToLast(50));
+            // تم رفع limitToLast لـ 300 لحل مشكلة اختفاء الرسائل الجديدة أثناء الدردشة
+            const msgsQuery = query(ref(db, `chats/${chatId}`), limitToLast(300));
             activeChatRef = onValue(msgsQuery, (snapshot) => {
-                // رسالة التشفير E2EE في أعلى المحادثة
                 box.innerHTML = `
                     <div class="flex justify-center mb-6 mt-2">
                         <div class="bg-yellow-500/10 border border-yellow-500/30 text-yellow-500 text-[10px] font-bold px-4 py-2 rounded-xl flex items-center gap-1.5 shadow-md text-center max-w-xs">
@@ -672,15 +694,26 @@
                     </div>`; 
 
                 const now = Date.now(); const oneDay = 24 * 60 * 60 * 1000;
+                let unreadUpdates = {};
                 
                 snapshot.forEach(c => {
                     const msgId = c.key;
                     const m = c.val(); 
-                    if(now - m.timestamp > oneDay) return; // الحذف التلقائي بعد 24 ساعة للمحتوى
+                    if(now - m.timestamp > oneDay) return; 
 
                     const isMe = m.senderId === currentUser.uid;
                     const timeStr = new Date(m.timestamp).toLocaleTimeString('ar-EG', {hour: '2-digit', minute:'2-digit'});
                     
+                    // منطق علامات القراءة (Seen)
+                    if (!isMe && m.status !== 'read' && !document.getElementById('private-chat-window').classList.contains('hidden')) {
+                        unreadUpdates[`chats/${chatId}/${msgId}/status`] = 'read';
+                    }
+
+                    let ticks = '';
+                    if (isMe) {
+                        ticks = m.status === 'read' ? `<span class="text-blue-400 text-[11px] ml-1 font-black">✓✓</span>` : `<span class="text-gray-400 text-[11px] ml-1 font-black">✓</span>`;
+                    }
+
                     let replyHTML = '';
                     if (m.replyTo) {
                         replyHTML = `
@@ -689,41 +722,46 @@
                             </div>
                         `;
                     }
+                    
+                    let imgHTML = m.image ? `<img src="${m.image}" class="w-full max-w-[220px] rounded-lg mt-1 mb-2 border border-gray-800/50">` : '';
+                    let txtHTML = m.text ? `<p class="text-xs font-semibold leading-relaxed pb-3 px-1 break-words">${escapeHTML(m.text)}</p>` : `<p class="pb-3"></p>`;
 
                     box.innerHTML += `
                         <div class="flex w-full mb-1 ${isMe ? 'justify-start' : 'justify-end'} group">
                             <div class="flex gap-2 items-center ${isMe ? 'flex-row' : 'flex-row-reverse'} max-w-[85%]">
                                 <div class="flex flex-col gap-1 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <button onclick="window.preparePrivateReply('${msgId}', '${escapeHTML(m.text)}')" class="text-gray-500 hover:text-white bg-[#1f1f2e] p-1.5 rounded-full text-[10px]">↩️</button>
+                                    <button onclick="window.preparePrivateReply('${msgId}', '${escapeHTML(m.text || "صورة")}')" class="text-gray-500 hover:text-white bg-[#1f1f2e] p-1.5 rounded-full text-[10px]">↩️</button>
                                     <button onclick="window.addReaction('chats/${chatId}', '${msgId}')" class="text-gray-500 hover:text-[#ff7300] bg-[#1f1f2e] p-1.5 rounded-full text-[10px]">😄</button>
                                 </div>
 
-                                <div class="p-3 rounded-2xl shadow-sm relative ${isMe ? 'gradient-bg text-white rounded-tr-none shadow-[#ff2a85]/10' : 'bg-[#1f1f2e] border border-gray-800 text-white rounded-tl-none'}">
+                                <div class="p-2.5 rounded-2xl shadow-sm relative ${isMe ? 'gradient-bg text-white rounded-tr-none shadow-[#ff2a85]/10' : 'bg-[#1f1f2e] border border-gray-800 text-white rounded-tl-none'}">
                                     ${replyHTML}
-                                    <p class="text-xs font-semibold leading-relaxed pb-3 px-1 break-words">${escapeHTML(m.text)}</p>
+                                    ${imgHTML}
+                                    ${txtHTML}
                                     ${renderReactions(m.reactions)}
-                                    <span class="absolute bottom-1 left-3 text-[8px] text-gray-300/60 select-none dir-ltr font-bold">${timeStr}</span>
+                                    <span class="absolute bottom-1 left-2.5 flex items-center gap-0.5 text-[8px] text-gray-300/60 select-none dir-ltr font-bold">${ticks} ${timeStr}</span>
                                 </div>
                             </div>
                         </div>`;
                 });
                 box.scrollTop = box.scrollHeight;
                 
-                // تحديث حالة القراءة إذا كنت فاتح الشات
+                if (Object.keys(unreadUpdates).length > 0) { update(ref(db), unreadUpdates); }
                 if(document.getElementById('private-chat-window').classList.contains('hidden') === false) {
                      update(ref(db), { [`user_chats/${currentUser.uid}/${chatId}/hasUnread`]: false });
                 }
             });
 
             document.getElementById('send-private-btn').onclick = () => {
-                const text = msgInput.value.trim(); if(!text) return; msgInput.value = ""; const timeNow = Date.now();
+                const text = msgInput.value.trim(); if(!text && !privatePostImageBase64) return; msgInput.value = ""; const timeNow = Date.now();
                 set(myTypingRef, false); clearTimeout(typingTimeout);
                 
-                const msgData = { senderId: currentUser.uid, text: text, timestamp: timeNow };
+                const msgData = { senderId: currentUser.uid, text: text, image: privatePostImageBase64, timestamp: timeNow, status: 'sent' };
                 if (privateReplyingToMsg) { msgData.replyTo = privateReplyingToMsg; }
                 
                 push(ref(db, `chats/${chatId}`), msgData).then(() => {
                     privateReplyingToMsg = null; document.getElementById('private-reply-banner').classList.add('hidden');
+                    privatePostImageBase64 = ""; document.getElementById('private-img-input').value = ""; document.getElementById('private-img-preview-container').classList.add('hidden');
                     addExpPoints(1);
                 });
                 
@@ -745,7 +783,7 @@
                 snapshot.forEach(c => {
                     const chatMeta = c.val(); const chatId = c.key;
                     if(chatMeta && chatMeta.targetUid) {
-                        if (chatMeta.hasUnread) totalUnread = true; // فحص هل هناك رسائل غير مقروءة
+                        if (chatMeta.hasUnread) totalUnread = true; 
                         const p = get(child(ref(db), `users/${chatMeta.targetUid}`)).then(uSnap => {
                             if(uSnap.exists()) return { chatId: chatId, lastUpdate: chatMeta.lastUpdate || 0, hasUnread: chatMeta.hasUnread || false, user: uSnap.val() };
                             return null;
@@ -754,7 +792,6 @@
                     }
                 });
 
-                // تفعيل إشعار التبويب الخاص بالشاتاتي (النقطة الخضراء)
                 if (totalUnread && window.activeTabId !== 'chats' && !openChatId) {
                     document.getElementById('chats-unread-dot').classList.remove('hidden');
                 }
@@ -863,7 +900,6 @@
             ctx.fillStyle = "#ff7300"; ctx.font = "55px Cairo, sans-serif"; ctx.fillText("@" + userData.username, 540, 1110);
             ctx.fillStyle = "#444444"; ctx.font = "bold 45px Cairo, sans-serif"; ctx.fillText("⭐ VIP MEMBER - شبكة التقارب ⭐", 540, 1250);
             
-            // إضافة مستوى Gamification على الكارت
             ctx.fillStyle = "#ff2a85"; ctx.font = "bold 55px Cairo, sans-serif"; 
             ctx.fillText("🔥 " + (userData.points || 0) + " EXP", 540, 1350);
 
@@ -885,7 +921,6 @@
     
     <script>
         window.switchTab = function(tId, btn) {
-            // تحديث التبويب النشط لإخفاء النقطة عند الدخول
             window.activeTabId = tId;
             if (tId === 'global') { document.getElementById('global-unread-dot').classList.add('hidden'); }
             if (tId === 'chats') { document.getElementById('chats-unread-dot').classList.add('hidden'); }
