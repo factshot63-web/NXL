@@ -14,7 +14,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
     
     <style>
         body { font-family: 'Cairo', sans-serif; background-color: #0d0d12; color: #ffffff; }
@@ -136,9 +136,14 @@
                 <input type="text" id="love-name1" placeholder="اسمك" class="w-full bg-[#1f1f2e] text-center text-sm rounded-xl py-2 mt-3 text-white relative z-10">
                 <input type="text" id="love-name2" placeholder="اسم الطرف التاني" class="w-full bg-[#1f1f2e] text-center text-sm rounded-xl py-2 mt-3 text-white relative z-10">
                 <button id="calculate-love-btn" class="w-full py-2.5 gradient-bg rounded-xl text-sm font-bold text-white mt-4 active:scale-95 shadow-md shadow-[#ff2a85]/20 relative z-10">احسب النسبة</button>
+                
                 <div id="love-result" class="mt-4 hidden relative z-10">
                     <div class="text-5xl font-black gradient-text mb-1 drop-shadow-lg" id="love-percentage">0%</div>
-                    <div class="text-xs text-gray-300 font-bold" id="love-status"></div>
+                    <div class="text-xs text-gray-300 font-bold mb-4" id="love-status"></div>
+                    
+                    <button id="share-ig-btn" class="w-full py-2.5 bg-gradient-to-r from-purple-600 to-[#ff2a85] rounded-xl text-sm font-bold text-white active:scale-95 shadow-lg shadow-purple-500/30 flex items-center justify-center gap-2">
+                        <span>📸</span> شاركها ستوري (إنستجرام)
+                    </button>
                 </div>
             </div>
         </section>
@@ -174,7 +179,7 @@
                 <div id="private-target-avatar" class="w-10 h-10 rounded-full overflow-hidden bg-gray-800 border border-gray-700"></div>
                 <div>
                     <h3 id="private-target-name" class="text-sm font-bold text-white">المستلم</h3>
-                    <p class="text-[10px] text-green-400 font-bold animate-pulse">نشط الآن في NXL</p>
+                    <p id="private-target-status" class="text-[10px] text-green-400 font-bold transition-colors duration-300">نشط الآن في NXL</p>
                 </div>
             </div>
         </header>
@@ -210,7 +215,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getDatabase, ref, set, update, push, onValue, get, child, query, limitToLast, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        import { getDatabase, ref, set, update, push, onValue, get, child, query, limitToLast, remove, onDisconnect } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
         import { getMessaging, getToken } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging.js";
 
         const firebaseConfig = {
@@ -234,6 +239,7 @@
         let globalPostImageBase64 = "";
         let activeChatRef = null;
         let openChatId = null; 
+        let targetTypingUnsubscribe = null;
         
         let replyingToMsg = null;
 
@@ -441,7 +447,6 @@
                     const likeIcon = isLiked ? '❤️' : '🤍';
                     const likeColor = isLiked ? 'text-[#ff2a85]' : 'text-gray-500 hover:text-gray-300';
                     
-                    // زر الحذف الجديد (يظهر فقط إذا كان البوست يخص المستخدم الحالي)
                     const deleteBtn = (post.userId === currentUser.uid) 
                         ? `<button onclick="window.deletePost('${post.id}')" class="absolute left-3 top-3 z-20 text-red-500 hover:text-red-400 bg-red-500/10 hover:bg-red-500/20 rounded-full w-7 h-7 flex items-center justify-center transition" title="حذف المنشور">🗑️</button>` 
                         : '';
@@ -477,14 +482,10 @@
             });
         }
 
-        // دالة حذف المنشور الجديدة
         window.deletePost = async (postId) => {
             if(confirm("هل أنت متأكد من حذف هذا المنشور نهائياً؟")) {
-                try {
-                    await remove(ref(db, `posts/${postId}`));
-                } catch (error) {
-                    alert("حدث خطأ أثناء الحذف: " + error.message);
-                }
+                try { await remove(ref(db, `posts/${postId}`)); } 
+                catch (error) { alert("حدث خطأ أثناء الحذف: " + error.message); }
             }
         };
 
@@ -497,14 +498,8 @@
                 let likeCount = p.likeCount || 0;
                 let userLikedNow = false;
 
-                if(likes[currentUser.uid]) {
-                    delete likes[currentUser.uid];
-                    likeCount--;
-                } else {
-                    likes[currentUser.uid] = true;
-                    likeCount++;
-                    userLikedNow = true;
-                }
+                if(likes[currentUser.uid]) { delete likes[currentUser.uid]; likeCount--; } 
+                else { likes[currentUser.uid] = true; likeCount++; userLikedNow = true; }
 
                 await update(postRef, { likes, likeCount });
 
@@ -552,13 +547,48 @@
 
             const initialUpdates = {};
             initialUpdates[`user_chats/${currentUser.uid}/${chatId}/targetUid`] = targetUid;
-            initialUpdates[`user_chats/${currentUser.uid}/${chatId}/hasUnread`] = false;
             initialUpdates[`user_chats/${targetUid}/${chatId}/targetUid`] = currentUser.uid;
             update(ref(db), initialUpdates);
 
+            // إزالة حالة "رسالة غير مقروءة" بمجرد فتح الشات
+            update(ref(db), { [`user_chats/${currentUser.uid}/${chatId}/hasUnread`]: false });
+
             const box = document.getElementById('private-messages-box');
             if(activeChatRef) activeChatRef(); 
+            if(targetTypingUnsubscribe) targetTypingUnsubscribe();
             
+            // --- ميزة (يكتب الآن...) ---
+            const myTypingRef = ref(db, `typing/${chatId}/${currentUser.uid}`);
+            const targetTypingRef = ref(db, `typing/${chatId}/${targetUid}`);
+            
+            // تنظيف حالة الكتابة الخاصة بي عند انقطاع الاتصال فجأة
+            onDisconnect(myTypingRef).set(false);
+
+            // الاستماع لحالة كتابة الطرف الآخر
+            targetTypingUnsubscribe = onValue(targetTypingRef, (snap) => {
+                const statusEl = document.getElementById('private-target-status');
+                if(snap.val() === true) {
+                    statusEl.innerText = "يكتب الآن...";
+                    statusEl.classList.replace('text-green-400', 'text-[#ff7300]');
+                    statusEl.classList.add('animate-pulse');
+                } else {
+                    statusEl.innerText = "نشط الآن في NXL";
+                    statusEl.classList.replace('text-[#ff7300]', 'text-green-400');
+                    statusEl.classList.remove('animate-pulse');
+                }
+            });
+
+            // إرسال حالة الكتابة الخاصة بي عند الضغط على الكيبورد
+            let typingTimeout;
+            const msgInput = document.getElementById('private-msg-input');
+            const handleTyping = () => {
+                set(myTypingRef, true);
+                clearTimeout(typingTimeout);
+                typingTimeout = setTimeout(() => { set(myTypingRef, false); }, 2000);
+            };
+            msgInput.addEventListener('input', handleTyping);
+            // -----------------------------
+
             const msgsQuery = query(ref(db, `chats/${chatId}`), limitToLast(50));
             activeChatRef = onValue(msgsQuery, (snapshot) => {
                 box.innerHTML = "";
@@ -581,18 +611,22 @@
                         </div>`;
                 });
                 box.scrollTop = box.scrollHeight;
-                update(ref(db), { [`user_chats/${currentUser.uid}/${chatId}/hasUnread`]: false });
             });
 
             document.getElementById('send-private-btn').onclick = () => {
-                const inp = document.getElementById('private-msg-input'); const text = inp.value.trim(); if(!text) return; inp.value = "";
+                const text = msgInput.value.trim(); if(!text) return; msgInput.value = "";
                 const timeNow = Date.now();
                 
+                // إيقاف "يكتب الآن" بمجرد الإرسال
+                set(myTypingRef, false);
+                clearTimeout(typingTimeout);
+
                 push(ref(db, `chats/${chatId}`), { senderId: currentUser.uid, text: text, timestamp: timeNow });
                 
                 const metaUpdates = {};
                 metaUpdates[`user_chats/${currentUser.uid}/${chatId}/lastUpdate`] = timeNow;
                 metaUpdates[`user_chats/${targetUid}/${chatId}/lastUpdate`] = timeNow;
+                // تفعيل النقطة الخضراء عند المستلم (رسالة جديدة)
                 metaUpdates[`user_chats/${targetUid}/${chatId}/hasUnread`] = true;
                 
                 update(ref(db), metaUpdates);
@@ -600,7 +634,11 @@
         }
         
         document.getElementById('close-private-chat').onclick = () => { 
-            document.getElementById('private-chat-window').classList.add('hidden'); 
+            document.getElementById('private-chat-window').classList.add('hidden');
+            // إنهاء حالة الكتابة عند إغلاق الشات
+            if(openChatId && currentUser) {
+                set(ref(db, `typing/${openChatId}/${currentUser.uid}`), false);
+            }
             openChatId = null; 
         };
 
@@ -657,7 +695,7 @@
                                 </div>
                             </div>
                             <div class="flex flex-col items-end gap-1">
-                                ${item.hasUnread ? '<span class="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse shadow-md shadow-green-500/50"></span>' : ''}
+                                ${item.hasUnread ? '<span class="w-3 h-3 rounded-full bg-green-500 animate-pulse shadow-md shadow-green-500/50"></span>' : ''}
                                 <span class="text-[9px] text-gray-500 bg-[#1f1f2e] px-2 py-0.5 rounded-md font-medium">مراسلة</span>
                             </div>
                         </div>`;
@@ -675,6 +713,80 @@
             document.getElementById('love-status').innerText = score > 90 ? "حب أسطوري متطابق! 🔥" : "توافق رائع وقوي ✨";
             document.getElementById('love-result').classList.remove('hidden');
         };
+
+        // --- ميزة مشاركة ستوري إنستجرام ---
+        document.getElementById('share-ig-btn').onclick = async () => {
+            const n1 = document.getElementById('love-name1').value.trim();
+            const n2 = document.getElementById('love-name2').value.trim();
+            const perc = document.getElementById('love-percentage').innerText;
+            const status = document.getElementById('love-status').innerText;
+            
+            // إنشاء قماش (Canvas) لعمل تصميم احترافي للستوري
+            const canvas = document.createElement('canvas');
+            canvas.width = 1080; canvas.height = 1920;
+            const ctx = canvas.getContext('2d');
+            
+            // الخلفية الأساسية
+            ctx.fillStyle = '#0d0d12'; 
+            ctx.fillRect(0, 0, 1080, 1920);
+            
+            // صندوق متدرج أنيق في المنتصف
+            const grad = ctx.createLinearGradient(140, 450, 940, 1450);
+            grad.addColorStop(0, '#ff2a85'); 
+            grad.addColorStop(1, '#ff7300');
+            ctx.fillStyle = grad;
+            ctx.beginPath();
+            ctx.roundRect(140, 450, 800, 1000, 60); 
+            ctx.fill();
+            
+            // النصوص والتنسيقات
+            ctx.textAlign = "center";
+            ctx.fillStyle = "#ffffff";
+            
+            ctx.font = "bold 65px Cairo, sans-serif";
+            ctx.fillText("NXL ELMAHALLA", 540, 580);
+            
+            ctx.font = "bold 55px Cairo, sans-serif";
+            ctx.fillText("❤️ مقياس الحب ❤️", 540, 700);
+            
+            ctx.font = "bold 90px Cairo, sans-serif";
+            ctx.fillText(`${n1}  +  ${n2}`, 540, 920);
+            
+            ctx.font = "900 220px Cairo, sans-serif";
+            // إضافة ظل للرقم ليكون فخماً
+            ctx.shadowColor = "rgba(0,0,0,0.5)"; ctx.shadowBlur = 20; ctx.shadowOffsetY = 10;
+            ctx.fillText(perc, 540, 1200);
+            ctx.shadowBlur = 0; ctx.shadowOffsetY = 0; // إيقاف الظل
+            
+            ctx.font = "bold 55px Cairo, sans-serif";
+            ctx.fillText(status, 540, 1360);
+            
+            ctx.fillStyle = "#666666";
+            ctx.font = "bold 45px Cairo, sans-serif";
+            ctx.fillText("NXL - سهولة ارتباط .. قلوب بتتقرب", 540, 1800);
+            
+            // تحويل الـ Canvas إلى صورة ومشاركتها
+            canvas.toBlob(async (blob) => {
+                const file = new File([blob], 'NXL_Love_Story.jpg', { type: 'image/jpeg' });
+                
+                // محاولة استخدام ميزة المشاركة للهواتف (Native Share)
+                if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                    try {
+                        await navigator.share({
+                            title: 'نتيجة مقياس الحب NXL',
+                            files: [file]
+                        });
+                    } catch(e) { console.log("تم إلغاء المشاركة"); }
+                } else {
+                    // إذا كان المتصفح لا يدعم المشاركة المباشرة (مثل بعض أجهزة الكمبيوتر)، قم بتحميل الصورة
+                    const link = document.createElement('a');
+                    link.download = 'NXL_Love_Story.jpg';
+                    link.href = URL.createObjectURL(blob);
+                    link.click();
+                }
+            }, 'image/jpeg', 0.95);
+        };
+        // -------------------------------------
 
         function escapeHTML(str) { return str.replace(/[&<>'"]/g, t => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[t] || t)); }
     </script>
