@@ -83,7 +83,34 @@
                     <label class="text-xs text-gray-300 font-bold mb-1 block">نبذة عنك (Bio):</label>
                     <input type="text" id="setup-bio" placeholder="اكتب شيئاً يعبر عنك..." class="w-full bg-[#1f1f2e] text-sm rounded-xl px-4 py-3 text-white focus:outline-none border border-gray-700">
                 </div>
-                <button id="save-profile-btn" class="w-full py-3 gradient-bg rounded-xl font-bold mt-2 active:scale-95 transition text-white shadow-lg shadow-[#ff2a85]/30">دخول عالم NXL</button>
+                <button id="save-profile-btn" class="w-full py-3 gradient-bg rounded-xl font-bold mt-2 active:scale-95 transition text-white shadow-lg shadow-[#ff7300]/30">دخول عالم NXL</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="edit-profile-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#09090d]/95 backdrop-blur-sm px-6 hidden">
+        <div class="max-w-md w-full bg-[#16161f] p-8 rounded-3xl border border-[#ff2a85] shadow-2xl overflow-y-auto max-h-[90vh]">
+            <h2 class="text-xl font-bold mb-1 text-center">تعديل الملف الشخصي ✏️</h2>
+            <p class="text-xs text-gray-400 text-center mb-6">يمكنك تعديل بياناتك الشخصية في أي وقت</p>
+            
+            <div class="space-y-4">
+                <div>
+                    <label class="text-xs text-gray-300 font-bold mb-1 block">اللقب الجديد:</label>
+                    <input type="text" id="edit-nickname" class="w-full bg-[#1f1f2e] text-sm rounded-xl px-4 py-3 text-white focus:outline-none border border-gray-700">
+                </div>
+                <div>
+                    <label class="text-xs text-gray-300 font-bold mb-1 block">اسم المستخدم الجديد (فريد بالإنجليزية):</label>
+                    <input type="text" id="edit-username" class="w-full bg-[#1f1f2e] text-sm rounded-xl px-4 py-3 text-white focus:outline-none border border-gray-700 dir-ltr text-left">
+                    <p id="edit-username-error" class="text-red-500 text-xs mt-1 hidden">هذا الاسم مستخدم بالفعل، اختر غيره.</p>
+                </div>
+                <div>
+                    <label class="text-xs text-gray-300 font-bold mb-1 block">النبذة الشخصية الجديدة (Bio):</label>
+                    <input type="text" id="edit-bio" class="w-full bg-[#1f1f2e] text-sm rounded-xl px-4 py-3 text-white focus:outline-none border border-gray-700">
+                </div>
+                <div class="flex gap-2">
+                    <button id="save-edit-profile-btn" class="flex-1 py-3 gradient-bg rounded-xl font-bold mt-2 active:scale-95 transition text-white shadow-lg shadow-[#ff2a85]/30">حفظ</button>
+                    <button id="close-edit-profile-btn" class="flex-1 py-3 bg-gray-800 rounded-xl font-bold mt-2 active:scale-95 transition text-white">إلغاء</button>
+                </div>
             </div>
         </div>
     </div>
@@ -206,6 +233,7 @@
         <section id="tab-profile" class="tab-content hidden p-4 max-w-lg mx-auto text-center">
             <div class="bg-[#16161f] p-6 rounded-3xl border border-gray-800 mb-6 relative shadow-xl">
                 <button id="logout-btn" class="absolute top-4 left-4 text-xs bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white border border-red-500/30 transition px-3 py-1 rounded-lg font-bold">خروج</button>
+                <button id="open-edit-profile-btn" class="absolute top-4 right-4 text-xs bg-blue-500/10 text-blue-500 hover:bg-blue-500 hover:text-white border border-blue-500/30 transition px-3 py-1 rounded-lg font-bold">تعديل</button>
                 <div id="profile-avatar-container" class="w-20 h-20 mx-auto rounded-full bg-gray-800 border-2 border-[#ff2a85] overflow-hidden mb-3 shadow-lg shadow-[#ff2a85]/30"></div>
                 <h2 id="profile-nickname" class="text-xl font-bold">اللقب</h2>
                 <p id="profile-username-display" class="text-sm text-[#ff7300] font-bold mb-1">@username</p>
@@ -375,7 +403,6 @@
                 document.getElementById('auth-screen').classList.add('hidden');
                 document.getElementById('notifyBtn').classList.remove('hidden'); 
                 
-                // نظام الأونلاين (Online Presence) الجبار
                 const myOnlineRef = ref(db, `users/${user.uid}/isOnline`);
                 const connectedRef = ref(db, '.info/connected');
                 onValue(connectedRef, (snap) => {
@@ -389,6 +416,15 @@
                     if (snapshot.exists()) {
                         userData = snapshot.val();
                         initAppUI();
+                        
+                        // فحص للمستخدم القديم: إذا لم يكن لديه Bio أو لديه البايو القديم، نلزمه بكتابة بايو جديد
+                        if (!userData.bio || userData.bio.trim() === "" || userData.bio === "عضو جديد في مجتمع NXL") {
+                            document.getElementById('setup-profile-screen').classList.remove('hidden');
+                            document.getElementById('setup-nickname').value = userData.nickname || "";
+                            document.getElementById('setup-username').value = userData.username || "";
+                            document.getElementById('setup-bio').value = "";
+                            document.getElementById('setup-bio').placeholder = "الرجاء كتابة نبذة شخصية (Bio) إلزامية لتحديث حسابك...";
+                        }
                     } else {
                         document.getElementById('setup-profile-screen').classList.remove('hidden');
                     }
@@ -403,17 +439,77 @@
         document.getElementById('save-profile-btn').addEventListener('click', async () => {
             const nickname = document.getElementById('setup-nickname').value.trim();
             let username = document.getElementById('setup-username').value.trim().toLowerCase().replace(/[^a-z0-9_]/g, '');
-            let bio = document.getElementById('setup-bio').value.trim() || "عضو جديد في مجتمع NXL";
+            let bio = document.getElementById('setup-bio').value.trim();
             
-            if(!nickname || !username) return alert("اكمل البيانات الأساسية!");
-            const unameCheck = await get(child(ref(db), `usernames/${username}`));
-            if(unameCheck.exists()) { document.getElementById('username-error').classList.remove('hidden'); return; }
+            if(!nickname || !username || !bio) return alert("برجاء إدخال الاسم، اسم المستخدم، والنبذة الشخصية (Bio)!");
+            
+            // في حالة كان مستخدم قديم يقوم بتحديث معلوماته فقط
+            if (userData && userData.username === username) {
+                const avatarUrl = `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(nickname)}`;
+                await update(ref(db, `users/${currentUser.uid}`), { nickname: nickname, bio: bio, avatarUrl: avatarUrl });
+                document.getElementById('setup-profile-screen').classList.add('hidden');
+                return;
+            }
 
-            const avatarUrl = `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(username)}`;
-            userData = { uid: currentUser.uid, nickname: nickname, username: username, bio: bio, avatarUrl: avatarUrl, email: currentUser.email, joinedAt: Date.now(), points: 0, isOnline: true };
+            const unameCheck = await get(child(ref(db), `usernames/${username}`));
+            if(unameCheck.exists() && unameCheck.val() !== currentUser.uid) { document.getElementById('username-error').classList.remove('hidden'); return; }
+
+            // إنشاء الأفاتار بناءً على الاسم (اللقب)
+            const avatarUrl = `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(nickname)}`;
+            userData = { uid: currentUser.uid, nickname: nickname, username: username, bio: bio, avatarUrl: avatarUrl, email: currentUser.email, joinedAt: Date.now(), points: userData?.points || 0, isOnline: true };
             await set(ref(db, `usernames/${username}`), currentUser.uid);
             await set(ref(db, `users/${currentUser.uid}`), userData);
             document.getElementById('setup-profile-screen').classList.add('hidden');
+        });
+
+        // تشغيل أزرار نافذة تعديل الملف الشخصي في أي وقت
+        document.getElementById('open-edit-profile-btn').addEventListener('click', () => {
+            if (!userData) return;
+            document.getElementById('edit-nickname').value = userData.nickname || "";
+            document.getElementById('edit-username').value = userData.username || "";
+            document.getElementById('edit-bio').value = userData.bio || "";
+            document.getElementById('edit-username-error').classList.add('hidden');
+            document.getElementById('edit-profile-screen').classList.remove('hidden');
+        });
+
+        document.getElementById('close-edit-profile-btn').addEventListener('click', () => {
+            document.getElementById('edit-profile-screen').classList.add('hidden');
+        });
+
+        document.getElementById('save-edit-profile-btn').addEventListener('click', async () => {
+            const newNickname = document.getElementById('edit-nickname').value.trim();
+            const newUsername = document.getElementById('edit-username').value.trim().toLowerCase().replace(/[^a-z0-9_]/g, '');
+            const newBio = document.getElementById('edit-bio').value.trim();
+
+            if (!newNickname || !newUsername || !newBio) {
+                return alert("الرجاء ملء جميع الحقول المطلوبة!");
+            }
+
+            const oldUsername = userData.username;
+
+            // إذا قام بتغيير اسم المستخدم نقوم بالتحقق من الفريدية والتكرار
+            if (newUsername !== oldUsername) {
+                const unameCheck = await get(child(ref(db), `usernames/${newUsername}`));
+                if (unameCheck.exists() && unameCheck.val() !== currentUser.uid) {
+                    document.getElementById('edit-username-error').classList.remove('hidden');
+                    return;
+                }
+                await remove(ref(db, `usernames/${oldUsername}`));
+                await set(ref(db, `usernames/${newUsername}`), currentUser.uid);
+            }
+
+            // تحديث الأفاتار بناءً على الاسم الجديد
+            const newAvatarUrl = `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(newNickname)}`;
+
+            await update(ref(db, `users/${currentUser.uid}`), {
+                nickname: newNickname,
+                username: newUsername,
+                bio: newBio,
+                avatarUrl: newAvatarUrl
+            });
+
+            document.getElementById('edit-profile-screen').classList.add('hidden');
+            alert("تم تحديث بيانات ملفك الشخصي بنجاح!");
         });
 
         function addExpPoints(amount = 1) {
@@ -455,7 +551,6 @@
                     const u = child.val();
                     allUsers.push(u); 
                     
-                    // فلترة الستوريات (النوت النشطة)
                     if(u.note && u.note.text && (now - u.note.timestamp < sevenHours) && u.uid !== currentUser.uid) {
                         activeStories.push(u);
                     }
@@ -618,12 +713,10 @@
 
         function startGlobalChat() {
             const box = document.getElementById('global-messages-box');
-            const chatQuery = query(ref(db, 'global_chat'), limitToLast(100)); // زيادة العدد لعدم اختفاء الرسائل بسرعة
+            const chatQuery = query(ref(db, 'global_chat'), limitToLast(100));
             
             onValue(chatQuery, (snapshot) => {
-                // حفظ موضع السكرول
                 const isAtBottom = box.scrollHeight - box.scrollTop <= box.clientHeight + 50;
-                
                 box.innerHTML = ""; const now = Date.now(); const oneDay = 24 * 60 * 60 * 1000;
                 let lastSenderId = null;
                 
@@ -664,9 +757,7 @@
                         </div>`;
                 });
                 
-                // النزول الذكي للأسفل
                 if (isAtBottom) { box.scrollTop = box.scrollHeight; }
-                
                 if (window.activeTabId !== 'global' && lastSenderId !== currentUser.uid && lastSenderId !== null) {
                     document.getElementById('global-unread-dot').classList.remove('hidden');
                 }
@@ -822,7 +913,6 @@
             document.getElementById('private-msg-input').focus();
         };
 
-        // إزالة مستخدم من المحادثات لديك فقط
         document.getElementById('delete-chat-btn').addEventListener('click', async () => {
             if(!openChatId) return;
             if(confirm("هل تريد إزالة هذا المستخدم من قائمة محادثاتك؟ (سيتم إخفاؤها لديك فقط)")) {
@@ -854,7 +944,6 @@
             
             onDisconnect(myTypingRef).set(false);
 
-            // استماع لحالة التواجد (Online) للطرف الآخر
             targetOnlineUnsubscribe = onValue(targetOnlineRef, (snap) => {
                 const isOnline = snap.val();
                 const dot = document.getElementById('private-target-online-dot');
@@ -867,7 +956,6 @@
                 const statusEl = document.getElementById('private-target-status');
                 if(snap.val() === true) { statusEl.innerText = "يكتب الآن..."; statusEl.classList.replace('text-green-400', 'text-[#ff7300]'); statusEl.classList.add('animate-pulse'); } 
                 else { 
-                    // إعادة الحالة لمتصل أو غير متصل بناء على النقطة
                     const isOnline = !document.getElementById('private-target-online-dot').classList.contains('hidden');
                     statusEl.innerText = isOnline ? "متصل الآن" : "غير متصل"; 
                     statusEl.classList.replace('text-[#ff7300]', isOnline ? 'text-green-400' : 'text-gray-400'); 
@@ -946,7 +1034,6 @@
                 });
                 
                 if (isAtBottom) { box.scrollTop = box.scrollHeight; }
-                
                 if (Object.keys(unreadUpdates).length > 0) { update(ref(db), unreadUpdates); }
                 if(document.getElementById('private-chat-window').classList.contains('hidden') === false) {
                      update(ref(db), { [`user_chats/${currentUser.uid}/${chatId}/hasUnread`]: false });
@@ -1039,7 +1126,6 @@
         window.handleOpenChat = (uid, name, avatar) => { openPrivateChat(uid, name, avatar); };
 
         /* ---------------- ألعاب وحركات NXL ---------------- */
-        
         document.getElementById('calculate-love-btn').onclick = () => {
             const n1 = document.getElementById('love-name1').value.trim(); const n2 = document.getElementById('love-name2').value.trim(); if(!n1 || !n2) return;
             const str = [n1, n2].sort().join("").toLowerCase(); let h = 0; for(let i=0; i<str.length; i++) h = str.charCodeAt(i) + ((h<<5)-h);
