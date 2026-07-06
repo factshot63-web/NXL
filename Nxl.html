@@ -20,7 +20,7 @@
         body { font-family: 'Cairo', sans-serif; background-color: #09090d; color: #ffffff; }
         .gradient-bg { background: linear-gradient(135deg, #ff2a85 0%, #ff7300 100%); }
         .gradient-text { background: linear-gradient(135deg, #ff2a85 0%, #ff7300 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; height: 4px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #ff2a85; border-radius: 10px; }
         
         @keyframes popIn {
@@ -30,6 +30,7 @@
         }
         .note-bubble { animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
         .matte-glass { background: rgba(22, 22, 31, 0.85); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .story-ring { outline: 2px solid #ff7300; outline-offset: 2px; }
     </style>
 </head>
 <body class="flex flex-col h-screen overflow-hidden select-none">
@@ -64,7 +65,7 @@
     </div>
 
     <div id="setup-profile-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#09090d]/95 backdrop-blur-sm px-6 hidden">
-        <div class="max-w-md w-full bg-[#16161f] p-8 rounded-3xl border border-[#ff7300] shadow-2xl">
+        <div class="max-w-md w-full bg-[#16161f] p-8 rounded-3xl border border-[#ff7300] shadow-2xl overflow-y-auto max-h-[90vh]">
             <h2 class="text-xl font-bold mb-1 text-center">خطوة أخيرة للبدء 🚀</h2>
             <p class="text-xs text-gray-400 text-center mb-6">اختر هويتك في NXL ليتمكن الجميع من البحث عنك</p>
             
@@ -74,11 +75,15 @@
                     <input type="text" id="setup-nickname" placeholder="مثال: الباشا، أميرة الأحلام..." class="w-full bg-[#1f1f2e] text-sm rounded-xl px-4 py-3 text-white focus:outline-none border border-gray-700">
                 </div>
                 <div>
-                    <label class="text-xs text-gray-300 font-bold mb-1 block">اسم المستخدم (فريد بالإنجليزية للبحث):</label>
+                    <label class="text-xs text-gray-300 font-bold mb-1 block">اسم المستخدم (فريد بالإنجليزية):</label>
                     <input type="text" id="setup-username" placeholder="مثال: ahmed_nxl" class="w-full bg-[#1f1f2e] text-sm rounded-xl px-4 py-3 text-white focus:outline-none border border-gray-700 dir-ltr text-left">
                     <p id="username-error" class="text-red-500 text-xs mt-1 hidden">هذا الاسم مستخدم بالفعل، اختر غيره.</p>
                 </div>
-                <button id="save-profile-btn" class="w-full py-3 gradient-bg rounded-xl font-bold mt-2 active:scale-95 transition text-white">دخول عالم NXL</button>
+                <div>
+                    <label class="text-xs text-gray-300 font-bold mb-1 block">نبذة عنك (Bio):</label>
+                    <input type="text" id="setup-bio" placeholder="اكتب شيئاً يعبر عنك..." class="w-full bg-[#1f1f2e] text-sm rounded-xl px-4 py-3 text-white focus:outline-none border border-gray-700">
+                </div>
+                <button id="save-profile-btn" class="w-full py-3 gradient-bg rounded-xl font-bold mt-2 active:scale-95 transition text-white shadow-lg shadow-[#ff2a85]/30">دخول عالم NXL</button>
             </div>
         </div>
     </div>
@@ -93,13 +98,19 @@
         </div>
         <div class="flex items-center gap-3">
             <button id="notifyBtn" class="text-lg hidden active:scale-95" title="تفعيل الإشعارات">🔔</button>
-            <div id="user-header-avatar" class="w-8 h-8 rounded-full border border-gray-700 bg-gray-800 overflow-hidden hidden cursor-pointer transition hover:border-[#ff2a85]" onclick="switchTab('profile', document.getElementById('nav-profile-btn'))"></div>
+            <div class="relative cursor-pointer transition hover:scale-105" onclick="switchTab('profile', document.getElementById('nav-profile-btn'))">
+                <div id="user-header-avatar" class="w-8 h-8 rounded-full border border-gray-700 bg-gray-800 overflow-hidden hidden"></div>
+                <span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border border-[#16161f] rounded-full"></span>
+            </div>
         </div>
     </header>
 
     <main class="flex-1 overflow-y-auto custom-scrollbar bg-[#09090d] pb-20 relative">
         
         <section id="tab-home" class="tab-content p-4 max-w-lg mx-auto">
+            <div id="stories-container" class="flex gap-4 overflow-x-auto pb-4 pt-2 mb-2 custom-scrollbar hidden">
+                </div>
+
             <div class="bg-[#16161f] p-4 rounded-2xl mb-4 border border-gray-800 shadow-lg">
                 <textarea id="post-input" placeholder="شارك لحظاتك... (تختفي بعد 72 ساعة)" class="w-full bg-[#1f1f2e] text-sm text-white rounded-xl p-3 focus:outline-none resize-none h-20"></textarea>
                 <div class="flex justify-between items-center mt-3">
@@ -109,8 +120,9 @@
                     </label>
                     <button id="submit-post-btn" class="gradient-bg text-xs font-bold text-white px-5 py-2 rounded-xl active:scale-95 shadow-md shadow-[#ff2a85]/20">نشر</button>
                 </div>
-                <div id="post-preview-container" class="mt-2 hidden">
-                    <img id="post-img-preview" class="w-20 h-20 object-cover rounded-lg border border-gray-700">
+                <div id="post-preview-container" class="mt-2 hidden relative w-max">
+                    <img id="post-img-preview" class="h-20 w-20 object-cover rounded-lg border border-gray-700">
+                    <button id="cancel-post-img" class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold shadow-md active:scale-90">×</button>
                 </div>
             </div>
             <div id="home-posts-feed" class="space-y-4"></div>
@@ -139,6 +151,14 @@
         </section>
 
         <section id="tab-games" class="tab-content hidden p-4 max-w-lg mx-auto space-y-6">
+            <div class="bg-[#16161f] p-5 rounded-2xl border border-gray-800 relative overflow-hidden shadow-lg">
+                <h2 class="text-lg font-bold mb-3 flex items-center gap-2"><span class="text-2xl">🏆</span> لوحة الشرف (Top 10)</h2>
+                <p class="text-[10px] text-gray-400 mb-3">أكثر الأعضاء تفاعلاً وجمعاً للنقاط في NXL.</p>
+                <div id="leaderboard-list" class="space-y-2">
+                    <div class="text-center text-xs text-gray-500 py-4">جاري تحميل الأبطال...</div>
+                </div>
+            </div>
+
             <div class="bg-[#16161f] p-6 rounded-2xl border border-gray-800 text-center relative overflow-hidden shadow-lg">
                 <h2 class="text-lg font-bold mb-1 relative z-10">❤️ حاسبة الحب NXL</h2>
                 <input type="text" id="love-name1" placeholder="اسمك" class="w-full bg-[#1f1f2e] border border-gray-700 text-center text-sm rounded-xl py-2 mt-3 text-white relative z-10">
@@ -148,7 +168,6 @@
                 <div id="love-result" class="mt-4 hidden relative z-10">
                     <div class="text-5xl font-black gradient-text mb-1 drop-shadow-lg" id="love-percentage">0%</div>
                     <div class="text-xs text-gray-300 font-bold mb-4" id="love-status"></div>
-                    
                     <button id="share-ig-btn" class="w-full py-2.5 bg-gradient-to-r from-purple-600 to-[#ff2a85] rounded-xl text-sm font-bold text-white active:scale-95 shadow-lg shadow-purple-500/30 flex items-center justify-center gap-2">
                         <span>📸</span> شاركها ستوري
                     </button>
@@ -169,7 +188,7 @@
             <div class="bg-[#16161f] p-3 rounded-xl border border-[#ff2a85]/40 mb-4 flex gap-2 items-center shadow-md">
                 <div id="my-note-avatar" class="w-9 h-9 rounded-full bg-gray-800 border border-gray-700 shrink-0 overflow-hidden"></div>
                 <input type="text" id="my-note-input" placeholder="نوت (تختفي بعد 7 ساعات)..." class="flex-1 bg-[#1f1f2e] text-xs rounded-lg px-3 py-2 text-white focus:outline-none border border-gray-800">
-                <button id="save-note-btn" class="gradient-bg text-white px-3 py-2 rounded-lg text-xs font-bold active:scale-95 transition-colors">نشر</button>
+                <button id="save-note-btn" class="gradient-bg text-white px-3 py-2 rounded-lg text-xs font-bold active:scale-95 transition-colors shadow-md shadow-[#ff2a85]/20">نشر</button>
             </div>
 
             <div class="relative bg-[#16161f] p-3 rounded-xl border border-gray-800 mb-4 z-20 shadow-md">
@@ -190,13 +209,14 @@
                 <div id="profile-avatar-container" class="w-20 h-20 mx-auto rounded-full bg-gray-800 border-2 border-[#ff2a85] overflow-hidden mb-3 shadow-lg shadow-[#ff2a85]/30"></div>
                 <h2 id="profile-nickname" class="text-xl font-bold">اللقب</h2>
                 <p id="profile-username-display" class="text-sm text-[#ff7300] font-bold mb-1">@username</p>
+                <p id="profile-bio-display" class="text-xs text-gray-300 italic mb-3 px-4"></p>
                 
-                <div class="mt-3 inline-block bg-[#1f1f2e] border border-gray-700 px-4 py-2 rounded-xl">
+                <div class="mt-1 inline-block bg-[#1f1f2e] border border-gray-700 px-4 py-2 rounded-xl">
                     <p class="text-xs text-gray-400 font-bold mb-1">🔥 نقاط التفاعل في المنصة</p>
                     <p class="text-lg font-black gradient-text" id="profile-points">0 EXP</p>
                 </div>
                 
-                <p id="profile-email" class="text-xs text-gray-500 mt-4">email</p>
+                <p id="profile-email" class="text-xs text-gray-600 mt-4">email</p>
             </div>
             <h3 class="text-sm font-bold text-right mb-3 px-1 text-gray-400">صوري المرفوعة:</h3>
             <div id="profile-posts-grid" class="grid grid-cols-3 gap-2"></div>
@@ -209,10 +229,13 @@
                 <button id="close-private-chat" class="text-gray-400 hover:text-white font-bold text-sm ml-1 flex items-center gap-1 transition">
                     <span>➡️</span> رجوع
                 </button>
-                <div id="private-target-avatar" class="w-10 h-10 rounded-full overflow-hidden bg-gray-800 border border-gray-700"></div>
+                <div class="relative">
+                    <div id="private-target-avatar" class="w-10 h-10 rounded-full overflow-hidden bg-gray-800 border border-gray-700"></div>
+                    <span id="private-target-online-dot" class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-[#16161f] rounded-full hidden"></span>
+                </div>
                 <div>
                     <h3 id="private-target-name" class="text-sm font-bold text-white">المستلم</h3>
-                    <p id="private-target-status" class="text-[10px] text-green-400 font-bold transition-colors duration-300">نشط الآن في NXL</p>
+                    <p id="private-target-status" class="text-[10px] text-gray-400 font-bold transition-colors duration-300">غير متصل</p>
                 </div>
             </div>
             <button id="delete-chat-btn" class="text-red-500 hover:bg-red-500/20 p-2 rounded-lg transition active:scale-90" title="إزالة المستخدم من قائمة محادثاتك">
@@ -247,12 +270,22 @@
         </div>
     </div>
 
-    <div id="user-modal" class="fixed inset-0 bg-black/80 z-50 flex items-center justify-center hidden px-4 backdrop-blur-sm">
-        <div class="bg-[#16161f] w-full max-w-sm rounded-3xl border border-gray-800 p-6 relative text-center shadow-2xl shadow-[#ff7300]/20">
+    <div id="user-modal" class="fixed inset-0 bg-black/80 z-50 flex items-center justify-center hidden px-4 backdrop-blur-sm transition-opacity">
+        <div class="bg-[#16161f] w-full max-w-sm rounded-3xl border border-gray-800 p-6 relative text-center shadow-2xl shadow-[#ff7300]/20 transform transition-transform scale-95" id="user-modal-content">
             <button id="close-modal-btn" class="absolute top-4 left-4 text-gray-400 hover:text-white transition text-2xl">&times;</button>
-            <div id="modal-avatar" class="w-20 h-20 mx-auto rounded-full bg-gray-800 border-2 border-[#ff7300] overflow-hidden mb-3 shadow-lg shadow-[#ff7300]/30"></div>
-            <h3 id="modal-nickname" class="font-bold text-lg">اللقب</h3>
-            <p id="modal-username-txt" class="text-sm text-[#ff7300] mb-4 font-medium">@username</p>
+            <div class="relative w-20 h-20 mx-auto mb-3">
+                <div id="modal-avatar" class="w-full h-full rounded-full bg-gray-800 border-2 border-[#ff7300] overflow-hidden shadow-lg shadow-[#ff7300]/30"></div>
+                <span id="modal-online-dot" class="absolute bottom-0 right-1 w-4 h-4 bg-green-500 border-2 border-[#16161f] rounded-full hidden"></span>
+            </div>
+            <h3 id="modal-nickname" class="font-bold text-lg flex items-center justify-center gap-1">اللقب</h3>
+            <p id="modal-username-txt" class="text-sm text-[#ff7300] mb-2 font-medium">@username</p>
+            <p id="modal-bio" class="text-xs text-gray-400 italic mb-3 px-2 line-clamp-3">لا توجد نبذة شخصية.</p>
+            <div class="flex justify-center gap-4 mb-4 text-xs font-bold bg-[#1f1f2e] p-2 rounded-xl border border-gray-700/50">
+                <span id="modal-points" class="text-[#ff2a85]">0 EXP 🔥</span>
+            </div>
+            
+            <div id="modal-note-area" class="hidden bg-white text-black p-3 rounded-xl rounded-tr-none text-xs font-bold mb-4 text-right shadow-md border border-gray-300 note-bubble"></div>
+
             <button id="modal-chat-btn" class="w-full py-2.5 gradient-bg rounded-xl text-sm font-bold text-white active:scale-95 shadow-md shadow-[#ff2a85]/30">مراسلة خاصة</button>
         </div>
     </div>
@@ -274,7 +307,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getDatabase, ref, set, update, push, onValue, get, child, query, limitToLast, remove, onDisconnect, increment } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        import { getDatabase, ref, set, update, push, onValue, get, child, query, limitToLast, remove, onDisconnect, increment, orderByChild } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
         import { getMessaging, getToken } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging.js";
 
         const firebaseConfig = {
@@ -296,10 +329,11 @@
         let currentUser = null;
         let userData = null;
         let globalPostImageBase64 = "";
-        let privatePostImageBase64 = ""; // متغير صورة الشات الخاص
+        let privatePostImageBase64 = ""; 
         let activeChatRef = null;
         let openChatId = null; 
         let targetTypingUnsubscribe = null;
+        let targetOnlineUnsubscribe = null;
         let replyingToMsg = null;
         let privateReplyingToMsg = null;
         window.activeTabId = 'home'; 
@@ -341,6 +375,16 @@
                 document.getElementById('auth-screen').classList.add('hidden');
                 document.getElementById('notifyBtn').classList.remove('hidden'); 
                 
+                // نظام الأونلاين (Online Presence) الجبار
+                const myOnlineRef = ref(db, `users/${user.uid}/isOnline`);
+                const connectedRef = ref(db, '.info/connected');
+                onValue(connectedRef, (snap) => {
+                    if (snap.val() === true) {
+                        onDisconnect(myOnlineRef).set(false);
+                        set(myOnlineRef, true);
+                    }
+                });
+
                 onValue(ref(db, `users/${user.uid}`), (snapshot) => {
                     if (snapshot.exists()) {
                         userData = snapshot.val();
@@ -359,12 +403,14 @@
         document.getElementById('save-profile-btn').addEventListener('click', async () => {
             const nickname = document.getElementById('setup-nickname').value.trim();
             let username = document.getElementById('setup-username').value.trim().toLowerCase().replace(/[^a-z0-9_]/g, '');
-            if(!nickname || !username) return alert("اكمل البيانات!");
+            let bio = document.getElementById('setup-bio').value.trim() || "عضو جديد في مجتمع NXL";
+            
+            if(!nickname || !username) return alert("اكمل البيانات الأساسية!");
             const unameCheck = await get(child(ref(db), `usernames/${username}`));
             if(unameCheck.exists()) { document.getElementById('username-error').classList.remove('hidden'); return; }
 
             const avatarUrl = `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(username)}`;
-            userData = { uid: currentUser.uid, nickname: nickname, username: username, avatarUrl: avatarUrl, email: currentUser.email, joinedAt: Date.now(), points: 0 };
+            userData = { uid: currentUser.uid, nickname: nickname, username: username, bio: bio, avatarUrl: avatarUrl, email: currentUser.email, joinedAt: Date.now(), points: 0, isOnline: true };
             await set(ref(db, `usernames/${username}`), currentUser.uid);
             await set(ref(db, `users/${currentUser.uid}`), userData);
             document.getElementById('setup-profile-screen').classList.add('hidden');
@@ -382,6 +428,7 @@
             
             document.getElementById('profile-nickname').innerText = userData.nickname;
             document.getElementById('profile-username-display').innerText = `@${userData.username}`;
+            document.getElementById('profile-bio-display').innerText = userData.bio || "";
             document.getElementById('profile-email').innerText = userData.email;
             document.getElementById('profile-points').innerText = `${userData.points || 0} EXP`;
             
@@ -390,9 +437,81 @@
             }
 
             if (!window.listenersStarted) {
-                startGlobalChat(); startPostsFeed(); startMyChatsList();
+                startGlobalChat(); startPostsFeed(); startMyChatsList(); startLeaderboardAndStories();
                 window.listenersStarted = true;
             }
+        }
+
+        /* ---------------- لوحة الشرف (Leaderboard) ونظام الحالات (Stories) ---------------- */
+        function startLeaderboardAndStories() {
+            const usersRef = query(ref(db, 'users'));
+            onValue(usersRef, (snapshot) => {
+                let allUsers = [];
+                let activeStories = [];
+                const now = Date.now();
+                const sevenHours = 7 * 60 * 60 * 1000;
+
+                snapshot.forEach(child => { 
+                    const u = child.val();
+                    allUsers.push(u); 
+                    
+                    // فلترة الستوريات (النوت النشطة)
+                    if(u.note && u.note.text && (now - u.note.timestamp < sevenHours) && u.uid !== currentUser.uid) {
+                        activeStories.push(u);
+                    }
+                });
+
+                // --- تحديث الستوريات (Stories) ---
+                const storyContainer = document.getElementById('stories-container');
+                if(activeStories.length > 0) {
+                    storyContainer.classList.remove('hidden');
+                    storyContainer.innerHTML = '';
+                    activeStories.forEach(u => {
+                        storyContainer.innerHTML += `
+                            <div class="flex flex-col items-center gap-1 min-w-[60px] cursor-pointer transition active:scale-95" onclick="window.openUserModal('${u.uid}')">
+                                <div class="w-14 h-14 rounded-full p-0.5 bg-gradient-to-tr from-[#ff7300] to-[#ff2a85]">
+                                    <img src="${u.avatarUrl}" class="w-full h-full rounded-full bg-gray-800 border-2 border-[#16161f] object-cover">
+                                </div>
+                                <span class="text-[9px] text-gray-300 truncate w-14 text-center">${u.nickname.split(' ')[0]}</span>
+                            </div>
+                        `;
+                    });
+                } else {
+                    storyContainer.classList.add('hidden');
+                }
+
+                // --- تحديث لوحة الشرف (Leaderboard) ---
+                allUsers.sort((a, b) => (b.points || 0) - (a.points || 0));
+                const top10 = allUsers.slice(0, 10);
+                const leadList = document.getElementById('leaderboard-list');
+                leadList.innerHTML = '';
+                
+                top10.forEach((u, index) => {
+                    let rankIcon = `#${index + 1}`;
+                    if(index === 0) rankIcon = '👑';
+                    if(index === 1) rankIcon = '🥈';
+                    if(index === 2) rankIcon = '🥉';
+
+                    const isMeClass = u.uid === currentUser.uid ? 'bg-[#ff2a85]/20 border-[#ff2a85]' : 'bg-[#1f1f2e] border-gray-800';
+
+                    leadList.innerHTML += `
+                        <div class="flex items-center justify-between p-2.5 rounded-xl border ${isMeClass} cursor-pointer hover:bg-[#252538] transition" onclick="window.openUserModal('${u.uid}')">
+                            <div class="flex items-center gap-3">
+                                <span class="w-6 text-center font-bold text-[#ff7300] text-sm">${rankIcon}</span>
+                                <div class="relative">
+                                    <img src="${u.avatarUrl}" class="w-9 h-9 rounded-full bg-gray-800 border border-gray-700">
+                                    ${u.isOnline ? '<span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border border-[#1f1f2e] rounded-full"></span>' : ''}
+                                </div>
+                                <div class="flex flex-col">
+                                    <span class="text-xs font-bold text-white">${u.nickname} ${u.uid === currentUser.uid ? '(أنت)' : ''}</span>
+                                    <span class="text-[9px] text-gray-400">@${u.username}</span>
+                                </div>
+                            </div>
+                            <div class="text-xs font-black text-[#ff2a85] bg-black/30 px-2 py-1 rounded-lg">${u.points || 0} EXP</div>
+                        </div>
+                    `;
+                });
+            });
         }
 
         /* ---------------- ميزة النوت (7 ساعات) ---------------- */
@@ -404,7 +523,7 @@
             } else {
                 await update(ref(db, `users/${currentUser.uid}/note`), { text: noteText, timestamp: Date.now() });
                 addExpPoints(2);
-                alert("تم نشر النوت! سيختفي تلقائياً بعد 7 ساعات.");
+                alert("تم نشر النوت بنجاح!");
             }
         };
 
@@ -428,12 +547,18 @@
                         if ((u.username.toLowerCase().includes(val) || u.nickname.toLowerCase().includes(val)) && u.uid !== currentUser.uid) {
                             matches++;
                             searchDropdown.innerHTML += `
-                                <div class="flex items-center gap-3 p-3 hover:bg-[#1f1f2e] cursor-pointer border-b border-gray-800 transition" onclick="window.openUserModal('${u.uid}'); document.getElementById('search-dropdown').classList.add('hidden');">
-                                    <img src="${u.avatarUrl}" class="w-8 h-8 rounded-full bg-gray-800 shrink-0">
-                                    <div>
-                                        <p class="text-xs font-bold text-white">${u.nickname}</p>
-                                        <p class="text-[10px] text-[#ff7300]">@${u.username}</p>
+                                <div class="flex items-center justify-between p-3 hover:bg-[#1f1f2e] cursor-pointer border-b border-gray-800 transition" onclick="window.openUserModal('${u.uid}'); document.getElementById('search-dropdown').classList.add('hidden');">
+                                    <div class="flex items-center gap-3">
+                                        <div class="relative">
+                                            <img src="${u.avatarUrl}" class="w-8 h-8 rounded-full bg-gray-800 shrink-0">
+                                            ${u.isOnline ? '<span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border border-[#16161f] rounded-full"></span>' : ''}
+                                        </div>
+                                        <div>
+                                            <p class="text-xs font-bold text-white">${u.nickname}</p>
+                                            <p class="text-[10px] text-[#ff7300]">@${u.username}</p>
+                                        </div>
                                     </div>
+                                    <span class="text-[10px] text-gray-500 bg-black/30 px-2 py-0.5 rounded-md">${u.points || 0} EXP</span>
                                 </div>
                             `;
                         }
@@ -448,7 +573,7 @@
             if (!e.target.closest('.relative.z-20')) { searchDropdown.classList.add('hidden'); }
         });
 
-        /* ---------------- وظيفة التفاعل بالريأكت ---------------- */
+        /* ---------------- وظائف عامة للرسائل ---------------- */
         window.addReaction = async (path, msgId) => {
             const emoji = prompt("أدخل إيموجي (من كيبورد الهاتف للتفاعل):");
             if(emoji && emoji.trim() !== '') {
@@ -458,11 +583,21 @@
             }
         };
 
+        window.copyMsgText = (text) => {
+            navigator.clipboard.writeText(text).then(() => alert("تم نسخ النص! ✓"));
+        }
+
+        window.deleteSingleMessage = async (path, msgId) => {
+            if(confirm("هل أنت متأكد من حذف هذه الرسالة للجميع؟")) {
+                await remove(ref(db, `${path}/${msgId}`));
+            }
+        }
+
         function renderReactions(reactionsObj) {
             if (!reactionsObj) return '';
             let html = `<div class="flex gap-1 mt-1.5 flex-wrap">`;
             for(let uid in reactionsObj) {
-                html += `<span class="bg-black/30 border border-gray-700/50 text-[11px] px-1.5 py-0.5 rounded-full cursor-pointer hover:scale-110 transition shadow-sm">${escapeHTML(reactionsObj[uid])}</span>`;
+                html += `<span class="bg-black/40 border border-gray-700/50 text-[11px] px-1.5 py-0.5 rounded-full cursor-pointer hover:scale-110 transition shadow-sm">${escapeHTML(reactionsObj[uid])}</span>`;
             }
             html += `</div>`;
             return html;
@@ -483,10 +618,15 @@
 
         function startGlobalChat() {
             const box = document.getElementById('global-messages-box');
-            const chatQuery = query(ref(db, 'global_chat'), limitToLast(50));
+            const chatQuery = query(ref(db, 'global_chat'), limitToLast(100)); // زيادة العدد لعدم اختفاء الرسائل بسرعة
+            
             onValue(chatQuery, (snapshot) => {
+                // حفظ موضع السكرول
+                const isAtBottom = box.scrollHeight - box.scrollTop <= box.clientHeight + 50;
+                
                 box.innerHTML = ""; const now = Date.now(); const oneDay = 24 * 60 * 60 * 1000;
                 let lastSenderId = null;
+                
                 snapshot.forEach(childSnap => {
                     const msgId = childSnap.key; const msg = childSnap.val(); 
                     if(now - msg.timestamp > oneDay) return; 
@@ -497,7 +637,7 @@
                     let replyHTML = '';
                     if (msg.replyTo) {
                         replyHTML = `
-                            <div class="bg-black/20 border-r-2 border-[#ff7300] p-1.5 mb-1.5 rounded text-[9px] text-gray-300 w-full text-right">
+                            <div class="bg-black/20 border-r-2 border-[#ff7300] p-1.5 mb-1.5 rounded text-[9px] text-gray-300 w-full text-right cursor-pointer" onclick="alert('${escapeHTML(msg.replyTo.text)}')">
                                 <strong class="text-[#ff7300] block mb-0.5">${escapeHTML(msg.replyTo.name)}</strong>
                                 <span class="truncate block max-w-[150px]">${escapeHTML(msg.replyTo.text)}</span>
                             </div>
@@ -505,13 +645,15 @@
                     }
 
                     box.innerHTML += `
-                        <div class="flex gap-2 w-full mb-1 ${isMe ? 'flex-row-reverse' : ''}">
+                        <div class="flex gap-2 w-full mb-1 ${isMe ? 'flex-row-reverse' : ''} group">
                             <img src="${msg.senderAvatar}" class="w-8 h-8 rounded-full cursor-pointer bg-gray-800 shrink-0 border border-gray-700" onclick="window.openUserModal('${msg.senderId}')">
-                            <div class="flex flex-col ${isMe ? 'items-end' : 'items-start'} max-w-[75%]">
-                                <div class="flex items-center gap-2 mb-0.5">
+                            <div class="flex flex-col ${isMe ? 'items-end' : 'items-start'} max-w-[80%]">
+                                <div class="flex items-center gap-2 mb-0.5 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity">
                                     <span class="text-[10px] text-gray-500 px-1 font-bold">${msg.senderNickname}</span>
-                                    <button onclick="window.prepareReply('${msgId}', '${msg.senderNickname}', '${escapeHTML(msg.text)}')" class="text-[9px] text-gray-500 hover:text-white transition active:scale-95">↩️ رد</button>
-                                    <button onclick="window.addReaction('global_chat', '${msgId}')" class="text-[10px] text-gray-500 hover:text-[#ff7300] transition active:scale-95">😄 تفاعل</button>
+                                    <button onclick="window.prepareReply('${msgId}', '${msg.senderNickname}', '${escapeHTML(msg.text)}')" class="text-[9px] text-gray-500 hover:text-white transition">↩️ رد</button>
+                                    <button onclick="window.addReaction('global_chat', '${msgId}')" class="text-[10px] text-gray-500 hover:text-[#ff7300] transition">😄</button>
+                                    <button onclick="window.copyMsgText('${escapeHTML(msg.text)}')" class="text-[10px] text-gray-500 hover:text-blue-400 transition">📋</button>
+                                    ${isMe ? `<button onclick="window.deleteSingleMessage('global_chat', '${msgId}')" class="text-[10px] text-red-500 hover:text-red-400 transition">🗑️</button>` : ''}
                                 </div>
                                 <div class="p-2.5 text-xs rounded-xl ${isMe ? 'gradient-bg text-white rounded-tr-none shadow-sm shadow-[#ff2a85]/10' : 'bg-[#1f1f2e] border border-gray-800 text-white rounded-tl-none'} w-full break-words relative">
                                     ${replyHTML}
@@ -521,7 +663,9 @@
                             </div>
                         </div>`;
                 });
-                box.scrollTop = box.scrollHeight;
+                
+                // النزول الذكي للأسفل
+                if (isAtBottom) { box.scrollTop = box.scrollHeight; }
                 
                 if (window.activeTabId !== 'global' && lastSenderId !== currentUser.uid && lastSenderId !== null) {
                     document.getElementById('global-unread-dot').classList.remove('hidden');
@@ -533,20 +677,34 @@
             const inp = document.getElementById('global-msg-input'); const text = inp.value.trim(); if(!text) return; inp.value = "";
             const msgData = { senderId: currentUser.uid, senderNickname: userData.nickname, senderAvatar: userData.avatarUrl, text: text, timestamp: Date.now() };
             if (replyingToMsg) { msgData.replyTo = replyingToMsg; }
-            push(ref(db, 'global_chat'), msgData).then(() => { replyingToMsg = null; document.getElementById('reply-banner').classList.add('hidden'); addExpPoints(1); });
+            push(ref(db, 'global_chat'), msgData).then(() => { 
+                replyingToMsg = null; document.getElementById('reply-banner').classList.add('hidden'); 
+                addExpPoints(1); 
+                const box = document.getElementById('global-messages-box');
+                setTimeout(() => box.scrollTop = box.scrollHeight, 100);
+            });
         };
 
         /* ---------------- المنشورات ---------------- */
         document.getElementById('post-file').onchange = e => {
             const f = e.target.files[0]; if(!f) return;
-            const r = new FileReader(); r.onload = () => { globalPostImageBase64 = r.result; document.getElementById('post-img-preview').src = globalPostImageBase64; document.getElementById('post-preview-container').classList.remove('hidden'); }; r.readAsDataURL(f);
+            document.getElementById('cancel-post-img').innerText = "⌛";
+            const r = new FileReader(); r.onload = () => { 
+                globalPostImageBase64 = r.result; 
+                document.getElementById('post-img-preview').src = globalPostImageBase64; 
+                document.getElementById('post-preview-container').classList.remove('hidden'); 
+                document.getElementById('cancel-post-img').innerText = "×";
+            }; r.readAsDataURL(f);
+        };
+        document.getElementById('cancel-post-img').onclick = () => {
+            globalPostImageBase64 = ""; document.getElementById('post-file').value = ""; document.getElementById('post-preview-container').classList.add('hidden');
         };
 
         document.getElementById('submit-post-btn').onclick = () => {
             const text = document.getElementById('post-input').value.trim(); if(!text && !globalPostImageBase64) return;
             document.getElementById('post-input').value = ""; document.getElementById('post-preview-container').classList.add('hidden');
             push(ref(db, 'posts'), { userId: currentUser.uid, userNickname: userData.nickname, userUsername: userData.username, userAvatar: userData.avatarUrl, text: text, image: globalPostImageBase64, timestamp: Date.now(), likeCount: 0 });
-            globalPostImageBase64 = "";
+            globalPostImageBase64 = ""; document.getElementById('post-file').value = "";
             addExpPoints(3); 
         };
 
@@ -562,7 +720,7 @@
                     const isLiked = post.likes && post.likes[currentUser.uid];
                     const likeIcon = isLiked ? '❤️' : '🤍';
                     const likeColor = isLiked ? 'text-[#ff2a85]' : 'text-gray-500 hover:text-gray-300';
-                    const deleteBtn = (post.userId === currentUser.uid) ? `<button onclick="window.deletePost('${post.id}')" class="absolute left-3 top-3 z-20 text-red-500 hover:text-red-400 bg-red-500/10 hover:bg-red-500/20 rounded-full w-7 h-7 flex items-center justify-center transition">🗑️</button>` : '';
+                    const deleteBtn = (post.userId === currentUser.uid) ? `<button onclick="window.deletePost('${post.id}')" class="absolute left-3 top-3 z-20 text-red-500 hover:text-red-400 bg-red-500/10 p-1.5 rounded-full flex items-center justify-center transition">🗑️</button>` : '';
 
                     feed.innerHTML += `
                         <div class="bg-[#16161f] p-4 rounded-2xl border border-gray-800 shadow-sm space-y-2 relative overflow-hidden transition-all duration-300 hover:border-[#ff2a85]/30 select-none" ondblclick="window.likePost('${post.id}')">
@@ -572,7 +730,7 @@
                                 <div><h4 class="text-xs font-bold">${post.userNickname} <span class="text-[#ff7300] font-normal text-[10px]">@${post.userUsername}</span></h4></div>
                             </div>
                             ${post.text ? `<p class="text-xs text-gray-200 relative z-10 leading-relaxed">${escapeHTML(post.text)}</p>` : ''}
-                            ${post.image ? `<img src="${post.image}" class="w-full rounded-lg mt-2 relative z-10 pointer-events-none border border-gray-800/50">` : ''}
+                            ${post.image ? `<img src="${post.image}" class="w-full rounded-lg mt-2 relative z-10 border border-gray-800/50">` : ''}
                             <div class="flex justify-between items-center mt-3 pt-3 border-t border-gray-800/60 relative z-10">
                                 <button onclick="window.likePost('${post.id}')" class="flex items-center gap-1.5 text-xs font-bold transition-colors ${likeColor} active:scale-90"><span class="text-sm">${likeIcon}</span><span>${post.likeCount || 0}</span></button>
                                 <span class="text-[9px] text-gray-500">انقر مرتين للإعجاب</span>
@@ -581,7 +739,7 @@
                                 <div class="text-8xl drop-shadow-[0_0_20px_rgba(255,42,133,0.9)] transform scale-50 transition-transform duration-300">❤️</div>
                             </div>
                         </div>`;
-                    if(post.userId === currentUser.uid && post.image) { grid.innerHTML += `<img src="${post.image}" class="w-full h-20 object-cover rounded-xl border border-gray-800 shadow-sm">`; }
+                    if(post.userId === currentUser.uid && post.image) { grid.innerHTML += `<img src="${post.image}" class="w-full h-24 object-cover rounded-xl border border-gray-800 shadow-sm">`; }
                 });
             });
         }
@@ -602,15 +760,38 @@
         };
 
         window.openUserModal = async (uid) => {
-            if(uid === currentUser.uid) return;
             const uSnap = await get(child(ref(db), `users/${uid}`)); if(!uSnap.exists()) return;
             const u = uSnap.val();
-            document.getElementById('modal-nickname').innerText = u.nickname; document.getElementById('modal-username-txt').innerText = `@${u.username}`;
+            
+            document.getElementById('modal-nickname').innerText = u.nickname; 
+            document.getElementById('modal-username-txt').innerText = `@${u.username}`;
+            document.getElementById('modal-bio').innerText = u.bio || "لا توجد نبذة شخصية.";
+            document.getElementById('modal-points').innerText = `${u.points || 0} EXP 🔥`;
             document.getElementById('modal-avatar').innerHTML = `<img src="${u.avatarUrl}" class="w-full h-full object-cover">`;
-            document.getElementById('modal-chat-btn').onclick = () => { document.getElementById('user-modal').classList.add('hidden'); openPrivateChat(u.uid, u.nickname, u.avatarUrl); };
+            
+            if(u.isOnline) document.getElementById('modal-online-dot').classList.remove('hidden');
+            else document.getElementById('modal-online-dot').classList.add('hidden');
+
+            const noteArea = document.getElementById('modal-note-area');
+            if(u.note && u.note.text && (Date.now() - u.note.timestamp < 7 * 60 * 60 * 1000)) {
+                noteArea.innerText = "أفكر في: " + u.note.text;
+                noteArea.classList.remove('hidden');
+            } else { noteArea.classList.add('hidden'); }
+
+            const chatBtn = document.getElementById('modal-chat-btn');
+            if(uid === currentUser.uid) { chatBtn.classList.add('hidden'); } 
+            else { 
+                chatBtn.classList.remove('hidden');
+                chatBtn.onclick = () => { document.getElementById('user-modal').classList.add('hidden'); openPrivateChat(u.uid, u.nickname, u.avatarUrl); };
+            }
+            
             document.getElementById('user-modal').classList.remove('hidden');
+            setTimeout(() => document.getElementById('user-modal-content').classList.replace('scale-95', 'scale-100'), 10);
         };
-        document.getElementById('close-modal-btn').onclick = () => document.getElementById('user-modal').classList.add('hidden');
+        document.getElementById('close-modal-btn').onclick = () => {
+            document.getElementById('user-modal-content').classList.replace('scale-100', 'scale-95');
+            setTimeout(() => document.getElementById('user-modal').classList.add('hidden'), 150);
+        };
 
         /* ---------------- إرسال صور في الخاص ---------------- */
         document.getElementById('private-img-btn').onclick = () => document.getElementById('private-img-input').click();
@@ -641,10 +822,10 @@
             document.getElementById('private-msg-input').focus();
         };
 
-        // حذف المستخدم من قائمة الشات (الخاص بي فقط)
+        // إزالة مستخدم من المحادثات لديك فقط
         document.getElementById('delete-chat-btn').addEventListener('click', async () => {
             if(!openChatId) return;
-            if(confirm("هل تريد إزالة هذا المستخدم من قائمة محادثاتك؟ (سيتم حذفه من القائمة لديك فقط)")) {
+            if(confirm("هل تريد إزالة هذا المستخدم من قائمة محادثاتك؟ (سيتم إخفاؤها لديك فقط)")) {
                 await remove(ref(db, `user_chats/${currentUser.uid}/${openChatId}`));
                 document.getElementById('private-chat-window').classList.add('hidden');
                 openChatId = null;
@@ -665,16 +846,33 @@
             update(ref(db), { [`user_chats/${currentUser.uid}/${chatId}/hasUnread`]: false }); 
 
             const box = document.getElementById('private-messages-box');
-            if(activeChatRef) activeChatRef(); if(targetTypingUnsubscribe) targetTypingUnsubscribe();
+            if(activeChatRef) activeChatRef(); if(targetTypingUnsubscribe) targetTypingUnsubscribe(); if(targetOnlineUnsubscribe) targetOnlineUnsubscribe();
             
             const myTypingRef = ref(db, `typing/${chatId}/${currentUser.uid}`);
             const targetTypingRef = ref(db, `typing/${chatId}/${targetUid}`);
+            const targetOnlineRef = ref(db, `users/${targetUid}/isOnline`);
+            
             onDisconnect(myTypingRef).set(false);
+
+            // استماع لحالة التواجد (Online) للطرف الآخر
+            targetOnlineUnsubscribe = onValue(targetOnlineRef, (snap) => {
+                const isOnline = snap.val();
+                const dot = document.getElementById('private-target-online-dot');
+                const statusTxt = document.getElementById('private-target-status');
+                if(isOnline) { dot.classList.remove('hidden'); statusTxt.innerText = "متصل الآن"; statusTxt.classList.replace('text-gray-400', 'text-green-400'); }
+                else { dot.classList.add('hidden'); statusTxt.innerText = "غير متصل"; statusTxt.classList.replace('text-green-400', 'text-gray-400'); }
+            });
 
             targetTypingUnsubscribe = onValue(targetTypingRef, (snap) => {
                 const statusEl = document.getElementById('private-target-status');
                 if(snap.val() === true) { statusEl.innerText = "يكتب الآن..."; statusEl.classList.replace('text-green-400', 'text-[#ff7300]'); statusEl.classList.add('animate-pulse'); } 
-                else { statusEl.innerText = "نشط الآن في NXL"; statusEl.classList.replace('text-[#ff7300]', 'text-green-400'); statusEl.classList.remove('animate-pulse'); }
+                else { 
+                    // إعادة الحالة لمتصل أو غير متصل بناء على النقطة
+                    const isOnline = !document.getElementById('private-target-online-dot').classList.contains('hidden');
+                    statusEl.innerText = isOnline ? "متصل الآن" : "غير متصل"; 
+                    statusEl.classList.replace('text-[#ff7300]', isOnline ? 'text-green-400' : 'text-gray-400'); 
+                    statusEl.classList.remove('animate-pulse'); 
+                }
             });
 
             let typingTimeout; const msgInput = document.getElementById('private-msg-input');
@@ -683,13 +881,14 @@
                 typingTimeout = setTimeout(() => { set(myTypingRef, false); }, 2000);
             });
 
-            // تم رفع limitToLast لـ 300 لحل مشكلة اختفاء الرسائل الجديدة أثناء الدردشة
             const msgsQuery = query(ref(db, `chats/${chatId}`), limitToLast(300));
             activeChatRef = onValue(msgsQuery, (snapshot) => {
+                const isAtBottom = box.scrollHeight - box.scrollTop <= box.clientHeight + 50;
+
                 box.innerHTML = `
                     <div class="flex justify-center mb-6 mt-2">
-                        <div class="bg-yellow-500/10 border border-yellow-500/30 text-yellow-500 text-[10px] font-bold px-4 py-2 rounded-xl flex items-center gap-1.5 shadow-md text-center max-w-xs">
-                            <span>🔒</span> الرسائل والمكالمات في هذه المحادثة مشفرة ومحمية. كما تُحذف الرسائل تلقائياً بعد مرور ٢٤ ساعة.
+                        <div class="bg-yellow-500/10 border border-yellow-500/30 text-yellow-500 text-[10px] font-bold px-4 py-2 rounded-xl flex items-center gap-1.5 shadow-md text-center max-w-xs backdrop-blur-sm">
+                            <span>🔒</span> الرسائل والمكالمات في هذه المحادثة مشفرة E2EE ومحمية. وتُحذف تلقائياً بعد مرور ٢٤ ساعة.
                         </div>
                     </div>`; 
 
@@ -704,7 +903,6 @@
                     const isMe = m.senderId === currentUser.uid;
                     const timeStr = new Date(m.timestamp).toLocaleTimeString('ar-EG', {hour: '2-digit', minute:'2-digit'});
                     
-                    // منطق علامات القراءة (Seen)
                     if (!isMe && m.status !== 'read' && !document.getElementById('private-chat-window').classList.contains('hidden')) {
                         unreadUpdates[`chats/${chatId}/${msgId}/status`] = 'read';
                     }
@@ -717,7 +915,7 @@
                     let replyHTML = '';
                     if (m.replyTo) {
                         replyHTML = `
-                            <div class="bg-black/20 border-r-2 border-[#ff7300] p-1.5 mb-1.5 rounded text-[9px] text-gray-300 w-full text-right">
+                            <div class="bg-black/20 border-r-2 border-[#ff7300] p-1.5 mb-1.5 rounded text-[9px] text-gray-300 w-full text-right cursor-pointer">
                                 <span class="truncate block max-w-[150px]">${escapeHTML(m.replyTo.text)}</span>
                             </div>
                         `;
@@ -730,11 +928,13 @@
                         <div class="flex w-full mb-1 ${isMe ? 'justify-start' : 'justify-end'} group">
                             <div class="flex gap-2 items-center ${isMe ? 'flex-row' : 'flex-row-reverse'} max-w-[85%]">
                                 <div class="flex flex-col gap-1 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <button onclick="window.preparePrivateReply('${msgId}', '${escapeHTML(m.text || "صورة")}')" class="text-gray-500 hover:text-white bg-[#1f1f2e] p-1.5 rounded-full text-[10px]">↩️</button>
-                                    <button onclick="window.addReaction('chats/${chatId}', '${msgId}')" class="text-gray-500 hover:text-[#ff7300] bg-[#1f1f2e] p-1.5 rounded-full text-[10px]">😄</button>
+                                    <button onclick="window.preparePrivateReply('${msgId}', '${escapeHTML(m.text || "صورة")}')" class="text-gray-500 hover:text-white bg-[#1f1f2e] p-1.5 rounded-full text-[10px]" title="رد">↩️</button>
+                                    <button onclick="window.addReaction('chats/${chatId}', '${msgId}')" class="text-gray-500 hover:text-[#ff7300] bg-[#1f1f2e] p-1.5 rounded-full text-[10px]" title="تفاعل">😄</button>
+                                    ${m.text ? `<button onclick="window.copyMsgText('${escapeHTML(m.text)}')" class="text-gray-500 hover:text-blue-400 bg-[#1f1f2e] p-1.5 rounded-full text-[10px]" title="نسخ">📋</button>` : ''}
+                                    ${isMe ? `<button onclick="window.deleteSingleMessage('chats/${chatId}', '${msgId}')" class="text-red-500 hover:text-white bg-[#1f1f2e] p-1.5 rounded-full text-[10px]" title="حذف للجميع">🗑️</button>` : ''}
                                 </div>
 
-                                <div class="p-2.5 rounded-2xl shadow-sm relative ${isMe ? 'gradient-bg text-white rounded-tr-none shadow-[#ff2a85]/10' : 'bg-[#1f1f2e] border border-gray-800 text-white rounded-tl-none'}">
+                                <div class="p-2.5 rounded-2xl shadow-sm relative ${isMe ? 'gradient-bg text-white rounded-tr-none shadow-[#ff2a85]/10' : 'bg-[#1f1f2e] border border-gray-800 text-white rounded-tl-none'} min-w-[80px]">
                                     ${replyHTML}
                                     ${imgHTML}
                                     ${txtHTML}
@@ -744,7 +944,8 @@
                             </div>
                         </div>`;
                 });
-                box.scrollTop = box.scrollHeight;
+                
+                if (isAtBottom) { box.scrollTop = box.scrollHeight; }
                 
                 if (Object.keys(unreadUpdates).length > 0) { update(ref(db), unreadUpdates); }
                 if(document.getElementById('private-chat-window').classList.contains('hidden') === false) {
@@ -763,6 +964,7 @@
                     privateReplyingToMsg = null; document.getElementById('private-reply-banner').classList.add('hidden');
                     privatePostImageBase64 = ""; document.getElementById('private-img-input').value = ""; document.getElementById('private-img-preview-container').classList.add('hidden');
                     addExpPoints(1);
+                    setTimeout(() => box.scrollTop = box.scrollHeight, 100);
                 });
                 
                 update(ref(db), { [`user_chats/${currentUser.uid}/${chatId}/lastUpdate`]: timeNow, [`user_chats/${targetUid}/${chatId}/lastUpdate`]: timeNow, [`user_chats/${targetUid}/${chatId}/hasUnread`]: true });
@@ -794,6 +996,8 @@
 
                 if (totalUnread && window.activeTabId !== 'chats' && !openChatId) {
                     document.getElementById('chats-unread-dot').classList.remove('hidden');
+                } else if(!totalUnread) {
+                    document.getElementById('chats-unread-dot').classList.add('hidden');
                 }
 
                 const results = await Promise.all(chatPromises); const validChats = results.filter(r => r !== null);
@@ -805,15 +1009,18 @@
                 validChats.forEach(item => {
                     const u = item.user;
                     let noteHTML = '';
+                    let avatarRing = '';
                     if (u.note && u.note.text && (Date.now() - u.note.timestamp < 7 * 60 * 60 * 1000)) {
                         noteHTML = `<div class="absolute -top-1 -right-2 bg-white text-black text-[9px] px-2 py-0.5 rounded-xl rounded-br-none shadow-md truncate max-w-[80px] font-bold border border-gray-300 z-10 note-bubble">${escapeHTML(u.note.text)}</div>`;
+                        avatarRing = 'story-ring';
                     }
 
                     list.innerHTML += `
                         <div class="bg-[#16161f] p-3 rounded-xl flex items-center justify-between border border-gray-800/60 cursor-pointer transition active:scale-[0.99] hover:bg-[#1f1f2e] shadow-sm hover:shadow-md" onclick="window.handleOpenChat('${u.uid}','${escapeHTML(u.nickname)}','${u.avatarUrl}')">
                             <div class="flex items-center gap-3">
                                 <div class="relative">
-                                    <img src="${u.avatarUrl}" class="w-11 h-11 rounded-full bg-gray-800 border border-gray-700">
+                                    <img src="${u.avatarUrl}" class="w-11 h-11 rounded-full bg-gray-800 border-2 border-[#16161f] ${avatarRing}">
+                                    ${u.isOnline ? '<span class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-[#16161f] rounded-full"></span>' : ''}
                                     ${noteHTML}
                                 </div>
                                 <div>
@@ -822,7 +1029,7 @@
                                 </div>
                             </div>
                             <div class="flex flex-col items-end gap-1">
-                                ${item.hasUnread ? '<span class="w-3 h-3 rounded-full bg-green-500 animate-pulse shadow-md shadow-green-500/50"></span>' : ''}
+                                ${item.hasUnread ? '<span class="w-3 h-3 rounded-full bg-green-500 animate-pulse shadow-md shadow-green-500/50"></span>' : '<span class="text-[10px] text-gray-600 font-bold">✓</span>'}
                                 <span class="text-[9px] text-gray-500 bg-[#1f1f2e] border border-gray-800 px-2 py-0.5 rounded-md font-medium">مراسلة</span>
                             </div>
                         </div>`;
