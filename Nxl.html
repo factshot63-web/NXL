@@ -152,6 +152,12 @@
                     <button id="cancel-post-img" class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold shadow-md active:scale-90">×</button>
                 </div>
             </div>
+
+            <div class="flex gap-2 mb-3 px-1 text-[11px] justify-center">
+                <button id="filter-smart-btn" class="px-4 py-1.5 rounded-xl bg-[#ff2a85] text-white font-bold transition shadow-md shadow-[#ff2a85]/20">✨ الرائج الذكي (الخوارزمية)</button>
+                <button id="filter-recent-btn" class="px-4 py-1.5 rounded-xl bg-[#1f1f2e] text-gray-400 font-bold transition hover:bg-gray-700">🕒 الأحدث</button>
+            </div>
+
             <div id="home-posts-feed" class="space-y-4"></div>
         </section>
 
@@ -221,7 +227,7 @@
             <div class="relative bg-[#16161f] p-3 rounded-xl border border-gray-800 mb-4 z-20 shadow-md">
                 <div class="flex gap-2">
                     <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">🔍</span>
-                    <input type="text" id="search-username-input" autocomplete="off" placeholder="ابحث بالاسم أو اليوزر..." class="flex-1 bg-[#1f1f2e] text-xs rounded-lg px-3 py-2.5 text-white focus:outline-none pl-8 border border-gray-700">
+                    <input type="text" id="search-username-input" autocomplete="off" placeholder="ابحث بالاسم، اليوزر، أو الإيميل..." class="w-full bg-[#1f1f2e] text-xs rounded-lg px-3 py-2.5 text-white focus:outline-none pl-8 border border-gray-700">
                 </div>
                 <div id="search-dropdown" class="absolute left-0 right-0 top-full mt-2 bg-[#16161f] border border-gray-800 rounded-xl shadow-2xl overflow-hidden hidden max-h-48 overflow-y-auto"></div>
             </div>
@@ -364,6 +370,7 @@
         let targetOnlineUnsubscribe = null;
         let replyingToMsg = null;
         let privateReplyingToMsg = null;
+        let feedFilter = "smart"; // متغير الفلترة الافتراضي (الخوارزمية الذكية)
         window.activeTabId = 'home'; 
 
         const emailInput = document.getElementById('auth-email');
@@ -417,7 +424,6 @@
                         userData = snapshot.val();
                         initAppUI();
                         
-                        // فحص للمستخدم القديم: إذا لم يكن لديه Bio أو لديه البايو القديم، نلزمه بكتابة بايو جديد
                         if (!userData.bio || userData.bio.trim() === "" || userData.bio === "عضو جديد في مجتمع NXL") {
                             document.getElementById('setup-profile-screen').classList.remove('hidden');
                             document.getElementById('setup-nickname').value = userData.nickname || "";
@@ -443,7 +449,6 @@
             
             if(!nickname || !username || !bio) return alert("برجاء إدخال الاسم، اسم المستخدم، والنبذة الشخصية (Bio)!");
             
-            // في حالة كان مستخدم قديم يقوم بتحديث معلوماته فقط
             if (userData && userData.username === username) {
                 const avatarUrl = `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(nickname)}`;
                 await update(ref(db, `users/${currentUser.uid}`), { nickname: nickname, bio: bio, avatarUrl: avatarUrl });
@@ -454,7 +459,6 @@
             const unameCheck = await get(child(ref(db), `usernames/${username}`));
             if(unameCheck.exists() && unameCheck.val() !== currentUser.uid) { document.getElementById('username-error').classList.remove('hidden'); return; }
 
-            // إنشاء الأفاتار بناءً على الاسم (اللقب)
             const avatarUrl = `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(nickname)}`;
             userData = { uid: currentUser.uid, nickname: nickname, username: username, bio: bio, avatarUrl: avatarUrl, email: currentUser.email, joinedAt: Date.now(), points: userData?.points || 0, isOnline: true };
             await set(ref(db, `usernames/${username}`), currentUser.uid);
@@ -462,7 +466,6 @@
             document.getElementById('setup-profile-screen').classList.add('hidden');
         });
 
-        // تشغيل أزرار نافذة تعديل الملف الشخصي في أي وقت
         document.getElementById('open-edit-profile-btn').addEventListener('click', () => {
             if (!userData) return;
             document.getElementById('edit-nickname').value = userData.nickname || "";
@@ -487,7 +490,6 @@
 
             const oldUsername = userData.username;
 
-            // إذا قام بتغيير اسم المستخدم نقوم بالتحقق من الفريدية والتكرار
             if (newUsername !== oldUsername) {
                 const unameCheck = await get(child(ref(db), `usernames/${newUsername}`));
                 if (unameCheck.exists() && unameCheck.val() !== currentUser.uid) {
@@ -498,7 +500,6 @@
                 await set(ref(db, `usernames/${newUsername}`), currentUser.uid);
             }
 
-            // تحديث الأفاتار بناءً على الاسم الجديد
             const newAvatarUrl = `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(newNickname)}`;
 
             await update(ref(db, `users/${currentUser.uid}`), {
@@ -556,7 +557,6 @@
                     }
                 });
 
-                // --- تحديث الستوريات (Stories) ---
                 const storyContainer = document.getElementById('stories-container');
                 if(activeStories.length > 0) {
                     storyContainer.classList.remove('hidden');
@@ -575,7 +575,6 @@
                     storyContainer.classList.add('hidden');
                 }
 
-                // --- تحديث لوحة الشرف (Leaderboard) ---
                 allUsers.sort((a, b) => (b.points || 0) - (a.points || 0));
                 const top10 = allUsers.slice(0, 10);
                 const leadList = document.getElementById('leaderboard-list');
@@ -622,7 +621,7 @@
             }
         };
 
-        /* ---------------- ميزة البحث اللحظي ---------------- */
+        /* ---------------- ميزة البحث اللحظي المطورة والشاملة ---------------- */
         const searchInput = document.getElementById('search-username-input');
         const searchDropdown = document.getElementById('search-dropdown');
         let searchTimeout = null;
@@ -639,7 +638,14 @@
                     let matches = 0;
                     snapshot.forEach(child => {
                         const u = child.val();
-                        if ((u.username.toLowerCase().includes(val) || u.nickname.toLowerCase().includes(val)) && u.uid !== currentUser.uid) {
+                        
+                        // جلب البيانات مع تأمين عدم وجود حقول فارغة
+                        const uName = (u.username || "").toLowerCase();
+                        const nName = (u.nickname || "").toLowerCase();
+                        const uEmail = (u.email || "").toLowerCase();
+
+                        // البحث الشامل والمطابقة باليوزر أو الاسم أو الإيميل لأي مستخدم آخر
+                        if ((uName.includes(val) || nName.includes(val) || uEmail.includes(val)) && u.uid !== currentUser.uid) {
                             matches++;
                             searchDropdown.innerHTML += `
                                 <div class="flex items-center justify-between p-3 hover:bg-[#1f1f2e] cursor-pointer border-b border-gray-800 transition" onclick="window.openUserModal('${u.uid}'); document.getElementById('search-dropdown').classList.add('hidden');">
@@ -776,7 +782,7 @@
             });
         };
 
-        /* ---------------- المنشورات ---------------- */
+        /* ---------------- المنشورات وخوارزمية التغذية الذكية ---------------- */
         document.getElementById('post-file').onchange = e => {
             const f = e.target.files[0]; if(!f) return;
             document.getElementById('cancel-post-img').innerText = "⌛";
@@ -799,15 +805,51 @@
             addExpPoints(3); 
         };
 
+        // فلاتر التبديل بين الخوارزمية والأحدث
+        document.getElementById('filter-smart-btn').onclick = () => {
+            feedFilter = "smart";
+            document.getElementById('filter-smart-btn').className = "px-4 py-1.5 rounded-xl bg-[#ff2a85] text-white font-bold transition shadow-md shadow-[#ff2a85]/20";
+            document.getElementById('filter-recent-btn').className = "px-4 py-1.5 rounded-xl bg-[#1f1f2e] text-gray-400 font-bold transition hover:bg-gray-700";
+            startPostsFeed();
+        };
+        document.getElementById('filter-recent-btn').onclick = () => {
+            feedFilter = "recent";
+            document.getElementById('filter-recent-btn').className = "px-4 py-1.5 rounded-xl bg-[#ff2a85] text-white font-bold transition shadow-md shadow-[#ff2a85]/20";
+            document.getElementById('filter-smart-btn').className = "px-4 py-1.5 rounded-xl bg-[#1f1f2e] text-gray-400 font-bold transition hover:bg-gray-700";
+            startPostsFeed();
+        };
+
         function startPostsFeed() {
             const feed = document.getElementById('home-posts-feed'); const grid = document.getElementById('profile-posts-grid');
             const postsQuery = query(ref(db, 'posts'), limitToLast(100));
             onValue(postsQuery, (snapshot) => {
                 feed.innerHTML = ""; grid.innerHTML = ""; const now = Date.now(); const threeDays = 72 * 60 * 60 * 1000;
-                let postsArray = []; snapshot.forEach(c => { let p = c.val(); p.id = c.key; postsArray.push(p); }); postsArray.reverse();
+                let postsArray = []; 
+                
+                snapshot.forEach(c => { 
+                    let p = c.val(); p.id = c.key; 
+                    if(now - p.timestamp <= threeDays) { postsArray.push(p); }
+                }); 
+
+                // تطبيق الخوارزمية البرمجية عند اختيار التغذية الذكية
+                if (feedFilter === "smart") {
+                    postsArray.sort((a, b) => {
+                        // حساب عمر المنشور بالساعات
+                        const ageA = (now - a.timestamp) / (1000 * 60 * 60);
+                        const ageB = (now - b.timestamp) / (1000 * 60 * 60);
+                        
+                        // خوارزمية قياس حرارة التفاعل (Hotness Score) = الإعجابات تفوق تأثير عامل الوقت
+                        const scoreA = ((a.likeCount || 0) * 8 + 2) / Math.pow(ageA + 2, 1.1);
+                        const scoreB = ((b.likeCount || 0) * 8 + 2) / Math.pow(ageB + 2, 1.1);
+                        
+                        return scoreB - scoreA; // ترتيب تنازلي للأعلى تفاعلاً ذكياً
+                    });
+                } else {
+                    // الترتيب العادي من الأحدث للأقدم فقط
+                    postsArray.reverse();
+                }
                 
                 postsArray.forEach(post => {
-                    if(now - post.timestamp > threeDays) return;
                     const isLiked = post.likes && post.likes[currentUser.uid];
                     const likeIcon = isLiked ? '❤️' : '🤍';
                     const likeColor = isLiked ? 'text-[#ff2a85]' : 'text-gray-500 hover:text-gray-300';
