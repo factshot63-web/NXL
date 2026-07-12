@@ -513,9 +513,44 @@
             alert("تم تحديث بيانات ملفك الشخصي بنجاح!");
         });
 
+        // ==========================================
+        // نظام الحماية لمنع الاحتيال والضغط المتكرر 
+        // ==========================================
+        let lastExpTime = 0;
+        let spamWarnings = 0;
+
         function addExpPoints(amount = 1) {
+            const now = Date.now();
+            
+            // لو الفرق بين الضغطة والتانية أقل من 3 ثواني (السبام)
+            if (now - lastExpTime < 3000) {
+                spamWarnings++;
+                
+                // لو كرر حركته السريعة دي 5 مرات متتالية (إحتيال صريح)
+                if (spamWarnings >= 5) {
+                    // العقاب: تصفير كل نقاطه فوراً
+                    update(ref(db, `users/${currentUser.uid}`), { points: 0 });
+                    alert("🚨 نظام الحماية: تم اكتشاف نشاط إحتيالي وتجميع غير شرعي للنقاط. تم تصفير حسابك كعقاب!");
+                    
+                    if(userData) userData.points = 0; // تحديث للواجهة
+                    if(document.getElementById('profile-points')) {
+                        document.getElementById('profile-points').innerText = "0 EXP";
+                    }
+                    
+                    spamWarnings = 0; // تصفير العداد بعد العقاب
+                }
+                return; // مش هياخد النقطة أصلاً
+            }
+            
+            // لو استنى الوقت الطبيعي ومشي صح، نصفر عداد التحذيرات
+            if (now - lastExpTime >= 5000) {
+                spamWarnings = 0;
+            }
+            
+            lastExpTime = now;
             update(ref(db, `users/${currentUser.uid}`), { points: increment(amount) });
         }
+        // ==========================================
 
         function initAppUI() {
             document.getElementById('user-header-avatar').innerHTML = `<img src="${userData.avatarUrl}" class="w-full h-full object-cover">`;
