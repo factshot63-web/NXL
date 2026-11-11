@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NXL AI - لوحة تحكم المعرفة والإدارة المركزية</title>
+    <title>NXL AI - لوحة تحكم الاستيراد الذكي للـ JSON</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
@@ -28,9 +28,9 @@
     <header class="liquid-glass p-4 rounded-2xl mb-4 flex justify-between items-center shrink-0 border border-purple-500/30">
         <div>
             <h1 class="text-sm font-bold text-white flex items-center gap-2">
-                <span>🤖</span> NXL AI Admin Dashboard
+                <span>🤖</span> NXL AI - محطة استيراد الـ JSON
             </h1>
-            <p class="text-[10px] text-purple-400">إدارة وتدريب الذكاء الاصطناعي بكل اللهجات بصيغة JSON والسيرفر</p>
+            <p class="text-[10px] text-purple-400">ارمي كود الـ JSON هنا وهوه هيضيفه أوتوماتيك للسيرفر ⚡</p>
         </div>
         <button id="export-json-btn" class="bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold px-3 py-2 rounded-xl transition shadow-lg shadow-purple-500/20 interactive-press">
             📥 تصدير الكل JSON
@@ -38,40 +38,50 @@
     </header>
 
     <main class="flex-1 overflow-y-auto custom-scrollbar space-y-4 pb-10">
-        <!-- نموذج إضافة سؤال وإجابة جديدة للـ AI -->
+        
+        <!-- قسم الإضافة اليدوية السريعة -->
         <div class="liquid-glass p-5 rounded-2xl border border-gray-800 space-y-3">
-            <h2 class="text-sm font-bold text-purple-300">➕ إضافة سؤال وإجابة جديدة لـ NXL AI</h2>
-            
-            <div>
-                <label class="text-[11px] text-gray-400 block mb-1">السؤال أو الكلمة المفتاحية (بأي لهجة):</label>
-                <input type="text" id="q-input" placeholder="مثال: وشلون اجمع نقاط؟ / ازيك يا بطل..." class="w-full bg-[#12121a] text-xs rounded-xl px-3 py-2.5 text-white focus:outline-none border border-gray-700">
-            </div>
-
-            <div>
-                <label class="text-[11px] text-gray-400 block mb-1">اللهجة / الفئة المستهدفة:</label>
-                <select id="dialect-select" class="w-full bg-[#12121a] text-xs rounded-xl px-3 py-2.5 text-white focus:outline-none border border-gray-700">
+            <h2 class="text-sm font-bold text-purple-300">➕ إضافة سؤال فردي</h2>
+            <div class="grid grid-cols-3 gap-2">
+                <input type="text" id="q-input" placeholder="السؤال..." class="col-span-2 bg-[#12121a] text-xs rounded-xl px-3 py-2.5 text-white focus:outline-none border border-gray-700">
+                <select id="dialect-select" class="bg-[#12121a] text-xs rounded-xl px-3 py-2.5 text-white focus:outline-none border border-gray-700">
                     <option value="egyptian">🇪🇬 مصرية</option>
                     <option value="gulf">🇸🇦 خليجية</option>
-                    <option value="levantine">🇸🇾 شامية</option>
-                    <option value="general">🌐 عامة / تفاعلية</option>
+                    <option value="general">🌐 عامة</option>
                 </select>
             </div>
+            <textarea id="a-input" placeholder="الإجابة..." class="w-full bg-[#12121a] text-xs rounded-xl px-3 py-2 text-white focus:outline-none border border-gray-700 h-16 resize-none"></textarea>
+            <button id="save-q-btn" class="w-full py-2.5 gradient-bg rounded-xl text-xs font-bold text-white shadow-md transition interactive-press">حفظ السؤال الفردي</button>
+        </div>
 
-            <div>
-                <label class="text-[11px] text-gray-400 block mb-1">إجابة الـ AI المناسبة:</label>
-                <textarea id="a-input" placeholder="اكتب الرد اللي هيظهر للمستخدم في التطبيق..." class="w-full bg-[#12121a] text-xs rounded-xl px-3 py-2.5 text-white focus:outline-none border border-gray-700 h-20 resize-none"></textarea>
-            </div>
-
-            <button id="save-q-btn" class="w-full py-3 gradient-bg rounded-xl text-xs font-bold text-white shadow-lg shadow-purple-500/30 transition interactive-press">
-                حفظ وإضافة لقاعدة المعرفة 🚀
+        <!-- قسم الاستيراد الجماعي بواسطة كود JSON -->
+        <div class="liquid-glass p-5 rounded-2xl border border-purple-500/40 space-y-3 shadow-lg shadow-purple-500/10">
+            <h2 class="text-sm font-bold text-purple-300 flex items-center gap-1"><span>💻</span> استيراد جماعي عبر كود JSON</h2>
+            <p class="text-[10px] text-gray-400">الصق كود الـ JSON بالأسفل (على شكل مصفوفة أو كائن)، ودع التطبيق يحلله ويدخله بالكامل:</p>
+            
+            <textarea id="json-bulk-input" placeholder='[
+  {
+    "question": "ازيك يا حوكش",
+    "answer": "يا هلا والله بـ حمص الغالي منور الدنيا! 🔥",
+    "dialect": "egyptian"
+  },
+  {
+    "question": "وشلونه الشغل",
+    "answer": "العالي عالي يا بطل، كله تمام التمام ⚡",
+    "dialect": "gulf"
+  }
+]' class="w-full bg-[#12121a] text-xs rounded-xl p-3 text-purple-200 font-mono focus:outline-none border border-purple-500/30 h-36 custom-scrollbar"></textarea>
+            
+            <button id="import-json-btn" class="w-full py-3 bg-gradient-to-r from-purple-600 to-blue-600 rounded-xl text-xs font-bold text-white shadow-lg shadow-purple-500/30 transition interactive-press">
+                تحليل وإضافة كود الـ JSON للسيرفر 🚀
             </button>
         </div>
 
         <!-- قائمة الأسئلة المخزنة في السيرفر -->
         <div class="liquid-glass p-5 rounded-2xl border border-gray-800 space-y-3">
-            <h2 class="text-sm font-bold text-purple-300">📚 الأسئلة المخزنة حالياً وتعمل بـ Live Sync</h2>
+            <h2 class="text-sm font-bold text-purple-300">📚 الأسئلة المخزنة في السيرفر حالياً</h2>
             <div id="questions-list" class="space-y-2">
-                <div class="text-center text-xs text-gray-500 py-4">جاري تحميل الأسئلة من السيرفر...</div>
+                <div class="text-center text-xs text-gray-500 py-4">جاري التحميل...</div>
             </div>
         </div>
     </main>
@@ -96,24 +106,47 @@
 
         let allKnowledge = {};
 
-        // حفظ سؤال وإجابة جديدة في السيرفر
+        // حفظ سؤال فردي
         document.getElementById('save-q-btn').onclick = async () => {
             const question = document.getElementById('q-input').value.trim();
             const dialect = document.getElementById('dialect-select').value;
             const answer = document.getElementById('a-input').value.trim();
+            if (!question || !answer) return alert("اكتب السؤال والإجابة!");
 
-            if (!question || !answer) return alert("يرجى إدخال السؤال والإجابة بدقة!");
+            await push(ref(db, 'ai_knowledge_base'), { question, dialect, answer, timestamp: Date.now() });
+            document.getElementById('q-input').value = ''; document.getElementById('a-input').value = '';
+            alert("تم الحفظ بنجاح! ✅");
+        };
 
-            await push(ref(db, 'ai_knowledge_base'), {
-                question: question,
-                dialect: dialect,
-                answer: answer,
-                timestamp: Date.now()
-            });
+        // ميزة تحليل واستيراد كود JSON الجماعي
+        document.getElementById('import-json-btn').onclick = async () => {
+            const rawText = document.getElementById('json-bulk-input').value.trim();
+            if (!rawText) return alert("فضلاً الصق كود الـ JSON أولاً!");
 
-            document.getElementById('q-input').value = '';
-            document.getElementById('a-input').value = '';
-            alert("تمت الإضافة بنجاح وتحديث الـ AI لجميع المستخدمين فوراً! ✅");
+            try {
+                const parsedData = JSON.parse(rawText);
+                let count = 0;
+
+                // دعم الشكلين: لو كود JSON عبارة عن مصفوفة [...] أو كائن مجمع {...}
+                let itemsArray = Array.isArray(parsedData) ? parsedData : Object.values(parsedData);
+
+                for (let item of itemsArray) {
+                    if (item.question && item.answer) {
+                        await push(ref(db, 'ai_knowledge_base'), {
+                            question: item.question,
+                            answer: item.answer,
+                            dialect: item.dialect || 'general',
+                            timestamp: Date.now()
+                        });
+                        count++;
+                    }
+                }
+
+                document.getElementById('json-bulk-input').value = '';
+                alert(`✨ تم استيراد وإضافة ${count} سؤال بنجاح للسيرفر وتحديث الـ AI فوراً!`);
+            } catch (error) {
+                alert("❌ خطأ في تنسيق كود الـ JSON! تأكد من الأقواس المزدوجة والنقاط الفاصلة.");
+            }
         };
 
         // عرض وجلب الأسئلة
@@ -136,17 +169,14 @@
                     `;
                 }
             } else {
-                listEl.innerHTML = '<div class="text-center text-xs text-gray-500 py-4">لا توجد أسئلة مخزنة بعد. ابدأ بإضافة أسئلتك الخاصة!</div>';
+                listEl.innerHTML = '<div class="text-center text-xs text-gray-500 py-4">لا توجد أسئلة مخزنة حالياً.</div>';
             }
         });
 
         window.deleteQ = async (id) => {
-            if(confirm("هل تريد حذف هذا السؤال من قاعدة المعرفة للجميع؟")) {
-                await remove(ref(db, `ai_knowledge_base/${id}`));
-            }
+            if(confirm("هل تريد حذف هذا السؤال؟")) await remove(ref(db, `ai_knowledge_base/${id}`));
         };
 
-        // تصدير ملف JSON كامل بالأسئلة والإجابات
         document.getElementById('export-json-btn').onclick = () => {
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(allKnowledge, null, 2));
             const downloadAnchor = document.createElement('a');
