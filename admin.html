@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NXL AI - لوحة تحكم المعرفة والإدارة المركزية</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Cairo', sans-serif; background-color: #060609; color: #ffffff; }
+        .liquid-glass { 
+            background: rgba(18, 18, 26, 0.85); 
+            backdrop-filter: blur(20px); 
+            border: 1px solid rgba(255, 255, 255, 0.08); 
+            box-shadow: 0 10px 40px 0 rgba(0, 0, 0, 0.5);
+        }
+        .gradient-bg { background: linear-gradient(135deg, #a855f7 0%, #3b82f6 100%); }
+        .gradient-text { background: linear-gradient(135deg, #a855f7 0%, #3b82f6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #a855f7; border-radius: 10px; }
+        .interactive-press:active { transform: scale(0.96); transition: transform 0.1s ease; }
+    </style>
+</head>
+<body class="flex flex-col h-screen overflow-hidden p-4 max-w-2xl mx-auto select-none">
+
+    <header class="liquid-glass p-4 rounded-2xl mb-4 flex justify-between items-center shrink-0 border border-purple-500/30">
+        <div>
+            <h1 class="text-sm font-bold text-white flex items-center gap-2">
+                <span>🤖</span> NXL AI Admin Dashboard
+            </h1>
+            <p class="text-[10px] text-purple-400">إدارة وتدريب الذكاء الاصطناعي بكل اللهجات بصيغة JSON والسيرفر</p>
+        </div>
+        <button id="export-json-btn" class="bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold px-3 py-2 rounded-xl transition shadow-lg shadow-purple-500/20 interactive-press">
+            📥 تصدير الكل JSON
+        </button>
+    </header>
+
+    <main class="flex-1 overflow-y-auto custom-scrollbar space-y-4 pb-10">
+        <!-- نموذج إضافة سؤال وإجابة جديدة للـ AI -->
+        <div class="liquid-glass p-5 rounded-2xl border border-gray-800 space-y-3">
+            <h2 class="text-sm font-bold text-purple-300">➕ إضافة سؤال وإجابة جديدة لـ NXL AI</h2>
+            
+            <div>
+                <label class="text-[11px] text-gray-400 block mb-1">السؤال أو الكلمة المفتاحية (بأي لهجة):</label>
+                <input type="text" id="q-input" placeholder="مثال: وشلون اجمع نقاط؟ / ازيك يا بطل..." class="w-full bg-[#12121a] text-xs rounded-xl px-3 py-2.5 text-white focus:outline-none border border-gray-700">
+            </div>
+
+            <div>
+                <label class="text-[11px] text-gray-400 block mb-1">اللهجة / الفئة المستهدفة:</label>
+                <select id="dialect-select" class="w-full bg-[#12121a] text-xs rounded-xl px-3 py-2.5 text-white focus:outline-none border border-gray-700">
+                    <option value="egyptian">🇪🇬 مصرية</option>
+                    <option value="gulf">🇸🇦 خليجية</option>
+                    <option value="levantine">🇸🇾 شامية</option>
+                    <option value="general">🌐 عامة / تفاعلية</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="text-[11px] text-gray-400 block mb-1">إجابة الـ AI المناسبة:</label>
+                <textarea id="a-input" placeholder="اكتب الرد اللي هيظهر للمستخدم في التطبيق..." class="w-full bg-[#12121a] text-xs rounded-xl px-3 py-2.5 text-white focus:outline-none border border-gray-700 h-20 resize-none"></textarea>
+            </div>
+
+            <button id="save-q-btn" class="w-full py-3 gradient-bg rounded-xl text-xs font-bold text-white shadow-lg shadow-purple-500/30 transition interactive-press">
+                حفظ وإضافة لقاعدة المعرفة 🚀
+            </button>
+        </div>
+
+        <!-- قائمة الأسئلة المخزنة في السيرفر -->
+        <div class="liquid-glass p-5 rounded-2xl border border-gray-800 space-y-3">
+            <h2 class="text-sm font-bold text-purple-300">📚 الأسئلة المخزنة حالياً وتعمل بـ Live Sync</h2>
+            <div id="questions-list" class="space-y-2">
+                <div class="text-center text-xs text-gray-500 py-4">جاري تحميل الأسئلة من السيرفر...</div>
+            </div>
+        </div>
+    </main>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, set, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDQ8pJMhye-kp5-FjXzVPPw2MDFm9_0A8c",
+            authDomain: "mohamed-fc163.firebaseapp.com",
+            databaseURL: "https://mohamed-fc163-default-rtdb.firebaseio.com",
+            projectId: "mohamed-fc163",
+            storageBucket: "mohamed-fc163.firebasestorage.app",
+            messagingSenderId: "53405639840",
+            appId: "1:53405639840:web:c8ff7cce9d39ade5d555c5",
+            measurementId: "G-Z264D8R3LV"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        let allKnowledge = {};
+
+        // حفظ سؤال وإجابة جديدة في السيرفر
+        document.getElementById('save-q-btn').onclick = async () => {
+            const question = document.getElementById('q-input').value.trim();
+            const dialect = document.getElementById('dialect-select').value;
+            const answer = document.getElementById('a-input').value.trim();
+
+            if (!question || !answer) return alert("يرجى إدخال السؤال والإجابة بدقة!");
+
+            await push(ref(db, 'ai_knowledge_base'), {
+                question: question,
+                dialect: dialect,
+                answer: answer,
+                timestamp: Date.now()
+            });
+
+            document.getElementById('q-input').value = '';
+            document.getElementById('a-input').value = '';
+            alert("تمت الإضافة بنجاح وتحديث الـ AI لجميع المستخدمين فوراً! ✅");
+        };
+
+        // عرض وجلب الأسئلة
+        const listEl = document.getElementById('questions-list');
+        onValue(ref(db, 'ai_knowledge_base'), (snapshot) => {
+            listEl.innerHTML = '';
+            if (snapshot.exists()) {
+                allKnowledge = snapshot.val();
+                for (let id in allKnowledge) {
+                    const item = allKnowledge[id];
+                    listEl.innerHTML += `
+                        <div class="bg-[#12121a] p-3 rounded-xl border border-gray-800 flex justify-between items-start gap-2">
+                            <div>
+                                <span class="bg-purple-600/30 text-purple-300 text-[9px] px-2 py-0.5 rounded-md font-bold">${item.dialect || 'general'}</span>
+                                <p class="text-xs font-bold text-white mt-1">❓ ${escapeHTML(item.question)}</p>
+                                <p class="text-[11px] text-gray-300 mt-0.5">💬 ${escapeHTML(item.answer)}</p>
+                            </div>
+                            <button onclick="window.deleteQ('${id}')" class="text-red-500 hover:text-red-400 text-xs p-1 interactive-press">🗑️</button>
+                        </div>
+                    `;
+                }
+            } else {
+                listEl.innerHTML = '<div class="text-center text-xs text-gray-500 py-4">لا توجد أسئلة مخزنة بعد. ابدأ بإضافة أسئلتك الخاصة!</div>';
+            }
+        });
+
+        window.deleteQ = async (id) => {
+            if(confirm("هل تريد حذف هذا السؤال من قاعدة المعرفة للجميع؟")) {
+                await remove(ref(db, `ai_knowledge_base/${id}`));
+            }
+        };
+
+        // تصدير ملف JSON كامل بالأسئلة والإجابات
+        document.getElementById('export-json-btn').onclick = () => {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(allKnowledge, null, 2));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", "nxl_ai_knowledge.json");
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+        };
+
+        function escapeHTML(str) {
+            if(!str) return "";
+            return str.replace(/[&<>'"]/g, tag => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', "'":'&#39;', '"':'&quot;'}[tag] || tag));
+        }
+    </script>
+</body>
+</html>
