@@ -30,7 +30,6 @@
         }
         .note-bubble { animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
         
-        /* تصميم الـ Liquid Glass الحديث */
         .liquid-glass { 
             background: rgba(18, 18, 26, 0.75); 
             backdrop-filter: blur(20px); 
@@ -46,8 +45,6 @@
             100% { border-color: rgba(255, 42, 133, 0.4); box-shadow: 0 0 20px rgba(255, 42, 133, 0.25); }
         }
         .glow-card { animation: glowingBorder 4s infinite ease-in-out; }
-        
-        /* تأثيرات النقر المرنة */
         .interactive-press:active { transform: scale(0.94); transition: transform 0.1s ease; }
     </style>
 </head>
@@ -153,8 +150,7 @@
     <main class="flex-1 overflow-y-auto custom-scrollbar bg-[#060609] pb-20 relative">
         
         <section id="tab-home" class="tab-content p-4 max-w-lg mx-auto">
-            <div id="stories-container" class="flex gap-4 overflow-x-auto pb-4 pt-2 mb-2 custom-scrollbar hidden">
-                </div>
+            <div id="stories-container" class="flex gap-4 overflow-x-auto pb-4 pt-2 mb-2 custom-scrollbar hidden"></div>
 
             <div class="liquid-glass p-4 rounded-2xl mb-4 border border-gray-800 shadow-lg glow-card">
                 <textarea id="post-input" placeholder="شارك لحظاتك... (تختفي بعد 72 ساعة)" class="w-full bg-[#12121a]/90 text-sm text-white rounded-xl p-3 focus:outline-none resize-none h-20 border border-gray-800/80"></textarea>
@@ -207,6 +203,21 @@
                 <p class="text-[10px] text-gray-400 mb-3">أكثر الأعضاء تفاعلاً وجمعاً للنقاط في NXL.</p>
                 <div id="leaderboard-list" class="space-y-2">
                     <div class="text-center text-xs text-gray-500 py-4">جاري تحميل الأبطال...</div>
+                </div>
+            </div>
+
+            <!-- لعبة اختبار العشاق الجديدة المضافة خصيصاً للارتباط -->
+            <div class="liquid-glass p-6 rounded-2xl border border-pink-500/30 text-center relative overflow-hidden shadow-lg">
+                <div class="absolute -top-10 -left-10 w-24 h-24 bg-pink-500 rounded-full blur-3xl opacity-20"></div>
+                <h2 class="text-lg font-bold mb-1 relative z-10 flex items-center justify-center gap-1"><span>💖</span> اختبار العشاق (Love Quiz)</h2>
+                <p class="text-[10px] text-gray-400 mb-4 relative z-10">جاوبوا على الأسئلة واكتشفوا مدى توافقكم وعمق مشاعركم!</p>
+                
+                <div id="quiz-container" class="space-y-3 relative z-10 text-right">
+                    <div id="quiz-question-box" class="bg-[#12121a] p-3 rounded-xl border border-gray-800 text-xs font-bold text-pink-300">
+                        اضغط ابدأ لاكتشاف السؤال الأول!
+                    </div>
+                    <div id="quiz-options-box" class="space-y-2"></div>
+                    <button id="start-quiz-btn" class="w-full py-2.5 bg-gradient-to-r from-pink-600 to-[#ff2a85] rounded-xl text-xs font-bold text-white interactive-press shadow-md shadow-pink-500/20">بدء الاختبار الرومانسي 💘</button>
                 </div>
             </div>
 
@@ -275,7 +286,6 @@
         </section>
     </main>
 
-    <!-- واجهة الشات الخاص المطورة (مع ستريك، فويس نوت، صور تختفي) -->
     <div id="private-chat-window" class="fixed inset-0 z-50 bg-[#060609] flex flex-col hidden">
         <header class="liquid-glass py-3 px-4 border-b border-gray-800 flex items-center justify-between shrink-0 shadow-md">
             <div class="flex items-center gap-3">
@@ -294,13 +304,12 @@
                     <p id="private-target-status" class="text-[10px] text-gray-400 font-bold transition-colors duration-300">غير متصل</p>
                 </div>
             </div>
-            <button id="delete-chat-btn" class="text-red-500 hover:bg-red-500/20 p-2 rounded-lg transition interactive-press" title="إزالة المستخدم من قائمة محادثاتك">
+            <button id="delete-chat-btn" class="text-red-500 hover:bg-red-500/20 p-2 rounded-lg transition interactive-press" title="إزالة المستخدم">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
             </button>
         </header>
         
-        <div id="private-messages-box" class="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar bg-[#060609] flex flex-col">
-        </div>
+        <div id="private-messages-box" class="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar bg-[#060609] flex flex-col"></div>
         
         <div class="p-3 liquid-glass border-t border-gray-800 flex flex-col shrink-0">
             <div id="private-img-preview-container" class="hidden relative bg-[#12121a] p-2 rounded-xl mb-2 border border-gray-800 w-max">
@@ -332,7 +341,6 @@
         </div>
     </div>
 
-    <!-- نافذة عرض الصورة التي تختفي -->
     <div id="view-once-modal" class="fixed inset-0 z-50 bg-black/95 flex flex-col items-center justify-center hidden p-4">
         <button id="close-view-once" class="absolute top-6 left-6 text-white text-3xl font-bold interactive-press">&times;</button>
         <p class="text-orange-400 text-xs font-bold mb-4">👻 صورة تختفي فور إغلاقها!</p>
@@ -352,27 +360,23 @@
             <div class="flex justify-center gap-4 mb-4 text-xs font-bold bg-[#12121a] p-2 rounded-xl border border-gray-700/50">
                 <span id="modal-points" class="text-[#ff2a85]">0 EXP 🔥</span>
             </div>
-            
             <div id="modal-note-area" class="hidden bg-white text-black p-3 rounded-xl rounded-tr-none text-xs font-bold mb-4 text-right shadow-md border border-gray-300 note-bubble"></div>
-
             <button id="modal-chat-btn" class="w-full py-2.5 gradient-bg rounded-xl text-sm font-bold text-white interactive-press shadow-md shadow-[#ff2a85]/30">مراسلة خاصة</button>
         </div>
     </div>
 
-    <!-- زر النوافذ العائم الخاص بـ NXL AI -->
     <button id="nxl-ai-btn" class="fixed bottom-20 left-4 z-40 w-12 h-12 rounded-full bg-gradient-to-tr from-purple-600 to-blue-500 flex items-center justify-center shadow-lg shadow-purple-500/40 animate-bounce transition interactive-press border-2 border-[#060609]">
         <span class="text-xl">🤖</span>
     </button>
 
-    <!-- واجهة NXL AI Assistant المطورة مع فهم اللهجات وخيارات الاقتراح -->
     <div id="nxl-ai-panel" class="fixed inset-0 z-50 bg-[#060609]/80 backdrop-blur-md flex flex-col hidden transition-opacity">
         <div class="mt-auto liquid-glass w-full max-w-lg mx-auto h-[82vh] rounded-t-3xl border-t border-purple-500 shadow-[0_-10px_40px_rgba(168,85,247,0.15)] flex flex-col overflow-hidden">
             <header class="p-4 border-b border-gray-800 flex justify-between items-center shrink-0 bg-[#12121a]">
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-purple-600 to-blue-500 flex items-center justify-center text-xl shadow-lg shadow-purple-500/30">🤖</div>
                     <div>
-                        <h3 class="text-sm font-bold text-white tracking-wide">NXL Assistant AI (اللهجات المتعددة)</h3>
-                        <p class="text-[10px] text-purple-400 animate-pulse">يفهم مصري، خليجي، وشامي ⚡</p>
+                        <h3 class="text-sm font-bold text-white tracking-wide">NXL Assistant AI (متصل بقاعدة المعرفة)</h3>
+                        <p class="text-[10px] text-purple-400 animate-pulse">يسحب إجاباته لحظياً من السيرفر ⚡</p>
                     </div>
                 </div>
                 <button id="close-ai-btn" class="text-gray-400 hover:text-white text-3xl font-light interactive-press">&times;</button>
@@ -382,13 +386,13 @@
                 <div class="flex gap-2 w-full mb-1 justify-start">
                     <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-purple-600 to-blue-500 flex items-center justify-center text-sm shrink-0">🤖</div>
                     <div class="p-3 text-xs rounded-2xl bg-[#12121a] border border-purple-500/30 text-white rounded-tl-none max-w-[80%] leading-relaxed shadow-sm">
-                        أهلاً يا بطل! أنا NXL AI. بفهم أي لهجة وبساعدك في التطبيق. اسألني بالعامية المصرية، الخليجية، أو الشامية براحتك! 🔥
+                        أهلاً يا بطل! أنا NXL AI. جاهز أجاوبك على أي سؤال بتضيفه من لوحة التحكم مباشرة! 🔥
                     </div>
                 </div>
             </div>
             
             <div class="p-3 bg-[#12121a] border-t border-gray-800 flex gap-2 items-center shrink-0">
-                <input type="text" id="ai-msg-input" placeholder="اسأل بأي لهجة (مثال: وشلون اجمع نقاط؟ أو ازيك؟)..." class="flex-1 bg-[#060609] text-sm rounded-xl px-4 py-3 text-white focus:outline-none border border-purple-500/50">
+                <input type="text" id="ai-msg-input" placeholder="اسأل بأي لهجة..." class="flex-1 bg-[#060609] text-sm rounded-xl px-4 py-3 text-white focus:outline-none border border-purple-500/50">
                 <button id="send-ai-btn" class="w-11 h-11 bg-gradient-to-tr from-purple-600 to-blue-500 rounded-xl flex items-center justify-center text-white font-bold interactive-press shadow-md shadow-purple-500/30 text-lg">✨</button>
             </div>
         </div>
@@ -401,10 +405,7 @@
             <span id="global-unread-dot" class="hidden absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full border border-[#060609] animate-pulse"></span>
         </button>
         <button onclick="switchTab('games', this)" class="nav-btn text-gray-400 hover:text-gray-200 font-bold text-[10px] transition-colors relative">ألعاب</button>
-        <button onclick="switchTab('chats', this)" class="nav-btn text-gray-400 hover:text-gray-200 font-bold text-[10px] transition-colors relative">
-            شاتاتي
-            <span id="chats-unread-dot" class="hidden absolute -top-1 -right-1 w-2.5 h-2.5 bg-green-500 rounded-full border border-[#060609] animate-pulse"></span>
-        </button>
+        <button onclick="switchTab('chats', this)" class="nav-btn text-gray-400 hover:text-gray-200 font-bold text-[10px] transition-colors relative">شاتاتي</button>
         <button id="nav-profile-btn" onclick="switchTab('profile', this)" class="nav-btn text-gray-400 hover:text-gray-200 font-bold text-[10px] transition-colors relative">ملفي</button>
     </nav>
 
@@ -439,11 +440,17 @@
         let targetTypingUnsubscribe = null;
         let targetOnlineUnsubscribe = null;
         let replyingToMsg = null;
-        let privateReplyingToMsg = null;
         let feedFilter = "smart"; 
         window.activeTabId = 'home'; 
 
-        // --- مولد الأصوات التفاعلية (Web Audio API) بدون ملفات خارجية ---
+        // تحميل قاعدة المعرفة الخاصة بالـ AI من السيرفر مباشرة
+        let dynamicAiKnowledge = {};
+        onValue(ref(db, 'ai_knowledge_base'), (snapshot) => {
+            if (snapshot.exists()) {
+                dynamicAiKnowledge = snapshot.val();
+            }
+        });
+
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         function playAppSound(type) {
             try {
@@ -468,7 +475,6 @@
             } catch(e) {}
         }
 
-        // ربط مؤثرات الضغط لكل الأزرار تلقائياً
         document.addEventListener('click', (e) => {
             if (e.target.closest('button') || e.target.closest('.interactive-press')) {
                 playAppSound('click');
@@ -643,7 +649,7 @@
             }
 
             if (!window.listenersStarted) {
-                startGlobalChat(); startPostsFeed(); startMyChatsList(); startLeaderboardAndStories();
+                startGlobalChat(); startPostsFeed(); startLeaderboardAndStories();
                 window.listenersStarted = true;
             }
         }
@@ -776,17 +782,63 @@
             if (!e.target.closest('.relative.z-20')) searchDropdown.classList.add('hidden');
         });
 
+        // --- لعبة اختبار العشاق التفاعلية (Love Quiz) ---
+        const quizQuestions = [
+            { q: "مين فيكم بيحب التاني أكتر؟", options: ["هو أكيد ❤️", "أنا طبعاً 🥰", "إحنا الاثنين بجنون 🔥"] },
+            { q: "مين بيبعت رسالة 'بحبك' الأول الصبح؟", options: ["هو الشجاع دايماً ☀️", "أنا اللي بصحيه عِشق 💌", "بنفتح عيونينا عليها مع بعض ⚡"] },
+            { q: "لو حصل زعل، مين بيصالح التاني الأول؟", options: ["هو عشان مايهنش عليه زعلي 🥺", "أنا عشان بحب قربه ❤️", "بنصالح بعض في نفس اللحظة ✨"] },
+            { q: "إيه أكتر مكان بتحبوا تتكلموا فيه سوا؟", options: ["الشات الخاص هنا في NXL 💬", "سهرات بالليل ع الموتوسيكل/الشارع 🛵", "أي مكان وإحنا مع بعض وخلاص 🥰"] }
+        ];
+        let currentQuizIndex = 0;
+
+        document.getElementById('start-quiz-btn').addEventListener('click', () => {
+            currentQuizIndex = 0;
+            loadQuizQuestion();
+        });
+
+        function loadQuizQuestion() {
+            if (currentQuizIndex >= quizQuestions.length) {
+                document.getElementById('quiz-question-box').innerText = "🎉 مبروك! إنتوا أحلى وأرقى إثنين في الدنيا! حبكم متصاعد ومليان طاقة إيجابية 🔥❤️";
+                document.getElementById('quiz-options-box').innerHTML = `<button onclick="document.getElementById('start-quiz-btn').click();" class="w-full py-2 bg-pink-600/30 text-pink-300 rounded-xl text-xs font-bold">إعادة الاختبار 🔄</button>`;
+                return;
+            }
+            const qObj = quizQuestions[currentQuizIndex];
+            document.getElementById('quiz-question-box').innerText = `السؤال ${currentQuizIndex + 1}: ${qObj.q}`;
+            const optBox = document.getElementById('quiz-options-box');
+            optBox.innerHTML = '';
+            qObj.options.forEach(opt => {
+                optBox.innerHTML += `<button onclick="nextQuizStep()" class="w-full text-right p-2.5 bg-[#12121a] hover:bg-pink-600/20 border border-gray-800 rounded-xl text-xs text-white transition interactive-press">💖 ${opt}</button>`;
+            });
+        }
+
+        window.nextQuizStep = () => {
+            playAppSound('pop');
+            currentQuizIndex++;
+            loadQuizQuestion();
+        };
+
+        // --- حاسبة الحب الكلاسيكية ---
+        document.getElementById('calculate-love-btn').addEventListener('click', () => {
+            const n1 = document.getElementById('love-name1').value.trim();
+            const n2 = document.getElementById('love-name2').value.trim();
+            if(!n1 || !n2) return alert("اكتب الاسمين يا بطل!");
+            let hash = 0; const combined = n1 + n2;
+            for (let i = 0; i < combined.length; i++) hash += combined.charCodeAt(i);
+            const percentage = (hash % 31) + 70; // نسبة من 70% لـ 100% عشان تبسطهم دائماً!
+            document.getElementById('love-percentage').innerText = `${percentage}%`;
+            document.getElementById('love-status').innerText = percentage > 90 ? "عشق لا ينتهي وقلوب متقاطعة إلى الأبد! 🔥❤️" : "حب جميل وتوافق هايل ومستقبل مشرف! ✨";
+            document.getElementById('love-result').classList.remove('hidden');
+        });
+
         window.addReaction = async (path, msgId) => {
             const emoji = prompt("أدخل إيموجي للتفاعل:");
             if(emoji && emoji.trim() !== '') {
-                const currentEmoji = emoji.trim().substring(0, 2);
-                await update(ref(db, `${path}/${msgId}/reactions`), { [currentUser.uid]: currentEmoji });
+                await update(ref(db, `${path}/${msgId}/reactions`), { [currentUser.uid]: emoji.trim().substring(0, 2) });
                 addExpPoints(1); 
             }
         };
 
         window.copyMsgText = (text) => { navigator.clipboard.writeText(text).then(() => alert("تم نسخ النص! ✓")); }
-
         window.deleteSingleMessage = async (path, msgId) => {
             if(confirm("هل أنت متأكد من حذف هذه الرسالة للجميع؟")) await remove(ref(db, `${path}/${msgId}`));
         };
@@ -1008,7 +1060,6 @@
             setTimeout(() => document.getElementById('user-modal').classList.add('hidden'), 150);
         };
 
-        // إدارة إرسال الصور (مع خيار View Once)
         document.getElementById('private-img-btn').onclick = () => document.getElementById('private-img-input').click();
         document.getElementById('private-img-input').onchange = e => {
             const f = e.target.files[0]; if(!f) return;
@@ -1025,7 +1076,6 @@
             document.getElementById('private-img-preview-container').classList.add('hidden');
         };
 
-        // التسجيل الصوتي (Voice Notes)
         let mediaRecorder; let audioChunks = [];
         document.getElementById('private-mic-btn').onclick = async () => {
             const micBtn = document.getElementById('private-mic-btn');
@@ -1041,49 +1091,25 @@
                         reader.readAsDataURL(audioBlob);
                         reader.onloadend = async () => {
                             const base64Audio = reader.result;
-                            const chatId = openChatId;
-                            await push(ref(db, `chats/${chatId}`), {
-                                senderId: currentUser.uid,
-                                audio: base64Audio,
-                                timestamp: Date.now(),
-                                status: 'sent'
-                            });
+                            await push(ref(db, `chats/${openChatId}`), { senderId: currentUser.uid, audio: base64Audio, timestamp: Date.now(), status: 'sent' });
                             playAppSound('pop');
                         };
                     };
                     mediaRecorder.start();
-                    micBtn.innerText = "⏹️ (جاري التسجيل...)";
-                    micBtn.classList.add('text-red-500', 'animate-pulse');
-                } catch (err) {
-                    alert("تعذر الوصول للميكروفون.");
-                }
+                    micBtn.innerText = "⏹️"; micBtn.classList.add('text-red-500', 'animate-pulse');
+                } catch (err) { alert("تعذر الوصول للميكروفون."); }
             } else {
                 mediaRecorder.stop();
-                micBtn.innerText = "🎙️";
-                micBtn.classList.remove('text-red-500', 'animate-pulse');
+                micBtn.innerText = "🎙️"; micBtn.classList.remove('text-red-500', 'animate-pulse');
             }
         };
 
         window.openViewOnceImage = async (msgId, imgBase64) => {
             document.getElementById('view-once-img').src = imgBase64;
             document.getElementById('view-once-modal').classList.remove('hidden');
-            // حذف الصورة من السيرفر فور فتحها (View Once حقيقي)
             await update(ref(db, `chats/${openChatId}/${msgId}`), { image: null, viewed: true });
         };
-        document.getElementById('close-view-once').onclick = () => {
-            document.getElementById('view-once-modal').classList.add('hidden');
-        };
-
-        document.getElementById('cancelPrivateReplyBtn').addEventListener('click', () => {
-            privateReplyingToMsg = null; document.getElementById('private-reply-banner').classList.add('hidden');
-        });
-
-        window.preparePrivateReply = function(msgId, msgText) {
-            privateReplyingToMsg = { id: msgId, text: msgText };
-            document.getElementById('private-reply-to-text').innerText = msgText;
-            document.getElementById('private-reply-banner').classList.remove('hidden');
-            document.getElementById('private-msg-input').focus();
-        };
+        document.getElementById('close-view-once').onclick = () => document.getElementById('view-once-modal').classList.add('hidden');
 
         document.getElementById('delete-chat-btn').addEventListener('click', async () => {
             if(!openChatId) return;
@@ -1105,7 +1131,6 @@
             initialUpdates[`user_chats/${currentUser.uid}/${chatId}/targetUid`] = targetUid;
             initialUpdates[`user_chats/${targetUid}/${chatId}/targetUid`] = currentUser.uid;
             update(ref(db), initialUpdates);
-            update(ref(db), { [`user_chats/${currentUser.uid}/${chatId}/hasUnread`]: false }); 
 
             const box = document.getElementById('private-messages-box');
             if(activeChatRef) activeChatRef(); if(targetTypingUnsubscribe) targetTypingUnsubscribe(); if(targetOnlineUnsubscribe) targetOnlineUnsubscribe();
@@ -1124,57 +1149,26 @@
                 else { dot.classList.add('hidden'); statusTxt.innerText = "غير متصل"; statusTxt.classList.replace('text-green-400', 'text-gray-400'); }
             });
 
-            targetTypingUnsubscribe = onValue(targetTypingRef, (snap) => {
-                const statusEl = document.getElementById('private-target-status');
-                if(snap.val() === true) { statusEl.innerText = "يكتب الآن..."; statusEl.classList.replace('text-green-400', 'text-[#ff7300]'); statusEl.classList.add('animate-pulse'); } 
-                else { 
-                    const isOnline = !document.getElementById('private-target-online-dot').classList.contains('hidden');
-                    statusEl.innerText = isOnline ? "متصل الآن" : "غير متصل"; 
-                    statusEl.classList.replace('text-[#ff7300]', isOnline ? 'text-green-400' : 'text-gray-400'); 
-                    statusEl.classList.remove('animate-pulse'); 
-                }
-            });
-
-            let typingTimeout; const msgInput = document.getElementById('private-msg-input');
-            msgInput.addEventListener('input', () => {
-                set(myTypingRef, true); clearTimeout(typingTimeout);
-                typingTimeout = setTimeout(() => set(myTypingRef, false), 2000);
-            });
-
             const msgsQuery = query(ref(db, `chats/${chatId}`), limitToLast(300));
             activeChatRef = onValue(msgsQuery, (snapshot) => {
                 const isAtBottom = box.scrollHeight - box.scrollTop <= box.clientHeight + 50;
-
-                box.innerHTML = `
-                    <div class="flex justify-center mb-6 mt-2">
-                        <div class="liquid-glass border border-yellow-500/30 text-yellow-400 text-[10px] font-bold px-4 py-2 rounded-xl text-center max-w-xs">
-                            🔒 مشفر E2EE + ستريك 🔥 مفعل ومحمية!
-                        </div>
-                    </div>`; 
+                box.innerHTML = `<div class="flex justify-center mb-6 mt-2"><div class="liquid-glass border border-yellow-500/30 text-yellow-400 text-[10px] font-bold px-4 py-2 rounded-xl text-center max-w-xs">🔒 مشفر E2EE + ستريك 🔥 مفعل</div></div>`; 
 
                 const now = Date.now(); const oneDay = 24 * 60 * 60 * 1000;
-                let unreadUpdates = {};
                 let messageCount = 0;
 
                 snapshot.forEach(c => {
                     messageCount++;
-                    const msgId = c.key;
-                    const m = c.val(); 
+                    const msgId = c.key; const m = c.val(); 
                     if(now - m.timestamp > oneDay) return; 
 
                     const isMe = m.senderId === currentUser.uid;
                     const timeStr = new Date(m.timestamp).toLocaleTimeString('ar-EG', {hour: '2-digit', minute:'2-digit'});
                     
-                    if (!isMe && m.status !== 'read' && !document.getElementById('private-chat-window').classList.contains('hidden')) {
-                        unreadUpdates[`chats/${chatId}/${msgId}/status`] = 'read';
-                    }
-
-                    let ticks = isMe ? (m.status === 'read' ? '<span class="text-blue-400">✓✓</span>' : '<span>✓</span>') : '';
-                    
                     let contentHTML = '';
                     if (m.image) {
                         if (m.viewOnce) {
-                            contentHTML = m.viewed ? `<p class="text-[11px] text-gray-400 italic">👻 تم فتح صورة العرض الواحد</p>` : `<button onclick="window.openViewOnceImage('${msgId}', '${m.image}')" class="bg-orange-600/30 border border-orange-500 text-orange-300 px-3 py-2 rounded-xl text-xs font-bold interactive-press">👻 اضغط لعرض الصورة (مرة واحدة)</button>`;
+                            contentHTML = m.viewed ? `<p class="text-[11px] text-gray-400 italic">👻 تم فتح صورة العرض الواحد</p>` : `<button onclick="window.openViewOnceImage('${msgId}', '${m.image}')" class="bg-orange-600/30 border border-orange-500 text-orange-300 px-3 py-2 rounded-xl text-xs font-bold interactive-press">👻 اضغط لعرض الصورة</button>`;
                         } else {
                             contentHTML = `<img src="${m.image}" class="w-full max-w-[220px] rounded-lg mt-1 mb-2 border border-gray-800">`;
                         }
@@ -1190,46 +1184,30 @@
                                 <div class="p-2.5 rounded-2xl relative ${isMe ? 'gradient-bg text-white rounded-tr-none' : 'liquid-glass border border-gray-800 text-white rounded-tl-none'} min-w-[80px]">
                                     ${contentHTML}
                                     ${renderReactions(m.reactions)}
-                                    <span class="absolute bottom-1 left-2.5 flex items-center gap-0.5 text-[8px] text-gray-300/60 select-none dir-ltr font-bold">${ticks} ${timeStr}</span>
+                                    <span class="absolute bottom-1 left-2.5 flex items-center gap-0.5 text-[8px] text-gray-300/60 select-none dir-ltr font-bold">${timeStr}</span>
                                 </div>
                             </div>
                         </div>`;
                 });
                 
-                // تحديث الستريك (🔥 Streak) تلقائياً
                 const streakBadge = document.getElementById('streak-badge');
                 if (messageCount > 0) {
-                    const streakDays = Math.max(1, Math.floor(messageCount / 3));
-                    streakBadge.innerText = `🔥 ${streakDays} يوم`;
+                    streakBadge.innerText = `🔥 ${Math.max(1, Math.floor(messageCount / 3))} يوم`;
                     streakBadge.classList.remove('hidden');
-                } else {
-                    streakBadge.classList.add('hidden');
-                }
+                } else { streakBadge.classList.add('hidden'); }
 
                 if (isAtBottom) box.scrollTop = box.scrollHeight;
-                if (Object.keys(unreadUpdates).length > 0) update(ref(db), unreadUpdates);
             });
         }
 
         document.getElementById('send-private-btn').onclick = () => {
             const inp = document.getElementById('private-msg-input'); const text = inp.value.trim(); 
             const isViewOnce = document.getElementById('view-once-check').checked;
-
             if(!text && !privatePostImageBase64) return; 
             inp.value = "";
             
-            const msgData = { 
-                senderId: currentUser.uid, 
-                text: text || null, 
-                image: privatePostImageBase64 || null, 
-                viewOnce: isViewOnce, 
-                timestamp: Date.now(), 
-                status: 'sent' 
-            };
-
-            privatePostImageBase64 = ""; 
-            document.getElementById('private-img-input').value = ""; 
-            document.getElementById('private-img-preview-container').classList.add('hidden');
+            const msgData = { senderId: currentUser.uid, text: text || null, image: privatePostImageBase64 || null, viewOnce: isViewOnce, timestamp: Date.now(), status: 'sent' };
+            privatePostImageBase64 = ""; document.getElementById('private-img-input').value = ""; document.getElementById('private-img-preview-container').classList.add('hidden');
             document.getElementById('view-once-check').checked = false;
 
             push(ref(db, `chats/${openChatId}`), msgData).then(() => {
@@ -1239,9 +1217,7 @@
             });
         };
 
-        // ==========================================
-        // سكربت الذكاء الاصطناعي (NXL AI متعدد اللهجات + اقتراحات ذكية)
-        // ==========================================
+        // --- الذكاء الاصطناعي المرتبط ديناميكياً بقاعدة المعرفة (Firebase) ---
         const aiBtn = document.getElementById('nxl-ai-btn');
         const aiPanel = document.getElementById('nxl-ai-panel');
         const closeAiBtn = document.getElementById('close-ai-btn');
@@ -1252,70 +1228,28 @@
         aiBtn.addEventListener('click', () => aiPanel.classList.remove('hidden'));
         closeAiBtn.addEventListener('click', () => aiPanel.classList.add('hidden'));
 
-        function appendAiMessage(text, isUser = false, options = null) {
+        function appendAiMessage(text, isUser = false) {
             const div = document.createElement('div');
             div.className = `flex gap-2 w-full mb-2 ${isUser ? 'justify-end' : 'justify-start'}`;
-            
-            let optionsHTML = '';
-            if (options && options.length > 0) {
-                optionsHTML = `<div class="flex flex-wrap gap-1.5 mt-2">`;
-                options.forEach(opt => {
-                    optionsHTML += `<button onclick="window.sendAiSuggestion('${opt}')" class="bg-purple-600/30 border border-purple-500/50 hover:bg-purple-600 text-purple-200 text-[10px] font-bold px-2.5 py-1 rounded-lg transition interactive-press">${opt}</button>`;
-                });
-                optionsHTML += `</div>`;
-            }
-
             if(isUser) {
                 div.innerHTML = `<div class="p-3 text-xs rounded-2xl bg-gradient-to-tr from-purple-600 to-blue-500 text-white rounded-tr-none max-w-[80%] leading-relaxed">${escapeHTML(text)}</div>`;
             } else {
-                div.innerHTML = `
-                    <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-purple-600 to-blue-500 flex items-center justify-center text-sm shrink-0">🤖</div>
-                    <div class="p-3 text-xs rounded-2xl liquid-glass border border-purple-500/30 text-white rounded-tl-none max-w-[80%] leading-relaxed">
-                        ${escapeHTML(text)}
-                        ${optionsHTML}
-                    </div>`;
+                div.innerHTML = `<div class="w-8 h-8 rounded-full bg-gradient-to-tr from-purple-600 to-blue-500 flex items-center justify-center text-sm shrink-0">🤖</div><div class="p-3 text-xs rounded-2xl liquid-glass border border-purple-500/30 text-white rounded-tl-none max-w-[80%] leading-relaxed">${escapeHTML(text)}</div>`;
             }
             aiBox.appendChild(div);
             aiBox.scrollTop = aiBox.scrollHeight;
         }
 
-        window.sendAiSuggestion = (text) => {
-            aiInput.value = text;
-            processAiMessage();
-        };
-
-        // قاعدة المعرفة متعددة اللهجات مع تفعيل اقتراحات الخيارات عند عدم المطابقة التامة
-        const nxlKnowledgeMultiDialect = [
-            {
-                keys: ["مرحبا", "اهلا", "سلام", "هاي", "السلام عليكم", "هلا", "ازيك", "عامل ايه", "اخبارك", "وشلونك", "كيفك", "شو اخبارك"],
-                reply: "أهلاً بك يا بطل! منور NXL. كيف أقدر أساعدك اليوم؟ 🔥"
-            },
-            {
-                keys: ["نقط", "نقاط", "exp", "اجمع", "ابي نقاط", "شلون اجمع نقط", "كيف اكسب نقاط"],
-                reply: "عشان تجمع نقاط (EXP): انشر بوستات، تفاعل بدبل كليك، وشارك في الشات العام!"
-            },
-            {
-                keys: ["حاسبة", "حب", "نسبة", "ارتباط", "كراش", "بحب"],
-                reply: "حاسبة الحب موجودة في قسم الألعاب 🎮! ادخل جربها واعرف نسبة التوافق."
-            },
-            {
-                keys: ["vip", "بطاقة", "كارت", "عضوية"],
-                reply: "تقدر تستخرج بطاقة VIP الفخمة الخاصة بك من قسم الألعاب وتشاركها ستوري 💳✨"
-            }
-        ];
-
-        function getSmartResponse(userText) {
+        function getDynamicAiResponse(userText) {
             let text = userText.toLowerCase();
-            for (let item of nxlKnowledgeMultiDialect) {
-                if (item.keys.some(k => text.includes(k))) {
-                    return { reply: item.reply, options: null };
+            // البحث الفوري في الأسئلة المُضافة من لوحة التحكم في السيرفر
+            for (let id in dynamicAiKnowledge) {
+                let item = dynamicAiKnowledge[id];
+                if (item.question && text.includes(item.question.toLowerCase())) {
+                    return item.answer;
                 }
             }
-            // في حال لم يفهم السؤال تماماً، يظهر خيارات ذكية بدلاً من رسالة خطأ صماء
-            return {
-                reply: "معلش يا بطل، ما فهمت قصدك بدقة. هل تقصد حاجة من دول؟ 🤔",
-                options: ["عايز اجمع نقاط EXP", "حاسبة الحب بتشتغل إزاي", "بطاقة VIP الفخمة"]
-            };
+            return "يا بطل، السؤال ده لسه مش مضاف في قاعدة المعرفة عندي! ادخل على لوحة التحكم وأضفه فوراً عشان أرد بيه عليك وعلى كل المستخدمين 🚀";
         }
 
         function processAiMessage() {
@@ -1324,19 +1258,10 @@
             aiInput.value = '';
             appendAiMessage(text, true);
 
-            const typingId = 'typing-' + Date.now();
-            const typingDiv = document.createElement('div');
-            typingDiv.id = typingId;
-            typingDiv.className = 'text-[10px] text-purple-400 ml-10 animate-pulse font-bold mt-1 mb-2';
-            typingDiv.innerText = 'NXL AI يحلل لهجتك... ⚡';
-            aiBox.appendChild(typingDiv);
-            aiBox.scrollTop = aiBox.scrollHeight;
-
             setTimeout(() => {
-                document.getElementById(typingId)?.remove();
-                const res = getSmartResponse(text);
-                appendAiMessage(res.reply, false, res.options);
-            }, 1000);
+                const reply = getDynamicAiResponse(text);
+                appendAiMessage(reply, false);
+            }, 600);
         }
 
         aiSendBtn.addEventListener('click', processAiMessage);
@@ -1351,12 +1276,10 @@
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
             document.getElementById(`tab-${tabId}`).classList.remove('hidden');
             document.querySelectorAll('.nav-btn').forEach(el => {
-                el.classList.remove('text-[#ff2a85]');
-                el.classList.add('text-gray-400');
+                el.classList.remove('text-[#ff2a85]'); el.classList.add('text-gray-400');
             });
             if(btnElement) {
-                btnElement.classList.add('text-[#ff2a85]');
-                btnElement.classList.remove('text-gray-400');
+                btnElement.classList.add('text-[#ff2a85]'); btnElement.classList.remove('text-gray-400');
             }
             window.activeTabId = tabId;
             if(tabId === 'global') {
@@ -1364,7 +1287,6 @@
                 setTimeout(() => box.scrollTop = box.scrollHeight, 50);
                 document.getElementById('global-unread-dot').classList.add('hidden');
             }
-            if(tabId === 'chats') document.getElementById('chats-unread-dot').classList.add('hidden');
         };
     </script>
 </body>
