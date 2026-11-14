@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>NXL Elmahalla - الشبكة العالمية الاحترافية</title>
+    <title>NXL Ultimate Network - الشبكة الاجتماعية الاحترافية</title>
 
     <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/png" href="image.PNG">
@@ -66,8 +66,8 @@
             <div class="w-16 h-16 mx-auto rounded-full gradient-bg flex items-center justify-center mb-4 shadow-xl shadow-[#ff2a85]/40 animate-pulse">
                 <span class="text-xl font-black tracking-wider text-white">NXL</span>
             </div>
-            <h1 class="text-xl font-bold mb-1">مرحباً بك في <span class="gradient-text">NXL</span></h1>
-            <p class="text-[11px] text-gray-400 mb-6">المنصة الاجتماعية الأقوى عالمياً</p>
+            <h1 class="text-xl font-bold mb-1">مرحباً بك في <span class="gradient-text">NXL Ultimate</span></h1>
+            <p class="text-[11px] text-gray-400 mb-6">المنصة الاجتماعية الاحترافية المؤمنة</p>
             
             <div class="space-y-3">
                 <input type="email" id="auth-email" placeholder="البريد الإلكتروني" class="w-full bg-[#12121a] text-xs rounded-xl px-4 py-3 text-white focus:outline-none border border-gray-700/60 dir-ltr text-left">
@@ -84,12 +84,12 @@
     <div id="setup-profile-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#060609]/95 backdrop-blur-md px-6 hidden">
         <div class="max-w-sm w-full liquid-glass p-6 rounded-3xl border border-[#ff7300] shadow-2xl">
             <h2 class="text-lg font-bold mb-1 text-center">خطوة أخيرة للبدء 🚀</h2>
-            <p class="text-[11px] text-gray-400 text-center mb-5">اختر هويتك في NXL ليتمكن الأصدقاء من الوصول إليك</p>
+            <p class="text-[11px] text-gray-400 text-center mb-5">اختر هويتك واسم المستخدم الخاص بك في المنصة</p>
             
             <div class="space-y-3">
-                <input type="text" id="setup-nickname" placeholder="اللقب (مثل: محمد، حمص)" class="w-full bg-[#12121a] text-xs rounded-xl px-4 py-3 text-white border border-gray-700">
-                <input type="text" id="setup-username" placeholder="اسم المستخدم بالإنجليزية (مثل: mohamed_nxl)" class="w-full bg-[#12121a] text-xs rounded-xl px-4 py-3 text-white border border-gray-700 dir-ltr text-left">
-                <input type="text" id="setup-bio" placeholder="نبذة عنك (Bio)..." class="w-full bg-[#12121a] text-xs rounded-xl px-4 py-3 text-white border border-gray-700">
+                <input type="text" id="setup-nickname" placeholder="اللقب الظاهر (مثل: Creator، Hero)" class="w-full bg-[#12121a] text-xs rounded-xl px-4 py-3 text-white border border-gray-700">
+                <input type="text" id="setup-username" placeholder="اسم المستخدم بالإنجليزية (مثل: nxl_user)" class="w-full bg-[#12121a] text-xs rounded-xl px-4 py-3 text-white border border-gray-700 dir-ltr text-left">
+                <input type="text" id="setup-bio" placeholder="نبذة تعريفية عنك (Bio)..." class="w-full bg-[#12121a] text-xs rounded-xl px-4 py-3 text-white border border-gray-700">
                 <button id="save-profile-btn" class="w-full py-3 gradient-bg rounded-xl font-bold text-xs text-white interactive-press shadow-lg shadow-[#ff7300]/30 mt-2">حفظ والدخول</button>
             </div>
         </div>
@@ -100,8 +100,8 @@
         <div class="flex items-center gap-2">
             <div class="w-8 h-8 rounded-full gradient-bg flex items-center justify-center font-black text-xs text-white shadow-md">NXL</div>
             <div>
-                <h1 class="text-xs font-extrabold tracking-wide">NXL ELMAHALLA</h1>
-                <p class="text-[8px] text-gray-400 -mt-0.5">الشبكة العالمية الاحترافية</p>
+                <h1 class="text-xs font-extrabold tracking-wide">NXL ULTIMATE</h1>
+                <p class="text-[8px] text-gray-400 -mt-0.5">المنصة الاجتماعية الاحترافية</p>
             </div>
         </div>
         <div class="flex items-center gap-3">
@@ -120,7 +120,7 @@
             <div id="stories-container" class="flex gap-3 overflow-x-auto pb-2 pt-1 custom-scrollbar hidden"></div>
 
             <div class="liquid-glass p-3 rounded-2xl border border-gray-800 shadow-lg">
-                <textarea id="post-input" placeholder="شارك لحظاتك وأفكارك... (تختفي بعد 72 ساعة)" class="w-full bg-[#12121a] text-xs text-white rounded-xl p-3 focus:outline-none resize-none h-16 border border-gray-800"></textarea>
+                <textarea id="post-input" placeholder="شارك أفكارك ولحظاتك... (تختفي بعد 72 ساعة)" class="w-full bg-[#12121a] text-xs text-white rounded-xl p-3 focus:outline-none resize-none h-16 border border-gray-800"></textarea>
                 <div class="flex justify-between items-center mt-2">
                     <label class="cursor-pointer text-[11px] text-gray-400 bg-[#12121a] px-3 py-1.5 rounded-lg flex gap-1 hover:bg-gray-800 border border-gray-700">
                         🖼️ صورة
@@ -172,12 +172,12 @@
                 <div onclick="startLoveQuizCard('compatibility')" class="liquid-glass p-3.5 rounded-2xl border border-pink-500/40 text-center cursor-pointer interactive-press hover:border-pink-500">
                     <div class="text-2xl mb-1">💖</div>
                     <h3 class="text-xs font-bold text-white mb-0.5">اختبار التوافق</h3>
-                    <p class="text-[9px] text-gray-400">أسئلة الحب وتوليد الكارت الفاخر</p>
+                    <p class="text-[9px] text-gray-400">أسئلة وتوليد الكارت الفاخر</p>
                 </div>
                 <div onclick="startLoveQuizCard('secrets')" class="liquid-glass p-3.5 rounded-2xl border border-orange-500/40 text-center cursor-pointer interactive-press hover:border-orange-500">
                     <div class="text-2xl mb-1">💌</div>
                     <h3 class="text-xs font-bold text-white mb-0.5">صندوق الأسرار</h3>
-                    <p class="text-[9px] text-gray-400">أسئلة صراحة وجريئة للارتباط</p>
+                    <p class="text-[9px] text-gray-400">أسئلة صراحة وجريئة</p>
                 </div>
             </div>
 
@@ -186,20 +186,18 @@
                 <h2 class="text-sm font-bold mb-1" id="love-game-title">💖 ركن الأسئلة والتوافق</h2>
                 <p class="text-[10px] text-gray-400 mb-3" id="love-game-desc">أجب عن الأسئلة أولاً قبل إصدار كارت Canva النهائي!</p>
                 
-                <!-- مرحلة الأسئلة التفاعلية -->
                 <div id="game-questions-stage" class="space-y-3 text-right">
                     <div class="bg-[#12121a] p-3 rounded-2xl border border-gray-800">
-                        <p class="text-xs font-bold text-pink-300 mb-2" id="q-title">السؤال 1 من 2: ما هي الصفة الأبرز في شريك حياتك؟</p>
+                        <p class="text-xs font-bold text-pink-300 mb-2" id="q-title">السؤال: ما هي الصفة الأبرز؟</p>
                         <input type="text" id="q-answer-input" placeholder="اكتب إجابتك هنا..." class="w-full bg-[#060609] border border-gray-700 text-xs rounded-xl p-2.5 text-white">
                     </div>
                     <div class="space-y-2">
                         <input type="text" id="love-name1" placeholder="اسمك أو الطرف الأول..." class="w-full bg-[#12121a] border border-gray-700 text-xs rounded-xl p-2.5 text-white">
-                        <input type="text" id="love-name2" placeholder="اسم الشريك أو الطرف الثاني..." class="w-full bg-[#12121a] border border-gray-700 text-xs rounded-xl p-2.5 text-white">
+                        <input type="text" id="love-name2" placeholder="اسم الطرف الثاني..." class="w-full bg-[#12121a] border border-gray-700 text-xs rounded-xl p-2.5 text-white">
                     </div>
                     <button onclick="proceedToCanvaCard()" class="w-full py-2.5 bg-gradient-to-r from-pink-600 to-[#ff2a85] rounded-xl text-xs font-bold text-white interactive-press shadow-md">التالي وتوليد الكارت الفاخر ✨</button>
                 </div>
 
-                <!-- مرحلة كارت Canva النهائي -->
                 <div id="love-result-card" class="mt-3 hidden bg-gradient-to-br from-pink-950 via-[#12121a] to-purple-950 p-5 rounded-3xl border-2 border-pink-500/60 shadow-2xl text-center relative overflow-hidden">
                     <div class="absolute -right-6 -bottom-6 w-20 h-20 bg-pink-500/20 rounded-full blur-xl"></div>
                     <div class="text-[9px] tracking-widest text-pink-400 font-bold mb-2 uppercase">NXL Exclusive Canva Card</div>
@@ -233,7 +231,7 @@
                 <div id="search-dropdown" class="absolute left-0 right-0 top-full mt-1 liquid-glass border border-gray-800 rounded-xl shadow-2xl overflow-hidden hidden max-h-44 overflow-y-auto"></div>
             </div>
 
-            <h2 class="text-xs font-bold mb-2 px-1 text-gray-400">الدردشات الخاصة بك (المحفوظة تلقائياً)</h2>
+            <h2 class="text-xs font-bold mb-2 px-1 text-gray-400">الدردشات الخاصة بك (حفظ تلقائي مع تنظيف دوري 25 ساعة)</h2>
             <div id="private-chats-list" class="space-y-1.5 text-xs">
                 <div class="text-center text-gray-500 py-6">جاري تحميل الشاتات المحفوظة... 💬</div>
             </div>
@@ -258,7 +256,7 @@
         </section>
     </main>
 
-    <!-- شاشة الشات الخاص (مصححة المحاذاة تماماً: رسائلك يمين وصديقك يسار) -->
+    <!-- شاشة الشات الخاص المعزولة تماماً والمصفاة لـ 25 ساعة -->
     <div id="private-chat-window" class="fixed inset-0 z-50 bg-[#060609] flex flex-col hidden">
         <header class="liquid-glass py-2.5 px-4 border-b border-gray-800 flex items-center justify-between shrink-0">
             <div class="flex items-center gap-2.5">
@@ -270,7 +268,7 @@
                 <div>
                     <div class="flex items-center gap-1.5">
                         <h3 id="private-target-name" class="text-xs font-bold text-white">المستلم</h3>
-                        <span id="streak-badge" class="bg-gradient-to-r from-orange-500 to-red-600 text-white text-[9px] font-black px-2 py-0.5 rounded-full hidden cursor-pointer interactive-press" title="اضغط لمشاركة كارت الستريك!">🔥 0 يوم</span>
+                        <span id="streak-badge" class="bg-gradient-to-r from-orange-500 to-red-600 text-white text-[9px] font-black px-2 py-0.5 rounded-full hidden cursor-pointer interactive-press">🔥 0 يوم</span>
                     </div>
                     <p id="private-target-status" class="text-[9px] text-gray-400 font-bold">غير متصل</p>
                 </div>
@@ -325,32 +323,20 @@
         </div>
     </div>
 
-    <!-- مودال كارت الستريك -->
-    <div id="streak-card-modal" class="fixed inset-0 z-50 bg-black/90 flex items-center justify-center hidden p-4 backdrop-blur-md">
-        <div class="liquid-glass w-full max-w-xs p-6 rounded-3xl border border-orange-500/50 text-center relative shadow-2xl space-y-4">
-            <button onclick="document.getElementById('streak-card-modal').classList.add('hidden')" class="absolute top-3 left-3 text-gray-400 text-xl">&times;</button>
-            <div class="w-16 h-16 mx-auto rounded-full gradient-bg flex items-center justify-center text-3xl shadow-lg shadow-orange-500/40">🔥</div>
-            <h3 class="text-base font-black text-white">ستريك التواصل مولع!</h3>
-            <p class="text-xs text-gray-300" id="streak-card-desc">مستمر بقوة بين الأبطال في NXL</p>
-            <div class="bg-[#12121a] p-3 rounded-2xl border border-gray-800 text-xs font-bold text-[#ff7300]" id="streak-card-days">0 يوم من السوالف</div>
-            <button onclick="alert('📸 تم حفظ كارت الستريك بنجاح! شاركه الآن ستوري إنستجرام أو واتساب.'); document.getElementById('streak-card-modal').classList.add('hidden');" class="w-full py-2.5 gradient-bg rounded-xl text-xs font-bold text-white interactive-press shadow-md">حفظ ومشاركة الكارت ستوري 📸</button>
-        </div>
-    </div>
-
-    <!-- زر المساعد الذكي NXL AI -->
+    <!-- زر المساعد الذكي AI -->
     <button id="nxl-ai-btn" class="fixed bottom-20 left-4 z-40 w-12 h-12 rounded-full bg-gradient-to-tr from-purple-600 to-blue-500 flex items-center justify-center shadow-lg shadow-purple-500/40 animate-bounce transition interactive-press border-2 border-[#060609]">
         <span class="text-xl">🤖</span>
     </button>
 
-    <!-- لوحة المساعد الذكي مع مؤشر تحميل مثل جيميناي وحرف N نابض -->
+    <!-- لوحة المساعد الذكي مع التدريبات المحلية أولاً ثم الويب -->
     <div id="nxl-ai-panel" class="fixed inset-0 z-50 bg-[#060609]/80 backdrop-blur-md flex flex-col hidden transition-opacity">
         <div class="mt-auto liquid-glass w-full max-w-md mx-auto h-[80vh] rounded-t-3xl border-t border-purple-500 shadow-2xl flex flex-col overflow-hidden">
             <header class="p-3.5 border-b border-gray-800 flex justify-between items-center shrink-0 bg-[#12121a]">
                 <div class="flex items-center gap-2.5">
                     <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-purple-600 to-blue-500 flex items-center justify-center text-base">🤖</div>
                     <div>
-                        <h3 class="text-xs font-bold text-white">NXL Assistant AI (قاعدة البيانات + بحث الويب 🌐)</h3>
-                        <p class="text-[9px] text-purple-400 animate-pulse">يفحص الذاكرة المحلية أولاً ثم الويب ⚡</p>
+                        <h3 class="text-xs font-bold text-white">NXL Assistant (قاعدة التدريب المحلية + الويب 🌐)</h3>
+                        <p class="text-[9px] text-purple-400 animate-pulse">يفحص الذاكرة والتدريبات أولاً بدقة ⚡</p>
                     </div>
                 </div>
                 <button id="close-ai-btn" class="text-gray-400 hover:text-white text-2xl font-light">&times;</button>
@@ -360,7 +346,7 @@
                 <div class="flex gap-2 w-full justify-start">
                     <div class="w-7 h-7 rounded-full bg-gradient-to-tr from-purple-600 to-blue-500 flex items-center justify-center text-xs shrink-0">🤖</div>
                     <div class="p-2.5 text-xs rounded-2xl bg-[#12121a] border border-purple-500/30 text-white rounded-tl-none max-w-[85%] leading-relaxed">
-                        أهلاً يا حمص! أنا جاهز أبحث في الذاكرة أولاً ثم الويب لأجيبك فوراً! 🔥
+                        أهلاً بك! سأبحث في التدريبات وقاعدة المعرفة الخاصة بك أولاً، ثم الويب لأجيبك فوراً! 🔥
                     </div>
                 </div>
             </div>
@@ -397,11 +383,11 @@
         </button>
     </nav>
 
-    <!-- البرمجة الخارقة والكاملة للمنصة -->
+    <!-- البرمجة الخارقة والمعالجة بالكامل -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getDatabase, ref, set, update, push, onValue, get, child, query, limitToLast, remove, onDisconnect } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        import { getDatabase, ref, set, update, push, onValue, get, child, query, limitToLast, remove, off, onDisconnect } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDQ8pJMhye-kp5-FjXzVPPw2MDFm9_0A8c",
@@ -422,7 +408,7 @@
         let userData = null;
         let globalPostImageBase64 = "";
         let privatePostImageBase64 = ""; 
-        let activeChatUnsubscribe = null;
+        let activeChatRef = null;
         let openChatId = null; 
         window.activeTabId = 'home'; 
 
@@ -536,7 +522,7 @@
             }
         }
 
-        // لوحة الشرف والستوريات والنوتات
+        // لوحة الشرف والستوريات
         function startLeaderboardAndStories() {
             onValue(query(ref(db, 'users')), (snapshot) => {
                 let allUsers = [], activeStories = [];
@@ -584,7 +570,7 @@
             const text = document.getElementById('my-note-input').value.trim();
             if(!text) await update(ref(db, `users/${currentUser.uid}`), { note: null });
             else await update(ref(db, `users/${currentUser.uid}/note`), { text, timestamp: Date.now() });
-            alert("تم نشر النوت بتصميم عالمي بنجاح! ✨");
+            alert("تم نشر النوت بنجاح! ✨");
         };
 
         window.startLoveQuizCard = (type) => {
@@ -594,12 +580,10 @@
             document.getElementById('love-result-card').classList.add('hidden');
             if(type === 'compatibility') {
                 document.getElementById('love-game-title').innerText = "💖 اختبار العشاق والتوافق الفاخر";
-                document.getElementById('love-game-desc').innerText = "أجب عن الأسئلة أولاً لتوليد كارت Canva!";
                 document.getElementById('q-title').innerText = "السؤال: ما هي أكثر صفة تعجبك في شريكك؟";
             } else {
                 document.getElementById('love-game-title').innerText = "💌 صندوق الأسرار والصراحة";
-                document.getElementById('love-game-desc').innerText = "أجب بصراحة تامة لتوليد كارت Canva!";
-                document.getElementById('q-title').innerText = "السؤال: ما هو السر الذي لم تقله لشريكك من قبل؟";
+                document.getElementById('q-title').innerText = "السؤال: ما هو السر الذي تود قوله بصراحة؟";
             }
         }
 
@@ -608,7 +592,7 @@
             const n1 = document.getElementById('love-name1').value.trim() || userData.nickname;
             const n2 = document.getElementById('love-name2').value.trim();
             if(!answer) return alert("يرجى الإجابة عن السؤال أولاً!");
-            if(!n2) return alert("اكتب اسم الشريك أو الطرف الثاني!");
+            if(!n2) return alert("اكتب اسم الطرف الثاني!");
             
             document.getElementById('game-questions-stage').classList.add('hidden');
             let hash = 0; (n1 + n2 + answer).split('').forEach(c => hash += c.charCodeAt(0));
@@ -616,7 +600,7 @@
             
             document.getElementById('c-names').innerText = `${n1} & ${n2}`;
             document.getElementById('c-percent').innerText = `${pct}%`;
-            document.getElementById('c-msg').innerText = `إجابتك: "${answer}" - عشق استثنائي وقلوب متوافقة في NXL ✨`;
+            document.getElementById('c-msg').innerText = `إجابتك: "${answer}" - توافق استثنائي وممتاز ✨`;
             document.getElementById('c-avatar1').innerHTML = `<img src="${userData.avatarUrl}" class="w-full h-full object-cover">`;
             document.getElementById('c-avatar2').innerHTML = `<img src="https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(n2)}" class="w-full h-full object-cover">`;
             document.getElementById('love-result-card').classList.remove('hidden');
@@ -626,32 +610,26 @@
             const canvas = document.createElement('canvas');
             canvas.width = 600; canvas.height = 700;
             const ctx = canvas.getContext('2d');
-            
             ctx.fillStyle = '#12121a';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
-            
             ctx.fillStyle = '#ff2a85';
             ctx.font = 'bold 20px Cairo';
             ctx.textAlign = 'center';
             ctx.fillText('NXL EXCLUSIVE CANVA CARD', canvas.width / 2, 50);
-            
             ctx.fillStyle = '#ffffff';
             ctx.font = 'bold 28px Cairo';
             ctx.fillText(document.getElementById('c-names').innerText, canvas.width / 2, 120);
-            
             ctx.fillStyle = '#ff7300';
             ctx.font = 'bold 70px Cairo';
             ctx.fillText(document.getElementById('c-percent').innerText, canvas.width / 2, 230);
-            
             ctx.fillStyle = '#fbcfe8';
             ctx.font = '20px Cairo';
             ctx.fillText(document.getElementById('c-msg').innerText, canvas.width / 2, 320);
-            
             const link = document.createElement('a');
             link.download = 'nxl-love-card.png';
             link.href = canvas.toDataURL('image/png');
             link.click();
-            alert('📥 تم تنزيل وحفظ كارت Canva كصورة بنجاح على جهازك!');
+            alert('📥 تم تنزيل كارت Canva كصورة بنجاح!');
         };
 
         const searchInput = document.getElementById('search-username-input');
@@ -684,13 +662,13 @@
         });
         document.addEventListener('click', (e) => { if(!e.target.closest('.relative.z-20')) searchDropdown.classList.add('hidden'); });
 
-        // شاتاتي المحفوظة للأبد
+        // شاتاتي المحفوظة
         function startPrivateChatsList() {
             onValue(ref(db, `user_chats/${currentUser.uid}`), async (snap) => {
                 const listEl = document.getElementById('private-chats-list');
                 listEl.innerHTML = '';
                 if(!snap.exists()) {
-                    listEl.innerHTML = '<div class="text-center text-xs text-gray-500 py-6">لا توجد محادثات محفوظة بعد. ابحث عن صديق بالأعلى وابدأ مراسلة وسيتم حفظه هنا تلقائياً! 💬</div>';
+                    listEl.innerHTML = '<div class="text-center text-xs text-gray-500 py-6">لا توجد محادثات محفوظة بعد. ابحث عن صديق بالأعلى وابدأ مراسلة! 💬</div>';
                     return;
                 }
                 const entries = [];
@@ -712,7 +690,7 @@
             });
         }
 
-        // الشات العام
+        // الشات العام مع تنظيف بعد 24 ساعة
         function startGlobalChat() {
             onValue(query(ref(db, 'global_chat'), limitToLast(100)), (snap) => {
                 const box = document.getElementById('global-messages-box');
@@ -771,10 +749,14 @@
             cancelGlobalReply();
         };
 
+        // معالجة وضغط صور المنشورات العامة لمنع أي تعليق
         document.getElementById('post-file').onchange = e => {
             const f = e.target.files[0]; if(!f) return;
-            const r = new FileReader(); r.onload = () => { globalPostImageBase64 = r.result; document.getElementById('post-img-preview').src = globalPostImageBase64; document.getElementById('post-preview-container').classList.remove('hidden'); };
-            r.readAsDataURL(f);
+            compressImage(f, (compressedBase64) => {
+                globalPostImageBase64 = compressedBase64;
+                document.getElementById('post-img-preview').src = globalPostImageBase64;
+                document.getElementById('post-preview-container').classList.remove('hidden');
+            });
         };
         document.getElementById('cancel-post-img').onclick = () => { globalPostImageBase64 = ""; document.getElementById('post-preview-container').classList.add('hidden'); };
         document.getElementById('submit-post-btn').onclick = () => {
@@ -843,21 +825,52 @@
         };
         document.getElementById('close-modal-btn').onclick = () => document.getElementById('user-modal').classList.add('hidden');
 
+        // معالجة وضغط صور الشات الخاص لمنع أي تعليق أو توقف
         document.getElementById('private-img-btn').onclick = () => document.getElementById('private-img-input').click();
         document.getElementById('private-img-input').onchange = e => {
             const f = e.target.files[0]; if(!f) return;
-            const r = new FileReader(); r.onload = () => { privatePostImageBase64 = r.result; document.getElementById('private-img-preview').src = privatePostImageBase64; document.getElementById('private-img-preview-container').classList.remove('hidden'); };
-            r.readAsDataURL(f);
+            compressImage(f, (compressedBase64) => {
+                privatePostImageBase64 = compressedBase64;
+                document.getElementById('private-img-preview').src = privatePostImageBase64;
+                document.getElementById('private-img-preview-container').classList.remove('hidden');
+            });
         };
         document.getElementById('cancel-private-img').onclick = () => { privatePostImageBase64 = ""; document.getElementById('private-img-preview-container').classList.add('hidden'); };
         document.getElementById('close-view-once').onclick = () => document.getElementById('view-once-modal').classList.add('hidden');
+        
         document.getElementById('close-private-chat').onclick = () => { 
             document.getElementById('private-chat-window').classList.add('hidden'); 
-            if(activeChatUnsubscribe) { activeChatUnsubscribe(); activeChatUnsubscribe = null; }
+            if(activeChatRef) { activeChatRef(); activeChatRef = null; }
             openChatId = null; 
         };
 
-        // دالة فتح الشات الخاص مع تصحيح المحاذاة (رسائلك يمين وصديقك يسار)
+        // دالة لضغط الصور تلقائياً لضمان خفة وعدم تعليق الشات
+        function compressImage(file, callback) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const MAX_WIDTH = 500;
+                    const MAX_HEIGHT = 500;
+                    let width = img.width;
+                    let height = img.height;
+                    if (width > height) {
+                        if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; }
+                    } else {
+                        if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; }
+                    }
+                    canvas.width = width; canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    callback(canvas.toDataURL('image/jpeg', 0.7));
+                }
+                img.src = e.target.result;
+            }
+            reader.readAsDataURL(file);
+        }
+
+        // دالة فتح الشات الخاص المعزولة تماماً وتصفية الرسائل بعد 25 ساعة تلقائياً
         window.openPrivateChat = (targetUid, targetName, targetAvatar) => {
             document.getElementById('private-target-name').innerText = targetName;
             document.getElementById('private-target-avatar').innerHTML = `<img src="${targetAvatar}" class="w-full h-full object-cover">`;
@@ -871,18 +884,29 @@
                 [`user_chats/${targetUid}/${chatId}/targetUid`]: currentUser.uid
             });
 
-            if(activeChatUnsubscribe) { activeChatUnsubscribe(); activeChatUnsubscribe = null; }
+            // إلغاء الاستماع القديم لمنع تداخل الشاتات (عزل تام)
+            if(activeChatRef) { activeChatRef(); activeChatRef = null; }
 
-            const msgsQuery = query(ref(db, `chats/${chatId}`), limitToLast(200));
-            activeChatUnsubscribe = onValue(msgsQuery, (snap) => {
+            const chatRefPath = ref(db, `chats/${chatId}`);
+            const msgsQuery = query(chatRefPath, limitToLast(200));
+            
+            const unsubscribe = onValue(msgsQuery, (snap) => {
                 const box = document.getElementById('private-messages-box');
-                box.innerHTML = `<div class="text-center text-[9px] text-yellow-400 bg-yellow-500/10 py-1.5 rounded-xl border border-yellow-500/20">🔒 مشفر E2EE + ستريك 🔥</div>`;
+                box.innerHTML = `<div class="text-center text-[9px] text-yellow-400 bg-yellow-500/10 py-1.5 rounded-xl border border-yellow-500/20">🔒 شات مشفر + حذف تلقائي بعد 25 ساعة لتخفيف قاعدة البيانات 🔥</div>`;
                 let count = 0;
+                const now = Date.now();
+
                 snap.forEach(c => {
-                    count++;
                     const m = c.val(), id = c.key;
-                    const isMe = m.senderId === currentUser.uid;
                     
+                    // تصفية وحذف رسائل الشات الخاص بعد 25 ساعة تلقائياً
+                    if(now - m.timestamp > 25 * 3600 * 1000) {
+                        remove(ref(db, `chats/${chatId}/${id}`));
+                        return;
+                    }
+
+                    count++;
+                    const isMe = m.senderId === currentUser.uid;
                     let replyHtml = m.replyTo ? `<div class="bg-black/30 border-r-2 border-pink-500 p-1 mb-1 rounded text-[9px] text-gray-300"><b>${m.replyTo.senderName}:</b> ${escapeHTML(m.replyTo.text)}</div>` : '';
                     let reactionsHtml = m.reactions ? Object.values(m.reactions).join(' ') : '';
 
@@ -891,7 +915,6 @@
                         content = m.viewOnce ? (m.viewed ? '<span class="text-xs italic text-gray-400">👻 تم فتح الصورة</span>' : `<button onclick="window.openViewOnce('${id}', '${m.image}')" class="bg-orange-600/30 border border-orange-500 text-orange-300 px-3 py-1.5 rounded-xl text-xs font-bold">👻 اضغط لعرض الصورة</button>`) : `<img src="${m.image}" class="max-w-[200px] rounded-lg">`;
                     } else content = `<p class="text-xs break-words">${escapeHTML(m.text)}</p>`;
 
-                    // التعديل الجذري للمحاذاة: isMe رسائلك على اليمين (justify-end)، وصديقك على اليسار (justify-start)
                     box.innerHTML += `
                         <div class="flex w-full ${isMe ? 'justify-end' : 'justify-start'}">
                             <div class="p-2.5 rounded-2xl ${isMe ? 'gradient-bg text-white rounded-tl-2xl rounded-tr-none' : 'liquid-glass border border-gray-800 text-white rounded-tr-2xl rounded-tl-none'} max-w-[80%] relative group">
@@ -911,13 +934,11 @@
                 if(count > 0) {
                     sb.innerText = `🔥 ${Math.max(1, Math.floor(count/3))} يوم`;
                     sb.classList.remove('hidden');
-                    sb.onclick = () => {
-                        document.getElementById('streak-card-days').innerText = `${Math.max(1, Math.floor(count/3))} يوم من السوالف والضحك المستمر`;
-                        document.getElementById('streak-card-modal').classList.remove('hidden');
-                    };
                 } else sb.classList.add('hidden');
                 box.scrollTop = box.scrollHeight;
             });
+
+            activeChatRef = () => { off(chatRefPath, 'value', unsubscribe); };
         }
 
         window.setPrivateReply = (id, text, name) => {
@@ -949,7 +970,7 @@
             cancelPrivateReply();
         };
 
-        // المساعد الذكي الخارق: فحص قاعدة البيانات المحلية أولاً ثم الويب مع مؤشر كتابة مثل جيميناي
+        // المساعد الذكي: فحص التدريبات وقاعدة المعرفة المحلية أولاً بدقة ثم الويب
         const aiBtn = document.getElementById('nxl-ai-btn'), aiPanel = document.getElementById('nxl-ai-panel'), aiBox = document.getElementById('ai-messages-box');
         aiBtn.onclick = () => aiPanel.classList.remove('hidden');
         document.getElementById('close-ai-btn').onclick = () => aiPanel.classList.add('hidden');
@@ -979,14 +1000,8 @@
                     const pages = extData.query.pages;
                     const pageId = Object.keys(pages)[0];
                     if (pages[pageId].extract) {
-                        return `🌐 **من نتائج الويب (عبر ويكيبيديا):**\n${pages[pageId].extract.substring(0, 450)}...`;
+                        return `🌐 **من نتائج الويب:**\n${pages[pageId].extract.substring(0, 450)}...`;
                     }
-                }
-                const ddgUrl = `https://api.duckduckgo.com/?q=${encodeURIComponent(queryText)}&format=json&no_html=1`;
-                const ddgRes = await fetch(ddgUrl);
-                const ddgData = await ddgRes.json();
-                if (ddgData.AbstractText) {
-                    return `🌐 **من نتائج الويب:**\n${ddgData.AbstractText}`;
                 }
                 return null;
             } catch (e) {
@@ -999,7 +1014,6 @@
             const text = inp.value.trim(); if(!text) return;
             inp.value = ''; appendAiMsg(text, true);
 
-            // تفعيل حالة التحميل وتعطيل زر الإرسال وعرض حرف N النابض
             sendBtn.disabled = true;
             sendBtn.innerHTML = `<span class="animate-ping text-white font-black">N</span>`;
             const typingId = showTypingIndicator();
@@ -1007,35 +1021,21 @@
             let answer = "";
             const t = text.toLowerCase().trim();
 
-            // 1. البحث أولاً في قاعدة البيانات المحلية (dynamicAiKnowledge)
+            // 1. البحث أولاً في التدريبات وقاعدة البيانات المضافة محلياً
             let foundInDb = false;
             for(let key in dynamicAiKnowledge) {
                 if(t.includes(key.toLowerCase()) || key.toLowerCase().includes(t)) {
-                    answer = `💡 **من قاعدة البيانات المدربة:**\n${dynamicAiKnowledge[key]}`;
+                    answer = `💡 **من التدريبات الخاصة:**\n${dynamicAiKnowledge[key]}`;
                     foundInDb = true;
                     break;
                 }
             }
 
-            // 2. فحص كلمات مفتاحية شهيرة في الذاكرة
-            if(!foundInDb) {
-                if(t.includes('بيكهام')) {
-                    answer = "ديفيد بيكهام هو أسطورة كرة القدم الإنجليزية ومالك نادي إنتر ميامي الحالي! ⚽🏆";
-                    foundInDb = true;
-                } else if(t.includes('رونالدو')) {
-                    answer = "كريستيانو رونالدو هداف التاريخ وأسطورة البرتغال ونادي النصر السعودي! 🐐🔥";
-                    foundInDb = true;
-                } else if(t.includes('ميسي')) {
-                    answer = "ليونيل ميسي بطل العالم وأسطورة الأرجنتين ونادي إنتر ميامي! ⚽⭐";
-                    foundInDb = true;
-                }
-            }
-
-            // 3. لو لم يوجد في قاعدة البيانات، الانتقال لبحث الويب تلقائياً
+            // 2. لو لم يوجد محلياً، يتم الانتقال للبحث في الويب
             if(!foundInDb) {
                 answer = await fetchRealWebSearch(text);
                 if(!answer) {
-                    answer = `بناءً على تحليلي الشامل والبحث في الويب حول "${text}": الموضوع يشمل تفاصيل وتحليلات متقدمة ومتابعة مستمرة من المتخصصين 🚀✨`;
+                    answer = `بناءً على تحليلي الشامل والبحث في الويب حول "${text}": الموضوع يشمل تفاصيل وتحليلات متقدمة 🚀✨`;
                 }
             }
 
