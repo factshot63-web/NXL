@@ -45,6 +45,17 @@
         }
         .glow-card { animation: glowingBorder 4s infinite ease-in-out; }
         .interactive-press:active { transform: scale(0.96); transition: transform 0.1s ease; }
+        
+        @keyframes bounceDot {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1.0); }
+        }
+        .typing-dot span {
+            display: inline-block; width: 6px; height: 6px; background-color: #ff2a85; border-radius: 50%;
+            animation: bounceDot 1.4s infinite ease-in-out both; margin: 0 2px;
+        }
+        .typing-dot span:nth-child(2) { animation-delay: -0.16s; }
+        .typing-dot span:nth-child(3) { animation-delay: -0.32s; }
     </style>
 </head>
 <body class="flex flex-col select-none">
@@ -62,9 +73,6 @@
                 <input type="email" id="auth-email" placeholder="البريد الإلكتروني" class="w-full bg-[#12121a] text-xs rounded-xl px-4 py-3 text-white focus:outline-none border border-gray-700/60 dir-ltr text-left">
                 <input type="password" id="auth-password" placeholder="كلمة المرور (6 أحرف على الأقل)" class="w-full bg-[#12121a] text-xs rounded-xl px-4 py-3 text-white focus:outline-none border border-gray-700/60 dir-ltr text-left">
                 
-                <p id="auth-error" class="text-red-500 text-[11px] hidden font-bold"></p>
-                <p id="auth-success" class="text-green-500 text-[11px] hidden font-bold"></p>
-
                 <button id="login-btn" class="w-full py-3 gradient-bg text-white font-bold text-xs rounded-xl interactive-press shadow-lg shadow-[#ff2a85]/20">تسجيل الدخول</button>
                 <button id="signup-btn" class="w-full py-3 bg-gray-800 text-white font-bold text-xs rounded-xl interactive-press hover:bg-gray-700">إنشاء حساب جديد</button>
                 <button id="forgot-pass-btn" class="text-[11px] text-gray-400 hover:text-white transition underline pt-2">نسيت كلمة المرور؟</button>
@@ -81,7 +89,6 @@
             <div class="space-y-3">
                 <input type="text" id="setup-nickname" placeholder="اللقب (مثل: محمد، حمص)" class="w-full bg-[#12121a] text-xs rounded-xl px-4 py-3 text-white border border-gray-700">
                 <input type="text" id="setup-username" placeholder="اسم المستخدم بالإنجليزية (مثل: mohamed_nxl)" class="w-full bg-[#12121a] text-xs rounded-xl px-4 py-3 text-white border border-gray-700 dir-ltr text-left">
-                <p id="username-error" class="text-red-500 text-[10px] hidden">هذا الاسم مستخدم بالفعل.</p>
                 <input type="text" id="setup-bio" placeholder="نبذة عنك (Bio)..." class="w-full bg-[#12121a] text-xs rounded-xl px-4 py-3 text-white border border-gray-700">
                 <button id="save-profile-btn" class="w-full py-3 gradient-bg rounded-xl font-bold text-xs text-white interactive-press shadow-lg shadow-[#ff7300]/30 mt-2">حفظ والدخول</button>
             </div>
@@ -152,7 +159,7 @@
             </div>
         </section>
 
-        <!-- تبويب الألعاب وتوليد كروت Canva الحقيقية -->
+        <!-- تبويب الألعاب وركن الأسئلة وتوليد كروت Canva -->
         <section id="tab-games" class="tab-content hidden p-3 max-w-md mx-auto space-y-4">
             <div class="liquid-glass p-4 rounded-2xl border border-gray-800 shadow-lg">
                 <h2 class="text-sm font-bold mb-2 flex items-center gap-1.5"><span class="text-lg">🏆</span> لوحة الشرف (Top 10)</h2>
@@ -165,7 +172,7 @@
                 <div onclick="startLoveQuizCard('compatibility')" class="liquid-glass p-3.5 rounded-2xl border border-pink-500/40 text-center cursor-pointer interactive-press hover:border-pink-500">
                     <div class="text-2xl mb-1">💖</div>
                     <h3 class="text-xs font-bold text-white mb-0.5">اختبار التوافق</h3>
-                    <p class="text-[9px] text-gray-400">اعرف نسبة الحب والكارت الفاخر</p>
+                    <p class="text-[9px] text-gray-400">أسئلة الحب وتوليد الكارت الفاخر</p>
                 </div>
                 <div onclick="startLoveQuizCard('secrets')" class="liquid-glass p-3.5 rounded-2xl border border-orange-500/40 text-center cursor-pointer interactive-press hover:border-orange-500">
                     <div class="text-2xl mb-1">💌</div>
@@ -174,16 +181,25 @@
                 </div>
             </div>
 
+            <!-- ركن الأسئلة والكارت التفاعلي -->
             <div id="custom-love-game-box" class="liquid-glass p-4 rounded-2xl border border-pink-500/50 text-center relative overflow-hidden shadow-lg hidden">
-                <h2 class="text-sm font-bold mb-1" id="love-game-title">💖 اختبار العشاق والتوافق</h2>
-                <p class="text-[10px] text-gray-400 mb-3" id="love-game-desc">توليد كارت تصميم فاخر جاهز للمشاركة كـ Canva Card!</p>
+                <h2 class="text-sm font-bold mb-1" id="love-game-title">💖 ركن الأسئلة والتوافق</h2>
+                <p class="text-[10px] text-gray-400 mb-3" id="love-game-desc">أجب عن الأسئلة أولاً قبل إصدار كارت Canva النهائي!</p>
                 
-                <div id="love-setup" class="space-y-2.5 text-right">
-                    <input type="text" id="love-name1" placeholder="اسمك أو الطرف الأول..." class="w-full bg-[#12121a] border border-gray-700 text-xs rounded-xl p-2.5 text-white">
-                    <input type="text" id="love-name2" placeholder="اسم الشريك أو الطرف الثاني..." class="w-full bg-[#12121a] border border-gray-700 text-xs rounded-xl p-2.5 text-white">
-                    <button onclick="generateCanvaLoveCard()" class="w-full py-2.5 bg-gradient-to-r from-pink-600 to-[#ff2a85] rounded-xl text-xs font-bold text-white interactive-press shadow-md">توليد الكارت الفاخر ✨</button>
+                <!-- مرحلة الأسئلة التفاعلية -->
+                <div id="game-questions-stage" class="space-y-3 text-right">
+                    <div class="bg-[#12121a] p-3 rounded-2xl border border-gray-800">
+                        <p class="text-xs font-bold text-pink-300 mb-2" id="q-title">السؤال 1 من 2: ما هي الصفة الأبرز في شريك حياتك؟</p>
+                        <input type="text" id="q-answer-input" placeholder="اكتب إجابتك هنا..." class="w-full bg-[#060609] border border-gray-700 text-xs rounded-xl p-2.5 text-white">
+                    </div>
+                    <div class="space-y-2">
+                        <input type="text" id="love-name1" placeholder="اسمك أو الطرف الأول..." class="w-full bg-[#12121a] border border-gray-700 text-xs rounded-xl p-2.5 text-white">
+                        <input type="text" id="love-name2" placeholder="اسم الشريك أو الطرف الثاني..." class="w-full bg-[#12121a] border border-gray-700 text-xs rounded-xl p-2.5 text-white">
+                    </div>
+                    <button onclick="proceedToCanvaCard()" class="w-full py-2.5 bg-gradient-to-r from-pink-600 to-[#ff2a85] rounded-xl text-xs font-bold text-white interactive-press shadow-md">التالي وتوليد الكارت الفاخر ✨</button>
                 </div>
 
+                <!-- مرحلة كارت Canva النهائي -->
                 <div id="love-result-card" class="mt-3 hidden bg-gradient-to-br from-pink-950 via-[#12121a] to-purple-950 p-5 rounded-3xl border-2 border-pink-500/60 shadow-2xl text-center relative overflow-hidden">
                     <div class="absolute -right-6 -bottom-6 w-20 h-20 bg-pink-500/20 rounded-full blur-xl"></div>
                     <div class="text-[9px] tracking-widest text-pink-400 font-bold mb-2 uppercase">NXL Exclusive Canva Card</div>
@@ -242,7 +258,7 @@
         </section>
     </main>
 
-    <!-- شاشة الشات الخاص المعالجة تماماً -->
+    <!-- شاشة الشات الخاص (مصححة المحاذاة تماماً: رسائلك يمين وصديقك يسار) -->
     <div id="private-chat-window" class="fixed inset-0 z-50 bg-[#060609] flex flex-col hidden">
         <header class="liquid-glass py-2.5 px-4 border-b border-gray-800 flex items-center justify-between shrink-0">
             <div class="flex items-center gap-2.5">
@@ -326,15 +342,15 @@
         <span class="text-xl">🤖</span>
     </button>
 
-    <!-- لوحة المساعد الذكي مع مؤشر حرف N النابض أثناء جلب معلومات الويب -->
+    <!-- لوحة المساعد الذكي مع مؤشر تحميل مثل جيميناي وحرف N نابض -->
     <div id="nxl-ai-panel" class="fixed inset-0 z-50 bg-[#060609]/80 backdrop-blur-md flex flex-col hidden transition-opacity">
         <div class="mt-auto liquid-glass w-full max-w-md mx-auto h-[80vh] rounded-t-3xl border-t border-purple-500 shadow-2xl flex flex-col overflow-hidden">
             <header class="p-3.5 border-b border-gray-800 flex justify-between items-center shrink-0 bg-[#12121a]">
                 <div class="flex items-center gap-2.5">
                     <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-purple-600 to-blue-500 flex items-center justify-center text-base">🤖</div>
                     <div>
-                        <h3 class="text-xs font-bold text-white">NXL Assistant AI (بحث ويب حقيقي 🌐)</h3>
-                        <p class="text-[9px] text-purple-400 animate-pulse">يبحث في الإنترنت ويجيبك فوراً بدقة ⚡</p>
+                        <h3 class="text-xs font-bold text-white">NXL Assistant AI (قاعدة البيانات + بحث الويب 🌐)</h3>
+                        <p class="text-[9px] text-purple-400 animate-pulse">يفحص الذاكرة المحلية أولاً ثم الويب ⚡</p>
                     </div>
                 </div>
                 <button id="close-ai-btn" class="text-gray-400 hover:text-white text-2xl font-light">&times;</button>
@@ -344,19 +360,19 @@
                 <div class="flex gap-2 w-full justify-start">
                     <div class="w-7 h-7 rounded-full bg-gradient-to-tr from-purple-600 to-blue-500 flex items-center justify-center text-xs shrink-0">🤖</div>
                     <div class="p-2.5 text-xs rounded-2xl bg-[#12121a] border border-purple-500/30 text-white rounded-tl-none max-w-[85%] leading-relaxed">
-                        أهلاً يا حمص! اسألني عن أي شخصية، معلومة، أو استفسار، وسأبحث في الويب خصيصاً لك! 🔥
+                        أهلاً يا حمص! أنا جاهز أبحث في الذاكرة أولاً ثم الويب لأجيبك فوراً! 🔥
                     </div>
                 </div>
             </div>
             
             <div class="p-2.5 bg-[#12121a] border-t border-gray-800 flex gap-2 items-center shrink-0 mb-safe">
-                <input type="text" id="ai-msg-input" placeholder="اسأل عن أي شيء للبحث في الويب..." class="flex-1 bg-[#060609] text-xs rounded-xl px-3.5 py-3 text-white focus:outline-none border border-purple-500/50">
+                <input type="text" id="ai-msg-input" placeholder="اسأل عن أي شيء..." class="flex-1 bg-[#060609] text-xs rounded-xl px-3.5 py-3 text-white focus:outline-none border border-purple-500/50">
                 <button id="send-ai-btn" class="w-10 h-10 bg-gradient-to-tr from-purple-600 to-blue-500 rounded-xl flex items-center justify-center text-white font-bold interactive-press shadow-md">✨</button>
             </div>
         </div>
     </div>
 
-    <!-- شريط التنقل السفلي الاحترافي -->
+    <!-- شريط التنقل السفلي -->
     <nav class="fixed bottom-0 left-0 right-0 h-16 liquid-glass border-t border-gray-800 flex justify-around items-center z-30 max-w-md mx-auto rounded-t-2xl px-2">
         <button onclick="switchTab('home', this)" class="nav-btn text-[#ff2a85] font-extrabold text-[10px] flex flex-col items-center gap-1 transition-all">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
@@ -574,27 +590,33 @@
         window.startLoveQuizCard = (type) => {
             const box = document.getElementById('custom-love-game-box');
             box.classList.remove('hidden');
+            document.getElementById('game-questions-stage').classList.remove('hidden');
+            document.getElementById('love-result-card').classList.add('hidden');
             if(type === 'compatibility') {
                 document.getElementById('love-game-title').innerText = "💖 اختبار العشاق والتوافق الفاخر";
-                document.getElementById('love-game-desc').innerText = "توليد كارت تصميم Canva فاخر لنسبة الحب!";
+                document.getElementById('love-game-desc').innerText = "أجب عن الأسئلة أولاً لتوليد كارت Canva!";
+                document.getElementById('q-title').innerText = "السؤال: ما هي أكثر صفة تعجبك في شريكك؟";
             } else {
                 document.getElementById('love-game-title').innerText = "💌 صندوق الأسرار والصراحة";
-                document.getElementById('love-game-desc').innerText = "اكتشفوا سر الارتباط والتوافق الروحي بأسلوب Canva!";
+                document.getElementById('love-game-desc').innerText = "أجب بصراحة تامة لتوليد كارت Canva!";
+                document.getElementById('q-title').innerText = "السؤال: ما هو السر الذي لم تقله لشريكك من قبل؟";
             }
         }
 
-        window.generateCanvaLoveCard = () => {
+        window.proceedToCanvaCard = () => {
+            const answer = document.getElementById('q-answer-input').value.trim();
             const n1 = document.getElementById('love-name1').value.trim() || userData.nickname;
             const n2 = document.getElementById('love-name2').value.trim();
+            if(!answer) return alert("يرجى الإجابة عن السؤال أولاً!");
             if(!n2) return alert("اكتب اسم الشريك أو الطرف الثاني!");
             
-            document.getElementById('love-setup').classList.add('hidden');
-            let hash = 0; (n1 + n2).split('').forEach(c => hash += c.charCodeAt(0));
+            document.getElementById('game-questions-stage').classList.add('hidden');
+            let hash = 0; (n1 + n2 + answer).split('').forEach(c => hash += c.charCodeAt(0));
             const pct = (hash % 12) + 88;
             
             document.getElementById('c-names').innerText = `${n1} & ${n2}`;
             document.getElementById('c-percent').innerText = `${pct}%`;
-            document.getElementById('c-msg').innerText = pct > 90 ? "عشق استثنائي وقلوب مرتبطة بروح واحدة في NXL ✨" : "توافق رائع وقصة حب مبهرة 🔥";
+            document.getElementById('c-msg').innerText = `إجابتك: "${answer}" - عشق استثنائي وقلوب متوافقة في NXL ✨`;
             document.getElementById('c-avatar1').innerHTML = `<img src="${userData.avatarUrl}" class="w-full h-full object-cover">`;
             document.getElementById('c-avatar2').innerHTML = `<img src="https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(n2)}" class="w-full h-full object-cover">`;
             document.getElementById('love-result-card').classList.remove('hidden');
@@ -762,8 +784,8 @@
             globalPostImageBase64 = "";
         };
 
-        document.getElementById('filter-smart-btn').onclick = () => { feedFilter = "smart"; startPostsFeed(); };
-        document.getElementById('filter-recent-btn').onclick = () => { feedFilter = "recent"; startPostsFeed(); };
+        document.getElementById('filter-smart-btn').onclick = () => { startPostsFeed(); };
+        document.getElementById('filter-recent-btn').onclick = () => { startPostsFeed(); };
 
         function startPostsFeed() {
             onValue(query(ref(db, 'posts'), limitToLast(50)), (snap) => {
@@ -835,7 +857,7 @@
             openChatId = null; 
         };
 
-        // دالة فتح الشات الخاص المصلحة جذرياً لضمان التوصيل الفوري بين الأصدقاء بدون أي أخطاء
+        // دالة فتح الشات الخاص مع تصحيح المحاذاة (رسائلك يمين وصديقك يسار)
         window.openPrivateChat = (targetUid, targetName, targetAvatar) => {
             document.getElementById('private-target-name').innerText = targetName;
             document.getElementById('private-target-avatar').innerHTML = `<img src="${targetAvatar}" class="w-full h-full object-cover">`;
@@ -844,7 +866,6 @@
             const chatId = currentUser.uid < targetUid ? `${currentUser.uid}_${targetUid}` : `${targetUid}_${currentUser.uid}`;
             openChatId = chatId;
 
-            // تسجيل الشات للطرفين فوراً لضمان ظهوره في "شاتاتي"
             update(ref(db), {
                 [`user_chats/${currentUser.uid}/${chatId}/targetUid`]: targetUid,
                 [`user_chats/${targetUid}/${chatId}/targetUid`]: currentUser.uid
@@ -870,9 +891,10 @@
                         content = m.viewOnce ? (m.viewed ? '<span class="text-xs italic text-gray-400">👻 تم فتح الصورة</span>' : `<button onclick="window.openViewOnce('${id}', '${m.image}')" class="bg-orange-600/30 border border-orange-500 text-orange-300 px-3 py-1.5 rounded-xl text-xs font-bold">👻 اضغط لعرض الصورة</button>`) : `<img src="${m.image}" class="max-w-[200px] rounded-lg">`;
                     } else content = `<p class="text-xs break-words">${escapeHTML(m.text)}</p>`;
 
+                    // التعديل الجذري للمحاذاة: isMe رسائلك على اليمين (justify-end)، وصديقك على اليسار (justify-start)
                     box.innerHTML += `
-                        <div class="flex w-full ${isMe ? 'justify-start' : 'justify-end'}">
-                            <div class="p-2.5 rounded-2xl ${isMe ? 'gradient-bg text-white rounded-tr-none' : 'liquid-glass border border-gray-800 text-white rounded-tl-none'} max-w-[80%] relative group">
+                        <div class="flex w-full ${isMe ? 'justify-end' : 'justify-start'}">
+                            <div class="p-2.5 rounded-2xl ${isMe ? 'gradient-bg text-white rounded-tl-2xl rounded-tr-none' : 'liquid-glass border border-gray-800 text-white rounded-tr-2xl rounded-tl-none'} max-w-[80%] relative group">
                                 ${replyHtml}
                                 ${content}
                                 ${reactionsHtml ? `<span class="absolute -bottom-2 ${isMe ? 'left-2' : 'right-2'} bg-[#12121a] border border-gray-700 rounded-full px-1.5 py-0.5 text-[10px] shadow">${reactionsHtml}</span>` : ''}
@@ -927,7 +949,7 @@
             cancelPrivateReply();
         };
 
-        // المساعد الذكي الخارق مع بحث الويب وزر الإرسال النابض (Pulsating 'N' Loader)
+        // المساعد الذكي الخارق: فحص قاعدة البيانات المحلية أولاً ثم الويب مع مؤشر كتابة مثل جيميناي
         const aiBtn = document.getElementById('nxl-ai-btn'), aiPanel = document.getElementById('nxl-ai-panel'), aiBox = document.getElementById('ai-messages-box');
         aiBtn.onclick = () => aiPanel.classList.remove('hidden');
         document.getElementById('close-ai-btn').onclick = () => aiPanel.classList.add('hidden');
@@ -935,6 +957,13 @@
         function appendAiMsg(text, isUser = false) {
             aiBox.innerHTML += `<div class="flex gap-2 w-full ${isUser ? 'justify-end' : 'justify-start'}"><div class="p-2.5 text-xs rounded-2xl ${isUser ? 'bg-gradient-to-tr from-purple-600 to-blue-500 text-white rounded-tr-none' : 'liquid-glass border border-purple-500/30 text-white rounded-tl-none'} max-w-[85%] leading-relaxed">${escapeHTML(text)}</div></div>`;
             aiBox.scrollTop = aiBox.scrollHeight;
+        }
+
+        function showTypingIndicator() {
+            const id = 'typing-' + Date.now();
+            aiBox.innerHTML += `<div id="${id}" class="flex gap-2 w-full justify-start"><div class="p-3 text-xs rounded-2xl liquid-glass border border-purple-500/30 text-white rounded-tl-none typing-dot"><span></span><span></span><span></span></div></div>`;
+            aiBox.scrollTop = aiBox.scrollHeight;
+            return id;
         }
 
         async function fetchRealWebSearch(queryText) {
@@ -950,14 +979,14 @@
                     const pages = extData.query.pages;
                     const pageId = Object.keys(pages)[0];
                     if (pages[pageId].extract) {
-                        return `🌐 **نتائج البحث المباشر من الويب:**\n${pages[pageId].extract.substring(0, 450)}...`;
+                        return `🌐 **من نتائج الويب (عبر ويكيبيديا):**\n${pages[pageId].extract.substring(0, 450)}...`;
                     }
                 }
                 const ddgUrl = `https://api.duckduckgo.com/?q=${encodeURIComponent(queryText)}&format=json&no_html=1`;
                 const ddgRes = await fetch(ddgUrl);
                 const ddgData = await ddgRes.json();
                 if (ddgData.AbstractText) {
-                    return `🌐 **نتائج الويب:**\n${ddgData.AbstractText}`;
+                    return `🌐 **من نتائج الويب:**\n${ddgData.AbstractText}`;
                 }
                 return null;
             } catch (e) {
@@ -973,30 +1002,50 @@
             // تفعيل حالة التحميل وتعطيل زر الإرسال وعرض حرف N النابض
             sendBtn.disabled = true;
             sendBtn.innerHTML = `<span class="animate-ping text-white font-black">N</span>`;
+            const typingId = showTypingIndicator();
 
             let answer = "";
             const t = text.toLowerCase().trim();
-            // البحث في الذاكرة المحلية أولاً
-            if(t.includes('بيكهام')) {
-                answer = "ديفيد بيكهام هو أسطورة كرة القدم الإنجليزية ومالك نادي إنتر ميامي الحالي! ⚽🏆";
-            } else if(t.includes('رونالدو')) {
-                answer = "كريستيانو رونالدو هداف التاريخ وأسطورة البرتغال ونادي النصر السعودي! 🐐🔥";
-            } else if(t.includes('ميسي')) {
-                answer = "ليونيل ميسي بطل العالم وأسطورة الأرجنتين ونادي إنتر ميامي! ⚽⭐";
-            } else {
-                // لو لم يوجد في الذاكرة، يبحث في الويب حقيقةً
+
+            // 1. البحث أولاً في قاعدة البيانات المحلية (dynamicAiKnowledge)
+            let foundInDb = false;
+            for(let key in dynamicAiKnowledge) {
+                if(t.includes(key.toLowerCase()) || key.toLowerCase().includes(t)) {
+                    answer = `💡 **من قاعدة البيانات المدربة:**\n${dynamicAiKnowledge[key]}`;
+                    foundInDb = true;
+                    break;
+                }
+            }
+
+            // 2. فحص كلمات مفتاحية شهيرة في الذاكرة
+            if(!foundInDb) {
+                if(t.includes('بيكهام')) {
+                    answer = "ديفيد بيكهام هو أسطورة كرة القدم الإنجليزية ومالك نادي إنتر ميامي الحالي! ⚽🏆";
+                    foundInDb = true;
+                } else if(t.includes('رونالدو')) {
+                    answer = "كريستيانو رونالدو هداف التاريخ وأسطورة البرتغال ونادي النصر السعودي! 🐐🔥";
+                    foundInDb = true;
+                } else if(t.includes('ميسي')) {
+                    answer = "ليونيل ميسي بطل العالم وأسطورة الأرجنتين ونادي إنتر ميامي! ⚽⭐";
+                    foundInDb = true;
+                }
+            }
+
+            // 3. لو لم يوجد في قاعدة البيانات، الانتقال لبحث الويب تلقائياً
+            if(!foundInDb) {
                 answer = await fetchRealWebSearch(text);
                 if(!answer) {
-                    answer = `بناءً على تحليلي الشامل والبحث في الويب حول "${text}": الموضوع يشمل تفاصيل وتحليلات متقدمة ومتابعة مستمرة من المتخصصين لضمان دقة المعلومات والنتائج 🚀✨`;
+                    answer = `بناءً على تحليلي الشامل والبحث في الويب حول "${text}": الموضوع يشمل تفاصيل وتحليلات متقدمة ومتابعة مستمرة من المتخصصين 🚀✨`;
                 }
             }
 
             setTimeout(() => {
+                const typingEl = document.getElementById(typingId);
+                if(typingEl) typingEl.remove();
                 appendAiMsg(answer, false);
-                // إعادة زر الإرسال لوضعه الطبيعي
                 sendBtn.disabled = false;
                 sendBtn.innerHTML = `✨`;
-            }, 500);
+            }, 600);
         };
         document.getElementById('ai-msg-input').onkeypress = (e) => { if(e.key === 'Enter') document.getElementById('send-ai-btn').click(); };
 
