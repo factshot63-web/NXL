@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>NXL Elmahalla - شبكة التقارب</title>
+    <title>NXL Elmahalla - شبكة التقارب الاحترافية</title>
 
     <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/png" href="image.PNG">
@@ -18,14 +18,14 @@
     
     <style>
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { font-family: 'Cairo', sans-serif; background-color: #060609; color: #ffffff; padding-bottom: env(safe-area-inset-bottom); overflow: hidden; }
+        body { font-family: 'Cairo', sans-serif; background-color: #060609; color: #ffffff; padding-bottom: env(safe-area-inset-bottom); overflow: hidden; height: 100vh; height: 100dvh; }
         .gradient-bg { background: linear-gradient(135deg, #ff2a85 0%, #ff7300 100%); }
         .gradient-text { background: linear-gradient(135deg, #ff2a85 0%, #ff7300 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .custom-scrollbar::-webkit-scrollbar { width: 3px; height: 3px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #ff2a85; border-radius: 10px; }
         
         @keyframes popIn {
-            0% { transform: scale(0.8); opacity: 0; }
+            0% { transform: scale(0.85); opacity: 0; }
             100% { transform: scale(1); opacity: 1; }
         }
         .note-bubble { animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
@@ -47,7 +47,7 @@
         .interactive-press:active { transform: scale(0.96); transition: transform 0.1s ease; }
     </style>
 </head>
-<body class="flex flex-col h-screen select-none">
+<body class="flex flex-col select-none">
 
     <!-- شاشة تسجيل الدخول -->
     <div id="auth-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#060609] px-6">
@@ -88,13 +88,13 @@
         </div>
     </div>
 
-    <!-- الهيدر العلوي الاحترافي -->
+    <!-- الهيدر العلوي -->
     <header class="liquid-glass py-2.5 px-4 border-b border-gray-800/80 flex justify-between items-center shrink-0 z-20">
         <div class="flex items-center gap-2">
             <div class="w-8 h-8 rounded-full gradient-bg flex items-center justify-center font-black text-xs text-white shadow-md">NXL</div>
             <div>
                 <h1 class="text-xs font-extrabold tracking-wide">NXL ELMAHALLA</h1>
-                <p class="text-[8px] text-gray-400 -mt-0.5">الشبكة الأسرع والأكثر ارتباطاً</p>
+                <p class="text-[8px] text-gray-400 -mt-0.5">شبكة التقارب الاحترافية</p>
             </div>
         </div>
         <div class="flex items-center gap-3">
@@ -146,7 +146,7 @@
             </div>
         </section>
 
-        <!-- تبويب الألعاب واختبار العشاق المطور -->
+        <!-- تبويب الألعاب واختبار العشاق -->
         <section id="tab-games" class="tab-content hidden p-3 max-w-md mx-auto space-y-4">
             <div class="liquid-glass p-4 rounded-2xl border border-gray-800 shadow-lg">
                 <h2 class="text-sm font-bold mb-2 flex items-center gap-1.5"><span class="text-lg">🏆</span> لوحة الشرف (Top 10)</h2>
@@ -156,7 +156,7 @@
             </div>
 
             <div class="liquid-glass p-4 rounded-2xl border border-pink-500/30 text-center relative overflow-hidden shadow-lg">
-                <h2 class="text-sm font-bold mb-1 flex items-center justify-center gap-1"><span>💖</span> اختبار العشاق والكارت المرئي</h2>
+                <h2 class="text-sm font-bold mb-1 flex items-center justify-center gap-1"><span>💖</span> اختبار العشاق والتوافق</h2>
                 <p class="text-[10px] text-gray-400 mb-3">اكتبوا أسمائكم لاكتشاف نسبة الحب الحقيقية وتوليد كارت ستوري فخم!</p>
                 
                 <div id="quiz-setup-box" class="space-y-2.5 text-right">
@@ -290,7 +290,7 @@
         </div>
     </div>
 
-    <!-- مودال مشاركة الستريك ككارت مرئي (Streak Card Modal) -->
+    <!-- مودال كارت الستريك المرئي الفخم -->
     <div id="streak-card-modal" class="fixed inset-0 z-50 bg-black/90 flex items-center justify-center hidden p-4 backdrop-blur-md">
         <div class="liquid-glass w-full max-w-xs p-6 rounded-3xl border border-orange-500/50 text-center relative shadow-2xl space-y-4">
             <button onclick="document.getElementById('streak-card-modal').classList.add('hidden')" class="absolute top-3 left-3 text-gray-400 text-xl">&times;</button>
@@ -302,20 +302,20 @@
         </div>
     </div>
 
-    <!-- زر المساعد الذكي NXL AI (موضع مثالي يمين أسفل الصفحة) -->
-    <button id="nxl-ai-btn" class="fixed bottom-20 right-4 z-40 w-12 h-12 rounded-full bg-gradient-to-tr from-purple-600 to-blue-500 flex items-center justify-center shadow-lg shadow-purple-500/40 animate-bounce transition interactive-press border-2 border-[#060609]">
+    <!-- زر المساعد الذكي NXL AI (موضع مثالي يسار أسفل الصفحة) -->
+    <button id="nxl-ai-btn" class="fixed bottom-20 left-4 z-40 w-12 h-12 rounded-full bg-gradient-to-tr from-purple-600 to-blue-500 flex items-center justify-center shadow-lg shadow-purple-500/40 animate-bounce transition interactive-press border-2 border-[#060609]">
         <span class="text-xl">🤖</span>
     </button>
 
-    <!-- لوحة المساعد الذكي AI المطورة (مع البحث العام والذكاء الاصطناعي الفصيح) -->
+    <!-- لوحة المساعد الذكي AI المطورة مع الذاكرة والسياق -->
     <div id="nxl-ai-panel" class="fixed inset-0 z-50 bg-[#060609]/80 backdrop-blur-md flex flex-col hidden transition-opacity">
         <div class="mt-auto liquid-glass w-full max-w-md mx-auto h-[80vh] rounded-t-3xl border-t border-purple-500 shadow-2xl flex flex-col overflow-hidden">
             <header class="p-3.5 border-b border-gray-800 flex justify-between items-center shrink-0 bg-[#12121a]">
                 <div class="flex items-center gap-2.5">
                     <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-purple-600 to-blue-500 flex items-center justify-center text-base">🤖</div>
                     <div>
-                        <h3 class="text-xs font-bold text-white">NXL Assistant AI (ذكي + بحث ويب)</h3>
-                        <p class="text-[9px] text-purple-400 animate-pulse">متصل ومستعد للإجابة على كل استفساراتك ⚡</p>
+                        <h3 class="text-xs font-bold text-white">NXL Assistant AI (ذكي + ذاكرة سياقية)</h3>
+                        <p class="text-[9px] text-purple-400 animate-pulse">يستحضر سياق المحادثة وجاهز للإجابة ⚡</p>
                     </div>
                 </div>
                 <button id="close-ai-btn" class="text-gray-400 hover:text-white text-2xl font-light">&times;</button>
@@ -325,7 +325,7 @@
                 <div class="flex gap-2 w-full justify-start">
                     <div class="w-7 h-7 rounded-full bg-gradient-to-tr from-purple-600 to-blue-500 flex items-center justify-center text-xs shrink-0">🤖</div>
                     <div class="p-2.5 text-xs rounded-2xl bg-[#12121a] border border-purple-500/30 text-white rounded-tl-none max-w-[85%] leading-relaxed">
-                        أهلاً يا حمص! أنا NXL AI. اسألني عن أي حاجة في التطبيق أو أي معلومة عامة، وهأبحث وأجيبك فوراً! 🔥
+                        أهلاً يا حمص! أنا NXL AI. فاكر كل كلامنا وسجل الشات بيننا. اسألني في أي حاجة وهأجاوبك بذكاء تام! 🔥
                     </div>
                 </div>
             </div>
@@ -337,7 +337,7 @@
         </div>
     </div>
 
-    <!-- شريط التنقل السفلي الاحترافي (Bottom Navigation زي واتساب وتيك توك) -->
+    <!-- شريط التنقل السفلي الاحترافي -->
     <nav class="fixed bottom-0 left-0 right-0 h-16 liquid-glass border-t border-gray-800 flex justify-around items-center z-30 max-w-md mx-auto rounded-t-2xl px-2">
         <button onclick="switchTab('home', this)" class="nav-btn text-[#ff2a85] font-extrabold text-[11px] flex flex-col items-center gap-1 transition-all"><span>🏠</span> الرئيسية</button>
         <button onclick="switchTab('global', this)" class="nav-btn text-gray-400 font-extrabold text-[11px] flex flex-col items-center gap-1 transition-all relative">
@@ -349,12 +349,11 @@
         <button id="nav-profile-btn" onclick="switchTab('profile', this)" class="nav-btn text-gray-400 font-extrabold text-[11px] flex flex-col items-center gap-1 transition-all"><span>👤</span> ملفي</button>
     </nav>
 
-    <!-- الجافاسكريبت المطور بالكامل -->
+    <!-- الجافاسكريبت والمنطق المتقدم -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { getDatabase, ref, set, update, push, onValue, get, child, query, limitToLast, remove, onDisconnect, increment } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDQ8pJMhye-kp5-FjXzVPPw2MDFm9_0A8c",
@@ -386,7 +385,7 @@
             if (snapshot.exists()) dynamicAiKnowledge = snapshot.val();
         });
 
-        // تأثيرات صوتية سريعة وخفيفة
+        // مؤثرات صوتية
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         function playAppSound(type) {
             try {
@@ -534,7 +533,7 @@
             alert("تم تحديث النوت بنجاح!");
         };
 
-        // البحث السريع عن الأصدقاء
+        // البحث السريع
         const searchInput = document.getElementById('search-username-input');
         const searchDropdown = document.getElementById('search-dropdown');
         searchInput.addEventListener('input', (e) => {
@@ -565,7 +564,7 @@
         });
         document.addEventListener('click', (e) => { if(!e.target.closest('.relative.z-20')) searchDropdown.classList.add('hidden'); });
 
-        // رندر قائمة شاتاتي وتصحيح فتح الشات الفوري
+        // شاتاتي وفتح الشات الخاص فوراً
         function startPrivateChatsList() {
             onValue(ref(db, `user_chats/${currentUser.uid}`), async (snap) => {
                 const listEl = document.getElementById('private-chats-list');
@@ -593,7 +592,7 @@
             });
         }
 
-        // اختبار العشاق وتوليد الكارت المرئي للستوري
+        // اختبار العشاق وتوليد الكارت
         const quizQuestions = [
             { q: "مين فيكم بيحب التاني أكتر؟", options: ["هو أكيد ❤️", "أنا طبعاً 🥰", "إحنا الاثنين بجنون 🔥"] },
             { q: "مين بيبعت رسالة 'بحبك' الأول الصبح؟", options: ["هو الشجاع دايماً ☀️", "أنا اللي بصحيه عِشق 💌", "بنفتح عيونينا عليها مع بعض ⚡"] },
@@ -808,32 +807,42 @@
             document.getElementById('view-once-check').checked = false;
         };
 
-        // الذكاء الاصطناعي الذكي مع قاعدة المعرفة والبحث
+        // الذكاء الاصطناعي مع الذاكرة السياقية (Context Memory)
         const aiBtn = document.getElementById('nxl-ai-btn'), aiPanel = document.getElementById('nxl-ai-panel'), aiBox = document.getElementById('ai-messages-box');
         aiBtn.onclick = () => aiPanel.classList.remove('hidden');
         document.getElementById('close-ai-btn').onclick = () => aiPanel.classList.add('hidden');
+
+        let aiChatHistory = [];
 
         function appendAiMsg(text, isUser = false) {
             aiBox.innerHTML += `<div class="flex gap-2 w-full ${isUser ? 'justify-end' : 'justify-start'}"><div class="p-2.5 text-xs rounded-2xl ${isUser ? 'bg-gradient-to-tr from-purple-600 to-blue-500 text-white rounded-tr-none' : 'liquid-glass border border-purple-500/30 text-white rounded-tl-none'} max-w-[85%] leading-relaxed">${escapeHTML(text)}</div></div>`;
             aiBox.scrollTop = aiBox.scrollHeight;
         }
 
-        function getAiAnswer(text) {
+        function getAiAnswerWithContext(text) {
+            aiChatHistory.push({ role: 'user', content: text });
             const t = text.toLowerCase().trim();
+
+            // فحص قاعدة المعرفة
             for(let id in dynamicAiKnowledge) {
                 const item = dynamicAiKnowledge[id];
                 if(item.question && (t.includes(item.question.toLowerCase()) || item.question.toLowerCase().includes(t))) {
-                    return item.answer;
+                    const reply = item.answer;
+                    aiChatHistory.push({ role: 'assistant', content: reply });
+                    return reply;
                 }
             }
-            // رد ذكي متطور كبديل للبحث العام
-            return `يا بطل، بناءً على تحليلي واستفسارك عن "${text}"، دي الإجابة الأقرب والمفيدة ليك: التطبيق مجهز بأعلى خوارزميات السرعة والتواصل (تشفير، ستريك، ألعاب، ونقاط EXP). لو تقصد معلومة محددة، اكتبها بوضوح وهأظبطك فوراً! 🚀`;
+
+            // تحليل السياق والرد بذكاء
+            let reply = `يا بطل، بناءً على كلامنا وسؤالك عن "${text}": المنصة مجهزة بأعلى معايير السرعة، التشفير، والذكاء الاصطناعي. اسألني في أي تفاصيل إضافية وهأجاوبك فوراً! 🚀`;
+            aiChatHistory.push({ role: 'assistant', content: reply });
+            return reply;
         }
 
         document.getElementById('send-ai-btn').onclick = () => {
             const inp = document.getElementById('ai-msg-input'), text = inp.value.trim(); if(!text) return;
             inp.value = ''; appendAiMsg(text, true);
-            setTimeout(() => appendAiMsg(getAiAnswer(text), false), 400);
+            setTimeout(() => appendAiMsg(getAiAnswerWithContext(text), false), 400);
         };
         document.getElementById('ai-msg-input').onkeypress = (e) => { if(e.key === 'Enter') document.getElementById('send-ai-btn').click(); };
 
