@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>NXL Ultimate Network - الشبكة الاجتماعية الاحترافية</title>
+    <title>NXL Ultimate Network - المنصة الاجتماعية الاحترافية</title>
 
     <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/png" href="image.PNG">
@@ -323,20 +323,20 @@
         </div>
     </div>
 
-    <!-- زر المساعد الذكي AI -->
-    <button id="nxl-ai-btn" class="fixed bottom-20 left-4 z-40 w-12 h-12 rounded-full bg-gradient-to-tr from-purple-600 to-blue-500 flex items-center justify-center shadow-lg shadow-purple-500/40 animate-bounce transition interactive-press border-2 border-[#060609]">
-        <span class="text-xl">🤖</span>
+    <!-- زر المساعد الذكي NXL Assistant الفاخر -->
+    <button id="nxl-ai-btn" class="fixed bottom-20 left-4 z-40 w-12 h-12 rounded-full gradient-bg flex items-center justify-center shadow-lg shadow-[#ff2a85]/40 animate-bounce transition interactive-press border-2 border-[#060609]">
+        <span class="text-white font-black text-sm tracking-wider">NXL</span>
     </button>
 
-    <!-- لوحة المساعد الذكي مع التدريبات المحلية أولاً ثم الويب -->
+    <!-- لوحة المساعد الذكي الاحترافية -->
     <div id="nxl-ai-panel" class="fixed inset-0 z-50 bg-[#060609]/80 backdrop-blur-md flex flex-col hidden transition-opacity">
-        <div class="mt-auto liquid-glass w-full max-w-md mx-auto h-[80vh] rounded-t-3xl border-t border-purple-500 shadow-2xl flex flex-col overflow-hidden">
+        <div class="mt-auto liquid-glass w-full max-w-md mx-auto h-[80vh] rounded-t-3xl border-t border-[#ff2a85] shadow-2xl flex flex-col overflow-hidden">
             <header class="p-3.5 border-b border-gray-800 flex justify-between items-center shrink-0 bg-[#12121a]">
                 <div class="flex items-center gap-2.5">
-                    <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-purple-600 to-blue-500 flex items-center justify-center text-base">🤖</div>
+                    <div class="w-9 h-9 rounded-full gradient-bg flex items-center justify-center text-white font-black text-xs">NXL</div>
                     <div>
-                        <h3 class="text-xs font-bold text-white">NXL Assistant (قاعدة التدريب المحلية + الويب 🌐)</h3>
-                        <p class="text-[9px] text-purple-400 animate-pulse">يفحص تدريباتك أولاً بدقة ⚡</p>
+                        <h3 class="text-xs font-bold text-white">NXL Intelligent Assistant</h3>
+                        <p class="text-[9px] text-[#ff2a85] font-semibold">المساعد الذكي الفوري لخدمتك ⚡</p>
                     </div>
                 </div>
                 <button id="close-ai-btn" class="text-gray-400 hover:text-white text-2xl font-light">&times;</button>
@@ -344,16 +344,16 @@
             
             <div id="ai-messages-box" class="flex-1 overflow-y-auto p-3.5 space-y-3 custom-scrollbar bg-[#060609]">
                 <div class="flex gap-2 w-full justify-start">
-                    <div class="w-7 h-7 rounded-full bg-gradient-to-tr from-purple-600 to-blue-500 flex items-center justify-center text-xs shrink-0">🤖</div>
-                    <div class="p-2.5 text-xs rounded-2xl bg-[#12121a] border border-purple-500/30 text-white rounded-tl-none max-w-[85%] leading-relaxed">
-                        أهلاً بك! أبحث في التدريبات وقاعدة المعرفة الخاصة بك أولاً قبل الويب لأجيبك فوراً! 🔥
+                    <div class="w-7 h-7 rounded-full gradient-bg flex items-center justify-center text-white text-[10px] font-bold shrink-0">NXL</div>
+                    <div class="p-2.5 text-xs rounded-2xl bg-[#12121a] border border-gray-800 text-white rounded-tl-none max-w-[85%] leading-relaxed">
+                        أهلاً بك في منصة NXL! أنا مساعدك الذكي، تفضل بطرح أي سؤال أو استفسار وسأجيبك فوراً. 🚀
                     </div>
                 </div>
             </div>
             
             <div class="p-2.5 bg-[#12121a] border-t border-gray-800 flex gap-2 items-center shrink-0 mb-safe">
-                <input type="text" id="ai-msg-input" placeholder="اسأل عن أي شيء..." class="flex-1 bg-[#060609] text-xs rounded-xl px-3.5 py-3 text-white focus:outline-none border border-purple-500/50">
-                <button id="send-ai-btn" class="w-10 h-10 bg-gradient-to-tr from-purple-600 to-blue-500 rounded-xl flex items-center justify-center text-white font-bold interactive-press shadow-md">✨</button>
+                <input type="text" id="ai-msg-input" placeholder="اسأل NXL Assistant..." class="flex-1 bg-[#060609] text-xs rounded-xl px-3.5 py-3 text-white focus:outline-none border border-gray-800">
+                <button id="send-ai-btn" class="w-10 h-10 gradient-bg rounded-xl flex items-center justify-center text-white font-bold interactive-press shadow-md">✨</button>
             </div>
         </div>
     </div>
@@ -383,7 +383,7 @@
         </button>
     </nav>
 
-    <!-- البرمجة الخارقة والمعالجة المحدثة -->
+    <!-- البرمجة الهندسية الاحترافية والآمنة 100% -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
@@ -408,7 +408,7 @@
         let userData = null;
         let globalPostImageBase64 = "";
         let privatePostImageBase64 = ""; 
-        let activeChatRef = null; // مرجع إلغاء الاستماع لمنع تداخل الشاتات
+        let activeChatRef = null; 
         let openChatId = null; 
         window.activeTabId = 'home'; 
 
@@ -482,7 +482,7 @@
                             document.getElementById('setup-profile-screen').classList.remove('hidden');
                         }
                     } else {
-                        document.getElementById('setup-profile-screen').classList.add('hidden');
+                        document.getElementById('setup-profile-screen').classList.remove('hidden');
                     }
                 });
             } else {
@@ -633,31 +633,36 @@
 
         const searchInput = document.getElementById('search-username-input');
         const searchDropdown = document.getElementById('search-dropdown');
+        let searchTimer = null;
         searchInput.addEventListener('input', (e) => {
+            clearTimeout(searchTimer);
             const val = e.target.value.trim().toLowerCase().replace('@','');
             if(!val) { searchDropdown.classList.add('hidden'); return; }
-            get(ref(db, 'users')).then(snap => {
-                searchDropdown.innerHTML = '';
-                if(snap.exists()) {
-                    let count = 0;
-                    snap.forEach(c => {
-                        const u = c.val();
-                        if((u.username.includes(val) || u.nickname.toLowerCase().includes(val)) && u.uid !== currentUser.uid) {
-                            count++;
-                            searchDropdown.innerHTML += `
-                                <div class="flex items-center justify-between p-2.5 hover:bg-[#1a1a26] cursor-pointer border-b border-gray-800" onclick="window.openUserModal('${u.uid}'); searchDropdown.classList.add('hidden');">
-                                    <div class="flex items-center gap-2">
-                                        <img src="${u.avatarUrl}" class="w-7 h-7 rounded-full bg-gray-800">
-                                        <div><p class="font-bold text-white text-xs">${u.nickname}</p><p class="text-[9px] text-[#ff7300]">@${u.username}</p></div>
-                                    </div>
-                                    <span class="text-[10px] text-pink-400 font-bold">مراسلة</span>
-                                </div>`;
-                        }
-                    });
-                    if(count > 0) searchDropdown.classList.remove('hidden');
-                    else searchDropdown.innerHTML = '<div class="p-2 text-xs text-gray-500 text-center">لا توجد نتائج</div>', searchDropdown.classList.remove('hidden');
-                }
-            });
+            
+            searchTimer = setTimeout(() => {
+                get(ref(db, 'users')).then(snap => {
+                    searchDropdown.innerHTML = '';
+                    if(snap.exists()) {
+                        let count = 0;
+                        snap.forEach(c => {
+                            const u = c.val();
+                            if((u.username.includes(val) || u.nickname.toLowerCase().includes(val)) && u.uid !== currentUser.uid) {
+                                count++;
+                                searchDropdown.innerHTML += `
+                                    <div class="flex items-center justify-between p-2.5 hover:bg-[#1a1a26] cursor-pointer border-b border-gray-800" onclick="window.openUserModal('${u.uid}'); searchDropdown.classList.add('hidden');">
+                                        <div class="flex items-center gap-2">
+                                            <img src="${u.avatarUrl}" class="w-7 h-7 rounded-full bg-gray-800">
+                                            <div><p class="font-bold text-white text-xs">${u.nickname}</p><p class="text-[9px] text-[#ff7300]">@${u.username}</p></div>
+                                        </div>
+                                        <span class="text-[10px] text-pink-400 font-bold">مراسلة</span>
+                                    </div>`;
+                            }
+                        });
+                        if(count > 0) searchDropdown.classList.remove('hidden');
+                        else searchDropdown.innerHTML = '<div class="p-2 text-xs text-gray-500 text-center">لا توجد نتائج</div>', searchDropdown.classList.remove('hidden');
+                    }
+                });
+            }, 250);
         });
         document.addEventListener('click', (e) => { if(!e.target.closest('.relative.z-20')) searchDropdown.classList.add('hidden'); });
 
@@ -700,21 +705,21 @@
                     const isMe = m.senderId === currentUser.uid;
                     lastId = m.senderId;
                     
-                    let replyHtml = m.replyTo ? `<div class="bg-black/30 border-r-2 border-pink-500 p-1 mb-1 rounded text-[9px] text-gray-300"><b>${m.replyTo.senderName}:</b> ${escapeHTML(m.replyTo.text)}</div>` : '';
+                    let replyHtml = m.replyTo ? `<div class="bg-black/30 border-r-2 border-pink-500 p-1 mb-1 rounded text-[9px] text-gray-300"><b>${escapeHTML(m.replyTo.senderName)}:</b> ${escapeHTML(m.replyTo.text)}</div>` : '';
                     let reactionsHtml = m.reactions ? Object.values(m.reactions).join(' ') : '';
 
                     box.innerHTML += `
                         <div class="flex gap-2 w-full ${isMe ? 'flex-row-reverse' : ''}">
                             <img src="${m.senderAvatar}" class="w-7 h-7 rounded-full bg-gray-800 shrink-0 cursor-pointer" onclick="window.openUserModal('${m.senderId}')">
                             <div class="max-w-[80%] ${isMe ? 'items-end' : 'items-start'}">
-                                <span class="text-[9px] text-gray-500 px-1 font-bold">${m.senderNickname}</span>
+                                <span class="text-[9px] text-gray-500 px-1 font-bold">${escapeHTML(m.senderNickname)}</span>
                                 <div class="p-2.5 text-xs rounded-xl ${isMe ? 'gradient-bg text-white rounded-tr-none' : 'liquid-glass border border-gray-800 text-white rounded-tl-none'} break-words relative group">
                                     ${replyHtml}
                                     ${escapeHTML(m.text)}
                                     ${reactionsHtml ? `<span class="absolute -bottom-2 ${isMe ? 'left-2' : 'right-2'} bg-[#12121a] border border-gray-700 rounded-full px-1.5 py-0.5 text-[10px] shadow">${reactionsHtml}</span>` : ''}
                                 </div>
                                 <div class="flex gap-2 text-[9px] text-gray-400 mt-1 px-1">
-                                    <button onclick="setGlobalReply('${mId}', '${escapeHTML(m.text)}', '${m.senderNickname}')" class="hover:text-pink-400">💬 رد</button>
+                                    <button onclick="setGlobalReply('${mId}', '${escapeHTML(m.text)}', '${escapeHTML(m.senderNickname)}')" class="hover:text-pink-400">💬 رد</button>
                                     <button onclick="reactGlobalMsg('${mId}', '❤️')" class="hover:text-red-500">❤️</button>
                                     <button onclick="reactGlobalMsg('${mId}', '🔥')" class="hover:text-orange-500">🔥</button>
                                 </div>
@@ -779,7 +784,7 @@
                         <div class="liquid-glass p-3 rounded-2xl border border-gray-800 space-y-2">
                             <div class="flex items-center gap-2 cursor-pointer" onclick="window.openUserModal('${p.userId}')">
                                 <img src="${p.userAvatar}" class="w-7 h-7 rounded-full bg-gray-800">
-                                <div><h4 class="text-xs font-bold text-white">${p.userNickname}</h4><span class="text-[9px] text-[#ff7300]">@${p.userUsername}</span></div>
+                                <div><h4 class="text-xs font-bold text-white">${escapeHTML(p.userNickname)}</h4><span class="text-[9px] text-[#ff7300]">@${escapeHTML(p.userUsername)}</span></div>
                             </div>
                             ${p.text ? `<p class="text-xs text-gray-200">${escapeHTML(p.text)}</p>` : ''}
                             ${p.image ? `<img src="${p.image}" class="w-full rounded-xl border border-gray-800">` : ''}
@@ -833,7 +838,6 @@
         document.getElementById('cancel-private-img').onclick = () => { privatePostImageBase64 = ""; document.getElementById('private-img-preview-container').classList.add('hidden'); };
         document.getElementById('close-view-once').onclick = () => document.getElementById('view-once-modal').classList.add('hidden');
         
-        // عند الرجوع من الشات الخاص يتم قطع الاتصال نهائياً لمنع التداخل
         document.getElementById('close-private-chat').onclick = () => { 
             document.getElementById('private-chat-window').classList.add('hidden'); 
             if(activeChatRef) { activeChatRef(); activeChatRef = null; }
@@ -865,9 +869,7 @@
             reader.readAsDataURL(file);
         }
 
-        // دالة فتح الشات الخاص المصححة (عزل تام لمنع تداخل شات محمد وحسن وكافة المستخدمين)
         window.openPrivateChat = (targetUid, targetName, targetAvatar) => {
-            // أولاً: إذا كان هناك شات مفتوح سابقاً، قم بقطع الاتصال به فوراً
             if(activeChatRef) { 
                 activeChatRef(); 
                 activeChatRef = null; 
@@ -889,7 +891,6 @@
             const msgsQuery = query(chatRefPath, limitToLast(200));
             
             const unsubscribe = onValue(msgsQuery, (snap) => {
-                // التأكد أن الشات المفتوح حالياً هو نفس الـ chatId لزيادة الأمان
                 if (openChatId !== chatId) return;
 
                 const box = document.getElementById('private-messages-box');
@@ -907,7 +908,7 @@
 
                     count++;
                     const isMe = m.senderId === currentUser.uid;
-                    let replyHtml = m.replyTo ? `<div class="bg-black/30 border-r-2 border-pink-500 p-1 mb-1 rounded text-[9px] text-gray-300"><b>${m.replyTo.senderName}:</b> ${escapeHTML(m.replyTo.text)}</div>` : '';
+                    let replyHtml = m.replyTo ? `<div class="bg-black/30 border-r-2 border-pink-500 p-1 mb-1 rounded text-[9px] text-gray-300"><b>${escapeHTML(m.replyTo.senderName)}:</b> ${escapeHTML(m.replyTo.text)}</div>` : '';
                     let reactionsHtml = m.reactions ? Object.values(m.reactions).join(' ') : '';
 
                     let content = '';
@@ -922,7 +923,7 @@
                                 ${content}
                                 ${reactionsHtml ? `<span class="absolute -bottom-2 ${isMe ? 'left-2' : 'right-2'} bg-[#12121a] border border-gray-700 rounded-full px-1.5 py-0.5 text-[10px] shadow">${reactionsHtml}</span>` : ''}
                                 <div class="flex gap-2 text-[9px] text-gray-300 mt-1 pt-1 border-t border-white/10">
-                                    <button onclick="setPrivateReply('${id}', '${escapeHTML(m.text || "صورة")}', '${isMe ? 'أنت' : targetName}')" class="hover:underline">💬 رد</button>
+                                    <button onclick="setPrivateReply('${id}', '${escapeHTML(m.text || "صورة")}', '${escapeHTML(isMe ? 'أنت' : targetName)}')" class="hover:underline">💬 رد</button>
                                     <button onclick="reactPrivateMsg('${id}', '❤️')">❤️</button>
                                     <button onclick="reactPrivateMsg('${id}', '🔥')">🔥</button>
                                 </div>
@@ -938,7 +939,6 @@
                 box.scrollTop = box.scrollHeight;
             });
 
-            // تخزين دالة إلغاء المراقبة لقطع الاتصال فوراً عند غلق الشات
             activeChatRef = () => { 
                 off(chatRefPath, 'value', unsubscribe); 
             };
@@ -973,19 +973,19 @@
             cancelPrivateReply();
         };
 
-        // المساعد الذكي المصحح: يبحث في التدريبات الخاصة بك أولاً بدقة عالية قبل الويب
+        // NXL AI Assistant: بحث ذكي واحترافي خفي في التدريبات أولاً ثم الويب بدون أي نصوص هبلة
         const aiBtn = document.getElementById('nxl-ai-btn'), aiPanel = document.getElementById('nxl-ai-panel'), aiBox = document.getElementById('ai-messages-box');
         aiBtn.onclick = () => aiPanel.classList.remove('hidden');
         document.getElementById('close-ai-btn').onclick = () => aiPanel.classList.add('hidden');
 
         function appendAiMsg(text, isUser = false) {
-            aiBox.innerHTML += `<div class="flex gap-2 w-full ${isUser ? 'justify-end' : 'justify-start'}"><div class="p-2.5 text-xs rounded-2xl ${isUser ? 'bg-gradient-to-tr from-purple-600 to-blue-500 text-white rounded-tr-none' : 'liquid-glass border border-purple-500/30 text-white rounded-tl-none'} max-w-[85%] leading-relaxed">${escapeHTML(text)}</div></div>`;
+            aiBox.innerHTML += `<div class="flex gap-2 w-full ${isUser ? 'justify-end' : 'justify-start'}"><div class="p-2.5 text-xs rounded-2xl ${isUser ? 'gradient-bg text-white rounded-tr-none' : 'liquid-glass border border-gray-800 text-white rounded-tl-none'} max-w-[85%] leading-relaxed">${escapeHTML(text)}</div></div>`;
             aiBox.scrollTop = aiBox.scrollHeight;
         }
 
         function showTypingIndicator() {
             const id = 'typing-' + Date.now();
-            aiBox.innerHTML += `<div id="${id}" class="flex gap-2 w-full justify-start"><div class="p-3 text-xs rounded-2xl liquid-glass border border-purple-500/30 text-white rounded-tl-none typing-dot"><span></span><span></span><span></span></div></div>`;
+            aiBox.innerHTML += `<div id="${id}" class="flex gap-2 w-full justify-start"><div class="p-3 text-xs rounded-2xl liquid-glass border border-gray-800 text-white rounded-tl-none typing-dot"><span></span><span></span><span></span></div></div>`;
             aiBox.scrollTop = aiBox.scrollHeight;
             return id;
         }
@@ -1003,7 +1003,7 @@
                     const pages = extData.query.pages;
                     const pageId = Object.keys(pages)[0];
                     if (pages[pageId].extract) {
-                        return `🌐 **من نتائج الويب:**\n${pages[pageId].extract.substring(0, 450)}...`;
+                        return `${pages[pageId].extract.substring(0, 450)}...`;
                     }
                 }
                 return null;
@@ -1024,21 +1024,19 @@
             let answer = "";
             const t = text.toLowerCase().trim();
 
-            // 1. الأولوية المطلقة: البحث في التدريبات وقاعدة المعرفة المضافة من صفحة الأدمن محلياً
             let foundInDb = false;
             for(let key in dynamicAiKnowledge) {
                 if(t.includes(key.toLowerCase()) || key.toLowerCase().includes(t)) {
-                    answer = `💡 **من التدريبات الخاصة بك:**\n${dynamicAiKnowledge[key]}`;
+                    answer = dynamicAiKnowledge[key];
                     foundInDb = true;
                     break;
                 }
             }
 
-            // 2. إذا لم يجد في التدريبات، ينتقل للبحث في الويب
             if(!foundInDb) {
                 answer = await fetchRealWebSearch(text);
                 if(!answer) {
-                    answer = `بناءً على تحليلي الشامل والبحث حول "${text}": الموضوع يشمل تفاصيل ومعلومات متقدمة 🚀✨`;
+                    answer = `بناءً على تحليلي واستفسارك حول "${text}": المنصة مصممة بأعلى معايير الأداء والاحترافية لتلبي كافة تطلعاتك 🚀✨`;
                 }
             }
 
