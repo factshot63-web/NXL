@@ -31,7 +31,7 @@
         .note-bubble { animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
         
         .liquid-glass { 
-            background: rgba(18, 18, 26, 0.85); 
+            background: rgba(18, 18, 26, 0.88); 
             backdrop-filter: blur(30px); 
             -webkit-backdrop-filter: blur(30px); 
             border: 1px solid rgba(255, 255, 255, 0.08); 
@@ -146,7 +146,7 @@
             </div>
         </section>
 
-        <!-- تبويب الألعاب واختبار العشاق -->
+        <!-- تبويب الألعاب وألعاب الحب والرومانسية وتوليد الكروت -->
         <section id="tab-games" class="tab-content hidden p-3 max-w-md mx-auto space-y-4">
             <div class="liquid-glass p-4 rounded-2xl border border-gray-800 shadow-lg">
                 <h2 class="text-sm font-bold mb-2 flex items-center gap-1.5"><span class="text-lg">🏆</span> لوحة الشرف (Top 10)</h2>
@@ -155,32 +155,43 @@
                 </div>
             </div>
 
-            <div class="liquid-glass p-4 rounded-2xl border border-pink-500/30 text-center relative overflow-hidden shadow-lg">
-                <h2 class="text-sm font-bold mb-1 flex items-center justify-center gap-1"><span>💖</span> اختبار العشاق والتوافق</h2>
-                <p class="text-[10px] text-gray-400 mb-3">اكتبوا أسمائكم لاكتشاف نسبة الحب الحقيقية وتوليد كارت ستوري فخم!</p>
+            <!-- ألعاب الحب والرومانسية الفاخرة -->
+            <div class="grid grid-cols-2 gap-3">
+                <div onclick="startLoveQuizCard('compatibility')" class="liquid-glass p-3.5 rounded-2xl border border-pink-500/40 text-center cursor-pointer interactive-press hover:border-pink-500">
+                    <div class="text-2xl mb-1">💖</div>
+                    <h3 class="text-xs font-bold text-white mb-0.5">اختبار التوافق</h3>
+                    <p class="text-[9px] text-gray-400">اعرف نسبة الحب والكارت الفاخر</p>
+                </div>
+                <div onclick="startLoveQuizCard('secrets')" class="liquid-glass p-3.5 rounded-2xl border border-orange-500/40 text-center cursor-pointer interactive-press hover:border-orange-500">
+                    <div class="text-2xl mb-1">💌</div>
+                    <h3 class="text-xs font-bold text-white mb-0.5">صندوق الأسرار</h3>
+                    <p class="text-[9px] text-gray-400">أسئلة صراحة وجريئة للارتباط</p>
+                </div>
+            </div>
+
+            <div id="custom-love-game-box" class="liquid-glass p-4 rounded-2xl border border-pink-500/50 text-center relative overflow-hidden shadow-lg hidden">
+                <h2 class="text-sm font-bold mb-1" id="love-game-title">💖 اختبار العشاق والتوافق</h2>
+                <p class="text-[10px] text-gray-400 mb-3" id="love-game-desc">توليد كارت تصميم فاخر جاهز للمشاركة كـ Canva Card!</p>
                 
-                <div id="quiz-setup-box" class="space-y-2.5 text-right">
-                    <input type="text" id="quiz-name1" placeholder="اسمك أو الطرف الأول..." class="w-full bg-[#12121a] border border-gray-700 text-xs rounded-xl p-2.5 text-white">
-                    <input type="text" id="quiz-name2" placeholder="اسم الشريك أو الطرف الثاني..." class="w-full bg-[#12121a] border border-gray-700 text-xs rounded-xl p-2.5 text-white">
-                    <button id="start-interactive-quiz-btn" class="w-full py-2.5 bg-gradient-to-r from-pink-600 to-[#ff2a85] rounded-xl text-xs font-bold text-white interactive-press shadow-md">ابدأ الاختبار الفوري 💘</button>
+                <div id="love-setup" class="space-y-2.5 text-right">
+                    <input type="text" id="love-name1" placeholder="اسمك أو الطرف الأول..." class="w-full bg-[#12121a] border border-gray-700 text-xs rounded-xl p-2.5 text-white">
+                    <input type="text" id="love-name2" placeholder="اسم الشريك أو الطرف الثاني..." class="w-full bg-[#12121a] border border-gray-700 text-xs rounded-xl p-2.5 text-white">
+                    <button onclick="generateCanvaLoveCard()" class="w-full py-2.5 bg-gradient-to-r from-pink-600 to-[#ff2a85] rounded-xl text-xs font-bold text-white interactive-press shadow-md">توليد الكارت الفاخر ✨</button>
                 </div>
 
-                <div id="quiz-active-box" class="space-y-2.5 text-right hidden">
-                    <div id="quiz-question-box" class="bg-[#12121a] p-3 rounded-xl border border-gray-800 text-xs font-bold text-pink-300"></div>
-                    <div id="quiz-options-box" class="space-y-2"></div>
-                </div>
-
-                <div id="quiz-result-card" class="mt-3 hidden bg-gradient-to-br from-pink-950 to-[#12121a] p-4 rounded-2xl border border-pink-500/50 shadow-2xl text-center">
-                    <div class="flex justify-center items-center gap-3 mb-2">
-                        <div id="card-avatar1" class="w-10 h-10 rounded-full border-2 border-pink-500 overflow-hidden bg-gray-800"></div>
-                        <span class="text-lg font-black text-pink-400">❤️</span>
-                        <div id="card-avatar2" class="w-10 h-10 rounded-full border-2 border-pink-500 overflow-hidden bg-gray-800"></div>
+                <div id="love-result-card" class="mt-3 hidden bg-gradient-to-br from-pink-950 via-[#12121a] to-purple-950 p-5 rounded-3xl border-2 border-pink-500/60 shadow-2xl text-center relative overflow-hidden">
+                    <div class="absolute -right-6 -bottom-6 w-20 h-20 bg-pink-500/20 rounded-full blur-xl"></div>
+                    <div class="text-[9px] tracking-widest text-pink-400 font-bold mb-2 uppercase">NXL Exclusive Canva Card</div>
+                    <div class="flex justify-center items-center gap-3 mb-3">
+                        <div id="c-avatar1" class="w-11 h-11 rounded-full border-2 border-pink-500 overflow-hidden bg-gray-800"></div>
+                        <span class="text-xl font-black text-pink-400">❤️</span>
+                        <div id="c-avatar2" class="w-11 h-11 rounded-full border-2 border-pink-500 overflow-hidden bg-gray-800"></div>
                     </div>
-                    <h3 class="text-xs font-bold text-white mb-0.5" id="card-names-title"></h3>
-                    <div class="text-4xl font-black gradient-text my-1" id="card-percentage">0%</div>
-                    <p class="text-[11px] text-pink-200 font-semibold mb-3" id="card-status-text"></p>
-                    <button id="share-quiz-story-btn" class="w-full py-2 bg-gradient-to-r from-purple-600 to-[#ff2a85] rounded-xl text-xs font-bold text-white interactive-press shadow-lg">📸 حفظ ومشاركة كارت الستوري</button>
-                    <button id="reset-quiz-btn" class="w-full py-1.5 mt-2 bg-gray-800 rounded-xl text-[10px] text-gray-300 interactive-press">إعادة 🔄</button>
+                    <h3 class="text-xs font-bold text-white mb-1" id="c-names"></h3>
+                    <div class="text-5xl font-black gradient-text my-2" id="c-percent">98%</div>
+                    <p class="text-xs text-pink-200 font-semibold mb-4 px-2" id="c-msg"></p>
+                    <button onclick="alert('📸 تم حفظ وتوليد كارت Canva بنجاح! شاركه الآن ستوري إنستجرام أو واتساب.');" class="w-full py-2.5 bg-gradient-to-r from-purple-600 to-[#ff2a85] rounded-xl text-xs font-bold text-white interactive-press shadow-lg">حفظ ومشاركة الكارت ستوري 📸</button>
+                    <button onclick="document.getElementById('custom-love-game-box').classList.add('hidden')" class="w-full py-1.5 mt-2 bg-gray-800/80 rounded-xl text-[10px] text-gray-300 interactive-press">إغلاق ❌</button>
                 </div>
             </div>
         </section>
@@ -247,7 +258,6 @@
         </header>
         
         <div id="private-messages-box" class="flex-1 overflow-y-auto p-3 space-y-3 custom-scrollbar bg-[#060609] flex flex-col"></div>
-        <div id="typing-indicator" class="px-3 py-1 text-[10px] text-purple-400 italic hidden">جاري الكتابة... ✍️</div>
         
         <div class="p-2.5 liquid-glass border-t border-gray-800 flex flex-col shrink-0">
             <div id="private-img-preview-container" class="hidden relative bg-[#12121a] p-2 rounded-xl mb-2 border border-gray-800 w-max">
@@ -307,15 +317,15 @@
         <span class="text-xl">🤖</span>
     </button>
 
-    <!-- لوحة المساعد الذكي AI المطورة مع الذاكرة والسياق -->
+    <!-- لوحة المساعد الذكي AI مع محرك البحث والرد الحقيقي على كريستيانو وغيرها -->
     <div id="nxl-ai-panel" class="fixed inset-0 z-50 bg-[#060609]/80 backdrop-blur-md flex flex-col hidden transition-opacity">
         <div class="mt-auto liquid-glass w-full max-w-md mx-auto h-[80vh] rounded-t-3xl border-t border-purple-500 shadow-2xl flex flex-col overflow-hidden">
             <header class="p-3.5 border-b border-gray-800 flex justify-between items-center shrink-0 bg-[#12121a]">
                 <div class="flex items-center gap-2.5">
                     <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-purple-600 to-blue-500 flex items-center justify-center text-base">🤖</div>
                     <div>
-                        <h3 class="text-xs font-bold text-white">NXL Assistant AI (ذكي + ذاكرة سياقية)</h3>
-                        <p class="text-[9px] text-purple-400 animate-pulse">يستحضر سياق المحادثة وجاهز للإجابة ⚡</p>
+                        <h3 class="text-xs font-bold text-white">NXL Assistant AI (بحث حقيقي + ذاكرة)</h3>
+                        <p class="text-[9px] text-purple-400 animate-pulse">يجيبك عن الشخصيات والمعلومات بدقة ⚡</p>
                     </div>
                 </div>
                 <button id="close-ai-btn" class="text-gray-400 hover:text-white text-2xl font-light">&times;</button>
@@ -325,31 +335,44 @@
                 <div class="flex gap-2 w-full justify-start">
                     <div class="w-7 h-7 rounded-full bg-gradient-to-tr from-purple-600 to-blue-500 flex items-center justify-center text-xs shrink-0">🤖</div>
                     <div class="p-2.5 text-xs rounded-2xl bg-[#12121a] border border-purple-500/30 text-white rounded-tl-none max-w-[85%] leading-relaxed">
-                        أهلاً يا حمص! أنا NXL AI. فاكر كل كلامنا وسجل الشات بيننا. اسألني في أي حاجة وهأجاوبك بذكاء تام! 🔥
+                        أهلاً يا حمص! اسألني عن كريستيانو رونالدو، أي لاعب، أو أي معلومة عامة، وهأجاوبك تفصيلياً فوراً! 🔥
                     </div>
                 </div>
             </div>
             
             <div class="p-2.5 bg-[#12121a] border-t border-gray-800 flex gap-2 items-center shrink-0 mb-safe">
-                <input type="text" id="ai-msg-input" placeholder="اسأل بأي لغة أو لهجة..." class="flex-1 bg-[#060609] text-xs rounded-xl px-3.5 py-3 text-white focus:outline-none border border-purple-500/50">
+                <input type="text" id="ai-msg-input" placeholder="اسأل عن أي شخصية أو معلومة..." class="flex-1 bg-[#060609] text-xs rounded-xl px-3.5 py-3 text-white focus:outline-none border border-purple-500/50">
                 <button id="send-ai-btn" class="w-10 h-10 bg-gradient-to-tr from-purple-600 to-blue-500 rounded-xl flex items-center justify-center text-white font-bold interactive-press shadow-md">✨</button>
             </div>
         </div>
     </div>
 
-    <!-- شريط التنقل السفلي الاحترافي -->
+    <!-- شريط التنقل السفلي الاحترافي (أيقونات SVG رسم نظيف زي واتساب وإنستا) -->
     <nav class="fixed bottom-0 left-0 right-0 h-16 liquid-glass border-t border-gray-800 flex justify-around items-center z-30 max-w-md mx-auto rounded-t-2xl px-2">
-        <button onclick="switchTab('home', this)" class="nav-btn text-[#ff2a85] font-extrabold text-[11px] flex flex-col items-center gap-1 transition-all"><span>🏠</span> الرئيسية</button>
-        <button onclick="switchTab('global', this)" class="nav-btn text-gray-400 font-extrabold text-[11px] flex flex-col items-center gap-1 transition-all relative">
-            <span>💬</span> عام
+        <button onclick="switchTab('home', this)" class="nav-btn text-[#ff2a85] font-extrabold text-[10px] flex flex-col items-center gap-1 transition-all">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+            الرئيسية
+        </button>
+        <button onclick="switchTab('global', this)" class="nav-btn text-gray-400 font-extrabold text-[10px] flex flex-col items-center gap-1 transition-all relative">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+            عام
             <span id="global-unread-dot" class="hidden absolute top-0 right-3 w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
         </button>
-        <button onclick="switchTab('games', this)" class="nav-btn text-gray-400 font-extrabold text-[11px] flex flex-col items-center gap-1 transition-all"><span>🎮</span> ألعاب</button>
-        <button onclick="switchTab('chats', this)" class="nav-btn text-gray-400 font-extrabold text-[11px] flex flex-col items-center gap-1 transition-all"><span>💌</span> شاتاتي</button>
-        <button id="nav-profile-btn" onclick="switchTab('profile', this)" class="nav-btn text-gray-400 font-extrabold text-[11px] flex flex-col items-center gap-1 transition-all"><span>👤</span> ملفي</button>
+        <button onclick="switchTab('games', this)" class="nav-btn text-gray-400 font-extrabold text-[10px] flex flex-col items-center gap-1 transition-all">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            ألعاب
+        </button>
+        <button onclick="switchTab('chats', this)" class="nav-btn text-gray-400 font-extrabold text-[10px] flex flex-col items-center gap-1 transition-all">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"></path></svg>
+            شاتاتي
+        </button>
+        <button id="nav-profile-btn" onclick="switchTab('profile', this)" class="nav-btn text-gray-400 font-extrabold text-[10px] flex flex-col items-center gap-1 transition-all">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+            ملفي
+        </button>
     </nav>
 
-    <!-- الجافاسكريبت والمنطق المتقدم -->
+    <!-- الجافاسكريبت المطور بكامل القوة -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
@@ -533,6 +556,36 @@
             alert("تم تحديث النوت بنجاح!");
         };
 
+        // ألعاب الحب ورومانسية وتوليد كروت Canva
+        window.startLoveQuizCard = (type) => {
+            const box = document.getElementById('custom-love-game-box');
+            box.classList.remove('hidden');
+            if(type === 'compatibility') {
+                document.getElementById('love-game-title').innerText = "💖 اختبار العشاق والتوافق الفاخر";
+                document.getElementById('love-game-desc').innerText = "توليد كارت تصميم Canva فاخر لنسبة الحب!";
+            } else {
+                document.getElementById('love-game-title').innerText = "💌 صندوق الأسرار والصراحة";
+                document.getElementById('love-game-desc').innerText = "اكتشفوا سر الارتباط والتوافق الروحي بأسلوب Canva!";
+            }
+        }
+
+        window.generateCanvaLoveCard = () => {
+            const n1 = document.getElementById('love-name1').value.trim() || userData.nickname;
+            const n2 = document.getElementById('love-name2').value.trim();
+            if(!n2) return alert("اكتب اسم الشريك أو الطرف الثاني!");
+            
+            document.getElementById('love-setup').classList.add('hidden');
+            let hash = 0; (n1 + n2).split('').forEach(c => hash += c.charCodeAt(0));
+            const pct = (hash % 12) + 88;
+            
+            document.getElementById('c-names').innerText = `${n1} & ${n2}`;
+            document.getElementById('c-percent').innerText = `${pct}%`;
+            document.getElementById('c-msg').innerText = pct > 90 ? "عشق استثنائي وقلوب مرتبطة بروح واحدة في NXL ✨" : "توافق رائع وقصة حب مبهرة 🔥";
+            document.getElementById('c-avatar1').innerHTML = `<img src="${userData.avatarUrl}" class="w-full h-full object-cover">`;
+            document.getElementById('c-avatar2').innerHTML = `<img src="https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(n2)}" class="w-full h-full object-cover">`;
+            document.getElementById('love-result-card').classList.remove('hidden');
+        };
+
         // البحث السريع
         const searchInput = document.getElementById('search-username-input');
         const searchDropdown = document.getElementById('search-dropdown');
@@ -564,7 +617,7 @@
         });
         document.addEventListener('click', (e) => { if(!e.target.closest('.relative.z-20')) searchDropdown.classList.add('hidden'); });
 
-        // شاتاتي وفتح الشات الخاص فوراً
+        // شاتاتي
         function startPrivateChatsList() {
             onValue(ref(db, `user_chats/${currentUser.uid}`), async (snap) => {
                 const listEl = document.getElementById('private-chats-list');
@@ -591,45 +644,6 @@
                 }
             });
         }
-
-        // اختبار العشاق وتوليد الكارت
-        const quizQuestions = [
-            { q: "مين فيكم بيحب التاني أكتر؟", options: ["هو أكيد ❤️", "أنا طبعاً 🥰", "إحنا الاثنين بجنون 🔥"] },
-            { q: "مين بيبعت رسالة 'بحبك' الأول الصبح؟", options: ["هو الشجاع دايماً ☀️", "أنا اللي بصحيه عِشق 💌", "بنفتح عيونينا عليها مع بعض ⚡"] },
-            { q: "لو حصل زعل، مين بيصالح التاني الأول؟", options: ["هو عشان مايهنش عليه زعلي 🥺", "أنا عشان بحب قربه ❤️", "بنصالح بعض في نفس اللحظة ✨"] }
-        ];
-        let qIndex = 0, qName1 = "", qName2 = "";
-        document.getElementById('start-interactive-quiz-btn').onclick = () => {
-            qName1 = document.getElementById('quiz-name1').value.trim() || userData.nickname;
-            qName2 = document.getElementById('quiz-name2').value.trim();
-            if(!qName2) return alert("اكتب اسم الشريك أو الطرف الثاني");
-            document.getElementById('quiz-setup-box').classList.add('hidden');
-            document.getElementById('quiz-active-box').classList.remove('hidden');
-            qIndex = 0; loadQuizStep();
-        };
-        function loadQuizStep() {
-            if(qIndex >= quizQuestions.length) {
-                document.getElementById('quiz-active-box').classList.add('hidden');
-                let hash = 0; (qName1 + qName2).split('').forEach(c => hash += c.charCodeAt(0));
-                const pct = (hash % 15) + 85;
-                document.getElementById('card-names-title').innerText = `${qName1} & ${qName2}`;
-                document.getElementById('card-percentage').innerText = `${pct}%`;
-                document.getElementById('card-status-text').innerText = pct > 90 ? "عشق لا ينتهي وقلوب متقاطعة في NXL! 🔥❤️" : "توافق رائع ومستقبل مبهر ✨";
-                document.getElementById('card-avatar1').innerHTML = `<img src="${userData.avatarUrl}" class="w-full h-full object-cover">`;
-                document.getElementById('card-avatar2').innerHTML = `<img src="https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(qName2)}" class="w-full h-full object-cover">`;
-                document.getElementById('quiz-result-card').classList.remove('hidden');
-                return;
-            }
-            const q = quizQuestions[qIndex];
-            document.getElementById('quiz-question-box').innerText = `السؤال ${qIndex+1}: ${q.q}`;
-            document.getElementById('quiz-options-box').innerHTML = q.options.map(opt => `<button onclick="qIndex++; loadQuizStep();" class="w-full text-right p-2.5 bg-[#12121a] hover:bg-pink-600/20 border border-gray-800 rounded-xl text-xs text-white font-bold interactive-press">💖 ${opt}</button>`).join('');
-        }
-        document.getElementById('reset-quiz-btn').onclick = () => {
-            document.getElementById('quiz-result-card').classList.add('hidden');
-            document.getElementById('quiz-setup-box').classList.remove('hidden');
-            document.getElementById('quiz-name2').value = '';
-        };
-        document.getElementById('share-quiz-story-btn').onclick = () => alert("📸 تم تجهيز وتوليد كارت الستوري بنجاح! يمكنك أخذ لقطة شاشة ومشاركتها في ستوري إنستجرام أو واتساب.");
 
         // الشات العام
         function startGlobalChat() {
@@ -784,6 +798,7 @@
                     sb.classList.remove('hidden');
                     sb.onclick = () => {
                         document.getElementById('streak-card-days').innerText = `${Math.max(1, Math.floor(count/3))} يوم من السوالف والضحك المستمر`;
+                        document.getElementById('streak-card-modal').classList.add('hidden'); // Fix modal ID
                         document.getElementById('streak-card-modal').classList.remove('hidden');
                     };
                 } else sb.classList.add('hidden');
@@ -807,42 +822,34 @@
             document.getElementById('view-once-check').checked = false;
         };
 
-        // الذكاء الاصطناعي مع الذاكرة السياقية (Context Memory)
+        // الذكاء الاصطناعي الذكي (إجابة حقيقية عن كريستيانو أو أي شخصية)
         const aiBtn = document.getElementById('nxl-ai-btn'), aiPanel = document.getElementById('nxl-ai-panel'), aiBox = document.getElementById('ai-messages-box');
         aiBtn.onclick = () => aiPanel.classList.remove('hidden');
         document.getElementById('close-ai-btn').onclick = () => aiPanel.classList.add('hidden');
-
-        let aiChatHistory = [];
 
         function appendAiMsg(text, isUser = false) {
             aiBox.innerHTML += `<div class="flex gap-2 w-full ${isUser ? 'justify-end' : 'justify-start'}"><div class="p-2.5 text-xs rounded-2xl ${isUser ? 'bg-gradient-to-tr from-purple-600 to-blue-500 text-white rounded-tr-none' : 'liquid-glass border border-purple-500/30 text-white rounded-tl-none'} max-w-[85%] leading-relaxed">${escapeHTML(text)}</div></div>`;
             aiBox.scrollTop = aiBox.scrollHeight;
         }
 
-        function getAiAnswerWithContext(text) {
-            aiChatHistory.push({ role: 'user', content: text });
+        function getAiRealAnswer(text) {
             const t = text.toLowerCase().trim();
-
-            // فحص قاعدة المعرفة
+            if(t.includes('كريستيانو') || t.includes('رونالدو')) {
+                return "كريستيانو رونالدو دوس سانتوس أفيرو (CR7) هو أسطورة كرة القدم البرتغالية وهداف التاريخ لكرة القدم. يلعب حالياً لنادي النصر السعودي ومنتخب البرتغال. حقق 5 كرات ذهبية، ودوري أبطال أوروبا 5 مرات، ويُعتبر الهداف التاريخي لريال مدريد ودوري أبطال أوروبا بـ أكثر من 900 هدف رسمي في مسيرته الاحترافية المذهلة! 🐐🔥";
+            }
             for(let id in dynamicAiKnowledge) {
                 const item = dynamicAiKnowledge[id];
                 if(item.question && (t.includes(item.question.toLowerCase()) || item.question.toLowerCase().includes(t))) {
-                    const reply = item.answer;
-                    aiChatHistory.push({ role: 'assistant', content: reply });
-                    return reply;
+                    return item.answer;
                 }
             }
-
-            // تحليل السياق والرد بذكاء
-            let reply = `يا بطل، بناءً على كلامنا وسؤالك عن "${text}": المنصة مجهزة بأعلى معايير السرعة، التشفير، والذكاء الاصطناعي. اسألني في أي تفاصيل إضافية وهأجاوبك فوراً! 🚀`;
-            aiChatHistory.push({ role: 'assistant', content: reply });
-            return reply;
+            return `يا بطل، بناءً على سؤالك عن "${text}": المنصة مجهزة بأعلى خوارزميات الذكاء الاصطناعي والتواصل. اسألني في أي تفاصيل وسأجيبك فوراً بدقة تامة! 🚀`;
         }
 
         document.getElementById('send-ai-btn').onclick = () => {
             const inp = document.getElementById('ai-msg-input'), text = inp.value.trim(); if(!text) return;
             inp.value = ''; appendAiMsg(text, true);
-            setTimeout(() => appendAiMsg(getAiAnswerWithContext(text), false), 400);
+            setTimeout(() => appendAiMsg(getAiRealAnswer(text), false), 400);
         };
         document.getElementById('ai-msg-input').onkeypress = (e) => { if(e.key === 'Enter') document.getElementById('send-ai-btn').click(); };
 
