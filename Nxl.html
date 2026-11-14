@@ -146,7 +146,7 @@
             </div>
         </section>
 
-        <!-- تبويب الألعاب وألعاب الحب والرومانسية وتوليد كروت Canva -->
+        <!-- تبويب الألعاب وتوليد كروت Canva الحقيقية للتحميل -->
         <section id="tab-games" class="tab-content hidden p-3 max-w-md mx-auto space-y-4">
             <div class="liquid-glass p-4 rounded-2xl border border-gray-800 shadow-lg">
                 <h2 class="text-sm font-bold mb-2 flex items-center gap-1.5"><span class="text-lg">🏆</span> لوحة الشرف (Top 10)</h2>
@@ -189,13 +189,13 @@
                     <h3 class="text-xs font-bold text-white mb-1" id="c-names"></h3>
                     <div class="text-5xl font-black gradient-text my-2" id="c-percent">98%</div>
                     <p class="text-xs text-pink-200 font-semibold mb-4 px-2" id="c-msg"></p>
-                    <button onclick="alert('📸 تم حفظ وتوليد كارت Canva بنجاح! شاركه الآن ستوري إنستجرام أو واتساب.');" class="w-full py-2.5 bg-gradient-to-r from-purple-600 to-[#ff2a85] rounded-xl text-xs font-bold text-white interactive-press shadow-lg">حفظ ومشاركة الكارت ستوري 📸</button>
+                    <button onclick="downloadCanvaCardImage()" class="w-full py-2.5 bg-gradient-to-r from-purple-600 to-[#ff2a85] rounded-xl text-xs font-bold text-white interactive-press shadow-lg">📥 تحميل الكارت كصورة (حفظ فوري)</button>
                     <button onclick="document.getElementById('custom-love-game-box').classList.add('hidden')" class="w-full py-1.5 mt-2 bg-gray-800/80 rounded-xl text-[10px] text-gray-300 interactive-press">إغلاق ❌</button>
                 </div>
             </div>
         </section>
 
-        <!-- تبويب الشاتات الخاصة (شاتاتي - تم إصلاح حفظ الأصدقاء للأبد) -->
+        <!-- تبويب الشاتات الخاصة (تم إصلاح الفتح الفوري والحفظ للأبد) -->
         <section id="tab-chats" class="tab-content hidden p-3 max-w-md mx-auto">
             <div class="liquid-glass p-2.5 rounded-xl border border-[#ff2a85]/40 mb-3 flex gap-2 items-center">
                 <div id="my-note-avatar" class="w-8 h-8 rounded-full bg-gray-800 border border-gray-700 shrink-0 overflow-hidden"></div>
@@ -217,7 +217,7 @@
             </div>
         </section>
 
-        <!-- تبويب الملف الشخصي (تم ربط عرض الصور المرفوعة للمستخدم بدقة) -->
+        <!-- تبويب الملف الشخصي -->
         <section id="tab-profile" class="tab-content hidden p-3 max-w-md mx-auto text-center">
             <div class="liquid-glass p-5 rounded-3xl border border-gray-800 mb-4 relative shadow-xl glow-card">
                 <button id="logout-btn" class="absolute top-3 left-3 text-[10px] bg-red-500/10 text-red-500 border border-red-500/30 px-2.5 py-1 rounded-lg font-bold interactive-press">خروج</button>
@@ -236,7 +236,7 @@
         </section>
     </main>
 
-    <!-- شاشة الشات الخاص -->
+    <!-- شاشة الشات الخاص (تم إصلاح نافذة الفتح بالكامل) -->
     <div id="private-chat-window" class="fixed inset-0 z-50 bg-[#060609] flex flex-col hidden">
         <header class="liquid-glass py-2.5 px-4 border-b border-gray-800 flex items-center justify-between shrink-0">
             <div class="flex items-center gap-2.5">
@@ -316,7 +316,7 @@
         <span class="text-xl">🤖</span>
     </button>
 
-    <!-- لوحة المساعد الذكي مع محرك البحث الفعلي في الإنترنت (للإجابة عن بيكهام، رونالدو، ميسي وكل شيء) -->
+    <!-- لوحة المساعد الذكي للبحث الفعلي في الإنترنت (بيكهام، ميسي، رونالدو، إلخ) -->
     <div id="nxl-ai-panel" class="fixed inset-0 z-50 bg-[#060609]/80 backdrop-blur-md flex flex-col hidden transition-opacity">
         <div class="mt-auto liquid-glass w-full max-w-md mx-auto h-[80vh] rounded-t-3xl border-t border-purple-500 shadow-2xl flex flex-col overflow-hidden">
             <header class="p-3.5 border-b border-gray-800 flex justify-between items-center shrink-0 bg-[#12121a]">
@@ -334,7 +334,7 @@
                 <div class="flex gap-2 w-full justify-start">
                     <div class="w-7 h-7 rounded-full bg-gradient-to-tr from-purple-600 to-blue-500 flex items-center justify-center text-xs shrink-0">🤖</div>
                     <div class="p-2.5 text-xs rounded-2xl bg-[#12121a] border border-purple-500/30 text-white rounded-tl-none max-w-[85%] leading-relaxed">
-                        أهلاً يا صديقي! اسألني عن بيكهام، ميسي، رونالدو، أو أي معلومة رياضية أو عامة، وهأجاوبك فوراً بكل تفصيل! 🔥
+                        أهلاً يا صديقي! اسألني عن بيكهام، ميسي، رونالدو، أو أي معلومة، وهأجاوبك فوراً بكل تفصيل! 🔥
                     </div>
                 </div>
             </div>
@@ -371,7 +371,7 @@
         </button>
     </nav>
 
-    <!-- الكود والمنطق البرمجي المطور -->
+    <!-- الكود البرمجي النهائي المعالج بالكامل -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
@@ -472,7 +472,6 @@
                     }
                 });
             } else {
-                document.getElementById('auth-screen').classList.add('hidden');
                 document.getElementById('auth-screen').classList.remove('hidden');
             }
         });
@@ -580,6 +579,40 @@
             document.getElementById('love-result-card').classList.remove('hidden');
         };
 
+        // دالة حقيقية لتحويل الكارت لصورة وحفظها على الموبايل
+        window.downloadCanvaCardImage = () => {
+            const cardEl = document.getElementById('love-result-card');
+            const canvas = document.createElement('canvas');
+            canvas.width = 600; canvas.height = 700;
+            const ctx = canvas.getContext('2d');
+            
+            ctx.fillStyle = '#12121a';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.fillStyle = '#ff2a85';
+            ctx.font = 'bold 20px Cairo';
+            ctx.textAlign = 'center';
+            ctx.fillText('NXL EXCLUSIVE CANVA CARD', canvas.width / 2, 50);
+            
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 28px Cairo';
+            ctx.fillText(document.getElementById('c-names').innerText, canvas.width / 2, 120);
+            
+            ctx.fillStyle = '#ff7300';
+            ctx.font = 'bold 70px Cairo';
+            ctx.fillText(document.getElementById('c-percent').innerText, canvas.width / 2, 230);
+            
+            ctx.fillStyle = '#fbcfe8';
+            ctx.font = '20px Cairo';
+            ctx.fillText(document.getElementById('c-msg').innerText, canvas.width / 2, 320);
+            
+            const link = document.createElement('a');
+            link.download = 'nxl-love-card.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+            alert('📥 تم تنزيل وحفظ كارت Canva كصورة بنجاح على جهازك!');
+        };
+
         const searchInput = document.getElementById('search-username-input');
         const searchDropdown = document.getElementById('search-dropdown');
         searchInput.addEventListener('input', (e) => {
@@ -610,7 +643,7 @@
         });
         document.addEventListener('click', (e) => { if(!e.target.closest('.relative.z-20')) searchDropdown.classList.add('hidden'); });
 
-        // شاتاتي المحفوظة تلقائياً للأبد
+        // شاتاتي (محفوظة للأبد وتفتح فوراً بدون أي تأخير)
         function startPrivateChatsList() {
             onValue(ref(db, `user_chats/${currentUser.uid}`), async (snap) => {
                 const listEl = document.getElementById('private-chats-list');
@@ -752,7 +785,8 @@
         document.getElementById('close-view-once').onclick = () => document.getElementById('view-once-modal').classList.add('hidden');
         document.getElementById('close-private-chat').onclick = () => { document.getElementById('private-chat-window').classList.add('hidden'); openChatId = null; if(activeChatRef) activeChatRef(); };
 
-        function openPrivateChat(targetUid, targetName, targetAvatar) {
+        // دالة فتح الشات الخاص المصلحة بالكامل لضمان الفتح الفوري
+        window.openPrivateChat = (targetUid, targetName, targetAvatar) => {
             document.getElementById('private-target-name').innerText = targetName;
             document.getElementById('private-target-avatar').innerHTML = `<img src="${targetAvatar}" class="w-full h-full object-cover">`;
             document.getElementById('private-chat-window').classList.remove('hidden');
@@ -806,12 +840,11 @@
             const text = inp.value.trim(); const isVO = document.getElementById('view-once-check').checked;
             if(!text && !privatePostImageBase64) return;
             inp.value = '';
-            push(ref(db, `chats/${openChatId}`), { senderId: currentUser.uid, text: text||null, image: privatePostImageBase64||null, viewOnce: isVO, timestamp: Date.Now = Date.now() });
+            push(ref(db, `chats/${openChatId}`), { senderId: currentUser.uid, text: text||null, image: privatePostImageBase64||null, viewOnce: isVO, timestamp: Date.now() });
             privatePostImageBase64 = ""; document.getElementById('private-img-preview-container').classList.add('hidden');
             document.getElementById('view-once-check').checked = false;
         };
 
-        // المساعد الذكي مع محرك البحث الفعلي للإنترنت وبدون نداءات مزعجة
         const aiBtn = document.getElementById('nxl-ai-btn'), aiPanel = document.getElementById('nxl-ai-panel'), aiBox = document.getElementById('ai-messages-box');
         aiBtn.onclick = () => aiPanel.classList.remove('hidden');
         document.getElementById('close-ai-btn').onclick = () => aiPanel.classList.add('hidden');
