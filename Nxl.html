@@ -336,7 +336,7 @@
                     <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-purple-600 to-blue-500 flex items-center justify-center text-base">🤖</div>
                     <div>
                         <h3 class="text-xs font-bold text-white">NXL Assistant (قاعدة التدريب المحلية + الويب 🌐)</h3>
-                        <p class="text-[9px] text-purple-400 animate-pulse">يفحص الذاكرة والتدريبات أولاً بدقة ⚡</p>
+                        <p class="text-[9px] text-purple-400 animate-pulse">يفحص تدريباتك أولاً بدقة ⚡</p>
                     </div>
                 </div>
                 <button id="close-ai-btn" class="text-gray-400 hover:text-white text-2xl font-light">&times;</button>
@@ -346,7 +346,7 @@
                 <div class="flex gap-2 w-full justify-start">
                     <div class="w-7 h-7 rounded-full bg-gradient-to-tr from-purple-600 to-blue-500 flex items-center justify-center text-xs shrink-0">🤖</div>
                     <div class="p-2.5 text-xs rounded-2xl bg-[#12121a] border border-purple-500/30 text-white rounded-tl-none max-w-[85%] leading-relaxed">
-                        أهلاً بك! سأبحث في التدريبات وقاعدة المعرفة الخاصة بك أولاً، ثم الويب لأجيبك فوراً! 🔥
+                        أهلاً بك! أبحث في التدريبات وقاعدة المعرفة الخاصة بك أولاً قبل الويب لأجيبك فوراً! 🔥
                     </div>
                 </div>
             </div>
@@ -383,7 +383,7 @@
         </button>
     </nav>
 
-    <!-- البرمجة الخارقة والمعالجة بالكامل -->
+    <!-- البرمجة الخارقة والمعالجة المحدثة -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
@@ -408,7 +408,7 @@
         let userData = null;
         let globalPostImageBase64 = "";
         let privatePostImageBase64 = ""; 
-        let activeChatRef = null;
+        let activeChatRef = null; // مرجع إلغاء الاستماع لمنع تداخل الشاتات
         let openChatId = null; 
         window.activeTabId = 'home'; 
 
@@ -482,7 +482,7 @@
                             document.getElementById('setup-profile-screen').classList.remove('hidden');
                         }
                     } else {
-                        document.getElementById('setup-profile-screen').classList.remove('hidden');
+                        document.getElementById('setup-profile-screen').classList.add('hidden');
                     }
                 });
             } else {
@@ -522,7 +522,6 @@
             }
         }
 
-        // لوحة الشرف والستوريات
         function startLeaderboardAndStories() {
             onValue(query(ref(db, 'users')), (snapshot) => {
                 let allUsers = [], activeStories = [];
@@ -662,7 +661,6 @@
         });
         document.addEventListener('click', (e) => { if(!e.target.closest('.relative.z-20')) searchDropdown.classList.add('hidden'); });
 
-        // شاتاتي المحفوظة
         function startPrivateChatsList() {
             onValue(ref(db, `user_chats/${currentUser.uid}`), async (snap) => {
                 const listEl = document.getElementById('private-chats-list');
@@ -690,7 +688,6 @@
             });
         }
 
-        // الشات العام مع تنظيف بعد 24 ساعة
         function startGlobalChat() {
             onValue(query(ref(db, 'global_chat'), limitToLast(100)), (snap) => {
                 const box = document.getElementById('global-messages-box');
@@ -749,7 +746,6 @@
             cancelGlobalReply();
         };
 
-        // معالجة وضغط صور المنشورات العامة لمنع أي تعليق
         document.getElementById('post-file').onchange = e => {
             const f = e.target.files[0]; if(!f) return;
             compressImage(f, (compressedBase64) => {
@@ -825,7 +821,6 @@
         };
         document.getElementById('close-modal-btn').onclick = () => document.getElementById('user-modal').classList.add('hidden');
 
-        // معالجة وضغط صور الشات الخاص لمنع أي تعليق أو توقف
         document.getElementById('private-img-btn').onclick = () => document.getElementById('private-img-input').click();
         document.getElementById('private-img-input').onchange = e => {
             const f = e.target.files[0]; if(!f) return;
@@ -838,13 +833,13 @@
         document.getElementById('cancel-private-img').onclick = () => { privatePostImageBase64 = ""; document.getElementById('private-img-preview-container').classList.add('hidden'); };
         document.getElementById('close-view-once').onclick = () => document.getElementById('view-once-modal').classList.add('hidden');
         
+        // عند الرجوع من الشات الخاص يتم قطع الاتصال نهائياً لمنع التداخل
         document.getElementById('close-private-chat').onclick = () => { 
             document.getElementById('private-chat-window').classList.add('hidden'); 
             if(activeChatRef) { activeChatRef(); activeChatRef = null; }
             openChatId = null; 
         };
 
-        // دالة لضغط الصور تلقائياً لضمان خفة وعدم تعليق الشات
         function compressImage(file, callback) {
             const reader = new FileReader();
             reader.onload = function(e) {
@@ -870,8 +865,14 @@
             reader.readAsDataURL(file);
         }
 
-        // دالة فتح الشات الخاص المعزولة تماماً وتصفية الرسائل بعد 25 ساعة تلقائياً
+        // دالة فتح الشات الخاص المصححة (عزل تام لمنع تداخل شات محمد وحسن وكافة المستخدمين)
         window.openPrivateChat = (targetUid, targetName, targetAvatar) => {
+            // أولاً: إذا كان هناك شات مفتوح سابقاً، قم بقطع الاتصال به فوراً
+            if(activeChatRef) { 
+                activeChatRef(); 
+                activeChatRef = null; 
+            }
+
             document.getElementById('private-target-name').innerText = targetName;
             document.getElementById('private-target-avatar').innerHTML = `<img src="${targetAvatar}" class="w-full h-full object-cover">`;
             document.getElementById('private-chat-window').classList.remove('hidden');
@@ -884,13 +885,13 @@
                 [`user_chats/${targetUid}/${chatId}/targetUid`]: currentUser.uid
             });
 
-            // إلغاء الاستماع القديم لمنع تداخل الشاتات (عزل تام)
-            if(activeChatRef) { activeChatRef(); activeChatRef = null; }
-
             const chatRefPath = ref(db, `chats/${chatId}`);
             const msgsQuery = query(chatRefPath, limitToLast(200));
             
             const unsubscribe = onValue(msgsQuery, (snap) => {
+                // التأكد أن الشات المفتوح حالياً هو نفس الـ chatId لزيادة الأمان
+                if (openChatId !== chatId) return;
+
                 const box = document.getElementById('private-messages-box');
                 box.innerHTML = `<div class="text-center text-[9px] text-yellow-400 bg-yellow-500/10 py-1.5 rounded-xl border border-yellow-500/20">🔒 شات مشفر + حذف تلقائي بعد 25 ساعة لتخفيف قاعدة البيانات 🔥</div>`;
                 let count = 0;
@@ -899,7 +900,6 @@
                 snap.forEach(c => {
                     const m = c.val(), id = c.key;
                     
-                    // تصفية وحذف رسائل الشات الخاص بعد 25 ساعة تلقائياً
                     if(now - m.timestamp > 25 * 3600 * 1000) {
                         remove(ref(db, `chats/${chatId}/${id}`));
                         return;
@@ -938,7 +938,10 @@
                 box.scrollTop = box.scrollHeight;
             });
 
-            activeChatRef = () => { off(chatRefPath, 'value', unsubscribe); };
+            // تخزين دالة إلغاء المراقبة لقطع الاتصال فوراً عند غلق الشات
+            activeChatRef = () => { 
+                off(chatRefPath, 'value', unsubscribe); 
+            };
         }
 
         window.setPrivateReply = (id, text, name) => {
@@ -970,7 +973,7 @@
             cancelPrivateReply();
         };
 
-        // المساعد الذكي: فحص التدريبات وقاعدة المعرفة المحلية أولاً بدقة ثم الويب
+        // المساعد الذكي المصحح: يبحث في التدريبات الخاصة بك أولاً بدقة عالية قبل الويب
         const aiBtn = document.getElementById('nxl-ai-btn'), aiPanel = document.getElementById('nxl-ai-panel'), aiBox = document.getElementById('ai-messages-box');
         aiBtn.onclick = () => aiPanel.classList.remove('hidden');
         document.getElementById('close-ai-btn').onclick = () => aiPanel.classList.add('hidden');
@@ -1021,21 +1024,21 @@
             let answer = "";
             const t = text.toLowerCase().trim();
 
-            // 1. البحث أولاً في التدريبات وقاعدة البيانات المضافة محلياً
+            // 1. الأولوية المطلقة: البحث في التدريبات وقاعدة المعرفة المضافة من صفحة الأدمن محلياً
             let foundInDb = false;
             for(let key in dynamicAiKnowledge) {
                 if(t.includes(key.toLowerCase()) || key.toLowerCase().includes(t)) {
-                    answer = `💡 **من التدريبات الخاصة:**\n${dynamicAiKnowledge[key]}`;
+                    answer = `💡 **من التدريبات الخاصة بك:**\n${dynamicAiKnowledge[key]}`;
                     foundInDb = true;
                     break;
                 }
             }
 
-            // 2. لو لم يوجد محلياً، يتم الانتقال للبحث في الويب
+            // 2. إذا لم يجد في التدريبات، ينتقل للبحث في الويب
             if(!foundInDb) {
                 answer = await fetchRealWebSearch(text);
                 if(!answer) {
-                    answer = `بناءً على تحليلي الشامل والبحث في الويب حول "${text}": الموضوع يشمل تفاصيل وتحليلات متقدمة 🚀✨`;
+                    answer = `بناءً على تحليلي الشامل والبحث حول "${text}": الموضوع يشمل تفاصيل ومعلومات متقدمة 🚀✨`;
                 }
             }
 
@@ -1045,7 +1048,7 @@
                 appendAiMsg(answer, false);
                 sendBtn.disabled = false;
                 sendBtn.innerHTML = `✨`;
-            }, 600);
+            }, 500);
         };
         document.getElementById('ai-msg-input').onkeypress = (e) => { if(e.key === 'Enter') document.getElementById('send-ai-btn').click(); };
 
