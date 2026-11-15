@@ -712,7 +712,7 @@
                         <div class="flex gap-2 w-full ${isMe ? 'flex-row-reverse' : ''}">
                             <img src="${m.senderAvatar}" class="w-7 h-7 rounded-full bg-gray-800 shrink-0 cursor-pointer" onclick="window.openUserModal('${m.senderId}')">
                             <div class="max-w-[80%] ${isMe ? 'items-end' : 'items-start'}">
-                                <span class="text-[9px] text-gray-500 px-1 font-bold">${escapeHTML(m.senderNickname)}</span>
+                                <span class="text-[9px] text-gray-500 px-1 font-bold cursor-pointer hover:underline" onclick="window.openUserModal('${m.senderId}')">${escapeHTML(m.senderNickname)}</span>
                                 <div class="p-2.5 text-xs rounded-xl ${isMe ? 'gradient-bg text-white rounded-tr-none' : 'liquid-glass border border-gray-800 text-white rounded-tl-none'} break-words relative group">
                                     ${replyHtml}
                                     ${escapeHTML(m.text)}
@@ -783,8 +783,8 @@
                     feed.innerHTML += `
                         <div class="liquid-glass p-3 rounded-2xl border border-gray-800 space-y-2">
                             <div class="flex items-center gap-2 cursor-pointer" onclick="window.openUserModal('${p.userId}')">
-                                <img src="${p.userAvatar}" class="w-7 h-7 rounded-full bg-gray-800">
-                                <div><h4 class="text-xs font-bold text-white">${escapeHTML(p.userNickname)}</h4><span class="text-[9px] text-[#ff7300]">@${escapeHTML(p.userUsername)}</span></div>
+                                <img src="${p.userAvatar}" class="w-7 h-7 rounded-full bg-gray-800 object-cover">
+                                <div><h4 class="text-xs font-bold text-white hover:underline">${escapeHTML(p.userNickname)}</h4><span class="text-[9px] text-[#ff7300]">@${escapeHTML(p.userUsername)}</span></div>
                             </div>
                             ${p.text ? `<p class="text-xs text-gray-200">${escapeHTML(p.text)}</p>` : ''}
                             ${p.image ? `<img src="${p.image}" class="w-full rounded-xl border border-gray-800">` : ''}
@@ -973,7 +973,7 @@
             cancelPrivateReply();
         };
 
-        // NXL AI Assistant: بحث ذكي واحترافي خفي في التدريبات أولاً ثم الويب بدون أي نصوص هبلة
+        // NXL AI Assistant: بحث ذكي في قاعدة البيانات أولاً بشكل صارم ثم الويب عند عدم الوجود
         const aiBtn = document.getElementById('nxl-ai-btn'), aiPanel = document.getElementById('nxl-ai-panel'), aiBox = document.getElementById('ai-messages-box');
         aiBtn.onclick = () => aiPanel.classList.remove('hidden');
         document.getElementById('close-ai-btn').onclick = () => aiPanel.classList.add('hidden');
@@ -1024,15 +1024,18 @@
             let answer = "";
             const t = text.toLowerCase().trim();
 
+            // فحص قاعدة البيانات أولاً بدقة عالية وصارمة
             let foundInDb = false;
             for(let key in dynamicAiKnowledge) {
-                if(t.includes(key.toLowerCase()) || key.toLowerCase().includes(t)) {
+                const cleanKey = key.toLowerCase().trim();
+                if(t === cleanKey || t.includes(cleanKey) || cleanKey.includes(t)) {
                     answer = dynamicAiKnowledge[key];
                     foundInDb = true;
                     break;
                 }
             }
 
+            // إذا لم يوجد في قاعدة البيانات، يتم البحث في الويب
             if(!foundInDb) {
                 answer = await fetchRealWebSearch(text);
                 if(!answer) {
