@@ -121,6 +121,18 @@
 
         <!-- تبويب الرئيسية -->
         <section id="tab-home" class="tab-content p-3 max-w-md mx-auto space-y-3">
+            <!-- بطاقة الذكاء الاصطناعي في الرئيسية -->
+            <div onclick="document.getElementById('nxl-ai-panel').classList.remove('hidden')" class="liquid-glass p-3 rounded-2xl border border-[#ff2a85]/40 flex items-center justify-between cursor-pointer interactive-press shadow-lg">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-full gradient-bg flex items-center justify-center font-black text-xs text-white shrink-0 shadow-md">NXL</div>
+                    <div>
+                        <h2 class="text-xs font-bold text-white">مساعد NXL الذكي</h2>
+                        <p class="text-[10px] text-gray-400">اسأل أو ابحث فوراً من الصفحة الرئيسية ⚡</p>
+                    </div>
+                </div>
+                <span class="text-[10px] gradient-bg text-white font-bold px-3 py-1 rounded-xl">فتح AI ✨</span>
+            </div>
+
             <div id="stories-container" class="flex gap-3 overflow-x-auto pb-2 pt-1 custom-scrollbar hidden"></div>
             <div class="liquid-glass p-3 rounded-2xl border border-gray-800 shadow-lg">
                 <textarea id="post-input" placeholder="شارك أفكارك ولحظاتك... (تختفي بعد 72 ساعة)" class="w-full bg-[#12121a] text-xs text-white rounded-xl p-3 focus:outline-none resize-none h-16 border border-gray-800"></textarea>
@@ -145,17 +157,24 @@
 
         <!-- تبويب الشات العام -->
         <section id="tab-global" class="tab-content hidden h-full flex flex-col max-w-md mx-auto">
-            <div class="liquid-glass text-[10px] text-center text-[#ff7300] font-bold py-1 border-b border-gray-800">الرسائل العامة تختفي بعد 24 ساعة 🔥</div>
-            <div id="global-messages-box" class="flex-1 overflow-y-auto p-3 space-y-3 custom-scrollbar"></div>
+            <div class="mx-3 mt-2.5 liquid-glass rounded-2xl px-3.5 py-2 border border-gray-800/90 flex items-center justify-between shrink-0">
+                <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
+                    <span class="text-xs font-bold text-white">الشات العام المباشر</span>
+                </div>
+                <span class="text-[10px] text-[#ff7300] font-bold bg-[#ff7300]/10 px-2.5 py-0.5 rounded-full border border-[#ff7300]/25">تختفي بعد 24 ساعة 🔥</span>
+            </div>
 
-            <div class="p-2.5 liquid-glass border-t border-gray-800 flex flex-col shrink-0 mb-16">
+            <div id="global-messages-box" class="flex-1 overflow-y-auto px-3 py-2.5 space-y-2.5 custom-scrollbar"></div>
+
+            <div class="p-2.5 mx-2 mb-16 liquid-glass rounded-2xl border border-gray-800 flex flex-col shrink-0 shadow-xl">
                 <div id="global-reply-preview" class="hidden bg-[#12121a] px-3 py-1.5 rounded-xl mb-1.5 border border-purple-500/40 text-[10px] flex justify-between items-center">
                     <span id="global-reply-text" class="text-gray-300 truncate"></span>
                     <button onclick="cancelGlobalReply()" class="text-red-400 font-bold px-1">✕</button>
                 </div>
                 <div class="flex gap-2 items-center">
-                    <input type="text" id="global-msg-input" placeholder="اكتب في الشات العام..." class="flex-1 bg-[#12121a] text-xs rounded-xl px-3 py-2.5 text-white focus:outline-none border border-gray-800">
-                    <button id="send-global-btn" class="w-10 h-10 gradient-bg rounded-xl flex items-center justify-center text-white font-bold interactive-press shadow-md">🚀</button>
+                    <input type="text" id="global-msg-input" placeholder="اكتب رسالة للجميع..." class="flex-1 bg-[#12121a] text-xs rounded-xl px-3.5 py-2.5 text-white focus:outline-none border border-gray-800 focus:border-[#ff2a85]/60">
+                    <button id="send-global-btn" class="w-10 h-10 gradient-bg rounded-xl flex items-center justify-center text-white font-bold interactive-press shadow-md shrink-0">🚀</button>
                 </div>
             </div>
         </section>
@@ -227,7 +246,20 @@
                 </div>
                 <div id="search-dropdown" class="absolute left-0 right-0 top-full mt-1 liquid-glass border border-gray-800 rounded-xl shadow-2xl overflow-hidden hidden max-h-44 overflow-y-auto"></div>
             </div>
-            <h2 class="text-xs font-bold mb-2 px-1 text-gray-400">الدردشات الخاصة بك (نظام واتساب - ظهور فوري للطرفين)</h2>
+            <h2 class="text-xs font-bold mb-2 px-1 text-gray-400">الدردشات الخاصة بك (محفوظة ومرتبة حسب آخر نشاط)</h2>
+
+            <!-- الذكاء الاصطناعي ضمن شاتات الخاص -->
+            <div onclick="document.getElementById('nxl-ai-panel').classList.remove('hidden')" class="liquid-glass p-2.5 rounded-xl border border-[#ff2a85]/50 flex items-center justify-between cursor-pointer hover:border-pink-500/70 transition interactive-press mb-2">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-10 h-10 rounded-full gradient-bg flex items-center justify-center text-white font-black text-xs shrink-0 shadow-md">NXL</div>
+                    <div>
+                        <h4 class="font-bold text-white text-xs">NXL AI (المساعد الذكي)</h4>
+                        <p class="text-[9px] text-[#ff7300] font-semibold">متاح دائماً للمساعدة والبحث الفوري ✨</p>
+                    </div>
+                </div>
+                <span class="text-[11px] bg-[#ff2a85]/20 text-[#ff2a85] px-2.5 py-1 rounded-xl font-bold">دردشة AI 🤖</span>
+            </div>
+
             <div id="private-chats-list" class="space-y-1.5 text-xs">
                 <div class="text-center text-gray-500 py-6">جاري تحميل الشاتات المحفوظة... 💬</div>
             </div>
@@ -272,10 +304,10 @@
                         <h3 id="private-target-name" class="text-xs font-bold text-white">المستلم</h3>
                         <span id="streak-badge" class="bg-gradient-to-r from-orange-500 to-red-600 text-white text-[9px] font-black px-2 py-0.5 rounded-full hidden cursor-pointer interactive-press">🔥 0 يوم</span>
                     </div>
-                    <p id="private-target-status" class="text-[9px] text-gray-400 font-bold">غير متصل</p>
+                    <p id="private-target-status" class="text-[9px] text-gray-400 font-bold">محادثة محفوظة</p>
                 </div>
             </div>
-            <button id="delete-chat-btn" class="text-red-500 p-1.5 rounded-lg interactive-press" title="إزالة">🗑️</button>
+            <button id="delete-chat-btn" class="text-gray-400 hover:text-white p-1.5 rounded-lg interactive-press" title="محادثة محفوظة">📌</button>
         </header>
 
         <div id="private-messages-box" class="flex-1 overflow-y-auto p-3 space-y-3 custom-scrollbar bg-[#060609] flex flex-col"></div>
@@ -782,20 +814,34 @@
                     return;
                 }
                 const entries = [];
-                snap.forEach(c => entries.push(c.val()));
+                snap.forEach(c => {
+                    entries.push({ chatId: c.key, ...(c.val() || {}) });
+                });
+
+                entries.sort((a, b) => (Number(b.lastTimestamp) || 0) - (Number(a.lastTimestamp) || 0));
 
                 for(let entry of entries) {
                     if(!entry.targetUid) continue;
                     const uSnap = await get(child(ref(db), `users/${entry.targetUid}`));
                     if(!uSnap.exists()) continue;
                     const u = uSnap.val();
+                    const lastMsgText = entry.lastMessage ? escapeHTML(entry.lastMessage) : 'محادثة محفوظة';
+                    const timeText = entry.lastTimestamp ? formatRelativeTime(entry.lastTimestamp) : '';
+
                     listEl.innerHTML += `
-                        <div class="liquid-glass p-2.5 rounded-xl border border-gray-800 flex items-center justify-between cursor-pointer hover:border-pink-500/50 transition interactive-press" onclick="openPrivateChat('${encodeURIComponent(u.uid || '')}', '${encodeURIComponent(u.nickname || '')}', '${encodeURIComponent(u.avatarUrl || '')}')">
-                            <div class="flex items-center gap-2.5">
-                                <img src="${escapeHTML(u.avatarUrl || '')}" class="w-10 h-10 rounded-full bg-gray-800 object-cover border border-gray-700" loading="lazy">
-                                <div><h4 class="font-bold text-white text-xs">${escapeHTML(u.nickname)}</h4><p class="text-[9px] text-gray-400">@${escapeHTML(u.username)}</p></div>
+                        <div class="liquid-glass p-2.5 rounded-xl border border-gray-800 flex items-center justify-between gap-2 cursor-pointer hover:border-pink-500/50 transition interactive-press" onclick="openPrivateChat('${encodeURIComponent(u.uid || '')}', '${encodeURIComponent(u.nickname || '')}', '${encodeURIComponent(u.avatarUrl || '')}')">
+                            <div class="flex items-center gap-2.5 min-w-0 flex-1">
+                                <img src="${escapeHTML(u.avatarUrl || '')}" class="w-10 h-10 rounded-full bg-gray-800 object-cover border border-gray-700 shrink-0" loading="lazy">
+                                <div class="min-w-0 flex-1">
+                                    <div class="flex items-center justify-between gap-2">
+                                        <h4 class="font-bold text-white text-xs truncate">${escapeHTML(u.nickname)}</h4>
+                                        ${timeText ? `<span class="text-[9px] text-gray-500 shrink-0">${escapeHTML(timeText)}</span>` : ''}
+                                    </div>
+                                    <p class="text-[9px] text-[#ff7300]">@${escapeHTML(u.username)}</p>
+                                    <p class="text-[10px] text-gray-300 truncate mt-0.5">${lastMsgText}</p>
+                                </div>
                             </div>
-                            <span class="text-[11px] bg-[#ff2a85]/20 text-[#ff2a85] px-2.5 py-1 rounded-xl font-bold">مراسلة 💬</span>
+                            <span class="text-[11px] bg-[#ff2a85]/20 text-[#ff2a85] px-2.5 py-1 rounded-xl font-bold shrink-0">مراسلة 💬</span>
                         </div>`;
                 }
             });
@@ -814,23 +860,27 @@
                     const isMe = m.senderId === currentUser.uid;
                     lastId = m.senderId;
 
-                    let replyHtml = m.replyTo ? `<div class="bg-black/30 border-r-2 border-pink-500 p-1 mb-1 rounded text-[9px] text-gray-300"><b>${escapeHTML(m.replyTo.senderName)}:</b> ${escapeHTML(m.replyTo.text)}</div>` : '';
+                    let replyHtml = m.replyTo ? `<div class="bg-black/35 border-r-2 border-pink-400 px-2 py-1 mb-1.5 rounded-lg text-[9px] text-gray-200"><b>${escapeHTML(m.replyTo.senderName)}:</b> ${escapeHTML(m.replyTo.text)}</div>` : '';
                     let reactionsHtml = m.reactions ? Object.values(m.reactions).map(escapeHTML).join(' ') : '';
+                    const timeLabel = formatRelativeTime(m.timestamp);
 
                     box.innerHTML += `
                         <div class="flex gap-2 w-full ${isMe ? 'flex-row-reverse' : ''}">
-                            <img src="${escapeHTML(m.senderAvatar || '')}" class="w-7 h-7 rounded-full bg-gray-800 shrink-0 cursor-pointer" onclick="window.openUserModal('${encodeURIComponent(m.senderId || '')}')">
-                            <div class="max-w-[80%] ${isMe ? 'items-end' : 'items-start'}">
-                                <span class="text-[9px] text-gray-500 px-1 font-bold cursor-pointer hover:underline" onclick="window.openUserModal('${m.senderId}')">${escapeHTML(m.senderNickname)}</span>
-                                <div class="p-2.5 text-xs rounded-xl ${isMe ? 'gradient-bg text-white rounded-tr-none' : 'liquid-glass border border-gray-800 text-white rounded-tl-none'} break-words relative group">
+                            <img src="${escapeHTML(m.senderAvatar || '')}" class="w-7 h-7 rounded-full bg-gray-800 shrink-0 cursor-pointer border border-gray-700/80" onclick="window.openUserModal('${encodeURIComponent(m.senderId || '')}')">
+                            <div class="max-w-[80%] flex flex-col ${isMe ? 'items-end' : 'items-start'}">
+                                <div class="flex items-center gap-1.5 px-1 mb-0.5">
+                                    <span class="text-[9px] text-gray-400 font-bold cursor-pointer hover:underline" onclick="window.openUserModal('${m.senderId}')">${escapeHTML(m.senderNickname)}</span>
+                                    ${timeLabel ? `<span class="text-[8px] text-gray-500">${escapeHTML(timeLabel)}</span>` : ''}
+                                </div>
+                                <div class="px-3 py-2 text-xs rounded-2xl ${isMe ? 'gradient-bg text-white rounded-tr-none shadow-md' : 'liquid-glass border border-gray-800 text-white rounded-tl-none'} break-words relative">
                                     ${replyHtml}
                                     ${escapeHTML(m.text)}
                                     ${reactionsHtml ? `<span class="absolute -bottom-2 ${isMe ? 'left-2' : 'right-2'} bg-[#12121a] border border-gray-700 rounded-full px-1.5 py-0.5 text-[10px] shadow">${reactionsHtml}</span>` : ''}
                                 </div>
-                                <div class="flex gap-2 text-[9px] text-gray-400 mt-1 px-1">
-                                    <button onclick="setGlobalReply('${encodeURIComponent(mId)}', '${encodeURIComponent(m.text || '')}', '${encodeURIComponent(m.senderNickname || '')}')" class="hover:text-pink-400">💬 رد</button>
-                                    <button onclick="reactGlobalMsg('${mId}', '❤️')" class="hover:text-red-500">❤️</button>
-                                    <button onclick="reactGlobalMsg('${mId}', '🔥')" class="hover:text-orange-500">🔥</button>
+                                <div class="flex gap-2.5 text-[9px] text-gray-400 mt-1.5 px-1">
+                                    <button onclick="setGlobalReply('${encodeURIComponent(mId)}', '${encodeURIComponent(m.text || '')}', '${encodeURIComponent(m.senderNickname || '')}')" class="hover:text-pink-400 transition">💬 رد</button>
+                                    <button onclick="reactGlobalMsg('${mId}', '❤️')" class="hover:text-red-500 transition">❤️</button>
+                                    <button onclick="reactGlobalMsg('${mId}', '🔥')" class="hover:text-orange-500 transition">🔥</button>
                                 </div>
                             </div>
                         </div>`;
@@ -1080,14 +1130,9 @@
             openChatTargetUid = null;
         };
 
-        document.getElementById('delete-chat-btn').onclick = async () => {
+        document.getElementById('delete-chat-btn').onclick = () => {
             if (!currentUser || !openChatId) return;
-            if (!confirm('إزالة المحادثة من قائمتك؟ لن تُحذف من حساب الطرف الآخر.')) return;
-            try {
-                await remove(ref(db, `user_chats/${currentUser.uid}/${openChatId}`));
-                document.getElementById('close-private-chat').click();
-                alert('تمت إزالة المحادثة من قائمتك');
-            } catch (err) { alert(firebaseErrorMessage(err)); }
+            showToast('📌 المحادثة محفوظة في قائمتك ولن يتم حذفها');
         };
 
         function compressImage(file, callback) {
@@ -1116,7 +1161,7 @@
             reader.readAsDataURL(file);
         }
 
-        window.openPrivateChat = (targetUid, targetName, targetAvatar) => {
+        window.openPrivateChat = async (targetUid, targetName, targetAvatar) => {
             targetUid = decodeInlineArg(targetUid); targetName = decodeInlineArg(targetName); targetAvatar = decodeInlineArg(targetAvatar);
             if (!currentUser || !targetUid || targetUid === currentUser.uid) return;
             if(activeChatRef) {
@@ -1131,10 +1176,28 @@
             openChatId = chatId;
             openChatTargetUid = targetUid;
 
-            update(ref(db), {
-                [`user_chats/${currentUser.uid}/${chatId}/targetUid`]: targetUid,
-                [`user_chats/${targetUid}/${chatId}/targetUid`]: currentUser.uid
-            }).catch(err => console.warn('Chat index update failed:', err));
+            try {
+                const myEntrySnap = await get(ref(db, `user_chats/${currentUser.uid}/${chatId}`));
+                const theirEntrySnap = await get(ref(db, `user_chats/${targetUid}/${chatId}`));
+                const myExisting = myEntrySnap.exists() ? myEntrySnap.val() : {};
+                const theirExisting = theirEntrySnap.exists() ? theirEntrySnap.val() : {};
+
+                await update(ref(db), {
+                    [`user_chats/${currentUser.uid}/${chatId}`]: {
+                        ...myExisting,
+                        targetUid,
+                        lastTimestamp: Number(myExisting.lastTimestamp) || 0
+                    },
+                    [`user_chats/${targetUid}/${chatId}`]: {
+                        ...theirExisting,
+                        targetUid: currentUser.uid,
+                        lastTimestamp: Number(theirExisting.lastTimestamp) || 0
+                    }
+                });
+            } catch (err) {
+                showToast('⚠️ تعذر حفظ المحادثة في القائمة');
+                alert(`فشل حفظ المحادثة في القائمة: ${firebaseErrorMessage(err)}`);
+            }
 
             const chatRefPath = ref(db, `chats/${chatId}`);
             const msgsQuery = query(chatRefPath, limitToLast(200));
@@ -1142,17 +1205,11 @@
             const unsubscribe = onValue(msgsQuery, (snap) => {
                 if (openChatId !== chatId) return;
                 const box = document.getElementById('private-messages-box');
-                box.innerHTML = `<div class="text-center text-[9px] text-yellow-400 bg-yellow-500/10 py-1.5 rounded-xl border border-yellow-500/20">🔒 محادثة خاصة — الرسائل تظهر للطرفين 🔥</div>`;
+                box.innerHTML = `<div class="text-center text-[9px] text-yellow-400 bg-yellow-500/10 py-1.5 rounded-xl border border-yellow-500/20">🔒 محادثة خاصة — محفوظة للطرفين 🔥</div>`;
                 let count = 0;
-                const now = Date.now();
 
                 snap.forEach(c => {
                     const m = c.val(), id = c.key;
-
-                    if(now - m.timestamp > 25 * 3600 * 1000) {
-                        remove(ref(db, `chats/${chatId}/${id}`));
-                        return;
-                    }
                     count++;
                     const isMe = m.senderId === currentUser.uid;
                     let replyHtml = m.replyTo ? `<div class="bg-black/30 border-r-2 border-pink-500 p-1 mb-1 rounded text-[9px] text-gray-300"><b>${escapeHTML(m.replyTo.senderName)}:</b> ${escapeHTML(m.replyTo.text)}</div>` : '';
@@ -1215,22 +1272,35 @@
             if (!text && !privatePostImageBase64) return;
             const targetUid = openChatTargetUid;
             if (!targetUid) return alert('تعذر تحديد الطرف الآخر في المحادثة');
-            const payload = { senderId: currentUser.uid, text: text || null, image: privatePostImageBase64 || null, viewOnce, timestamp: Date.now() };
+
+            const nowTs = Date.now();
+            const lastMsgSummary = text
+                ? text
+                : (privatePostImageBase64 ? (viewOnce ? '👻 صورة تختفي' : '🖼️ صورة') : '');
+
+            const payload = { senderId: currentUser.uid, text: text || null, image: privatePostImageBase64 || null, viewOnce, timestamp: nowTs };
             if (replyingPrivateMsg) payload.replyTo = replyingPrivateMsg;
             const sendBtn = document.getElementById('send-private-btn');
             sendBtn.disabled = true;
             try {
+                await push(ref(db, `chats/${openChatId}`), payload);
                 await update(ref(db), {
                     [`user_chats/${currentUser.uid}/${openChatId}/targetUid`]: targetUid,
-                    [`user_chats/${targetUid}/${openChatId}/targetUid`]: currentUser.uid
+                    [`user_chats/${currentUser.uid}/${openChatId}/lastMessage`]: lastMsgSummary,
+                    [`user_chats/${currentUser.uid}/${openChatId}/lastTimestamp`]: nowTs,
+                    [`user_chats/${targetUid}/${openChatId}/targetUid`]: currentUser.uid,
+                    [`user_chats/${targetUid}/${openChatId}/lastMessage`]: lastMsgSummary,
+                    [`user_chats/${targetUid}/${openChatId}/lastTimestamp`]: nowTs
                 });
-                await push(ref(db, `chats/${openChatId}`), payload);
                 inp.value = '';
                 privatePostImageBase64 = '';
                 document.getElementById('private-img-preview-container').classList.add('hidden');
                 document.getElementById('view-once-check').checked = false;
                 cancelPrivateReply();
-            } catch (err) { alert(firebaseErrorMessage(err)); }
+            } catch (err) {
+                showToast('⚠️ تعذر تحديث حالة المحادثة');
+                alert(firebaseErrorMessage(err));
+            }
             finally { sendBtn.disabled = false; }
         };
 
