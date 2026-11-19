@@ -34,6 +34,10 @@
             -webkit-backdrop-filter: blur(35px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+            transition: border-color 0.25s ease, box-shadow 0.25s ease;
+        }
+        .liquid-glass:hover {
+            border-color: rgba(255, 42, 133, 0.26);
         }
         @keyframes glowingBorder {
             0% { border-color: rgba(255, 42, 133, 0.3); box-shadow: 0 0 15px rgba(255, 42, 133, 0.2); }
@@ -56,6 +60,9 @@
     </style>
 </head>
 <body class="flex flex-col select-none">
+
+    <!-- إشعار عائم أنيق -->
+    <div id="nxl-toast" class="fixed top-14 left-1/2 -translate-x-1/2 z-[60] bg-[#12121a]/95 border border-[#ff2a85]/50 text-white text-[11px] font-bold px-4 py-1.5 rounded-full shadow-xl hidden pointer-events-none"></div>
 
     <!-- شاشة تسجيل الدخول -->
     <div id="auth-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#060609] px-6">
@@ -245,6 +252,12 @@
         </section>
     </main>
 
+    <!-- عارض صور المنشورات المكبّر -->
+    <div id="post-lightbox-modal" class="fixed inset-0 z-50 bg-black/95 flex flex-col items-center justify-center hidden p-4" onclick="window.closePostLightbox()">
+        <button id="close-post-lightbox" class="absolute top-6 left-6 text-white text-3xl font-bold">&times;</button>
+        <img id="post-lightbox-img" class="max-w-full max-h-[82vh] rounded-2xl border border-[#ff2a85]/40 shadow-2xl object-contain" onclick="event.stopPropagation()">
+    </div>
+
     <!-- شاشة الشات الخاص -->
     <div id="private-chat-window" class="fixed inset-0 z-50 bg-[#060609] flex flex-col hidden">
         <header class="liquid-glass py-2.5 px-4 border-b border-gray-800 flex items-center justify-between shrink-0">
@@ -340,6 +353,12 @@
                 </div>
             </div>
 
+            <div class="flex gap-1.5 px-2.5 pt-2 bg-[#12121a] overflow-x-auto custom-scrollbar shrink-0">
+                <button type="button" onclick="window.sendQuickAiPrompt('ما هي منصة NXL؟')" class="text-[10px] bg-[#060609] text-pink-300 border border-pink-500/30 px-2.5 py-1 rounded-full whitespace-nowrap interactive-press">✨ عن NXL</button>
+                <button type="button" onclick="window.sendQuickAiPrompt('اعطني نصيحة سريعة لصناع المحتوى')" class="text-[10px] bg-[#060609] text-orange-300 border border-orange-500/30 px-2.5 py-1 rounded-full whitespace-nowrap interactive-press">🔥 نصيحة محتوى</button>
+                <button type="button" onclick="window.sendQuickAiPrompt('فكرة منشور جذاب اليوم')" class="text-[10px] bg-[#060609] text-purple-300 border border-purple-500/30 px-2.5 py-1 rounded-full whitespace-nowrap interactive-press">💡 فكرة منشور</button>
+            </div>
+
             <div class="p-2.5 bg-[#12121a] border-t border-gray-800 flex gap-2 items-center shrink-0 mb-safe">
                 <input type="text" id="ai-msg-input" placeholder="اسأل NXL Assistant..." class="flex-1 bg-[#060609] text-xs rounded-xl px-3.5 py-3 text-white focus:outline-none border border-gray-800">
                 <button id="send-ai-btn" class="w-10 h-10 gradient-bg rounded-xl flex items-center justify-center text-white font-bold interactive-press shadow-md">✨</button>
@@ -403,6 +422,45 @@
         let replyingGlobalMsg = null;
         let replyingPrivateMsg = null;
         let dynamicAiKnowledge = {};
+        const expandedPostComments = {};
+        const postImageRegistry = {};
+        let toastTimer = null;
+
+        function showToast(msg) {
+            const el = document.getElementById('nxl-toast');
+            if (!el || !msg) return;
+            el.innerText = msg;
+            el.classList.remove('hidden');
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => el.classList.add('hidden'), 1800);
+        }
+
+        function formatRelativeTime(ts) {
+            const num = Number(ts);
+            if (!Number.isFinite(num) || num <= 0) return '';
+            const diffSec = Math.max(0, Math.floor((Date.now() - num) / 1000));
+            if (diffSec < 60) return 'الآن';
+            const diffMin = Math.floor(diffSec / 60);
+            if (diffMin < 60) return `${diffMin} د`;
+            const diffHr = Math.floor(diffMin / 60);
+            if (diffHr < 24) return `${diffHr} س`;
+            return `${Math.floor(diffHr / 24)} ي`;
+        }
+
+        window.openPostLightbox = (postId) => {
+            postId = decodeInlineArg(postId);
+            const src = postImageRegistry[postId];
+            if (!src) return;
+            document.getElementById('post-lightbox-img').src = src;
+            document.getElementById('post-lightbox-modal').classList.remove('hidden');
+            showToast('🔍 عرض الصورة بحجم كامل');
+        };
+
+        window.closePostLightbox = () => {
+            document.getElementById('post-lightbox-modal').classList.add('hidden');
+            document.getElementById('post-lightbox-img').src = '';
+            showToast('تم إغلاق الصورة');
+        };
 
         onValue(ref(db, 'ai_knowledge_base'), (snapshot) => {
             if (snapshot.exists()) dynamicAiKnowledge = snapshot.val();
@@ -494,7 +552,7 @@
                 const oldUsername = userData?.username || null;
                 const claim = await runTransaction(ref(db, `usernames/${username}`), current => {
                     if (current === null || current === currentUser.uid) return currentUser.uid;
-                    return; // abort: الاسم مستخدم بالفعل
+                    return;
                 });
                 if (!claim.committed) throw new Error('USERNAME_TAKEN');
                 const avatarUrl = userData?.avatarUrl || `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(nickname)}`;
@@ -529,7 +587,6 @@
             return messages[code] || err?.message || 'حدث خطأ غير متوقع، حاول مرة أخرى';
         }
 
-        // تعديل الملف الشخصي: الاسم والنبذة، مع الاحتفاظ باسم المستخدم الحالي.
         document.getElementById('open-edit-profile-btn').addEventListener('click', async () => {
             if (!currentUser || !userData) return;
             const nickname = prompt('اكتب اللقب الجديد:', userData.nickname || '');
@@ -834,6 +891,50 @@
         document.getElementById('filter-smart-btn').onclick = () => { postsFeedMode = 'trending'; renderPostsFeed(); };
         document.getElementById('filter-recent-btn').onclick = () => { postsFeedMode = 'recent'; renderPostsFeed(); };
 
+        window.toggleComments = (postId) => {
+            postId = decodeInlineArg(postId);
+            if (!postId) return;
+            expandedPostComments[postId] = !expandedPostComments[postId];
+            renderPostsFeed();
+        };
+
+        window.submitComment = async (postId) => {
+            postId = decodeInlineArg(postId);
+            if (!currentUser || !userData || !postId) return;
+            const inputEl = document.getElementById(`comment-input-${postId}`);
+            if (!inputEl) return;
+            const text = inputEl.value.trim();
+            if (!text) return;
+            if (text.length > 500) return alert('التعليق أقصى حد له 500 حرف');
+            try {
+                await push(ref(db, `posts/${postId}/comments`), {
+                    userId: currentUser.uid,
+                    nickname: userData.nickname,
+                    avatarUrl: userData.avatarUrl || '',
+                    text,
+                    timestamp: Date.now()
+                });
+                expandedPostComments[postId] = true;
+                inputEl.value = '';
+            } catch (err) {
+                alert(firebaseErrorMessage(err));
+            }
+        };
+
+        window.deleteComment = async (postId, commentId) => {
+            postId = decodeInlineArg(postId);
+            commentId = decodeInlineArg(commentId);
+            if (!currentUser || !postId || !commentId) return;
+            try {
+                const cRef = ref(db, `posts/${postId}/comments/${commentId}`);
+                const snap = await get(cRef);
+                if (!snap.exists() || snap.val().userId !== currentUser.uid) return;
+                await remove(cRef);
+            } catch (err) {
+                alert(firebaseErrorMessage(err));
+            }
+        };
+
         function startPostsFeed() {
             if (postsFeedUnsubscribe) return;
             postsFeedUnsubscribe = onValue(query(ref(db, 'posts'), limitToLast(50)), (snap) => {
@@ -855,22 +956,59 @@
             const arr = [...cachedPosts];
             if (postsFeedMode === 'recent') arr.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
             else arr.sort((a, b) => ((b.likeCount || 0) * 3 + (b.timestamp || 0) / 1e12) - ((a.likeCount || 0) * 3 + (a.timestamp || 0) / 1e12));
+
             arr.forEach(p => {
                 const isLiked = !!(p.likes && p.likes[currentUser.uid]);
+                const commentsMap = p.comments && typeof p.comments === 'object' ? p.comments : {};
+                const commentEntries = Object.entries(commentsMap)
+                    .map(([cid, cval]) => ({ id: cid, ...(cval || {}) }))
+                    .sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
+                const isCommentsOpen = !!expandedPostComments[p.id];
+
+                if (p.image) postImageRegistry[p.id] = p.image;
+
+                const commentsSectionHtml = isCommentsOpen ? `
+                    <div class="mt-2 pt-2 border-t border-gray-800/80 space-y-2">
+                        <div class="space-y-1.5 max-h-40 overflow-y-auto custom-scrollbar">
+                            ${commentEntries.length > 0 ? commentEntries.map(cm => `
+                                <div class="bg-[#12121a] px-2.5 py-1.5 rounded-xl border border-gray-800/70 flex justify-between items-start gap-2">
+                                    <div class="text-[11px] leading-relaxed break-words">
+                                        <span class="font-bold text-[#ff7300]">${escapeHTML(cm.nickname || 'مستخدم')}:</span>
+                                        <span class="text-gray-200 mr-1">${escapeHTML(cm.text || '')}</span>
+                                        <span class="text-[9px] text-gray-500 mr-1">${escapeHTML(formatRelativeTime(cm.timestamp))}</span>
+                                    </div>
+                                    ${cm.userId === currentUser.uid ? `<button onclick="window.deleteComment('${encodeURIComponent(p.id)}', '${encodeURIComponent(cm.id)}')" class="text-red-400 text-[10px] shrink-0">✕</button>` : ''}
+                                </div>
+                            `).join('') : `<p class="text-[10px] text-gray-500 text-center py-1">لا توجد تعليقات بعد، كن أول من يعلق 💬</p>`}
+                        </div>
+                        <div class="flex gap-1.5 items-center">
+                            <input type="text" id="comment-input-${escapeHTML(p.id)}" placeholder="اكتب تعليقك..." onkeydown="if(event.key==='Enter'){event.preventDefault();window.submitComment('${encodeURIComponent(p.id)}');}" class="flex-1 bg-[#12121a] text-[11px] rounded-xl px-3 py-1.5 text-white border border-gray-800 focus:outline-none">
+                            <button onclick="window.submitComment('${encodeURIComponent(p.id)}')" class="gradient-bg text-white text-[10px] font-bold px-3 py-1.5 rounded-xl interactive-press">إرسال</button>
+                        </div>
+                    </div>
+                ` : '';
+
                 feed.insertAdjacentHTML('beforeend', `
                     <div class="liquid-glass p-3 rounded-2xl border border-gray-800 space-y-2">
-                        <div class="flex items-center gap-2 cursor-pointer" onclick="window.openUserModal('${p.userId}')">
-                            <img src="${escapeHTML(p.userAvatar || '')}" class="w-7 h-7 rounded-full bg-gray-800 object-cover" onerror="this.style.display='none'">
-                            <div><h4 class="text-xs font-bold text-white hover:underline">${escapeHTML(p.userNickname)}</h4><span class="text-[9px] text-[#ff7300]">@${escapeHTML(p.userUsername)}</span></div>
+                        <div class="flex items-center justify-between gap-2">
+                            <div class="flex items-center gap-2 cursor-pointer" onclick="window.openUserModal('${p.userId}')">
+                                <img src="${escapeHTML(p.userAvatar || '')}" class="w-7 h-7 rounded-full bg-gray-800 object-cover" onerror="this.style.display='none'">
+                                <div><h4 class="text-xs font-bold text-white hover:underline">${escapeHTML(p.userNickname)}</h4><span class="text-[9px] text-[#ff7300]">@${escapeHTML(p.userUsername)}</span></div>
+                            </div>
+                            <span class="text-[9px] text-gray-500 font-semibold">${escapeHTML(formatRelativeTime(p.timestamp))}</span>
                         </div>
                         ${p.text ? `<p class="text-xs text-gray-200 whitespace-pre-wrap break-words">${escapeHTML(p.text)}</p>` : ''}
-                        ${p.image ? `<img src="${escapeHTML(p.image)}" class="w-full rounded-xl border border-gray-800" loading="lazy">` : ''}
+                        ${p.image ? `<img src="${escapeHTML(p.image)}" onclick="window.openPostLightbox('${encodeURIComponent(p.id)}')" class="w-full rounded-xl border border-gray-800 cursor-pointer hover:opacity-95 transition" loading="lazy">` : ''}
                         <div class="flex justify-between items-center text-xs pt-2 border-t border-gray-800">
-                            <button onclick="window.likePost('${p.id}')" class="flex items-center gap-1 font-bold ${isLiked ? 'text-[#ff2a85]' : 'text-gray-400'}"><span>${isLiked ? '❤️' : '🤍'}</span><span>${Number(p.likeCount) || 0}</span></button>
+                            <div class="flex items-center gap-3">
+                                <button onclick="window.likePost('${p.id}')" class="flex items-center gap-1 font-bold ${isLiked ? 'text-[#ff2a85]' : 'text-gray-400'}"><span>${isLiked ? '❤️' : '🤍'}</span><span>${Number(p.likeCount) || 0}</span></button>
+                                <button onclick="window.toggleComments('${encodeURIComponent(p.id)}')" class="flex items-center gap-1 font-bold ${isCommentsOpen ? 'text-[#ff7300]' : 'text-gray-400'}"><span>💬</span><span>${commentEntries.length}</span></button>
+                            </div>
                             ${p.userId === currentUser.uid ? `<button onclick="window.deleteOwnPost('${p.id}')" class="text-red-400 text-[10px] font-bold">حذف المنشور 🗑️</button>` : ''}
                         </div>
+                        ${commentsSectionHtml}
                     </div>`);
-                if (p.userId === currentUser.uid && p.image) grid.insertAdjacentHTML('beforeend', `<img src="${escapeHTML(p.image)}" class="w-full h-24 object-cover rounded-xl border border-gray-800" loading="lazy">`);
+                if (p.userId === currentUser.uid && p.image) grid.insertAdjacentHTML('beforeend', `<img src="${escapeHTML(p.image)}" onclick="window.openPostLightbox('${encodeURIComponent(p.id)}')" class="w-full h-24 object-cover rounded-xl border border-gray-800 cursor-pointer" loading="lazy">`);
             });
             document.getElementById('filter-smart-btn').classList.toggle('bg-[#ff2a85]', postsFeedMode === 'trending');
             document.getElementById('filter-smart-btn').classList.toggle('text-white', postsFeedMode === 'trending');
@@ -993,7 +1131,6 @@
             openChatId = chatId;
             openChatTargetUid = targetUid;
 
-            // تسجيل الشات للطرفين فوراً عند الفتح أو المراسلة
             update(ref(db), {
                 [`user_chats/${currentUser.uid}/${chatId}/targetUid`]: targetUid,
                 [`user_chats/${targetUid}/${chatId}/targetUid`]: currentUser.uid
@@ -1136,6 +1273,13 @@
                 return null;
             }
         }
+
+        window.sendQuickAiPrompt = (promptText) => {
+            const inp = document.getElementById('ai-msg-input');
+            if (!inp) return;
+            inp.value = promptText;
+            document.getElementById('send-ai-btn').click();
+        };
 
         document.getElementById('send-ai-btn').onclick = async () => {
             const inp = document.getElementById('ai-msg-input'), sendBtn = document.getElementById('send-ai-btn');
