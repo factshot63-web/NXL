@@ -2,93 +2,248 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NXL AI - لوحة تحكم الاستيراد الذكي للـ JSON</title>
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>NXL Admin Command Center - لوحة تحكم المدير</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Cairo', sans-serif; background-color: #060609; color: #ffffff; }
-        .liquid-glass { 
-            background: rgba(18, 18, 26, 0.85); 
-            backdrop-filter: blur(20px); 
-            border: 1px solid rgba(255, 255, 255, 0.08); 
-            box-shadow: 0 10px 40px 0 rgba(0, 0, 0, 0.5);
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #060609;
+            color: #ffffff;
+            min-height: 100vh;
         }
-        .gradient-bg { background: linear-gradient(135deg, #a855f7 0%, #3b82f6 100%); }
-        .gradient-text { background: linear-gradient(135deg, #a855f7 0%, #3b82f6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #a855f7; border-radius: 10px; }
-        .interactive-press:active { transform: scale(0.96); transition: transform 0.1s ease; }
+        .gradient-bg { background: linear-gradient(135deg, #ff2a85 0%, #ff7300 100%); }
+        .gradient-text {
+            background: linear-gradient(135deg, #ff2a85 0%, #ff7300 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .glass-panel {
+            background: rgba(18, 18, 26, 0.92);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .custom-scrollbar::-webkit-scrollbar { width: 5px; height: 5px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #ff2a85; border-radius: 999px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #0c0c12; }
     </style>
 </head>
-<body class="flex flex-col h-screen overflow-hidden p-4 max-w-2xl mx-auto select-none">
+<body class="pb-12">
 
-    <header class="liquid-glass p-4 rounded-2xl mb-4 flex justify-between items-center shrink-0 border border-purple-500/30">
-        <div>
-            <h1 class="text-sm font-bold text-white flex items-center gap-2">
-                <span>🤖</span> NXL AI - محطة استيراد الـ JSON
-            </h1>
-            <p class="text-[10px] text-purple-400">ارمي كود الـ JSON هنا وهوه هيضيفه أوتوماتيك للسيرفر ⚡</p>
+    <!-- Toast Notification -->
+    <div id="admin-toast" class="fixed top-5 left-1/2 -translate-x-1/2 z-[70] bg-[#14141f] border border-[#ff2a85]/60 text-white text-xs font-bold px-5 py-2.5 rounded-full shadow-2xl hidden"></div>
+
+    <!-- Top Header -->
+    <header class="glass-panel sticky top-0 z-40 border-b border-gray-800/80 px-4 py-3">
+        <div class="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-2xl gradient-bg flex items-center justify-center font-black text-sm text-white shadow-lg shadow-[#ff2a85]/30">
+                    NXL
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <h1 class="text-sm md:text-base font-black">لوحة تحكم المدير الكاملة</h1>
+                        <span id="db-status-badge" class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 font-bold">
+                            متصل بقاعدة البيانات
+                        </span>
+                    </div>
+                    <p class="text-[11px] text-gray-400">إدارة الرسائل، المستخدمين، النقاط، المحادثات، والفرملة التلقائية</p>
+                </div>
+            </div>
+
+            <!-- Quick Auth / Session Bar -->
+            <div id="auth-bar" class="flex flex-wrap items-center gap-2 text-xs">
+                <span id="auth-user-info" class="text-[11px] text-gray-300 bg-[#0d0d14] px-3 py-1.5 rounded-xl border border-gray-800">
+                    وضع الزائر / غير مسجل
+                </span>
+                <input type="email" id="admin-email" placeholder="بريد المدير" class="bg-[#0d0d14] border border-gray-800 rounded-xl px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-[#ff2a85]">
+                <input type="password" id="admin-pass" placeholder="كلمة المرور" class="bg-[#0d0d14] border border-gray-800 rounded-xl px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-[#ff2a85]">
+                <button id="admin-login-btn" class="gradient-bg text-white font-bold px-3.5 py-1.5 rounded-xl hover:opacity-95 transition">دخول</button>
+                <button id="admin-logout-btn" class="bg-gray-800 text-gray-200 font-bold px-3 py-1.5 rounded-xl hover:bg-gray-700 transition hidden">خروج</button>
+            </div>
         </div>
-        <button id="export-json-btn" class="bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold px-3 py-2 rounded-xl transition shadow-lg shadow-purple-500/20 interactive-press">
-            📥 تصدير الكل JSON
-        </button>
     </header>
 
-    <main class="flex-1 overflow-y-auto custom-scrollbar space-y-4 pb-10">
-        
-        <!-- قسم الإضافة اليدوية السريعة -->
-        <div class="liquid-glass p-5 rounded-2xl border border-gray-800 space-y-3">
-            <h2 class="text-sm font-bold text-purple-300">➕ إضافة سؤال فردي</h2>
-            <div class="grid grid-cols-3 gap-2">
-                <input type="text" id="q-input" placeholder="السؤال..." class="col-span-2 bg-[#12121a] text-xs rounded-xl px-3 py-2.5 text-white focus:outline-none border border-gray-700">
-                <select id="dialect-select" class="bg-[#12121a] text-xs rounded-xl px-3 py-2.5 text-white focus:outline-none border border-gray-700">
-                    <option value="egyptian">🇪🇬 مصرية</option>
-                    <option value="gulf">🇸🇦 خليجية</option>
-                    <option value="general">🌐 عامة</option>
-                </select>
-            </div>
-            <textarea id="a-input" placeholder="الإجابة..." class="w-full bg-[#12121a] text-xs rounded-xl px-3 py-2 text-white focus:outline-none border border-gray-700 h-16 resize-none"></textarea>
-            <button id="save-q-btn" class="w-full py-2.5 gradient-bg rounded-xl text-xs font-bold text-white shadow-md transition interactive-press">حفظ السؤال الفردي</button>
-        </div>
+    <main class="max-w-6xl mx-auto px-4 pt-5 space-y-5">
 
-        <!-- قسم الاستيراد الجماعي بواسطة كود JSON -->
-        <div class="liquid-glass p-5 rounded-2xl border border-purple-500/40 space-y-3 shadow-lg shadow-purple-500/10">
-            <h2 class="text-sm font-bold text-purple-300 flex items-center gap-1"><span>💻</span> استيراد جماعي عبر كود JSON</h2>
-            <p class="text-[10px] text-gray-400">الصق كود الـ JSON بالأسفل (على شكل مصفوفة أو كائن)، ودع التطبيق يحلله ويدخله بالكامل:</p>
-            
-            <textarea id="json-bulk-input" placeholder='[
-  {
-    "question": "ازيك يا حوكش",
-    "answer": "يا هلا والله بـ حمص الغالي منور الدنيا! 🔥",
-    "dialect": "egyptian"
-  },
-  {
-    "question": "وشلونه الشغل",
-    "answer": "العالي عالي يا بطل، كله تمام التمام ⚡",
-    "dialect": "gulf"
-  }
-]' class="w-full bg-[#12121a] text-xs rounded-xl p-3 text-purple-200 font-mono focus:outline-none border border-purple-500/30 h-36 custom-scrollbar"></textarea>
-            
-            <button id="import-json-btn" class="w-full py-3 bg-gradient-to-r from-purple-600 to-blue-600 rounded-xl text-xs font-bold text-white shadow-lg shadow-purple-500/30 transition interactive-press">
-                تحليل وإضافة كود الـ JSON للسيرفر 🚀
+        <!-- KPI Stats Cards -->
+        <section class="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <div class="glass-panel p-4 rounded-2xl border border-gray-800/80">
+                <p class="text-[11px] text-gray-400 font-bold">إجمالي المستخدمين</p>
+                <p id="stat-users" class="text-2xl font-black gradient-text mt-1">0</p>
+            </div>
+            <div class="glass-panel p-4 rounded-2xl border border-gray-800/80">
+                <p class="text-[11px] text-gray-400 font-bold">رسائل الشات العام</p>
+                <p id="stat-global-msgs" class="text-2xl font-black text-pink-400 mt-1">0</p>
+            </div>
+            <div class="glass-panel p-4 rounded-2xl border border-gray-800/80">
+                <p class="text-[11px] text-gray-400 font-bold">المحادثات الخاصة</p>
+                <p id="stat-chats" class="text-2xl font-black text-orange-400 mt-1">0</p>
+            </div>
+            <div class="glass-panel p-4 rounded-2xl border border-gray-800/80">
+                <p class="text-[11px] text-gray-400 font-bold">إجراءات الفرملة التلقائية</p>
+                <p id="stat-automod-actions" class="text-2xl font-black text-emerald-400 mt-1">0</p>
+            </div>
+        </section>
+
+        <!-- Navigation Tabs -->
+        <nav class="flex flex-wrap gap-2 bg-[#0d0d14] p-1.5 rounded-2xl border border-gray-800/80">
+            <button data-tab="messages" class="admin-tab-btn flex-1 min-w-[120px] py-2.5 px-3 rounded-xl text-xs font-extrabold gradient-bg text-white transition">
+                💬 الرسائل وحذف رسايل
             </button>
-        </div>
+            <button data-tab="users" class="admin-tab-btn flex-1 min-w-[120px] py-2.5 px-3 rounded-xl text-xs font-extrabold text-gray-400 hover:text-white transition">
+                👥 المستخدمون والنقاط
+            </button>
+            <button data-tab="chats" class="admin-tab-btn flex-1 min-w-[120px] py-2.5 px-3 rounded-xl text-xs font-extrabold text-gray-400 hover:text-white transition">
+                🗂️ المحادثات الخاصة
+            </button>
+            <button data-tab="automod" class="admin-tab-btn flex-1 min-w-[120px] py-2.5 px-3 rounded-xl text-xs font-extrabold text-gray-400 hover:text-white transition">
+                🛡️ الفرملة التلقائية
+            </button>
+        </nav>
 
-        <!-- قائمة الأسئلة المخزنة في السيرفر -->
-        <div class="liquid-glass p-5 rounded-2xl border border-gray-800 space-y-3">
-            <h2 class="text-sm font-bold text-purple-300">📚 الأسئلة المخزنة في السيرفر حالياً</h2>
-            <div id="questions-list" class="space-y-2">
-                <div class="text-center text-xs text-gray-500 py-4">جاري التحميل...</div>
+        <!-- TAB 1: MESSAGES -->
+        <section id="panel-messages" class="admin-panel space-y-4">
+            <div class="glass-panel p-4 rounded-2xl border border-gray-800/80 flex flex-wrap items-center justify-between gap-3">
+                <div class="flex items-center gap-2">
+                    <button id="msg-source-global" class="px-3.5 py-2 rounded-xl text-xs font-bold bg-[#ff2a85] text-white">رسائل الشات العام</button>
+                    <button id="msg-source-private" class="px-3.5 py-2 rounded-xl text-xs font-bold bg-[#0d0d14] text-gray-300 border border-gray-800">رسائل محادثة خاصة</button>
+                    <select id="private-chat-selector" class="hidden bg-[#0d0d14] border border-gray-800 rounded-xl px-3 py-2 text-xs text-white max-w-[240px]">
+                        <option value="">اختر محادثة خاصة...</option>
+                    </select>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-2">
+                    <input type="text" id="msg-search-input" placeholder="ابحث في الرسائل أو المرسل..." class="bg-[#0d0d14] border border-gray-800 rounded-xl px-3 py-2 text-xs text-white w-56 focus:outline-none focus:border-[#ff2a85]">
+                    <button id="clear-current-scope-btn" class="bg-red-500/15 hover:bg-red-500/25 text-red-400 border border-red-500/30 px-3.5 py-2 rounded-xl text-xs font-bold transition">
+                        🗑️ مسح كل رسائل القسم الحالي
+                    </button>
+                </div>
             </div>
-        </div>
+
+            <div id="messages-list" class="space-y-2.5 max-h-[62vh] overflow-y-auto custom-scrollbar pr-1">
+                <div class="glass-panel p-8 rounded-2xl text-center text-xs text-gray-400">جاري تحميل الرسائل...</div>
+            </div>
+        </section>
+
+        <!-- TAB 2: USERS & POINTS -->
+        <section id="panel-users" class="admin-panel hidden space-y-4">
+            <div class="glass-panel p-4 rounded-2xl border border-gray-800/80 flex flex-wrap items-center justify-between gap-3">
+                <input type="text" id="user-search-input" placeholder="ابحث بالاسم، اليوزر، أو UID..." class="bg-[#0d0d14] border border-gray-800 rounded-xl px-3.5 py-2 text-xs text-white w-full sm:w-72 focus:outline-none focus:border-[#ff2a85]">
+                <div class="flex flex-wrap gap-2">
+                    <button id="reset-all-points-btn" class="bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/30 px-3.5 py-2 rounded-xl text-xs font-bold transition">
+                        ⚡ تصفير نقاط جميع المستخدمين
+                    </button>
+                </div>
+            </div>
+
+            <div id="users-list" class="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-[65vh] overflow-y-auto custom-scrollbar pr-1">
+                <div class="glass-panel p-8 rounded-2xl text-center text-xs text-gray-400 col-span-full">جاري تحميل المستخدمين...</div>
+            </div>
+        </section>
+
+        <!-- TAB 3: PRIVATE CHATS -->
+        <section id="panel-chats" class="admin-panel hidden space-y-4">
+            <div class="glass-panel p-4 rounded-2xl border border-gray-800/80 flex flex-wrap items-center justify-between gap-3">
+                <div>
+                    <h2 class="text-sm font-extrabold">إدارة المحادثات الخاصة</h2>
+                    <p class="text-[11px] text-gray-400">يمكنك معاينة أي محادثة أو حذفها بالكامل من قاعدة البيانات ومن قوائم الطرفين</p>
+                </div>
+                <input type="text" id="chat-search-input" placeholder="ابحث بمعرّف المحادثة أو UID..." class="bg-[#0d0d14] border border-gray-800 rounded-xl px-3.5 py-2 text-xs text-white w-64 focus:outline-none focus:border-[#ff2a85]">
+            </div>
+
+            <div id="chats-list" class="space-y-2.5 max-h-[65vh] overflow-y-auto custom-scrollbar pr-1">
+                <div class="glass-panel p-8 rounded-2xl text-center text-xs text-gray-400">جاري تحميل المحادثات...</div>
+            </div>
+        </section>
+
+        <!-- TAB 4: AUTO-MODERATION & AUTO-THROTTLE -->
+        <section id="panel-automod" class="admin-panel hidden space-y-4">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <!-- Controls Card -->
+                <div class="glass-panel p-5 rounded-2xl border border-gray-800/80 space-y-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h2 class="text-sm font-black">محرك الفرملة التلقائية (Auto-Throttle)</h2>
+                            <p class="text-[11px] text-gray-400">يراقب الشات العام لحظياً ويفرمل أي إغراق أو مخالفة تلقائياً</p>
+                        </div>
+                        <span id="automod-live-indicator" class="text-[11px] font-bold px-3 py-1 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+                            مفعّل ومراقب
+                        </span>
+                    </div>
+
+                    <label class="flex items-center justify-between bg-[#0d0d14] p-3.5 rounded-xl border border-gray-800 cursor-pointer">
+                        <div>
+                            <p class="text-xs font-bold text-white">فرملة تكرار الرسائل (Anti-Flood)</p>
+                            <p class="text-[10px] text-gray-400">يحذف الرسائل الزائدة تلقائياً لو نفس المستخدم بعت رسائل بسرعة</p>
+                        </div>
+                        <input type="checkbox" id="toggle-antiflood" checked class="w-4 h-4 accent-[#ff2a85]">
+                    </label>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="bg-[#0d0d14] p-3 rounded-xl border border-gray-800">
+                            <label class="block text-[10px] text-gray-400 mb-1">أقصى رسائل مسموحة</label>
+                            <input type="number" id="flood-max-msgs" value="4" min="1" max="30" class="w-full bg-[#060609] border border-gray-700 rounded-lg px-2.5 py-1.5 text-xs text-white">
+                        </div>
+                        <div class="bg-[#0d0d14] p-3 rounded-xl border border-gray-800">
+                            <label class="block text-[10px] text-gray-400 mb-1">المدة الزمنية (بالثواني)</label>
+                            <input type="number" id="flood-window-sec" value="8" min="2" max="120" class="w-full bg-[#060609] border border-gray-700 rounded-lg px-2.5 py-1.5 text-xs text-white">
+                        </div>
+                    </div>
+
+                    <label class="flex items-center justify-between bg-[#0d0d14] p-3.5 rounded-xl border border-gray-800 cursor-pointer">
+                        <div>
+                            <p class="text-xs font-bold text-white">حذف الرسائل المخالفة تلقائياً (Word Filter)</p>
+                            <p class="text-[10px] text-gray-400">يحذف أي رسالة تحتوي على كلمة من القائمة أدناه</p>
+                        </div>
+                        <input type="checkbox" id="toggle-wordfilter" checked class="w-4 h-4 accent-[#ff2a85]">
+                    </label>
+
+                    <div class="bg-[#0d0d14] p-3 rounded-xl border border-gray-800">
+                        <label class="block text-[10px] text-gray-400 mb-1">الكلمات الممنوعة (افصل بينها بفاصلة أو سطر)</label>
+                        <textarea id="banned-words-input" rows="2" placeholder="كلمة1, كلمة2, سبام..." class="w-full bg-[#060609] border border-gray-700 rounded-lg p-2.5 text-xs text-white focus:outline-none"></textarea>
+                    </div>
+
+                    <label class="flex items-center justify-between bg-[#0d0d14] p-3.5 rounded-xl border border-amber-500/30 cursor-pointer">
+                        <div>
+                            <p class="text-xs font-bold text-amber-300">فرملة الطوارئ (Emergency Lock Flag)</p>
+                            <p class="text-[10px] text-gray-400">يسجّل حالة إغلاق/تهدئة في قاعدة البيانات (`admin_config/autoMod`)</p>
+                        </div>
+                        <input type="checkbox" id="toggle-emergency-lock" class="w-4 h-4 accent-amber-500">
+                    </label>
+
+                    <button id="save-automod-config-btn" class="w-full py-2.5 gradient-bg text-white font-extrabold text-xs rounded-xl shadow-lg shadow-[#ff2a85]/20 hover:opacity-95 transition">
+                        💾 حفظ إعدادات الفرملة التلقائية
+                    </button>
+                </div>
+
+                <!-- Live Action Log Card -->
+                <div class="glass-panel p-5 rounded-2xl border border-gray-800/80 flex flex-col">
+                    <div class="flex items-center justify-between mb-3">
+                        <div>
+                            <h3 class="text-sm font-black">سجل الفرملة التلقائية المباشر</h3>
+                            <p class="text-[11px] text-gray-400">كل رسالة تم إيقافها أو حذفها تلقائياً أثناء فتح اللوحة</p>
+                        </div>
+                        <button id="clear-automod-log-btn" class="text-[11px] bg-gray-800 hover:bg-gray-700 text-gray-300 px-3 py-1 rounded-lg font-bold">
+                            مسح السجل
+                        </button>
+                    </div>
+                    <div id="automod-log-list" class="flex-1 space-y-2 max-h-[420px] overflow-y-auto custom-scrollbar">
+                        <div class="text-center text-xs text-gray-500 py-10">لا توجد مخالفات مرصودة حتى الآن ✨</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
     </main>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getDatabase, ref, set, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getDatabase, ref, onValue, get, set, update, remove, query, limitToLast } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDQ8pJMhye-kp5-FjXzVPPw2MDFm9_0A8c",
@@ -102,95 +257,621 @@
         };
 
         const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
         const db = getDatabase(app);
 
-        let allKnowledge = {};
+        // State
+        let usersMap = {};
+        let globalMessagesList = [];
+        let privateChatsMap = {};
+        let userChatsMap = {};
+        let selectedPrivateChatId = "";
+        let selectedPrivateChatMessages = [];
+        let msgSourceMode = "global"; // 'global' | 'private'
+        let autoModActionsCount = 0;
+        const processedAutoModMsgIds = new Set();
+        const senderRecentTimestamps = new Map();
 
-        // حفظ سؤال فردي
-        document.getElementById('save-q-btn').onclick = async () => {
-            const question = document.getElementById('q-input').value.trim();
-            const dialect = document.getElementById('dialect-select').value;
-            const answer = document.getElementById('a-input').value.trim();
-            if (!question || !answer) return alert("اكتب السؤال والإجابة!");
-
-            await push(ref(db, 'ai_knowledge_base'), { question, dialect, answer, timestamp: Date.now() });
-            document.getElementById('q-input').value = ''; document.getElementById('a-input').value = '';
-            alert("تم الحفظ بنجاح! ✅");
+        let autoModConfig = {
+            antiFloodEnabled: true,
+            maxMsgs: 4,
+            windowSec: 8,
+            wordFilterEnabled: true,
+            bannedWords: ["سبام", "إعلان وهمي"],
+            emergencyLock: false
         };
 
-        // ميزة تحليل واستيراد كود JSON الجماعي
-        document.getElementById('import-json-btn').onclick = async () => {
-            const rawText = document.getElementById('json-bulk-input').value.trim();
-            if (!rawText) return alert("فضلاً الصق كود الـ JSON أولاً!");
+        // Helpers
+        function escapeHTML(str) {
+            if (str === null || str === undefined) return "";
+            return String(str).replace(/[&<>"']/g, ch => ({
+                "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+            }[ch]));
+        }
 
+        function formatTime(ts) {
+            const n = Number(ts);
+            if (!Number.isFinite(n) || n <= 0) return "بدون وقت";
+            return new Date(n).toLocaleString("ar-EG", {
+                hour: "2-digit", minute: "2-digit", day: "2-digit", month: "short"
+            });
+        }
+
+        let toastTimer = null;
+        function showToast(msg, isError = false) {
+            const el = document.getElementById("admin-toast");
+            if (!el) return;
+            el.textContent = msg;
+            el.className = `fixed top-5 left-1/2 -translate-x-1/2 z-[70] text-white text-xs font-bold px-5 py-2.5 rounded-full shadow-2xl border ${
+                isError ? "bg-red-950/95 border-red-500/60" : "bg-[#14141f]/95 border-[#ff2a85]/60"
+            }`;
+            el.classList.remove("hidden");
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => el.classList.add("hidden"), 2400);
+        }
+
+        function updateStats() {
+            document.getElementById("stat-users").textContent = Object.keys(usersMap).length;
+            document.getElementById("stat-global-msgs").textContent = globalMessagesList.length;
+            document.getElementById("stat-chats").textContent = Object.keys(privateChatsMap).length;
+            document.getElementById("stat-automod-actions").textContent = autoModActionsCount;
+        }
+
+        // Auth Handlers
+        document.getElementById("admin-login-btn").addEventListener("click", async () => {
+            const email = document.getElementById("admin-email").value.trim();
+            const pass = document.getElementById("admin-pass").value;
+            if (!email || !pass) return showToast("أدخل البريد وكلمة المرور", true);
             try {
-                const parsedData = JSON.parse(rawText);
-                let count = 0;
-
-                // دعم الشكلين: لو كود JSON عبارة عن مصفوفة [...] أو كائن مجمع {...}
-                let itemsArray = Array.isArray(parsedData) ? parsedData : Object.values(parsedData);
-
-                for (let item of itemsArray) {
-                    if (item.question && item.answer) {
-                        await push(ref(db, 'ai_knowledge_base'), {
-                            question: item.question,
-                            answer: item.answer,
-                            dialect: item.dialect || 'general',
-                            timestamp: Date.now()
-                        });
-                        count++;
-                    }
-                }
-
-                document.getElementById('json-bulk-input').value = '';
-                alert(`✨ تم استيراد وإضافة ${count} سؤال بنجاح للسيرفر وتحديث الـ AI فوراً!`);
-            } catch (error) {
-                alert("❌ خطأ في تنسيق كود الـ JSON! تأكد من الأقواس المزدوجة والنقاط الفاصلة.");
-            }
-        };
-
-        // عرض وجلب الأسئلة
-        const listEl = document.getElementById('questions-list');
-        onValue(ref(db, 'ai_knowledge_base'), (snapshot) => {
-            listEl.innerHTML = '';
-            if (snapshot.exists()) {
-                allKnowledge = snapshot.val();
-                for (let id in allKnowledge) {
-                    const item = allKnowledge[id];
-                    listEl.innerHTML += `
-                        <div class="bg-[#12121a] p-3 rounded-xl border border-gray-800 flex justify-between items-start gap-2">
-                            <div>
-                                <span class="bg-purple-600/30 text-purple-300 text-[9px] px-2 py-0.5 rounded-md font-bold">${item.dialect || 'general'}</span>
-                                <p class="text-xs font-bold text-white mt-1">❓ ${escapeHTML(item.question)}</p>
-                                <p class="text-[11px] text-gray-300 mt-0.5">💬 ${escapeHTML(item.answer)}</p>
-                            </div>
-                            <button onclick="window.deleteQ('${id}')" class="text-red-500 hover:text-red-400 text-xs p-1 interactive-press">🗑️</button>
-                        </div>
-                    `;
-                }
-            } else {
-                listEl.innerHTML = '<div class="text-center text-xs text-gray-500 py-4">لا توجد أسئلة مخزنة حالياً.</div>';
+                await signInWithEmailAndPassword(auth, email, pass);
+                showToast("تم تسجيل الدخول بنجاح");
+            } catch (err) {
+                showToast(err?.message || "فشل تسجيل الدخول", true);
             }
         });
 
-        window.deleteQ = async (id) => {
-            if(confirm("هل تريد حذف هذا السؤال؟")) await remove(ref(db, `ai_knowledge_base/${id}`));
-        };
+        document.getElementById("admin-logout-btn").addEventListener("click", async () => {
+            await signOut(auth);
+            showToast("تم تسجيل الخروج");
+        });
 
-        document.getElementById('export-json-btn').onclick = () => {
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(allKnowledge, null, 2));
-            const downloadAnchor = document.createElement('a');
-            downloadAnchor.setAttribute("href", dataStr);
-            downloadAnchor.setAttribute("download", "nxl_ai_knowledge.json");
-            document.body.appendChild(downloadAnchor);
-            downloadAnchor.click();
-            downloadAnchor.remove();
-        };
+        onAuthStateChanged(auth, (user) => {
+            const infoEl = document.getElementById("auth-user-info");
+            const loginBtn = document.getElementById("admin-login-btn");
+            const logoutBtn = document.getElementById("admin-logout-btn");
+            if (user) {
+                infoEl.textContent = `مسجل: ${user.email || user.uid}`;
+                loginBtn.classList.add("hidden");
+                logoutBtn.classList.remove("hidden");
+            } else {
+                infoEl.textContent = "وضع الزائر / غير مسجل";
+                loginBtn.classList.remove("hidden");
+                logoutBtn.classList.add("hidden");
+            }
+        });
 
-        function escapeHTML(str) {
-            if(!str) return "";
-            return str.replace(/[&<>'"]/g, tag => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', "'":'&#39;', '"':'&quot;'}[tag] || tag));
+        // Tabs Navigation
+        document.querySelectorAll(".admin-tab-btn").forEach(btn => {
+            btn.addEventListener("click", () => {
+                const tab = btn.dataset.tab;
+                document.querySelectorAll(".admin-tab-btn").forEach(b => {
+                    b.classList.remove("gradient-bg", "text-white");
+                    b.classList.add("text-gray-400");
+                });
+                btn.classList.add("gradient-bg", "text-white");
+                btn.classList.remove("text-gray-400");
+
+                document.querySelectorAll(".admin-panel").forEach(p => p.classList.add("hidden"));
+                document.getElementById(`panel-${tab}`).classList.remove("hidden");
+            });
+        });
+
+        // Realtime Listeners
+        onValue(ref(db, ".info/connected"), (snap) => {
+            const badge = document.getElementById("db-status-badge");
+            if (snap.val() === true) {
+                badge.textContent = "متصل بقاعدة البيانات";
+                badge.className = "text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 font-bold";
+            } else {
+                badge.textContent = "غير متصل";
+                badge.className = "text-[10px] px-2 py-0.5 rounded-full bg-red-500/15 text-red-400 border border-red-500/30 font-bold";
+            }
+        });
+
+        onValue(ref(db, "users"), (snap) => {
+            usersMap = {};
+            if (snap.exists()) {
+                snap.forEach(child => {
+                    usersMap[child.key] = { uid: child.key, ...(child.val() || {}) };
+                });
+            }
+            updateStats();
+            renderUsers();
+            renderChats();
+            renderMessages();
+        });
+
+        onValue(query(ref(db, "global_chat"), limitToLast(250)), (snap) => {
+            const arr = [];
+            if (snap.exists()) {
+                snap.forEach(child => {
+                    arr.push({ id: child.key, ...(child.val() || {}) });
+                });
+            }
+            arr.sort((a, b) => (Number(b.timestamp) || 0) - (Number(a.timestamp) || 0));
+            globalMessagesList = arr;
+            runAutoModOnGlobalMessages(arr);
+            updateStats();
+            if (msgSourceMode === "global") renderMessages();
+        });
+
+        onValue(ref(db, "chats"), (snap) => {
+            privateChatsMap = {};
+            if (snap.exists()) {
+                snap.forEach(child => {
+                    privateChatsMap[child.key] = child.val() || {};
+                });
+            }
+            syncPrivateChatSelector();
+            updateStats();
+            renderChats();
+            if (msgSourceMode === "private" && selectedPrivateChatId) {
+                loadSelectedPrivateChatMessages(selectedPrivateChatId);
+            }
+        });
+
+        onValue(ref(db, "user_chats"), (snap) => {
+            userChatsMap = snap.exists() ? snap.val() : {};
+            renderChats();
+        });
+
+        onValue(ref(db, "admin_config/autoMod"), (snap) => {
+            if (!snap.exists()) return;
+            const cfg = snap.val() || {};
+            autoModConfig = {
+                antiFloodEnabled: cfg.antiFloodEnabled !== false,
+                maxMsgs: Math.max(1, Number(cfg.maxMsgs) || 4),
+                windowSec: Math.max(2, Number(cfg.windowSec) || 8),
+                wordFilterEnabled: cfg.wordFilterEnabled !== false,
+                bannedWords: Array.isArray(cfg.bannedWords) ? cfg.bannedWords : autoModConfig.bannedWords,
+                emergencyLock: !!cfg.emergencyLock
+            };
+            applyConfigToForm();
+        });
+
+        function applyConfigToForm() {
+            document.getElementById("toggle-antiflood").checked = autoModConfig.antiFloodEnabled;
+            document.getElementById("flood-max-msgs").value = autoModConfig.maxMsgs;
+            document.getElementById("flood-window-sec").value = autoModConfig.windowSec;
+            document.getElementById("toggle-wordfilter").checked = autoModConfig.wordFilterEnabled;
+            document.getElementById("banned-words-input").value = (autoModConfig.bannedWords || []).join(", ");
+            document.getElementById("toggle-emergency-lock").checked = autoModConfig.emergencyLock;
         }
+        applyConfigToForm();
+
+        // Auto-Moderation Engine
+        function appendAutoModLog(reason, senderName, msgText) {
+            autoModActionsCount++;
+            updateStats();
+            const logBox = document.getElementById("automod-log-list");
+            if (logBox.textContent.includes("لا توجد مخالفات")) {
+                logBox.innerHTML = "";
+            }
+            const item = document.createElement("div");
+            item.className = "bg-[#0d0d14] border border-pink-500/30 rounded-xl p-3 text-xs space-y-1";
+            item.innerHTML = `
+                <div class="flex items-center justify-between gap-2">
+                    <span class="font-extrabold text-pink-400">${escapeHTML(reason)}</span>
+                    <span class="text-[10px] text-gray-500">${escapeHTML(formatTime(Date.now()))}</span>
+                </div>
+                <p class="text-[11px] text-gray-300">المستخدم: <b>${escapeHTML(senderName || "مجهول")}</b></p>
+                ${msgText ? `<p class="text-[11px] text-gray-400 truncate">النص: "${escapeHTML(msgText)}"</p>` : ""}
+            `;
+            logBox.prepend(item);
+        }
+
+        async function runAutoModOnGlobalMessages(msgs) {
+            if (!autoModConfig.antiFloodEnabled && !autoModConfig.wordFilterEnabled) return;
+            const chronological = [...msgs].sort((a, b) => (Number(a.timestamp) || 0) - (Number(b.timestamp) || 0));
+            const windowMs = autoModConfig.windowSec * 1000;
+            const banned = (autoModConfig.bannedWords || []).map(w => String(w).trim().toLowerCase()).filter(Boolean);
+
+            for (const m of chronological) {
+                if (!m.id || processedAutoModMsgIds.has(m.id)) continue;
+                const text = String(m.text || "");
+                const senderId = m.senderId || "unknown";
+                const senderName = m.senderNickname || usersMap[senderId]?.nickname || senderId;
+
+                // 1) Banned words check
+                if (autoModConfig.wordFilterEnabled && banned.length > 0 && text) {
+                    const lowerText = text.toLowerCase();
+                    const hitWord = banned.find(w => lowerText.includes(w));
+                    if (hitWord) {
+                        processedAutoModMsgIds.add(m.id);
+                        try {
+                            await remove(ref(db, `global_chat/${m.id}`));
+                            appendAutoModLog(`حذف تلقائي لكلمة ممنوعة (${hitWord})`, senderName, text);
+                        } catch (_) {}
+                        continue;
+                    }
+                }
+
+                // 2) Anti-flood rate limit check
+                if (autoModConfig.antiFloodEnabled && senderId !== "unknown") {
+                    const ts = Number(m.timestamp) || Date.now();
+                    const prev = (senderRecentTimestamps.get(senderId) || []).filter(t => ts - t <= windowMs);
+                    prev.push(ts);
+                    senderRecentTimestamps.set(senderId, prev);
+
+                    if (prev.length > autoModConfig.maxMsgs) {
+                        processedAutoModMsgIds.add(m.id);
+                        try {
+                            await remove(ref(db, `global_chat/${m.id}`));
+                            appendAutoModLog(`فرملة تلقائية لتكرار الرسائل (أكثر من ${autoModConfig.maxMsgs} في ${autoModConfig.windowSec}ث)`, senderName, text);
+                        } catch (_) {}
+                    }
+                }
+            }
+        }
+
+        document.getElementById("save-automod-config-btn").addEventListener("click", async () => {
+            const rawWords = document.getElementById("banned-words-input").value;
+            const words = rawWords.split(/[,\n،]+/).map(s => s.trim()).filter(Boolean);
+            const nextCfg = {
+                antiFloodEnabled: document.getElementById("toggle-antiflood").checked,
+                maxMsgs: Math.max(1, Number(document.getElementById("flood-max-msgs").value) || 4),
+                windowSec: Math.max(2, Number(document.getElementById("flood-window-sec").value) || 8),
+                wordFilterEnabled: document.getElementById("toggle-wordfilter").checked,
+                bannedWords: words,
+                emergencyLock: document.getElementById("toggle-emergency-lock").checked,
+                updatedAt: Date.now()
+            };
+            try {
+                await set(ref(db, "admin_config/autoMod"), nextCfg);
+                autoModConfig = nextCfg;
+                showToast("تم حفظ إعدادات الفرملة التلقائية");
+            } catch (err) {
+                showToast(err?.message || "تعذر حفظ الإعدادات", true);
+            }
+        });
+
+        document.getElementById("clear-automod-log-btn").addEventListener("click", () => {
+            autoModActionsCount = 0;
+            updateStats();
+            document.getElementById("automod-log-list").innerHTML =
+                `<div class="text-center text-xs text-gray-500 py-10">لا توجد مخالفات مرصودة حتى الآن ✨</div>`;
+            showToast("تم مسح سجل الفرملة");
+        });
+
+        // Messages Section
+        document.getElementById("msg-source-global").addEventListener("click", () => {
+            msgSourceMode = "global";
+            document.getElementById("msg-source-global").className = "px-3.5 py-2 rounded-xl text-xs font-bold bg-[#ff2a85] text-white";
+            document.getElementById("msg-source-private").className = "px-3.5 py-2 rounded-xl text-xs font-bold bg-[#0d0d14] text-gray-300 border border-gray-800";
+            document.getElementById("private-chat-selector").classList.add("hidden");
+            renderMessages();
+        });
+
+        document.getElementById("msg-source-private").addEventListener("click", () => {
+            msgSourceMode = "private";
+            document.getElementById("msg-source-private").className = "px-3.5 py-2 rounded-xl text-xs font-bold bg-[#ff2a85] text-white";
+            document.getElementById("msg-source-global").className = "px-3.5 py-2 rounded-xl text-xs font-bold bg-[#0d0d14] text-gray-300 border border-gray-800";
+            document.getElementById("private-chat-selector").classList.remove("hidden");
+            if (selectedPrivateChatId) loadSelectedPrivateChatMessages(selectedPrivateChatId);
+            else renderMessages();
+        });
+
+        function syncPrivateChatSelector() {
+            const sel = document.getElementById("private-chat-selector");
+            const currentVal = sel.value;
+            const ids = Object.keys(privateChatsMap);
+            sel.innerHTML = `<option value="">اختر محادثة خاصة...</option>` + ids.map(id =>
+                `<option value="${escapeHTML(id)}">${escapeHTML(id)}</option>`
+            ).join("");
+            if (ids.includes(currentVal)) sel.value = currentVal;
+        }
+
+        document.getElementById("private-chat-selector").addEventListener("change", (e) => {
+            selectedPrivateChatId = e.target.value;
+            if (selectedPrivateChatId) loadSelectedPrivateChatMessages(selectedPrivateChatId);
+            else {
+                selectedPrivateChatMessages = [];
+                renderMessages();
+            }
+        });
+
+        function loadSelectedPrivateChatMessages(chatId) {
+            const rawChat = privateChatsMap[chatId] || {};
+            const arr = Object.entries(rawChat).map(([id, val]) => ({ id, ...(val || {}) }));
+            arr.sort((a, b) => (Number(b.timestamp) || 0) - (Number(a.timestamp) || 0));
+            selectedPrivateChatMessages = arr;
+            renderMessages();
+        }
+
+        document.getElementById("msg-search-input").addEventListener("input", renderMessages);
+
+        function renderMessages() {
+            const container = document.getElementById("messages-list");
+            const q = document.getElementById("msg-search-input").value.trim().toLowerCase();
+            const source = msgSourceMode === "global" ? globalMessagesList : selectedPrivateChatMessages;
+
+            const filtered = source.filter(m => {
+                if (!q) return true;
+                const sender = (m.senderNickname || usersMap[m.senderId]?.nickname || m.senderId || "").toLowerCase();
+                const body = (m.text || "").toLowerCase();
+                return sender.includes(q) || body.includes(q);
+            });
+
+            if (msgSourceMode === "private" && !selectedPrivateChatId) {
+                container.innerHTML = `<div class="glass-panel p-8 rounded-2xl text-center text-xs text-gray-400">اختر محادثة خاصة من القائمة بالأعلى لعرض وحذف رسائلها</div>`;
+                return;
+            }
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<div class="glass-panel p-8 rounded-2xl text-center text-xs text-gray-400">لا توجد رسائل مطابقة</div>`;
+                return;
+            }
+
+            container.innerHTML = filtered.map(m => {
+                const senderName = m.senderNickname || usersMap[m.senderId]?.nickname || m.senderId || "مستخدم";
+                return `
+                    <div class="glass-panel p-3.5 rounded-2xl border border-gray-800/80 flex items-start justify-between gap-3">
+                        <div class="min-w-0 flex-1 space-y-1">
+                            <div class="flex flex-wrap items-center gap-2">
+                                <span class="text-xs font-extrabold text-white">${escapeHTML(senderName)}</span>
+                                <span class="text-[10px] text-gray-500 font-mono">${escapeHTML(m.senderId || "")}</span>
+                                <span class="text-[10px] text-[#ff7300]">${escapeHTML(formatTime(m.timestamp))}</span>
+                            </div>
+                            ${m.text ? `<p class="text-xs text-gray-200 break-words">${escapeHTML(m.text)}</p>` : ""}
+                            ${m.image ? `<span class="inline-block text-[10px] px-2 py-0.5 rounded-md bg-pink-500/15 text-pink-300 border border-pink-500/30">${m.viewOnce ? "👻 صورة عرض واحد" : "🖼️ صورة مرفقة"}</span>` : ""}
+                        </div>
+                        <button onclick="window.deleteSingleMessage('${encodeURIComponent(m.id)}')" class="bg-red-500/15 hover:bg-red-500/30 text-red-400 border border-red-500/30 px-3 py-1.5 rounded-xl text-xs font-bold shrink-0 transition">
+                            حذف 🗑️
+                        </button>
+                    </div>
+                `;
+            }).join("");
+        }
+
+        window.deleteSingleMessage = async (encodedMsgId) => {
+            const msgId = decodeURIComponent(encodedMsgId);
+            if (!msgId) return;
+            try {
+                if (msgSourceMode === "global") {
+                    await remove(ref(db, `global_chat/${msgId}`));
+                } else if (selectedPrivateChatId) {
+                    await remove(ref(db, `chats/${selectedPrivateChatId}/${msgId}`));
+                }
+                showToast("تم حذف الرسالة بنجاح");
+            } catch (err) {
+                showToast(err?.message || "تعذر حذف الرسالة", true);
+            }
+        };
+
+        document.getElementById("clear-current-scope-btn").addEventListener("click", async () => {
+            if (msgSourceMode === "global") {
+                if (!confirm("متأكد من مسح جميع رسائل الشات العام الظاهرة؟")) return;
+                try {
+                    await remove(ref(db, "global_chat"));
+                    showToast("تم مسح الشات العام");
+                } catch (err) {
+                    showToast(err?.message || "تعذر المسح", true);
+                }
+            } else {
+                if (!selectedPrivateChatId) return showToast("اختر محادثة أولاً", true);
+                if (!confirm(`متأكد من مسح كل رسائل المحادثة ${selectedPrivateChatId}؟`)) return;
+                try {
+                    await remove(ref(db, `chats/${selectedPrivateChatId}`));
+                    showToast("تم مسح رسائل المحادثة");
+                } catch (err) {
+                    showToast(err?.message || "تعذر المسح", true);
+                }
+            }
+        });
+
+        // Users & Points Section
+        document.getElementById("user-search-input").addEventListener("input", renderUsers);
+
+        function renderUsers() {
+            const box = document.getElementById("users-list");
+            const q = document.getElementById("user-search-input").value.trim().toLowerCase();
+            const list = Object.values(usersMap).filter(u => {
+                if (!q) return true;
+                return (u.nickname || "").toLowerCase().includes(q) ||
+                       (u.username || "").toLowerCase().includes(q) ||
+                       (u.uid || "").toLowerCase().includes(q);
+            });
+
+            if (list.length === 0) {
+                box.innerHTML = `<div class="glass-panel p-8 rounded-2xl text-center text-xs text-gray-400 col-span-full">لا يوجد مستخدمون</div>`;
+                return;
+            }
+
+            box.innerHTML = list.map(u => {
+                const isBanned = !!u.isBanned;
+                return `
+                    <div class="glass-panel p-4 rounded-2xl border ${isBanned ? "border-red-500/50" : "border-gray-800/80"} flex flex-col justify-between gap-3">
+                        <div class="flex items-center justify-between gap-2">
+                            <div class="flex items-center gap-3 min-w-0">
+                                <img src="${escapeHTML(u.avatarUrl || "")}" class="w-11 h-11 rounded-full bg-gray-800 object-cover border border-gray-700 shrink-0" onerror="this.style.display='none'">
+                                <div class="min-w-0">
+                                    <div class="flex items-center gap-1.5">
+                                        <h3 class="text-xs font-extrabold text-white truncate">${escapeHTML(u.nickname || "بدون لقب")}</h3>
+                                        ${isBanned ? `<span class="text-[9px] bg-red-500/20 text-red-400 px-2 py-0.5 rounded-full font-bold">محظور</span>` : ""}
+                                    </div>
+                                    <p class="text-[11px] text-[#ff7300] truncate">@${escapeHTML(u.username || "user")}</p>
+                                    <p class="text-[10px] text-gray-500 font-mono truncate">${escapeHTML(u.uid)}</p>
+                                </div>
+                            </div>
+                            <div class="text-left shrink-0">
+                                <span class="text-xs font-black text-pink-400">${Number(u.points) || 0} EXP</span>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-wrap gap-1.5 pt-2 border-t border-gray-800/70 text-[11px]">
+                            <button onclick="window.editUserPoints('${encodeURIComponent(u.uid)}', ${Number(u.points) || 0})" class="bg-blue-500/15 hover:bg-blue-500/25 text-blue-300 border border-blue-500/30 px-2.5 py-1.5 rounded-xl font-bold transition">
+                                تعديل النقاط
+                            </button>
+                            <button onclick="window.resetSingleUserPoints('${encodeURIComponent(u.uid)}')" class="bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/30 px-2.5 py-1.5 rounded-xl font-bold transition">
+                                تصفير النقاط
+                            </button>
+                            <button onclick="window.toggleBanUser('${encodeURIComponent(u.uid)}', ${isBanned})" class="bg-orange-500/15 hover:bg-orange-500/25 text-orange-300 border border-orange-500/30 px-2.5 py-1.5 rounded-xl font-bold transition">
+                                ${isBanned ? "فك الحظر" : "حظر"}
+                            </button>
+                            <button onclick="window.deleteUserAccount('${encodeURIComponent(u.uid)}', '${encodeURIComponent(u.username || "")}')" class="bg-red-500/15 hover:bg-red-500/25 text-red-400 border border-red-500/30 px-2.5 py-1.5 rounded-xl font-bold transition mr-auto">
+                                حذف المستخدم 🗑️
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join("");
+        }
+
+        window.editUserPoints = async (encodedUid, currentPts) => {
+            const uid = decodeURIComponent(encodedUid);
+            const val = prompt("اكتب رصيد النقاط الجديد (EXP):", String(currentPts));
+            if (val === null) return;
+            const num = Number(val);
+            if (!Number.isFinite(num)) return showToast("أدخل رقماً صحيحاً", true);
+            try {
+                await update(ref(db, `users/${uid}`), { points: num });
+                showToast("تم تحديث النقاط");
+            } catch (err) {
+                showToast(err?.message || "فشل تحديث النقاط", true);
+            }
+        };
+
+        window.resetSingleUserPoints = async (encodedUid) => {
+            const uid = decodeURIComponent(encodedUid);
+            try {
+                await update(ref(db, `users/${uid}`), { points: 0 });
+                showToast("تم تصفير نقاط المستخدم");
+            } catch (err) {
+                showToast(err?.message || "فشل تصفير النقاط", true);
+            }
+        };
+
+        document.getElementById("reset-all-points-btn").addEventListener("click", async () => {
+            if (!confirm("متأكد من تصفير نقاط (EXP) لجميع المستخدمين؟")) return;
+            try {
+                const updatesObj = {};
+                Object.keys(usersMap).forEach(uid => {
+                    updatesObj[`users/${uid}/points`] = 0;
+                });
+                await update(ref(db), updatesObj);
+                showToast("تم تصفير نقاط الجميع بنجاح");
+            } catch (err) {
+                showToast(err?.message || "فشل تصفير نقاط الجميع", true);
+            }
+        });
+
+        window.toggleBanUser = async (encodedUid, currentlyBanned) => {
+            const uid = decodeURIComponent(encodedUid);
+            try {
+                await update(ref(db, `users/${uid}`), { isBanned: !currentlyBanned });
+                showToast(!currentlyBanned ? "تم حظر المستخدم" : "تم فك الحظر عن المستخدم");
+            } catch (err) {
+                showToast(err?.message || "تعذر تحديث حالة الحظر", true);
+            }
+        };
+
+        window.deleteUserAccount = async (encodedUid, encodedUsername) => {
+            const uid = decodeURIComponent(encodedUid);
+            const username = decodeURIComponent(encodedUsername);
+            if (!confirm(`متأكد من حذف بيانات المستخدم (${uid}) نهائياً من قاعدة البيانات؟`)) return;
+            try {
+                await remove(ref(db, `users/${uid}`));
+                await remove(ref(db, `user_chats/${uid}`));
+                if (username) {
+                    const unameSnap = await get(ref(db, `usernames/${username}`));
+                    if (unameSnap.val() === uid) {
+                        await remove(ref(db, `usernames/${username}`));
+                    }
+                }
+                showToast("تم حذف بيانات المستخدم");
+            } catch (err) {
+                showToast(err?.message || "تعذر حذف المستخدم", true);
+            }
+        };
+
+        // Private Chats Section
+        document.getElementById("chat-search-input").addEventListener("input", renderChats);
+
+        function renderChats() {
+            const box = document.getElementById("chats-list");
+            const q = document.getElementById("chat-search-input").value.trim().toLowerCase();
+            const chatIds = Object.keys(privateChatsMap).filter(id => !q || id.toLowerCase().includes(q));
+
+            if (chatIds.length === 0) {
+                box.innerHTML = `<div class="glass-panel p-8 rounded-2xl text-center text-xs text-gray-400">لا توجد محادثات خاصة</div>`;
+                return;
+            }
+
+            box.innerHTML = chatIds.map(chatId => {
+                const msgsObj = privateChatsMap[chatId] || {};
+                const msgsArr = Object.values(msgsObj);
+                msgsArr.sort((a, b) => (Number(b.timestamp) || 0) - (Number(a.timestamp) || 0));
+                const lastMsg = msgsArr[0]?.text || (msgsArr[0]?.image ? "🖼️ صورة" : "بدون رسائل");
+                const parts = chatId.split("_");
+                const nameA = usersMap[parts[0]]?.nickname || parts[0] || "";
+                const nameB = usersMap[parts[1]]?.nickname || parts[1] || "";
+
+                return `
+                    <div class="glass-panel p-4 rounded-2xl border border-gray-800/80 flex flex-wrap items-center justify-between gap-3">
+                        <div class="min-w-0 flex-1 space-y-1">
+                            <div class="flex flex-wrap items-center gap-2">
+                                <span class="text-xs font-extrabold text-white">${escapeHTML(nameA)} ↔ ${escapeHTML(nameB)}</span>
+                                <span class="text-[10px] font-mono text-gray-500">${escapeHTML(chatId)}</span>
+                                <span class="text-[10px] px-2 py-0.5 rounded-full bg-pink-500/15 text-pink-300 font-bold">${msgsArr.length} رسالة</span>
+                            </div>
+                            <p class="text-xs text-gray-300 truncate">آخر رسالة: ${escapeHTML(lastMsg)}</p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="window.inspectPrivateChat('${encodeURIComponent(chatId)}')" class="bg-blue-500/15 hover:bg-blue-500/25 text-blue-300 border border-blue-500/30 px-3 py-1.5 rounded-xl text-xs font-bold transition">
+                                عرض الرسائل
+                            </button>
+                            <button onclick="window.deleteEntirePrivateChat('${encodeURIComponent(chatId)}')" class="bg-red-500/15 hover:bg-red-500/25 text-red-400 border border-red-500/30 px-3 py-1.5 rounded-xl text-xs font-bold transition">
+                                حذف المحادثة 🗑️
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join("");
+        }
+
+        window.inspectPrivateChat = (encodedChatId) => {
+            const chatId = decodeURIComponent(encodedChatId);
+            selectedPrivateChatId = chatId;
+            document.getElementById("msg-source-private").click();
+            document.getElementById("private-chat-selector").value = chatId;
+            loadSelectedPrivateChatMessages(chatId);
+            document.querySelector('[data-tab="messages"]').click();
+        };
+
+        window.deleteEntirePrivateChat = async (encodedChatId) => {
+            const chatId = decodeURIComponent(encodedChatId);
+            if (!confirm(`متأكد من حذف المحادثة (${chatId}) بالكامل من قاعدة البيانات؟`)) return;
+            try {
+                await remove(ref(db, `chats/${chatId}`));
+                const updatesObj = {};
+                Object.keys(userChatsMap).forEach(uid => {
+                    if (userChatsMap[uid] && userChatsMap[uid][chatId]) {
+                        updatesObj[`user_chats/${uid}/${chatId}`] = null;
+                    }
+                });
+                if (Object.keys(updatesObj).length > 0) {
+                    await update(ref(db), updatesObj);
+                }
+                if (selectedPrivateChatId === chatId) {
+                    selectedPrivateChatId = "";
+                    selectedPrivateChatMessages = [];
+                    renderMessages();
+                }
+                showToast("تم حذف المحادثة بالكامل");
+            } catch (err) {
+                showToast(err?.message || "تعذر حذف المحادثة", true);
+            }
+        };
     </script>
 </body>
 </html>
