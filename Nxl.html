@@ -39,15 +39,46 @@
         .liquid-glass:hover {
             border-color: rgba(255, 42, 133, 0.26);
         }
+
+        /* Hearts Chat Theme */
+        @keyframes floatHeartUp {
+            0% { transform: translateY(100%) scale(0.75) rotate(-8deg); opacity: 0; }
+            20% { opacity: 0.55; }
+            80% { opacity: 0.45; }
+            100% { transform: translateY(-120%) scale(1.15) rotate(12deg); opacity: 0; }
+        }
         .hearts-chat-theme {
-            background-color: #140710 !important;
-            background-image: radial-gradient(rgba(255, 42, 133, 0.2) 1.2px, transparent 1.2px);
-            background-size: 20px 20px;
+            position: relative;
+            background: radial-gradient(circle at top, rgba(255, 42, 133, 0.22), rgba(24, 6, 17, 0.96) 65%, #0c0409 100%) !important;
+        }
+        .hearts-floating-layer {
+            position: sticky;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 0;
+            overflow: visible;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .floating-heart-item {
+            position: absolute;
+            top: 260px;
+            font-size: 18px;
+            animation: floatHeartUp 5.5s linear infinite;
+            filter: drop-shadow(0 0 8px rgba(255, 42, 133, 0.55));
         }
         .hearts-bubble-me {
-            background: linear-gradient(135deg, #ff2a85 0%, #e11d48 100%) !important;
-            box-shadow: 0 6px 18px rgba(255, 42, 133, 0.32);
+            background: linear-gradient(135deg, #ff2a85 0%, #f43f5e 100%) !important;
+            border: 1px solid rgba(255, 182, 213, 0.45) !important;
+            box-shadow: 0 8px 20px rgba(255, 42, 133, 0.35);
         }
+        .hearts-bubble-other {
+            background: rgba(45, 11, 29, 0.88) !important;
+            border: 1px solid rgba(255, 105, 180, 0.35) !important;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.45);
+        }
+
         @keyframes glowingBorder {
             0% { border-color: rgba(255, 42, 133, 0.3); box-shadow: 0 0 15px rgba(255, 42, 133, 0.2); }
             50% { border-color: rgba(255, 115, 0, 0.8); box-shadow: 0 0 25px rgba(255, 115, 0, 0.4); }
@@ -97,7 +128,12 @@
     <div id="setup-profile-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#060609]/95 backdrop-blur-md px-6 hidden">
         <div class="max-w-sm w-full liquid-glass p-6 rounded-3xl border border-[#ff7300] shadow-2xl">
             <h2 class="text-lg font-bold mb-1 text-center">خطوة أخيرة للبدء 🚀</h2>
-            <p class="text-[11px] text-gray-400 text-center mb-5">اختر هويتك واسم المستخدم الخاص بك في المنصة</p>
+            <p class="text-[11px] text-gray-400 text-center mb-4">اختر هويتك واسم المستخدم الخاص بك في المنصة</p>
+
+            <div class="flex flex-col items-center mb-4">
+                <div id="setup-avatar-preview" class="w-16 h-16 rounded-full border-2 border-[#ff2a85] overflow-hidden bg-gray-800 shadow-lg"></div>
+                <span class="text-[10px] text-gray-400 mt-1.5">أفاتار تلقائي حسب النوع (خاص بك)</span>
+            </div>
 
             <div class="space-y-3">
                 <input type="text" id="setup-nickname" placeholder="اللقب الظاهر (مثل: Creator، Hero)" class="w-full bg-[#12121a] text-xs rounded-xl px-4 py-3 text-white border border-gray-700">
@@ -472,7 +508,7 @@
         const postImageRegistry = {};
         let toastTimer = null;
 
-        // 1) Private Gender helper (kept private for avatar generation only)
+        // 1) Private Gender helper + guaranteed instant SVG avatar generation
         function normalizePrivateGender(val) {
             const g = String(val || "").trim().toLowerCase();
             if (g === "female" || g === "f" || g === "أنثى" || g === "انثي" || g === "بنت") return "female";
@@ -482,12 +518,28 @@
 
         function getAvatarByPrivateGender(gender, seed = "nxl") {
             const g = normalizePrivateGender(gender);
-            const safeSeed = encodeURIComponent(String(seed || "nxl"));
-            if (g === "female") {
-                return `https://api.dicebear.com/7.x/avataaars/svg?seed=female_${safeSeed}&top=longHairStraight&hairColor=2c1b18`;
-            }
-            return `https://api.dicebear.com/7.x/avataaars/svg?seed=male_${safeSeed}&top=shortHairShortFlat&hairColor=2c1b18`;
+            const cleanSeed = String(seed || "nxl").trim();
+            const initial = escapeHTML((cleanSeed.replace(/^@/, "")[0] || "N").toUpperCase());
+            const isFemale = g === "female";
+            const bgStart = isFemale ? "%23ff2a85" : "%232563eb";
+            const bgEnd = isFemale ? "%23ff7300" : "%2306b6d4";
+            const badge = isFemale ? "🌸" : "⚡";
+            const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="${bgStart}"/><stop offset="100%" stop-color="${bgEnd}"/></linearGradient></defs><rect width="120" height="120" rx="60" fill="url(%23g)"/><circle cx="60" cy="46" r="21" fill="rgba(255,255,255,0.25)"/><path d="M24 104c4-20 18-31 36-31s32 11 36 31" fill="rgba(255,255,255,0.22)"/><text x="60" y="54" text-anchor="middle" fill="#ffffff" font-family="Cairo,sans-serif" font-size="26" font-weight="900">${initial}</text><text x="88" y="34" text-anchor="middle" font-size="18">${badge}</text></svg>`;
+            return `data:image/svg+xml;utf8,${svg}`;
         }
+
+        function updateSetupAvatarPreview() {
+            const previewEl = document.getElementById('setup-avatar-preview');
+            if (!previewEl) return;
+            const g = normalizePrivateGender(document.getElementById('setup-private-gender')?.value);
+            const seed = document.getElementById('setup-username')?.value.trim() || document.getElementById('setup-nickname')?.value.trim() || 'NXL';
+            previewEl.innerHTML = `<img src="${escapeHTML(getAvatarByPrivateGender(g, seed))}" class="w-full h-full object-cover">`;
+        }
+
+        document.getElementById('setup-private-gender')?.addEventListener('change', updateSetupAvatarPreview);
+        document.getElementById('setup-username')?.addEventListener('input', updateSetupAvatarPreview);
+        document.getElementById('setup-nickname')?.addEventListener('input', updateSetupAvatarPreview);
+        updateSetupAvatarPreview();
 
         function showToast(msg) {
             const el = document.getElementById('nxl-toast');
@@ -587,12 +639,17 @@
                 onValue(ref(db, `users/${user.uid}`), (snapshot) => {
                     if (snapshot.exists()) {
                         userData = snapshot.val();
+                        if (!userData.avatarUrl) {
+                            userData.avatarUrl = getAvatarByPrivateGender(userData.privateGender, userData.username || userData.nickname || user.uid);
+                        }
                         initAppUI();
                         if (!userData.bio || userData.bio.trim() === "") {
                             document.getElementById('setup-profile-screen').classList.remove('hidden');
+                            updateSetupAvatarPreview();
                         }
                     } else {
                         document.getElementById('setup-profile-screen').classList.remove('hidden');
+                        updateSetupAvatarPreview();
                     }
                 });
             } else {
@@ -660,9 +717,10 @@
             const bio = prompt('اكتب نبذة قصيرة عنك (120 حرفاً كحد أقصى):', userData.bio || '');
             if (bio === null) return;
             if (bio.trim().length > 120) return alert('النبذة أقصى حد لها 120 حرفاً');
+            const avatarUrl = userData.avatarUrl || getAvatarByPrivateGender(userData.privateGender, userData.username || cleanNickname);
             try {
-                const next = { ...userData, nickname: cleanNickname, bio: bio.trim() };
-                await update(ref(db, `users/${currentUser.uid}`), { nickname: next.nickname, bio: next.bio });
+                const next = { ...userData, nickname: cleanNickname, bio: bio.trim(), avatarUrl };
+                await update(ref(db, `users/${currentUser.uid}`), { nickname: next.nickname, bio: next.bio, avatarUrl });
                 userData = next;
                 initAppUI();
                 alert('تم تحديث ملفك الشخصي ✨');
@@ -670,10 +728,11 @@
         });
 
         function initAppUI() {
-            document.getElementById('user-header-avatar').innerHTML = `<img src="${escapeHTML(userData.avatarUrl || '')}" class="w-full h-full object-cover">`;
+            const safeAvatar = userData.avatarUrl || getAvatarByPrivateGender(userData.privateGender, userData.username || userData.nickname || currentUser?.uid);
+            document.getElementById('user-header-avatar').innerHTML = `<img src="${escapeHTML(safeAvatar)}" class="w-full h-full object-cover">`;
             document.getElementById('user-header-avatar').classList.remove('hidden');
-            document.getElementById('profile-avatar-container').innerHTML = `<img src="${escapeHTML(userData.avatarUrl || '')}" class="w-full h-full object-cover">`;
-            document.getElementById('my-note-avatar').innerHTML = `<img src="${escapeHTML(userData.avatarUrl || '')}" class="w-full h-full object-cover">`;
+            document.getElementById('profile-avatar-container').innerHTML = `<img src="${escapeHTML(safeAvatar)}" class="w-full h-full object-cover">`;
+            document.getElementById('my-note-avatar').innerHTML = `<img src="${escapeHTML(safeAvatar)}" class="w-full h-full object-cover">`;
 
             document.getElementById('profile-nickname').innerText = userData.nickname;
             document.getElementById('profile-username-display').innerText = `@${userData.username}`;
@@ -694,8 +753,10 @@
                 const now = Date.now();
                 snapshot.forEach(c => {
                     const u = c.val();
-                    allUsers.push(u);
-                    if(u.note && u.note.text && (now - u.note.timestamp < 7*3600*1000)) activeStories.push(u);
+                    const av = u.avatarUrl || getAvatarByPrivateGender(u.privateGender, u.username || u.nickname || u.uid);
+                    const normalizedU = { ...u, avatarUrl: av };
+                    allUsers.push(normalizedU);
+                    if(u.note && u.note.text && (now - u.note.timestamp < 7*3600*1000)) activeStories.push(normalizedU);
                 });
 
                 const sc = document.getElementById('stories-container');
@@ -769,7 +830,7 @@
             document.getElementById('c-percent').innerText = `${pct}%`;
             document.getElementById('c-msg').innerText = `إجابتك: "${answer}" - توافق استثنائي وممتاز ✨`;
             document.getElementById('c-avatar1').innerHTML = `<img src="${escapeHTML(userData.avatarUrl || '')}" class="w-full h-full object-cover">`;
-            document.getElementById('c-avatar2').innerHTML = `<img src="https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(n2)}" class="w-full h-full object-cover">`;
+            document.getElementById('c-avatar2').innerHTML = `<img src="${escapeHTML(getAvatarByPrivateGender('male', n2))}" class="w-full h-full object-cover">`;
             document.getElementById('love-result-card').classList.remove('hidden');
         };
 
@@ -816,12 +877,13 @@
                         let count = 0;
                         snap.forEach(c => {
                             const u = c.val();
+                            const av = u.avatarUrl || getAvatarByPrivateGender(u.privateGender, u.username || u.nickname || u.uid);
                             if((u.username.includes(val) || u.nickname.toLowerCase().includes(val)) && u.uid !== currentUser.uid) {
                                 count++;
                                 searchDropdown.innerHTML += `
                                     <div class="flex items-center justify-between p-2.5 hover:bg-[#1a1a26] cursor-pointer border-b border-gray-800" onclick="window.openUserModal('${u.uid}'); document.getElementById('search-dropdown').classList.add('hidden');">
                                         <div class="flex items-center gap-2">
-                                            <img src="${escapeHTML(u.avatarUrl || '')}" class="w-7 h-7 rounded-full bg-gray-800" loading="lazy">
+                                            <img src="${escapeHTML(av)}" class="w-7 h-7 rounded-full bg-gray-800" loading="lazy">
                                             <div><p class="font-bold text-white text-xs">${escapeHTML(u.nickname)}</p><p class="text-[9px] text-[#ff7300]">@${escapeHTML(u.username)}</p></div>
                                         </div>
                                         <span class="text-[10px] text-pink-400 font-bold">مراسلة</span>
@@ -857,13 +919,14 @@
                     const uSnap = await get(child(ref(db), `users/${entry.targetUid}`));
                     if(!uSnap.exists()) continue;
                     const u = uSnap.val();
+                    const av = u.avatarUrl || getAvatarByPrivateGender(u.privateGender, u.username || u.nickname || u.uid);
                     const lastMsgText = entry.lastMessage ? escapeHTML(entry.lastMessage) : 'محادثة محفوظة';
                     const timeText = entry.lastTimestamp ? formatRelativeTime(entry.lastTimestamp) : '';
 
                     listEl.innerHTML += `
-                        <div class="liquid-glass p-2.5 rounded-xl border border-gray-800 flex items-center justify-between gap-2 cursor-pointer hover:border-pink-500/50 transition interactive-press" onclick="openPrivateChat('${encodeURIComponent(u.uid || '')}', '${encodeURIComponent(u.nickname || '')}', '${encodeURIComponent(u.avatarUrl || '')}')">
+                        <div class="liquid-glass p-2.5 rounded-xl border border-gray-800 flex items-center justify-between gap-2 cursor-pointer hover:border-pink-500/50 transition interactive-press" onclick="openPrivateChat('${encodeURIComponent(u.uid || '')}', '${encodeURIComponent(u.nickname || '')}', '${encodeURIComponent(av)}')">
                             <div class="flex items-center gap-2.5 min-w-0 flex-1">
-                                <img src="${escapeHTML(u.avatarUrl || '')}" class="w-10 h-10 rounded-full bg-gray-800 object-cover border border-gray-700 shrink-0" loading="lazy">
+                                <img src="${escapeHTML(av)}" class="w-10 h-10 rounded-full bg-gray-800 object-cover border border-gray-700 shrink-0" loading="lazy">
                                 <div class="min-w-0 flex-1">
                                     <div class="flex items-center justify-between gap-2">
                                         <h4 class="font-bold text-white text-xs truncate">${escapeHTML(u.nickname)}</h4>
@@ -1125,11 +1188,12 @@
         window.openUserModal = async (uid) => {
             const snap = await get(child(ref(db), `users/${uid}`)); if(!snap.exists()) return;
             const u = snap.val();
+            const av = u.avatarUrl || getAvatarByPrivateGender(u.privateGender, u.username || u.nickname || u.uid);
             document.getElementById('modal-nickname').innerText = u.nickname;
             document.getElementById('modal-username-txt').innerText = `@${u.username}`;
             document.getElementById('modal-bio').innerText = u.bio || "لا توجد نبذة شخصية.";
             document.getElementById('modal-points').innerText = `${u.points||0} EXP 🔥`;
-            document.getElementById('modal-avatar').innerHTML = `<img src="${escapeHTML(u.avatarUrl || '')}" class="w-full h-full object-cover">`;
+            document.getElementById('modal-avatar').innerHTML = `<img src="${escapeHTML(av)}" class="w-full h-full object-cover">`;
             if(u.isOnline) document.getElementById('modal-online-dot').classList.remove('hidden'); else document.getElementById('modal-online-dot').classList.add('hidden');
 
             const noteArea = document.getElementById('modal-note-area');
@@ -1137,7 +1201,7 @@
 
             const chatBtn = document.getElementById('modal-chat-btn');
             if(uid === currentUser.uid) chatBtn.classList.add('hidden');
-            else { chatBtn.classList.remove('hidden'); chatBtn.onclick = () => { document.getElementById('user-modal').classList.add('hidden'); openPrivateChat(u.uid, u.nickname, u.avatarUrl); }; }
+            else { chatBtn.classList.remove('hidden'); chatBtn.onclick = () => { document.getElementById('user-modal').classList.add('hidden'); openPrivateChat(u.uid, u.nickname, av); }; }
             document.getElementById('user-modal').classList.remove('hidden');
         };
 
@@ -1195,7 +1259,15 @@
             reader.readAsDataURL(file);
         }
 
-        // 3) Automatic "hearts" ("قلوب") theme in private chat between boy and girl
+        // 3) Automatic "hearts" ("قلوب") theme with floating hearts when boy and girl chat privately
+        function renderHeartsFloatingOverlay() {
+            const hearts = ['💖', '💕', '💗', '💘', '💞'];
+            const items = hearts.map((h, idx) =>
+                `<span class="floating-heart-item" style="left:${12 + idx * 18}%;animation-delay:${idx * 0.9}s;">${h}</span>`
+            ).join('');
+            return `<div class="hearts-floating-layer">${items}</div>`;
+        }
+
         async function applyPrivateChatHeartsThemeIfNeeded(targetUid) {
             const msgBox = document.getElementById('private-messages-box');
             const statusEl = document.getElementById('private-target-status');
@@ -1222,8 +1294,9 @@
                 activeChatRef();
                 activeChatRef = null;
             }
+            const safeTargetAvatar = targetAvatar || getAvatarByPrivateGender('male', targetName || targetUid);
             document.getElementById('private-target-name').innerText = targetName;
-            document.getElementById('private-target-avatar').innerHTML = `<img src="${escapeHTML(targetAvatar || '')}" class="w-full h-full object-cover">`;
+            document.getElementById('private-target-avatar').innerHTML = `<img src="${escapeHTML(safeTargetAvatar)}" class="w-full h-full object-cover">`;
             document.getElementById('private-chat-window').classList.remove('hidden');
 
             const chatId = currentUser.uid < targetUid ? `${currentUser.uid}_${targetUid}` : `${targetUid}_${currentUser.uid}`;
@@ -1260,7 +1333,11 @@
             const unsubscribe = onValue(msgsQuery, (snap) => {
                 if (openChatId !== chatId) return;
                 const box = document.getElementById('private-messages-box');
-                box.innerHTML = `<div class="text-center text-[9px] text-yellow-400 bg-yellow-500/10 py-1.5 rounded-xl border border-yellow-500/20">${isCurrentPrivateChatHearts ? '💖 محادثة خاصة — ثيم قلوب تلقائي 🔥' : '🔒 محادثة خاصة — محفوظة للطرفين 🔥'}</div>`;
+                const heartsLayer = isCurrentPrivateChatHearts ? renderHeartsFloatingOverlay() : '';
+                const bannerHtml = isCurrentPrivateChatHearts
+                    ? `<div class="text-center text-[10px] text-pink-200 bg-pink-500/20 py-1.5 rounded-xl border border-pink-400/40 relative z-10 font-bold">💖 ثيم القلوب مفعّل تلقائياً لمحادثة الخاص 💕</div>`
+                    : `<div class="text-center text-[9px] text-yellow-400 bg-yellow-500/10 py-1.5 rounded-xl border border-yellow-500/20 relative z-10">🔒 محادثة خاصة — محفوظة للطرفين 🔥</div>`;
+                box.innerHTML = `${heartsLayer}${bannerHtml}`;
                 let count = 0;
 
                 snap.forEach(c => {
@@ -1273,14 +1350,14 @@
                     let content = '';
                     if(m.image) {
                         content = m.viewOnce ? (m.viewed ? '<span class="text-xs italic text-gray-400">👻 تم فتح الصورة</span>' : `<button onclick="window.openViewOnce('${id}', '${m.image}')" class="bg-orange-600/30 border border-orange-500 text-orange-300 px-3 py-1.5 rounded-xl text-xs font-bold">👻 اضغط لعرض الصورة</button>`) : `<img src="${escapeHTML(m.image)}" class="max-w-[200px] rounded-lg" loading="lazy">`;
-                    } else content = `<p class="text-xs break-words">${escapeHTML(m.text)}</p>`;
+                    } else content = `<p class="text-xs break-words">${escapeHTML(m.text)}${isCurrentPrivateChatHearts ? ' 💖' : ''}</p>`;
 
                     const meBubbleClass = isCurrentPrivateChatHearts
-                        ? 'hearts-bubble-me text-white rounded-tl-2xl rounded-tr-none'
-                        : 'gradient-bg text-white rounded-tl-2xl rounded-tr-none';
+                        ? 'hearts-bubble-me text-white rounded-tl-2xl rounded-tr-none relative z-10'
+                        : 'gradient-bg text-white rounded-tl-2xl rounded-tr-none relative z-10';
                     const otherBubbleClass = isCurrentPrivateChatHearts
-                        ? 'liquid-glass border border-pink-500/40 text-white rounded-tr-2xl rounded-tl-none'
-                        : 'liquid-glass border border-gray-800 text-white rounded-tr-2xl rounded-tl-none';
+                        ? 'hearts-bubble-other text-white rounded-tr-2xl rounded-tl-none relative z-10'
+                        : 'liquid-glass border border-gray-800 text-white rounded-tr-2xl rounded-tl-none relative z-10';
 
                     box.innerHTML += `
                         <div class="flex w-full ${isMe ? 'justify-end' : 'justify-start'}">
