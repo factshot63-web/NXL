@@ -39,6 +39,15 @@
         .liquid-glass:hover {
             border-color: rgba(255, 42, 133, 0.26);
         }
+        .hearts-chat-theme {
+            background-color: #140710 !important;
+            background-image: radial-gradient(rgba(255, 42, 133, 0.2) 1.2px, transparent 1.2px);
+            background-size: 20px 20px;
+        }
+        .hearts-bubble-me {
+            background: linear-gradient(135deg, #ff2a85 0%, #e11d48 100%) !important;
+            box-shadow: 0 6px 18px rgba(255, 42, 133, 0.32);
+        }
         @keyframes glowingBorder {
             0% { border-color: rgba(255, 42, 133, 0.3); box-shadow: 0 0 15px rgba(255, 42, 133, 0.2); }
             50% { border-color: rgba(255, 115, 0, 0.8); box-shadow: 0 0 25px rgba(255, 115, 0, 0.4); }
@@ -93,6 +102,10 @@
             <div class="space-y-3">
                 <input type="text" id="setup-nickname" placeholder="اللقب الظاهر (مثل: Creator، Hero)" class="w-full bg-[#12121a] text-xs rounded-xl px-4 py-3 text-white border border-gray-700">
                 <input type="text" id="setup-username" placeholder="اسم المستخدم بالإنجليزية (مثل: nxl_user)" class="w-full bg-[#12121a] text-xs rounded-xl px-4 py-3 text-white border border-gray-700 dir-ltr text-left">
+                <select id="setup-private-gender" class="w-full bg-[#12121a] text-xs rounded-xl px-4 py-3 text-white border border-gray-700">
+                    <option value="male">ذكر (خاص للأفاتار)</option>
+                    <option value="female">أنثى (خاص للأفاتار)</option>
+                </select>
                 <input type="text" id="setup-bio" placeholder="نبذة تعريفية عنك (Bio)..." class="w-full bg-[#12121a] text-xs rounded-xl px-4 py-3 text-white border border-gray-700">
                 <button id="save-profile-btn" class="w-full py-3 gradient-bg rounded-xl font-bold text-xs text-white interactive-press shadow-lg shadow-[#ff7300]/30 mt-2">حفظ والدخول</button>
             </div>
@@ -450,6 +463,7 @@
         let activeChatRef = null;
         let openChatId = null;
         let openChatTargetUid = null;
+        let isCurrentPrivateChatHearts = false;
         window.activeTabId = 'home';
         let replyingGlobalMsg = null;
         let replyingPrivateMsg = null;
@@ -457,6 +471,23 @@
         const expandedPostComments = {};
         const postImageRegistry = {};
         let toastTimer = null;
+
+        // 1) Private Gender helper (kept private for avatar generation only)
+        function normalizePrivateGender(val) {
+            const g = String(val || "").trim().toLowerCase();
+            if (g === "female" || g === "f" || g === "أنثى" || g === "انثي" || g === "بنت") return "female";
+            if (g === "male" || g === "m" || g === "ذكر" || g === "ولد") return "male";
+            return "male";
+        }
+
+        function getAvatarByPrivateGender(gender, seed = "nxl") {
+            const g = normalizePrivateGender(gender);
+            const safeSeed = encodeURIComponent(String(seed || "nxl"));
+            if (g === "female") {
+                return `https://api.dicebear.com/7.x/avataaars/svg?seed=female_${safeSeed}&top=longHairStraight&hairColor=2c1b18`;
+            }
+            return `https://api.dicebear.com/7.x/avataaars/svg?seed=male_${safeSeed}&top=shortHairShortFlat&hairColor=2c1b18`;
+        }
 
         function showToast(msg) {
             const el = document.getElementById('nxl-toast');
@@ -573,6 +604,7 @@
             if (!currentUser) return alert('سجّل الدخول أولاً');
             const nickname = document.getElementById('setup-nickname').value.trim();
             const username = document.getElementById('setup-username').value.trim().toLowerCase();
+            const privateGender = normalizePrivateGender(document.getElementById('setup-private-gender').value);
             const bio = document.getElementById('setup-bio').value.trim();
             if (nickname.length < 2 || nickname.length > 24) return alert('اللقب لازم يكون من حرفين إلى 24 حرفاً');
             if (!/^[a-z0-9_]{3,20}$/.test(username)) return alert('اسم المستخدم من 3 إلى 20 حرفاً إنجليزياً أو أرقام أو _');
@@ -587,8 +619,8 @@
                     return;
                 });
                 if (!claim.committed) throw new Error('USERNAME_TAKEN');
-                const avatarUrl = userData?.avatarUrl || `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(nickname)}`;
-                const nextUser = { ...(userData || {}), uid: currentUser.uid, nickname, username, bio, avatarUrl, email: currentUser.email, joinedAt: userData?.joinedAt || Date.now(), points: userData?.points || 0, isOnline: true };
+                const avatarUrl = getAvatarByPrivateGender(privateGender, username || nickname);
+                const nextUser = { ...(userData || {}), uid: currentUser.uid, nickname, username, privateGender, bio, avatarUrl, email: currentUser.email, joinedAt: userData?.joinedAt || Date.now(), points: userData?.points || 0, isOnline: true };
                 await set(ref(db, `users/${currentUser.uid}`), nextUser);
                 if (oldUsername && oldUsername !== username) {
                     const oldClaim = await get(ref(db, `usernames/${oldUsername}`));
@@ -1125,6 +1157,8 @@
 
         document.getElementById('close-private-chat').onclick = () => {
             document.getElementById('private-chat-window').classList.add('hidden');
+            document.getElementById('private-messages-box').classList.remove('hearts-chat-theme');
+            isCurrentPrivateChatHearts = false;
             if(activeChatRef) { activeChatRef(); activeChatRef = null; }
             openChatId = null;
             openChatTargetUid = null;
@@ -1161,6 +1195,26 @@
             reader.readAsDataURL(file);
         }
 
+        // 3) Automatic "hearts" ("قلوب") theme in private chat between boy and girl
+        async function applyPrivateChatHeartsThemeIfNeeded(targetUid) {
+            const msgBox = document.getElementById('private-messages-box');
+            const statusEl = document.getElementById('private-target-status');
+            msgBox.classList.remove('hearts-chat-theme');
+            isCurrentPrivateChatHearts = false;
+            try {
+                const targetSnap = await get(child(ref(db), `users/${targetUid}`));
+                const targetGender = targetSnap.exists() ? normalizePrivateGender(targetSnap.val()?.privateGender) : "";
+                const myGender = normalizePrivateGender(userData?.privateGender);
+                if (myGender && targetGender && myGender !== targetGender) {
+                    isCurrentPrivateChatHearts = true;
+                    msgBox.classList.add('hearts-chat-theme');
+                    if (statusEl) statusEl.innerText = "💖 ثيم القلوب مفعّل تلقائياً";
+                } else if (statusEl) {
+                    statusEl.innerText = "محادثة محفوظة";
+                }
+            } catch (_) {}
+        }
+
         window.openPrivateChat = async (targetUid, targetName, targetAvatar) => {
             targetUid = decodeInlineArg(targetUid); targetName = decodeInlineArg(targetName); targetAvatar = decodeInlineArg(targetAvatar);
             if (!currentUser || !targetUid || targetUid === currentUser.uid) return;
@@ -1175,6 +1229,7 @@
             const chatId = currentUser.uid < targetUid ? `${currentUser.uid}_${targetUid}` : `${targetUid}_${currentUser.uid}`;
             openChatId = chatId;
             openChatTargetUid = targetUid;
+            await applyPrivateChatHeartsThemeIfNeeded(targetUid);
 
             try {
                 const myEntrySnap = await get(ref(db, `user_chats/${currentUser.uid}/${chatId}`));
@@ -1205,7 +1260,7 @@
             const unsubscribe = onValue(msgsQuery, (snap) => {
                 if (openChatId !== chatId) return;
                 const box = document.getElementById('private-messages-box');
-                box.innerHTML = `<div class="text-center text-[9px] text-yellow-400 bg-yellow-500/10 py-1.5 rounded-xl border border-yellow-500/20">🔒 محادثة خاصة — محفوظة للطرفين 🔥</div>`;
+                box.innerHTML = `<div class="text-center text-[9px] text-yellow-400 bg-yellow-500/10 py-1.5 rounded-xl border border-yellow-500/20">${isCurrentPrivateChatHearts ? '💖 محادثة خاصة — ثيم قلوب تلقائي 🔥' : '🔒 محادثة خاصة — محفوظة للطرفين 🔥'}</div>`;
                 let count = 0;
 
                 snap.forEach(c => {
@@ -1220,9 +1275,16 @@
                         content = m.viewOnce ? (m.viewed ? '<span class="text-xs italic text-gray-400">👻 تم فتح الصورة</span>' : `<button onclick="window.openViewOnce('${id}', '${m.image}')" class="bg-orange-600/30 border border-orange-500 text-orange-300 px-3 py-1.5 rounded-xl text-xs font-bold">👻 اضغط لعرض الصورة</button>`) : `<img src="${escapeHTML(m.image)}" class="max-w-[200px] rounded-lg" loading="lazy">`;
                     } else content = `<p class="text-xs break-words">${escapeHTML(m.text)}</p>`;
 
+                    const meBubbleClass = isCurrentPrivateChatHearts
+                        ? 'hearts-bubble-me text-white rounded-tl-2xl rounded-tr-none'
+                        : 'gradient-bg text-white rounded-tl-2xl rounded-tr-none';
+                    const otherBubbleClass = isCurrentPrivateChatHearts
+                        ? 'liquid-glass border border-pink-500/40 text-white rounded-tr-2xl rounded-tl-none'
+                        : 'liquid-glass border border-gray-800 text-white rounded-tr-2xl rounded-tl-none';
+
                     box.innerHTML += `
                         <div class="flex w-full ${isMe ? 'justify-end' : 'justify-start'}">
-                            <div class="p-2.5 rounded-2xl ${isMe ? 'gradient-bg text-white rounded-tl-2xl rounded-tr-none' : 'liquid-glass border border-gray-800 text-white rounded-tr-2xl rounded-tl-none'} max-w-[80%] relative group">
+                            <div class="p-2.5 rounded-2xl ${isMe ? meBubbleClass : otherBubbleClass} max-w-[80%] relative group">
                                 ${replyHtml}
                                 ${content}
                                 ${reactionsHtml ? `<span class="absolute -bottom-2 ${isMe ? 'left-2' : 'right-2'} bg-[#12121a] border border-gray-700 rounded-full px-1.5 py-0.5 text-[10px] shadow">${reactionsHtml}</span>` : ''}
@@ -1304,7 +1366,7 @@
             finally { sendBtn.disabled = false; }
         };
 
-        // NXL AI Assistant
+        // 2) NXL AI Assistant (short questions + questions about NXL include leadership info)
         const aiBtn = document.getElementById('nxl-ai-btn'), aiPanel = document.getElementById('nxl-ai-panel'), aiBox = document.getElementById('ai-messages-box');
         aiBtn.onclick = () => aiPanel.classList.remove('hidden');
         document.getElementById('close-ai-btn').onclick = () => aiPanel.classList.add('hidden');
@@ -1362,6 +1424,9 @@
 
             let answer = "";
             const t = text.toLowerCase().trim();
+            const leadershipNote = "مع العلم أن رئيس المطورين هو حمص، ورئيسة السوشيال ميديا والصلح والمراسلات هي مريم.";
+            const isNxlQuestion = t.includes("nxl") || t.includes("ان اكس ال") || t.includes("نكسيل");
+            const isShortQuestion = t.length <= 28;
 
             let foundInDb = false;
             for(let key in dynamicAiKnowledge) {
@@ -1374,9 +1439,14 @@
             }
 
             try {
-                if (!foundInDb) {
+                if (isNxlQuestion && !foundInDb) {
+                    answer = `منصة NXL منصة اجتماعية تفاعلية للدردشة والمشاركة والمجتمع. ${leadershipNote}`;
+                } else if (!foundInDb) {
                     answer = await fetchRealWebSearch(text);
                     if (!answer) answer = 'مش قادر أوصل لمعلومة موثوقة دلوقتي. جرّب صياغة السؤال بشكل أوضح أو راجع اتصال الإنترنت.';
+                }
+                if ((isNxlQuestion || isShortQuestion) && !answer.includes("رئيس المطورين هو حمص")) {
+                    answer = `${answer} ${leadershipNote}`;
                 }
             } catch (err) {
                 answer = 'حصل خطأ أثناء تجهيز الرد. حاول مرة أخرى.';
