@@ -233,7 +233,7 @@
                 <button id="open-edit-profile-btn" class="absolute top-3 right-3 text-[10px] bg-blue-500/10 text-blue-500 border border-blue-500/30 px-2.5 py-1 rounded-lg font-bold interactive-press">تعديل</button>
                 <div id="profile-avatar-container" class="w-16 h-16 mx-auto rounded-full bg-gray-800 border-2 border-[#ff2a85] overflow-hidden mb-2 shadow-lg"></div>
                 <h2 id="profile-nickname" class="text-base font-bold">اللقب</h2>
-                <p id="profile-username-display" class="text-xs text-[#ff7300] font-bold mb-1">@username</p>
+                <p id="profile-username-display" onclick="copyTextToClipboard(this.innerText)" class="text-xs text-[#ff7300] font-bold mb-1 cursor-pointer hover:underline" title="اضغط للنسخ">@username</p>
                 <p id="profile-bio-display" class="text-[11px] text-gray-300 italic mb-3 px-3"></p>
                 <div class="inline-block bg-[#12121a] border border-gray-700 px-3 py-1.5 rounded-xl">
                     <p class="text-[10px] text-gray-400">🔥 نقاط التفاعل</p>
@@ -304,7 +304,7 @@
                 <span id="modal-online-dot" class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-green-500 border-2 border-[#060609] rounded-full hidden"></span>
             </div>
             <h3 id="modal-nickname" class="font-bold text-sm">اللقب</h3>
-            <p id="modal-username-txt" class="text-xs text-[#ff7300] mb-2 font-medium">@username</p>
+            <p id="modal-username-txt" onclick="copyTextToClipboard(this.innerText)" class="text-xs text-[#ff7300] mb-2 font-medium cursor-pointer hover:underline" title="اضغط للنسخ">@username</p>
             <p id="modal-bio" class="text-[11px] text-gray-400 italic mb-3 px-2 line-clamp-3">لا توجد نبذة شخصية.</p>
             <div class="bg-[#12121a] p-1.5 rounded-xl mb-3 text-[11px] text-[#ff2a85] font-bold" id="modal-points">0 EXP 🔥</div>
             <div id="modal-note-area" class="hidden bg-white text-black p-2.5 rounded-xl text-[11px] font-bold mb-3 text-right shadow-md note-bubble"></div>
@@ -397,18 +397,50 @@
         let globalPostImageBase64 = "";
         let privatePostImageBase64 = "";
         let activeChatRef = null;
+        let activeTargetStatusRef = null;
         let openChatId = null;
+        let currentPrivateTargetUid = null;
         window.activeTabId = 'home';
         let replyingGlobalMsg = null;
         let replyingPrivateMsg = null;
         let dynamicAiKnowledge = {};
+        const viewOnceStore = {};
+        const openCommentsState = {};
+
+        function escapeJs(str) {
+            if (!str) return "";
+            return String(str)
+                .replace(/\\/g, "\\\\")
+                .replace(/'/g, "\\'")
+                .replace(/"/g, "&quot;")
+                .replace(/\n/g, " ")
+                .replace(/\r/g, "");
+        }
+        window.escapeJs = escapeJs;
+
+        window.copyTextToClipboard = (txt) => {
+            if (!txt) return;
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(txt).then(() => alert(`تم النسخ: ${txt}`)).catch(() => {});
+            } else {
+                const ta = document.createElement('textarea');
+                ta.value = txt;
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                document.body.removeChild(ta);
+                alert(`تم النسخ: ${txt}`);
+            }
+        };
 
         onValue(ref(db, 'ai_knowledge_base'), (snapshot) => {
             if (snapshot.exists()) dynamicAiKnowledge = snapshot.val();
         });
 
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        const audioCtx = AudioContextClass ? new AudioContextClass() : null;
         function playAppSound(type) {
+            if (!audioCtx) return;
             try {
                 if (audioCtx.state === 'suspended') audioCtx.resume();
                 const osc = audioCtx.createOscillator();
@@ -476,25 +508,47 @@
             }
         });
 
+        // ميزة 1: تفعيل زر تعديل الملف الشخصي
+        document.getElementById('open-edit-profile-btn').addEventListener('click', () => {
+            if (!userData) return;
+            document.getElementById('setup-nickname').value = userData.nickname || "";
+            document.getElementById('setup-username').value = userData.username || "";
+            document.getElementById('setup-bio').value = userData.bio || "";
+            document.getElementById('setup-profile-screen').classList.remove('hidden');
+        });
+
         document.getElementById('save-profile-btn').addEventListener('click', async () => {
             const nickname = document.getElementById('setup-nickname').value.trim();
             let username = document.getElementById('setup-username').value.trim().toLowerCase().replace(/[^a-z0-9_]/g, '');
             let bio = document.getElementById('setup-bio').value.trim();
             if(!nickname || !username || !bio) return alert("املأ جميع الحقول المطلوبة");
 
-            const avatarUrl = `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(nickname)}`;
-            userData = { uid: currentUser.uid, nickname, username, bio, avatarUrl, email: currentUser.email, joinedAt: Date.now(), points: userData?.points || 0, isOnline: true };
+            const avatarUrl = userData?.avatarUrl || `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(nickname)}`;
+            const updatedProfile = {
+                ...(userData || {}),
+                uid: currentUser.uid,
+                nickname,
+                username,
+                bio,
+                avatarUrl,
+                email: currentUser.email,
+                joinedAt: userData?.joinedAt || Date.now(),
+                points: userData?.points || 0,
+                isOnline: true
+            };
 
             await set(ref(db, `usernames/${username}`), currentUser.uid);
-            await set(ref(db, `users/${currentUser.uid}`), userData);
+            await update(ref(db, `users/${currentUser.uid}`), updatedProfile);
+            userData = updatedProfile;
             document.getElementById('setup-profile-screen').classList.add('hidden');
+            initAppUI();
         });
 
         function initAppUI() {
-            document.getElementById('user-header-avatar').innerHTML = `<img src="${userData.avatarUrl}" class="w-full h-full object-cover">`;
+            document.getElementById('user-header-avatar').innerHTML = `<img src="${escapeHTML(userData.avatarUrl)}" class="w-full h-full object-cover">`;
             document.getElementById('user-header-avatar').classList.remove('hidden');
-            document.getElementById('profile-avatar-container').innerHTML = `<img src="${userData.avatarUrl}" class="w-full h-full object-cover">`;
-            document.getElementById('my-note-avatar').innerHTML = `<img src="${userData.avatarUrl}" class="w-full h-full object-cover">`;
+            document.getElementById('profile-avatar-container').innerHTML = `<img src="${escapeHTML(userData.avatarUrl)}" class="w-full h-full object-cover">`;
+            document.getElementById('my-note-avatar').innerHTML = `<img src="${escapeHTML(userData.avatarUrl)}" class="w-full h-full object-cover">`;
 
             document.getElementById('profile-nickname').innerText = userData.nickname;
             document.getElementById('profile-username-display').innerText = `@${userData.username}`;
@@ -515,6 +569,7 @@
                 const now = Date.now();
                 snapshot.forEach(c => {
                     const u = c.val();
+                    if(!u || !u.uid) return;
                     allUsers.push(u);
                     if(u.note && u.note.text && (now - u.note.timestamp < 7*3600*1000)) activeStories.push(u);
                 });
@@ -523,22 +578,22 @@
                 if(activeStories.length > 0) {
                     sc.classList.remove('hidden');
                     sc.innerHTML = activeStories.map(u => `
-                        <div class="flex flex-col items-center gap-1 min-w-[60px] cursor-pointer group" onclick="openNoteReplyModal('${u.uid}', '${u.nickname}', '${u.avatarUrl}', '${escapeHTML(u.note.text)}')">
+                        <div class="flex flex-col items-center gap-1 min-w-[60px] cursor-pointer group" onclick="openNoteReplyModal('${escapeJs(u.uid)}', '${escapeJs(u.nickname)}', '${escapeJs(u.avatarUrl)}', '${escapeJs(u.note.text)}')">
                             <div class="w-14 h-14 rounded-full p-0.5 bg-gradient-to-tr from-[#ff7300] to-[#ff2a85] shadow-lg shadow-pink-500/20 group-hover:scale-105 transition">
-                                <img src="${u.avatarUrl}" class="w-full h-full rounded-full bg-gray-800 object-cover">
+                                <img src="${escapeHTML(u.avatarUrl)}" class="w-full h-full rounded-full bg-gray-800 object-cover">
                             </div>
-                            <span class="text-[9px] text-gray-200 font-bold truncate w-14 text-center">${u.nickname.split(' ')[0]}</span>
+                            <span class="text-[9px] text-gray-200 font-bold truncate w-14 text-center">${escapeHTML((u.nickname || '').split(' ')[0])}</span>
                             <div class="bg-[#12121a]/90 border border-pink-500/30 text-[9px] text-pink-300 px-2 py-0.5 rounded-full truncate max-w-[70px] shadow">${escapeHTML(u.note.text)}</div>
                         </div>`).join('');
                 } else sc.classList.add('hidden');
 
                 allUsers.sort((a,b) => (b.points||0)-(a.points||0));
                 document.getElementById('leaderboard-list').innerHTML = allUsers.slice(0, 10).map((u, i) => `
-                    <div class="flex items-center justify-between p-2 rounded-xl border ${u.uid === currentUser.uid ? 'bg-[#ff2a85]/20 border-[#ff2a85]' : 'bg-[#12121a] border-gray-800'} cursor-pointer" onclick="window.openUserModal('${u.uid}')">
+                    <div class="flex items-center justify-between p-2 rounded-xl border ${u.uid === currentUser.uid ? 'bg-[#ff2a85]/20 border-[#ff2a85]' : 'bg-[#12121a] border-gray-800'} cursor-pointer" onclick="window.openUserModal('${escapeJs(u.uid)}')">
                         <div class="flex items-center gap-2.5">
                             <span class="font-bold text-[#ff7300]">${i===0?'👑':i===1?'🥈':i===2?'🥉':'#'+(i+1)}</span>
-                            <img src="${u.avatarUrl}" class="w-8 h-8 rounded-full bg-gray-800 object-cover">
-                            <div><span class="font-bold text-white text-xs">${u.nickname}</span><span class="block text-[8px] text-gray-400">@${u.username}</span></div>
+                            <img src="${escapeHTML(u.avatarUrl)}" class="w-8 h-8 rounded-full bg-gray-800 object-cover">
+                            <div><span class="font-bold text-white text-xs">${escapeHTML(u.nickname)}</span><span class="block text-[8px] text-gray-400">@${escapeHTML(u.username)}</span></div>
                         </div>
                         <span class="text-xs font-black text-[#ff2a85]">${u.points||0} EXP</span>
                     </div>`).join('');
@@ -588,7 +643,7 @@
             document.getElementById('c-names').innerText = `${n1} & ${n2}`;
             document.getElementById('c-percent').innerText = `${pct}%`;
             document.getElementById('c-msg').innerText = `إجابتك: "${answer}" - توافق استثنائي وممتاز ✨`;
-            document.getElementById('c-avatar1').innerHTML = `<img src="${userData.avatarUrl}" class="w-full h-full object-cover">`;
+            document.getElementById('c-avatar1').innerHTML = `<img src="${escapeHTML(userData.avatarUrl)}" class="w-full h-full object-cover">`;
             document.getElementById('c-avatar2').innerHTML = `<img src="https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(n2)}" class="w-full h-full object-cover">`;
             document.getElementById('love-result-card').classList.remove('hidden');
         };
@@ -633,23 +688,27 @@
                 get(ref(db, 'users')).then(snap => {
                     searchDropdown.innerHTML = '';
                     if(snap.exists()) {
-                        let count = 0;
+                        const rows = [];
                         snap.forEach(c => {
                             const u = c.val();
-                            if((u.username.includes(val) || u.nickname.toLowerCase().includes(val)) && u.uid !== currentUser.uid) {
-                                count++;
-                                searchDropdown.innerHTML += `
-                                    <div class="flex items-center justify-between p-2.5 hover:bg-[#1a1a26] cursor-pointer border-b border-gray-800" onclick="window.openUserModal('${u.uid}'); document.getElementById('search-dropdown').classList.add('hidden');">
+                            if(u && ((u.username || '').toLowerCase().includes(val) || (u.nickname || '').toLowerCase().includes(val)) && u.uid !== currentUser.uid) {
+                                rows.push(`
+                                    <div class="flex items-center justify-between p-2.5 hover:bg-[#1a1a26] cursor-pointer border-b border-gray-800" onclick="window.openUserModal('${escapeJs(u.uid)}'); document.getElementById('search-dropdown').classList.add('hidden');">
                                         <div class="flex items-center gap-2">
-                                            <img src="${u.avatarUrl}" class="w-7 h-7 rounded-full bg-gray-800">
-                                            <div><p class="font-bold text-white text-xs">${u.nickname}</p><p class="text-[9px] text-[#ff7300]">@${u.username}</p></div>
+                                            <img src="${escapeHTML(u.avatarUrl)}" class="w-7 h-7 rounded-full bg-gray-800">
+                                            <div><p class="font-bold text-white text-xs">${escapeHTML(u.nickname)}</p><p class="text-[9px] text-[#ff7300]">@${escapeHTML(u.username)}</p></div>
                                         </div>
                                         <span class="text-[10px] text-pink-400 font-bold">مراسلة</span>
-                                    </div>`;
+                                    </div>`);
                             }
                         });
-                        if(count > 0) searchDropdown.classList.remove('hidden');
-                        else { searchDropdown.innerHTML = '<div class="p-2 text-xs text-gray-500 text-center">لا توجد نتائج</div>'; searchDropdown.classList.remove('hidden'); }
+                        if(rows.length > 0) {
+                            searchDropdown.innerHTML = rows.join('');
+                            searchDropdown.classList.remove('hidden');
+                        } else {
+                            searchDropdown.innerHTML = '<div class="p-2 text-xs text-gray-500 text-center">لا توجد نتائج</div>';
+                            searchDropdown.classList.remove('hidden');
+                        }
                     }
                 });
             }, 250);
@@ -660,7 +719,6 @@
         function startPrivateChatsList() {
             onValue(ref(db, `user_chats/${currentUser.uid}`), async (snap) => {
                 const listEl = document.getElementById('private-chats-list');
-                listEl.innerHTML = '';
                 if(!snap.exists()) {
                     listEl.innerHTML = '<div class="text-center text-xs text-gray-500 py-6">لا توجد محادثات محفوظة بعد. ابحث عن صديق بالأعلى وابدأ مراسلة! 💬</div>';
                     return;
@@ -668,57 +726,60 @@
                 const entries = [];
                 snap.forEach(c => entries.push(c.val()));
 
+                const itemsHtml = [];
                 for(let entry of entries) {
-                    if(!entry.targetUid) continue;
+                    if(!entry || !entry.targetUid) continue;
                     const uSnap = await get(child(ref(db), `users/${entry.targetUid}`));
                     if(!uSnap.exists()) continue;
                     const u = uSnap.val();
-                    listEl.innerHTML += `
-                        <div class="liquid-glass p-2.5 rounded-xl border border-gray-800 flex items-center justify-between cursor-pointer hover:border-pink-500/50 transition interactive-press" onclick="openPrivateChat('${u.uid}', '${u.nickname}', '${u.avatarUrl}')">
+                    itemsHtml.push(`
+                        <div class="liquid-glass p-2.5 rounded-xl border border-gray-800 flex items-center justify-between cursor-pointer hover:border-pink-500/50 transition interactive-press" onclick="openPrivateChat('${escapeJs(u.uid)}', '${escapeJs(u.nickname)}', '${escapeJs(u.avatarUrl)}')">
                             <div class="flex items-center gap-2.5">
-                                <img src="${u.avatarUrl}" class="w-10 h-10 rounded-full bg-gray-800 object-cover border border-gray-700">
-                                <div><h4 class="font-bold text-white text-xs">${u.nickname}</h4><p class="text-[9px] text-gray-400">@${u.username}</p></div>
+                                <img src="${escapeHTML(u.avatarUrl)}" class="w-10 h-10 rounded-full bg-gray-800 object-cover border border-gray-700">
+                                <div><h4 class="font-bold text-white text-xs">${escapeHTML(u.nickname)}</h4><p class="text-[9px] text-gray-400">@${escapeHTML(u.username)}</p></div>
                             </div>
                             <span class="text-[11px] bg-[#ff2a85]/20 text-[#ff2a85] px-2.5 py-1 rounded-xl font-bold">مراسلة 💬</span>
-                        </div>`;
+                        </div>`);
                 }
+                listEl.innerHTML = itemsHtml.length ? itemsHtml.join('') : '<div class="text-center text-xs text-gray-500 py-6">لا توجد محادثات محفوظة بعد. ابحث عن صديق بالأعلى وابدأ مراسلة! 💬</div>';
             });
         }
 
         function startGlobalChat() {
             onValue(query(ref(db, 'global_chat'), limitToLast(100)), (snap) => {
                 const box = document.getElementById('global-messages-box');
-                box.innerHTML = '';
                 const now = Date.now();
                 let lastId = null;
+                const msgsHtml = [];
 
                 snap.forEach(c => {
                     const m = c.val(); const mId = c.key;
-                    if(now - m.timestamp > 24*3600*1000) return;
+                    if(!m || now - m.timestamp > 24*3600*1000) return;
                     const isMe = m.senderId === currentUser.uid;
                     lastId = m.senderId;
 
                     let replyHtml = m.replyTo ? `<div class="bg-black/30 border-r-2 border-pink-500 p-1 mb-1 rounded text-[9px] text-gray-300"><b>${escapeHTML(m.replyTo.senderName)}:</b> ${escapeHTML(m.replyTo.text)}</div>` : '';
-                    let reactionsHtml = m.reactions ? Object.values(m.reactions).join(' ') : '';
+                    let reactionsHtml = m.reactions ? Object.values(m.reactions).map(r => escapeHTML(r)).join(' ') : '';
 
-                    box.innerHTML += `
+                    msgsHtml.push(`
                         <div class="flex gap-2 w-full ${isMe ? 'flex-row-reverse' : ''}">
-                            <img src="${m.senderAvatar}" class="w-7 h-7 rounded-full bg-gray-800 shrink-0 cursor-pointer" onclick="window.openUserModal('${m.senderId}')">
+                            <img src="${escapeHTML(m.senderAvatar)}" class="w-7 h-7 rounded-full bg-gray-800 shrink-0 cursor-pointer" onclick="window.openUserModal('${escapeJs(m.senderId)}')">
                             <div class="max-w-[80%] ${isMe ? 'items-end' : 'items-start'}">
-                                <span class="text-[9px] text-gray-500 px-1 font-bold cursor-pointer hover:underline" onclick="window.openUserModal('${m.senderId}')">${escapeHTML(m.senderNickname)}</span>
+                                <span class="text-[9px] text-gray-500 px-1 font-bold cursor-pointer hover:underline" onclick="window.openUserModal('${escapeJs(m.senderId)}')">${escapeHTML(m.senderNickname)}</span>
                                 <div class="p-2.5 text-xs rounded-xl ${isMe ? 'gradient-bg text-white rounded-tr-none' : 'liquid-glass border border-gray-800 text-white rounded-tl-none'} break-words relative group">
                                     ${replyHtml}
                                     ${escapeHTML(m.text)}
                                     ${reactionsHtml ? `<span class="absolute -bottom-2 ${isMe ? 'left-2' : 'right-2'} bg-[#12121a] border border-gray-700 rounded-full px-1.5 py-0.5 text-[10px] shadow">${reactionsHtml}</span>` : ''}
                                 </div>
                                 <div class="flex gap-2 text-[9px] text-gray-400 mt-1 px-1">
-                                    <button onclick="setGlobalReply('${mId}', '${escapeHTML(m.text)}', '${escapeHTML(m.senderNickname)}')" class="hover:text-pink-400">💬 رد</button>
-                                    <button onclick="reactGlobalMsg('${mId}', '❤️')" class="hover:text-red-500">❤️</button>
-                                    <button onclick="reactGlobalMsg('${mId}', '🔥')" class="hover:text-orange-500">🔥</button>
+                                    <button onclick="setGlobalReply('${escapeJs(mId)}', '${escapeJs(m.text)}', '${escapeJs(m.senderNickname)}')" class="hover:text-pink-400">💬 رد</button>
+                                    <button onclick="reactGlobalMsg('${escapeJs(mId)}', '❤️')" class="hover:text-red-500">❤️</button>
+                                    <button onclick="reactGlobalMsg('${escapeJs(mId)}', '🔥')" class="hover:text-orange-500">🔥</button>
                                 </div>
                             </div>
-                        </div>`;
+                        </div>`);
                 });
+                box.innerHTML = msgsHtml.join('');
                 box.scrollTop = box.scrollHeight;
                 if(window.activeTabId !== 'global' && lastId && lastId !== currentUser.uid) document.getElementById('global-unread-dot').classList.remove('hidden');
             });
@@ -734,7 +795,7 @@
             update(ref(db, `global_chat/${msgId}/reactions`), { [currentUser.uid]: emoji });
         };
 
-        document.getElementById('send-global-btn').onclick = () => {
+        function sendGlobalMessage() {
             const inp = document.getElementById('global-msg-input');
             const text = inp.value.trim(); if(!text) return;
             inp.value = '';
@@ -742,7 +803,10 @@
             if(replyingGlobalMsg) payload.replyTo = replyingGlobalMsg;
             push(ref(db, 'global_chat'), payload);
             cancelGlobalReply();
-        };
+        }
+        document.getElementById('send-global-btn').onclick = sendGlobalMessage;
+        // ميزة 2: إرسال بزر Enter في الشات العام
+        document.getElementById('global-msg-input').onkeypress = (e) => { if(e.key === 'Enter') sendGlobalMessage(); };
 
         document.getElementById('post-file').onchange = e => {
             const f = e.target.files[0]; if(!f) return;
@@ -761,33 +825,97 @@
             globalPostImageBase64 = "";
         };
 
-        document.getElementById('filter-smart-btn').onclick = () => { startPostsFeed(); };
-        document.getElementById('filter-recent-btn').onclick = () => { startPostsFeed(); };
+        let postSortMode = 'recent';
+        document.getElementById('filter-smart-btn').onclick = () => {
+            postSortMode = 'smart';
+            document.getElementById('filter-smart-btn').className = 'px-4 py-1.5 rounded-xl bg-[#ff2a85] text-white font-bold transition interactive-press shadow-md';
+            document.getElementById('filter-recent-btn').className = 'px-4 py-1.5 rounded-xl bg-[#12121a] text-gray-400 font-bold transition interactive-press';
+            startPostsFeed();
+        };
+        document.getElementById('filter-recent-btn').onclick = () => {
+            postSortMode = 'recent';
+            document.getElementById('filter-recent-btn').className = 'px-4 py-1.5 rounded-xl bg-[#ff2a85] text-white font-bold transition interactive-press shadow-md';
+            document.getElementById('filter-smart-btn').className = 'px-4 py-1.5 rounded-xl bg-[#12121a] text-gray-400 font-bold transition interactive-press';
+            startPostsFeed();
+        };
+
+        // ميزة 4: فتح/إغلاق وإضافة تعليقات على المنشورات
+        window.togglePostComments = (postId) => {
+            openCommentsState[postId] = !openCommentsState[postId];
+            startPostsFeed();
+        };
+
+        window.addPostComment = async (postId) => {
+            const inputEl = document.getElementById(`comment-input-${postId}`);
+            if (!inputEl) return;
+            const commentText = inputEl.value.trim();
+            if (!commentText) return;
+            inputEl.value = '';
+            openCommentsState[postId] = true;
+            await push(ref(db, `posts/${postId}/comments`), {
+                userId: currentUser.uid,
+                nickname: userData.nickname,
+                text: commentText,
+                timestamp: Date.now()
+            });
+        };
 
         function startPostsFeed() {
             onValue(query(ref(db, 'posts'), limitToLast(50)), (snap) => {
                 const feed = document.getElementById('home-posts-feed'), grid = document.getElementById('profile-posts-grid');
-                feed.innerHTML = ''; grid.innerHTML = '';
                 const now = Date.now();
                 let arr = [];
-                snap.forEach(c => { let p = c.val(); p.id = c.key; if(now - p.timestamp < 72*3600*1000) arr.push(p); });
-                arr.reverse();
+                snap.forEach(c => { let p = c.val(); if(p && now - p.timestamp < 72*3600*1000) { p.id = c.key; arr.push(p); } });
+
+                if (postSortMode === 'smart') {
+                    arr.sort((a, b) => ((b.likeCount || 0) + Object.keys(b.comments || {}).length * 2) - ((a.likeCount || 0) + Object.keys(a.comments || {}).length * 2));
+                } else {
+                    arr.reverse();
+                }
+
+                const feedHtml = [];
+                const gridHtml = [];
+
                 arr.forEach(p => {
                     const isLiked = p.likes && p.likes[currentUser.uid];
-                    feed.innerHTML += `
+                    const commentsObj = p.comments || {};
+                    const commentsList = Object.values(commentsObj);
+                    const isCommentsOpen = !!openCommentsState[p.id];
+
+                    const commentsRender = isCommentsOpen ? `
+                        <div class="mt-2 pt-2 border-t border-gray-800/80 space-y-1.5">
+                            ${commentsList.map(cm => `
+                                <div class="bg-[#12121a] px-2.5 py-1.5 rounded-xl text-[11px]">
+                                    <span class="font-bold text-[#ff7300]">${escapeHTML(cm.nickname)}: </span>
+                                    <span class="text-gray-200">${escapeHTML(cm.text)}</span>
+                                </div>
+                            `).join('')}
+                            <div class="flex gap-1.5 pt-1">
+                                <input id="comment-input-${escapeHTML(p.id)}" type="text" placeholder="اكتب تعليقاً..." class="flex-1 bg-[#12121a] text-[11px] rounded-xl px-2.5 py-1.5 text-white border border-gray-800 focus:outline-none">
+                                <button onclick="window.addPostComment('${escapeJs(p.id)}')" class="gradient-bg text-white text-[10px] font-bold px-3 rounded-xl interactive-press">إرسال</button>
+                            </div>
+                        </div>
+                    ` : '';
+
+                    feedHtml.push(`
                         <div class="liquid-glass p-3 rounded-2xl border border-gray-800 space-y-2">
-                            <div class="flex items-center gap-2 cursor-pointer" onclick="window.openUserModal('${p.userId}')">
-                                <img src="${p.userAvatar}" class="w-7 h-7 rounded-full bg-gray-800 object-cover">
+                            <div class="flex items-center gap-2 cursor-pointer" onclick="window.openUserModal('${escapeJs(p.userId)}')">
+                                <img src="${escapeHTML(p.userAvatar)}" class="w-7 h-7 rounded-full bg-gray-800 object-cover">
                                 <div><h4 class="text-xs font-bold text-white hover:underline">${escapeHTML(p.userNickname)}</h4><span class="text-[9px] text-[#ff7300]">@${escapeHTML(p.userUsername)}</span></div>
                             </div>
                             ${p.text ? `<p class="text-xs text-gray-200">${escapeHTML(p.text)}</p>` : ''}
-                            ${p.image ? `<img src="${p.image}" class="w-full rounded-xl border border-gray-800">` : ''}
+                            ${p.image ? `<img src="${escapeHTML(p.image)}" class="w-full rounded-xl border border-gray-800">` : ''}
                             <div class="flex justify-between items-center text-xs pt-2 border-t border-gray-800">
-                                <button onclick="window.likePost('${p.id}')" class="flex items-center gap-1 font-bold ${isLiked ? 'text-[#ff2a85]' : 'text-gray-400'}"><span>${isLiked ? '❤️' : '🤍'}</span><span>${p.likeCount||0}</span></button>
+                                <button onclick="window.likePost('${escapeJs(p.id)}')" class="flex items-center gap-1 font-bold ${isLiked ? 'text-[#ff2a85]' : 'text-gray-400'}"><span>${isLiked ? '❤️' : '🤍'}</span><span>${p.likeCount||0}</span></button>
+                                <button onclick="window.togglePostComments('${escapeJs(p.id)}')" class="flex items-center gap-1 text-gray-400 hover:text-white font-bold text-[11px]">💬 <span>${commentsList.length}</span></button>
                             </div>
-                        </div>`;
-                    if(p.userId === currentUser.uid && p.image) grid.innerHTML += `<img src="${p.image}" class="w-full h-24 object-cover rounded-xl border border-gray-800">`;
+                            ${commentsRender}
+                        </div>`);
+                    if(p.userId === currentUser.uid && p.image) gridHtml.push(`<img src="${escapeHTML(p.image)}" class="w-full h-24 object-cover rounded-xl border border-gray-800">`);
                 });
+
+                feed.innerHTML = feedHtml.join('');
+                grid.innerHTML = gridHtml.join('');
             });
         }
 
@@ -796,7 +924,7 @@
             const snap = await get(refP);
             if(snap.exists()) {
                 let p = snap.val(); let likes = p.likes || {}; let count = p.likeCount || 0;
-                if(likes[currentUser.uid]) { delete likes[currentUser.uid]; count--; } else { likes[currentUser.uid] = true; count++; }
+                if(likes[currentUser.uid]) { delete likes[currentUser.uid]; count = Math.max(0, count - 1); } else { likes[currentUser.uid] = true; count++; }
                 await update(refP, { likes, likeCount: count });
             }
         };
@@ -808,7 +936,7 @@
             document.getElementById('modal-username-txt').innerText = `@${u.username}`;
             document.getElementById('modal-bio').innerText = u.bio || "لا توجد نبذة شخصية.";
             document.getElementById('modal-points').innerText = `${u.points||0} EXP 🔥`;
-            document.getElementById('modal-avatar').innerHTML = `<img src="${u.avatarUrl}" class="w-full h-full object-cover">`;
+            document.getElementById('modal-avatar').innerHTML = `<img src="${escapeHTML(u.avatarUrl)}" class="w-full h-full object-cover">`;
             if(u.isOnline) document.getElementById('modal-online-dot').classList.remove('hidden'); else document.getElementById('modal-online-dot').classList.add('hidden');
 
             const noteArea = document.getElementById('modal-note-area');
@@ -837,7 +965,18 @@
         document.getElementById('close-private-chat').onclick = () => {
             document.getElementById('private-chat-window').classList.add('hidden');
             if(activeChatRef) { activeChatRef(); activeChatRef = null; }
+            if(activeTargetStatusRef) { activeTargetStatusRef(); activeTargetStatusRef = null; }
             openChatId = null;
+            currentPrivateTargetUid = null;
+        };
+
+        // ميزة 2 (إضافية): تفعيل زر حذف المحادثة من قائمة شاتاتي
+        document.getElementById('delete-chat-btn').onclick = async () => {
+            if (!openChatId || !currentUser) return;
+            if (confirm("هل تريد إزالة هذه المحادثة من قائمة شاتاتك؟")) {
+                await remove(ref(db, `user_chats/${currentUser.uid}/${openChatId}`));
+                document.getElementById('close-private-chat').click();
+            }
         };
 
         function compressImage(file, callback) {
@@ -866,18 +1005,42 @@
         }
 
         window.openPrivateChat = (targetUid, targetName, targetAvatar) => {
+            if(!targetUid) return;
             if(activeChatRef) {
                 activeChatRef();
                 activeChatRef = null;
             }
+            if(activeTargetStatusRef) {
+                activeTargetStatusRef();
+                activeTargetStatusRef = null;
+            }
+
+            currentPrivateTargetUid = targetUid;
             document.getElementById('private-target-name').innerText = targetName;
-            document.getElementById('private-target-avatar').innerHTML = `<img src="${targetAvatar}" class="w-full h-full object-cover">`;
+            document.getElementById('private-target-avatar').innerHTML = `<img src="${escapeHTML(targetAvatar)}" class="w-full h-full object-cover">`;
             document.getElementById('private-chat-window').classList.remove('hidden');
+
+            // ميزة 3: متابعة حالة الاتصال المباشرة للمستلم
+            const targetOnlineRef = ref(db, `users/${targetUid}/isOnline`);
+            const unsubOnline = onValue(targetOnlineRef, (snap) => {
+                const online = snap.exists() && snap.val() === true;
+                const dot = document.getElementById('private-target-online-dot');
+                const statusTxt = document.getElementById('private-target-status');
+                if (online) {
+                    dot.classList.remove('hidden');
+                    statusTxt.innerText = "متصل الآن";
+                    statusTxt.className = "text-[9px] text-green-400 font-bold";
+                } else {
+                    dot.classList.add('hidden');
+                    statusTxt.innerText = "غير متصل";
+                    statusTxt.className = "text-[9px] text-gray-400 font-bold";
+                }
+            });
+            activeTargetStatusRef = () => off(targetOnlineRef, 'value', unsubOnline);
 
             const chatId = currentUser.uid < targetUid ? `${currentUser.uid}_${targetUid}` : `${targetUid}_${currentUser.uid}`;
             openChatId = chatId;
 
-            // تسجيل الشات للطرفين فوراً عند الفتح أو المراسلة
             update(ref(db), {
                 [`user_chats/${currentUser.uid}/${chatId}/targetUid`]: targetUid,
                 [`user_chats/${targetUid}/${chatId}/targetUid`]: currentUser.uid
@@ -889,12 +1052,13 @@
             const unsubscribe = onValue(msgsQuery, (snap) => {
                 if (openChatId !== chatId) return;
                 const box = document.getElementById('private-messages-box');
-                box.innerHTML = `<div class="text-center text-[9px] text-yellow-400 bg-yellow-500/10 py-1.5 rounded-xl border border-yellow-500/20">🔒 نظام واتساب: شات مشفر وظهور تلقائي للطرفين 🔥</div>`;
+                const msgNodes = [`<div class="text-center text-[9px] text-yellow-400 bg-yellow-500/10 py-1.5 rounded-xl border border-yellow-500/20">🔒 نظام واتساب: شات مشفر وظهور تلقائي للطرفين 🔥</div>`];
                 let count = 0;
                 const now = Date.now();
 
                 snap.forEach(c => {
                     const m = c.val(), id = c.key;
+                    if(!m) return;
 
                     if(now - m.timestamp > 25 * 3600 * 1000) {
                         remove(ref(db, `chats/${chatId}/${id}`));
@@ -903,27 +1067,34 @@
                     count++;
                     const isMe = m.senderId === currentUser.uid;
                     let replyHtml = m.replyTo ? `<div class="bg-black/30 border-r-2 border-pink-500 p-1 mb-1 rounded text-[9px] text-gray-300"><b>${escapeHTML(m.replyTo.senderName)}:</b> ${escapeHTML(m.replyTo.text)}</div>` : '';
-                    let reactionsHtml = m.reactions ? Object.values(m.reactions).join(' ') : '';
+                    let reactionsHtml = m.reactions ? Object.values(m.reactions).map(r => escapeHTML(r)).join(' ') : '';
 
                     let content = '';
                     if(m.image) {
-                        content = m.viewOnce ? (m.viewed ? '<span class="text-xs italic text-gray-400">👻 تم فتح الصورة</span>' : `<button onclick="window.openViewOnce('${id}', '${m.image}')" class="bg-orange-600/30 border border-orange-500 text-orange-300 px-3 py-1.5 rounded-xl text-xs font-bold">👻 اضغط لعرض الصورة</button>`) : `<img src="${m.image}" class="max-w-[200px] rounded-lg">`;
+                        if (m.viewOnce) {
+                            viewOnceStore[id] = m.image;
+                            content = m.viewed ? '<span class="text-xs italic text-gray-400">👻 تم فتح الصورة</span>' : `<button onclick="window.openViewOnce('${escapeJs(id)}')" class="bg-orange-600/30 border border-orange-500 text-orange-300 px-3 py-1.5 rounded-xl text-xs font-bold">👻 اضغط لعرض الصورة</button>`;
+                        } else {
+                            content = `<img src="${escapeHTML(m.image)}" class="max-w-[200px] rounded-lg">`;
+                        }
                     } else content = `<p class="text-xs break-words">${escapeHTML(m.text)}</p>`;
 
-                    box.innerHTML += `
+                    msgNodes.push(`
                         <div class="flex w-full ${isMe ? 'justify-end' : 'justify-start'}">
                             <div class="p-2.5 rounded-2xl ${isMe ? 'gradient-bg text-white rounded-tl-2xl rounded-tr-none' : 'liquid-glass border border-gray-800 text-white rounded-tr-2xl rounded-tl-none'} max-w-[80%] relative group">
                                 ${replyHtml}
                                 ${content}
                                 ${reactionsHtml ? `<span class="absolute -bottom-2 ${isMe ? 'left-2' : 'right-2'} bg-[#12121a] border border-gray-700 rounded-full px-1.5 py-0.5 text-[10px] shadow">${reactionsHtml}</span>` : ''}
                                 <div class="flex gap-2 text-[9px] text-gray-300 mt-1 pt-1 border-t border-white/10">
-                                    <button onclick="setPrivateReply('${id}', '${escapeHTML(m.text || "صورة")}', '${escapeHTML(isMe ? 'أنت' : targetName)}')" class="hover:underline">💬 رد</button>
-                                    <button onclick="reactPrivateMsg('${id}', '❤️')">❤️</button>
-                                    <button onclick="reactPrivateMsg('${id}', '🔥')">🔥</button>
+                                    <button onclick="setPrivateReply('${escapeJs(id)}', '${escapeJs(m.text || "صورة")}', '${escapeJs(isMe ? 'أنت' : targetName)}')" class="hover:underline">💬 رد</button>
+                                    <button onclick="reactPrivateMsg('${escapeJs(id)}', '❤️')">❤️</button>
+                                    <button onclick="reactPrivateMsg('${escapeJs(id)}', '🔥')">🔥</button>
                                 </div>
                             </div>
-                        </div>`;
+                        </div>`);
                 });
+
+                box.innerHTML = msgNodes.join('');
 
                 const sb = document.getElementById('streak-badge');
                 if(count > 0) {
@@ -949,32 +1120,36 @@
             update(ref(db, `chats/${openChatId}/${msgId}/reactions`), { [currentUser.uid]: emoji });
         };
 
-        window.openViewOnce = async (msgId, img) => {
-            document.getElementById('view-once-img').src = img;
+        window.openViewOnce = async (msgId) => {
+            const imgData = viewOnceStore[msgId];
+            if (!imgData) return;
+            document.getElementById('view-once-img').src = imgData;
             document.getElementById('view-once-modal').classList.remove('hidden');
             await update(ref(db, `chats/${openChatId}/${msgId}`), { viewed: true });
         };
 
-        document.getElementById('send-private-btn').onclick = () => {
+        function sendPrivateMessage() {
             const inp = document.getElementById('private-msg-input');
             const text = inp.value.trim(); const isVO = document.getElementById('view-once-check').checked;
             if(!text && !privatePostImageBase64) return;
+            if(!openChatId || !currentPrivateTargetUid) return;
             inp.value = '';
             let payload = { senderId: currentUser.uid, text: text||null, image: privatePostImageBase64||null, viewOnce: isVO, timestamp: Date.now() };
             if(replyingPrivateMsg) payload.replyTo = replyingPrivateMsg;
 
-            // تثبيت الشات للطرفين فوراً (نظام واتساب)
-            const targetUid = openChatId.split('_').find(id => id !== currentUser.uid);
             update(ref(db), {
-                [`user_chats/${currentUser.uid}/${openChatId}/targetUid`]: targetUid,
-                [`user_chats/${targetUid}/${openChatId}/targetUid`]: currentUser.uid
+                [`user_chats/${currentUser.uid}/${openChatId}/targetUid`]: currentPrivateTargetUid,
+                [`user_chats/${currentPrivateTargetUid}/${openChatId}/targetUid`]: currentUser.uid
             });
 
             push(ref(db, `chats/${openChatId}`), payload);
             privatePostImageBase64 = ""; document.getElementById('private-img-preview-container').classList.add('hidden');
             document.getElementById('view-once-check').checked = false;
             cancelPrivateReply();
-        };
+        }
+        document.getElementById('send-private-btn').onclick = sendPrivateMessage;
+        // ميزة 2 (إضافية): إرسال بزر Enter في الشات الخاص
+        document.getElementById('private-msg-input').onkeypress = (e) => { if(e.key === 'Enter') sendPrivateMessage(); };
 
         // NXL AI Assistant
         const aiBtn = document.getElementById('nxl-ai-btn'), aiPanel = document.getElementById('nxl-ai-panel'), aiBox = document.getElementById('ai-messages-box');
@@ -982,13 +1157,13 @@
         document.getElementById('close-ai-btn').onclick = () => aiPanel.classList.add('hidden');
 
         function appendAiMsg(text, isUser = false) {
-            aiBox.innerHTML += `<div class="flex gap-2 w-full ${isUser ? 'justify-end' : 'justify-start'}"><div class="p-2.5 text-xs rounded-2xl ${isUser ? 'gradient-bg text-white rounded-tr-none' : 'liquid-glass border border-gray-800 text-white rounded-tl-none'} max-w-[85%] leading-relaxed">${escapeHTML(text)}</div></div>`;
+            aiBox.insertAdjacentHTML('beforeend', `<div class="flex gap-2 w-full ${isUser ? 'justify-end' : 'justify-start'}"><div class="p-2.5 text-xs rounded-2xl ${isUser ? 'gradient-bg text-white rounded-tr-none' : 'liquid-glass border border-gray-800 text-white rounded-tl-none'} max-w-[85%] leading-relaxed">${escapeHTML(text)}</div></div>`);
             aiBox.scrollTop = aiBox.scrollHeight;
         }
 
         function showTypingIndicator() {
             const id = 'typing-' + Date.now();
-            aiBox.innerHTML += `<div id="${id}" class="flex gap-2 w-full justify-start"><div class="p-3 text-xs rounded-2xl liquid-glass border border-gray-800 text-white rounded-tl-none typing-dot"><span></span><span></span><span></span></div></div>`;
+            aiBox.insertAdjacentHTML('beforeend', `<div id="${id}" class="flex gap-2 w-full justify-start"><div class="p-3 text-xs rounded-2xl liquid-glass border border-gray-800 text-white rounded-tl-none typing-dot"><span></span><span></span><span></span></div></div>`);
             aiBox.scrollTop = aiBox.scrollHeight;
             return id;
         }
@@ -1056,7 +1231,7 @@
 
         document.getElementById('ai-msg-input').onkeypress = (e) => { if(e.key === 'Enter') document.getElementById('send-ai-btn').click(); };
 
-        function escapeHTML(str) { if(!str) return ""; return str.replace(/[&<>'"]/g, tag => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[tag] || tag)); }
+        function escapeHTML(str) { if(!str) return ""; return String(str).replace(/[&<>'"]/g, tag => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[tag] || tag)); }
         window.escapeHTML = escapeHTML;
 
         window.switchTab = (tabId, btn) => {
