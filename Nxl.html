@@ -123,22 +123,28 @@
     <!-- إشعار عائم أنيق -->
     <div id="nxl-toast" class="fixed top-14 left-1/2 -translate-x-1/2 z-[60] bg-[#12121a]/95 border border-[#ff2a85]/50 text-white text-[11px] font-bold px-4 py-1.5 rounded-full shadow-xl hidden pointer-events-none"></div>
 
-    <!-- شاشة تسجيل الدخول -->
+    <!-- شاشة تسجيل الدخول وإنشاء الحساب -->
     <div id="auth-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#060609] px-6">
-        <div class="text-center max-w-sm w-full liquid-glass p-8 rounded-3xl glow-card">
-            <div class="w-16 h-16 mx-auto rounded-full gradient-bg flex items-center justify-center mb-4 shadow-xl shadow-[#ff2a85]/40 animate-pulse">
+        <div class="text-center max-w-sm w-full liquid-glass p-7 rounded-3xl glow-card">
+            <div class="w-16 h-16 mx-auto rounded-full gradient-bg flex items-center justify-center mb-3 shadow-xl shadow-[#ff2a85]/40 animate-pulse">
                 <span class="text-xl font-black tracking-wider text-white">NXL</span>
             </div>
             <h1 class="text-xl font-bold mb-1">مرحباً بك في <span class="gradient-text">NXL Ultimate</span></h1>
-            <p class="text-[11px] text-gray-400 mb-6">المنصة الاجتماعية الاحترافية المؤمنة</p>
+            <p class="text-[11px] text-gray-400 mb-4">سجّل دخولك بالبريد وكلمة المرور من أي جهاز</p>
+
+            <!-- تبديل سريع بين تسجيل الدخول وإنشاء حساب -->
+            <div class="grid grid-cols-2 gap-1.5 bg-[#0b0b12] p-1 rounded-2xl border border-gray-800 mb-4">
+                <button type="button" id="mode-login-tab" class="py-2 rounded-xl text-xs font-bold gradient-bg text-white transition">تسجيل الدخول</button>
+                <button type="button" id="mode-signup-tab" class="py-2 rounded-xl text-xs font-bold text-gray-400 hover:text-white transition">إنشاء حساب</button>
+            </div>
 
             <div class="space-y-3">
-                <input type="email" id="auth-email" placeholder="البريد الإلكتروني" class="w-full bg-[#12121a] text-xs rounded-xl px-4 py-3 text-white focus:outline-none border border-gray-700/60 dir-ltr text-left">
-                <input type="password" id="auth-password" placeholder="كلمة المرور (6 أحرف على الأقل)" class="w-full bg-[#12121a] text-xs rounded-xl px-4 py-3 text-white focus:outline-none border border-gray-700/60 dir-ltr text-left">
+                <input type="email" id="auth-email" autocomplete="email" placeholder="البريد الإلكتروني" class="w-full bg-[#12121a] text-xs rounded-xl px-4 py-3 text-white focus:outline-none border border-gray-700/60 focus:border-[#ff2a85] dir-ltr text-left">
+                <input type="password" id="auth-password" autocomplete="current-password" placeholder="كلمة المرور (6 أحرف على الأقل)" class="w-full bg-[#12121a] text-xs rounded-xl px-4 py-3 text-white focus:outline-none border border-gray-700/60 focus:border-[#ff2a85] dir-ltr text-left">
 
-                <button id="login-btn" class="w-full py-3 gradient-bg text-white font-bold text-xs rounded-xl interactive-press shadow-lg shadow-[#ff2a85]/20">تسجيل الدخول</button>
-                <button id="signup-btn" class="w-full py-3 bg-gray-800 text-white font-bold text-xs rounded-xl interactive-press hover:bg-gray-700">إنشاء حساب جديد</button>
-                <button id="forgot-pass-btn" class="text-[11px] text-gray-400 hover:text-white transition underline pt-2">نسيت كلمة المرور؟</button>
+                <button id="login-btn" class="w-full py-3 gradient-bg text-white font-bold text-xs rounded-xl interactive-press shadow-lg shadow-[#ff2a85]/20">دخول إلى حسابي ⚡</button>
+                <button id="signup-btn" class="w-full py-3 gradient-bg text-white font-bold text-xs rounded-xl interactive-press shadow-lg shadow-[#ff2a85]/20 hidden">إنشاء حساب جديد ✨</button>
+                <button id="forgot-pass-btn" type="button" class="text-[11px] text-gray-400 hover:text-white transition underline pt-1">نسيت كلمة المرور؟</button>
             </div>
         </div>
     </div>
@@ -146,8 +152,8 @@
     <!-- شاشة إعداد الملف الشخصي -->
     <div id="setup-profile-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#060609]/95 backdrop-blur-md px-6 hidden">
         <div class="max-w-sm w-full liquid-glass p-6 rounded-3xl border border-[#ff7300] shadow-2xl">
-            <h2 class="text-lg font-bold mb-1 text-center">خطوة أخيرة للبدء 🚀</h2>
-            <p class="text-[11px] text-gray-400 text-center mb-4">اختر هويتك واسم المستخدم الخاص بك في المنصة</p>
+            <h2 class="text-lg font-bold mb-1 text-center">إعداد حسابك لأول مرة 🚀</h2>
+            <p class="text-[11px] text-gray-400 text-center mb-4">يتم حفظ بياناتك في السحابة لتفتح حسابك من أي جهاز</p>
 
             <div class="flex flex-col items-center mb-4">
                 <div id="setup-avatar-preview" class="w-16 h-16 rounded-full border-2 border-[#ff2a85] overflow-hidden bg-gray-800 shadow-lg"></div>
@@ -285,18 +291,6 @@
                     </label>
                 </div>
 
-                <!-- إضافة جملة جديدة لقاعدة الأدمن (love_card_quotes) -->
-                <div class="bg-[#12121a]/90 border border-gray-800 rounded-2xl p-2.5 space-y-2">
-                    <div class="flex items-center justify-between">
-                        <span class="text-[10px] font-bold text-amber-300">🛠️ إضافة جملة جديدة لقائمة الكروت (الأدمن)</span>
-                        <span id="admin-quotes-count" class="text-[9px] text-gray-400">0 جملة</span>
-                    </div>
-                    <div class="flex gap-1.5">
-                        <input type="text" id="admin-new-love-quote" placeholder="اكتب جملة جديدة ليبدأ سحبها للكروت..." class="flex-1 bg-[#060609] border border-gray-700 text-[11px] rounded-xl px-3 py-2 text-white focus:outline-none">
-                        <button type="button" id="add-admin-love-quote-btn" class="px-3 py-2 bg-amber-500/20 text-amber-200 border border-amber-400/40 rounded-xl text-[10px] font-bold interactive-press">إضافة</button>
-                    </div>
-                </div>
-
                 <textarea id="love-card-custom-note" placeholder="رسالة إضافية من قلبك (اختياري - أو اتركها لتوليد كلام جامد تلقائياً)..." class="w-full bg-[#12121a] border border-gray-700 text-xs rounded-xl px-3 py-2 text-white h-14 resize-none focus:outline-none focus:border-pink-500"></textarea>
 
                 <div class="flex gap-2">
@@ -343,7 +337,7 @@
 
                     <div class="grid grid-cols-2 gap-2 mt-3">
                         <button id="download-nxl-love-card-btn" class="py-2.5 bg-gradient-to-r from-[#ff2a85] to-[#ff7300] rounded-xl text-xs font-extrabold text-white interactive-press shadow-lg">📥 حفظ الكارت صورة</button>
-                        <button type="button" onclick="window.shareEpicCardToGlobal()" class="py-2.5 bg-pink-600/30 border border-pink-400/50 rounded-xl text-xs font-extrabold text-pink-100 interactive-press">📣 مشاركة بالشات العام</button>
+                        <button type="button" onclick="window.shareEpicCardToGlobal()" class="py-2.5 bg-pink-600/30 border border-pink-400/50 rounded-xl text-xs font-extrabold text-pink-100 interactive-press">📣 مشاركة بالمنشورات</button>
                     </div>
                 </div>
             </div>
@@ -587,8 +581,8 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getDatabase, ref, set, update, push, onValue, get, child, query, limitToLast, remove, off, onDisconnect, runTransaction } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, onAuthStateChanged, signOut, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getDatabase, ref, set, update, push, onValue, get, child, query, limitToLast, remove, onDisconnect, runTransaction } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
         import { createAvatar } from "https://esm.sh/@dicebear/core@9";
         import * as avataaars from "https://esm.sh/@dicebear/avataaars@9";
 
@@ -606,6 +600,7 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getDatabase(app);
+        setPersistence(auth, browserLocalPersistence).catch(() => {});
 
         let currentUser = null;
         let userData = null;
@@ -614,7 +609,7 @@
         let loveCardBoyPhotoBase64 = "";
         let loveCardGirlPhotoBase64 = "";
         let latestEpicCardData = null;
-        let adminLoveQuotesList = [];
+        let externalLoveQuotesList = [];
         let usedLoveQuotesSet = new Set();
         let activeChatRef = null;
         let openChatId = null;
@@ -634,10 +629,34 @@
             "ليس الجمال في طول الحكاية، بل في بقاء الاهتمام والوفاء مهما تغيرت الظروف.",
             "حين يتفق قلبان على المودة والاحترام، تتحول أبسط التفاصيل إلى ذكريات لا تُنسى.",
             "أجمل ما في الحب الحقيقي أنه يمنحك طمأنينة تجعلك أقوى أمام كل ما يمر بك.",
-            "بين كل الوجوه تبقى هناك عينان تفهمانك دون شرح وتمنحانك معنى حقيقي للانتماء."
+            "بين كل الوجوه تبقى هناك عينان تفهمانك دون شرح وتمنحانك معنى حقيقي للانتماء.",
+            "وجود شخص يفهم نظرتك قبل كلامك نعمة تجعل الحياة أخف وأجمل في كل لحظة."
         ];
 
-        // 1) Automatic Avatar Library (@dicebear/core + @dicebear/avataaars) with guaranteed fallback
+        function awardExpPoints(amount) {
+            if (!currentUser || !Number.isFinite(Number(amount))) return;
+            runTransaction(ref(db, `users/${currentUser.uid}/points`), (curr) => (Number(curr) || 0) + Number(amount)).catch(() => {});
+        }
+
+        // Auth mode switcher (Login vs Sign Up)
+        const modeLoginTab = document.getElementById('mode-login-tab');
+        const modeSignupTab = document.getElementById('mode-signup-tab');
+        const loginBtn = document.getElementById('login-btn');
+        const signupBtn = document.getElementById('signup-btn');
+        const authPassInput = document.getElementById('auth-password');
+
+        function setAuthMode(mode) {
+            const isLogin = mode === 'login';
+            modeLoginTab.className = `py-2 rounded-xl text-xs font-bold transition ${isLogin ? 'gradient-bg text-white' : 'text-gray-400 hover:text-white'}`;
+            modeSignupTab.className = `py-2 rounded-xl text-xs font-bold transition ${!isLogin ? 'gradient-bg text-white' : 'text-gray-400 hover:text-white'}`;
+            loginBtn.classList.toggle('hidden', !isLogin);
+            signupBtn.classList.toggle('hidden', isLogin);
+            authPassInput.autocomplete = isLogin ? 'current-password' : 'new-password';
+        }
+        modeLoginTab.addEventListener('click', () => setAuthMode('login'));
+        modeSignupTab.addEventListener('click', () => setAuthMode('signup'));
+
+        // Automatic Avatar Library (@dicebear/core + @dicebear/avataaars) with guaranteed fallback
         function normalizePrivateGender(val) {
             const g = String(val || "").trim().toLowerCase();
             if (g === "female" || g === "f" || g === "أنثى" || g === "انثي" || g === "بنت") return "female";
@@ -713,20 +732,16 @@
             if (snapshot.exists()) dynamicAiKnowledge = snapshot.val();
         });
 
-        // Admin love card quotes listener + used quotes tracker so each card draws a fresh quote
         onValue(ref(db, 'love_card_quotes'), (snapshot) => {
             const list = [];
             if (snapshot.exists()) {
                 snapshot.forEach((childSnap) => {
                     const val = childSnap.val();
                     const text = typeof val === 'string' ? val.trim() : String(val?.text || '').trim();
-                    if (text) list.push({ id: childSnap.key, text });
+                    if (text) list.push(text);
                 });
             }
-            adminLoveQuotesList = list;
-            const countEl = document.getElementById('admin-quotes-count');
-            const totalPool = adminLoveQuotesList.length > 0 ? adminLoveQuotesList.length : DEFAULT_LOVE_QUOTES.length;
-            if (countEl) countEl.innerText = `${totalPool} جملة متاحة`;
+            externalLoveQuotesList = list;
         });
 
         onValue(ref(db, 'used_love_quotes'), (snapshot) => {
@@ -741,27 +756,9 @@
             usedLoveQuotesSet = nextUsed;
         });
 
-        document.getElementById('add-admin-love-quote-btn')?.addEventListener('click', async () => {
-            const inp = document.getElementById('admin-new-love-quote');
-            const text = inp?.value.trim() || '';
-            if (!text) return alert('اكتب الجملة أولاً');
-            if (text.length > 260) return alert('الجملة طويلة؛ أقصى حد 260 حرفاً');
-            try {
-                await push(ref(db, 'love_card_quotes'), {
-                    text,
-                    addedBy: currentUser?.uid || 'admin',
-                    timestamp: Date.now()
-                });
-                inp.value = '';
-                showToast('✅ تم إضافة الجملة لقائمة الكروت');
-            } catch (err) {
-                alert(firebaseErrorMessage(err));
-            }
-        });
-
         function pickNextLoveQuote() {
-            const pool = adminLoveQuotesList.length > 0
-                ? adminLoveQuotesList.map((item) => item.text)
+            const pool = externalLoveQuotesList.length > 0
+                ? externalLoveQuotesList
                 : DEFAULT_LOVE_QUOTES;
             const unused = pool.filter((q) => !usedLoveQuotesSet.has(q));
             const candidates = unused.length > 0 ? unused : pool;
@@ -795,24 +792,47 @@
             if (e.target.closest('button') || e.target.closest('.interactive-press')) playAppSound('click');
         });
 
-        document.getElementById('signup-btn').addEventListener('click', () => {
+        signupBtn.addEventListener('click', async () => {
             const email = document.getElementById('auth-email').value.trim();
             const pass = document.getElementById('auth-password').value;
-            if(!email || pass.length < 6) return alert("بريد غير صحيح أو كلمة مرور أقل من 6 أحرف");
-            createUserWithEmailAndPassword(auth, email, pass).catch(err => alert(firebaseErrorMessage(err)));
+            if (!email || pass.length < 6) return alert("بريد غير صحيح أو كلمة مرور أقل من 6 أحرف");
+            signupBtn.disabled = true;
+            try {
+                await createUserWithEmailAndPassword(auth, email, pass);
+            } catch (err) {
+                alert(firebaseErrorMessage(err));
+            } finally {
+                signupBtn.disabled = false;
+            }
         });
 
-        document.getElementById('login-btn').addEventListener('click', () => {
+        loginBtn.addEventListener('click', async () => {
             const email = document.getElementById('auth-email').value.trim();
             const pass = document.getElementById('auth-password').value;
-            if(!email || !pass) return alert("أدخل البريد وكلمة المرور");
-            signInWithEmailAndPassword(auth, email, pass).catch(err => alert(firebaseErrorMessage(err)));
+            if (!email || !pass) return alert("أدخل البريد الإلكتروني وكلمة المرور");
+            loginBtn.disabled = true;
+            try {
+                await signInWithEmailAndPassword(auth, email, pass);
+            } catch (err) {
+                alert(firebaseErrorMessage(err));
+            } finally {
+                loginBtn.disabled = false;
+            }
+        });
+
+        document.getElementById('auth-password').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                if (!loginBtn.classList.contains('hidden')) loginBtn.click();
+                else signupBtn.click();
+            }
         });
 
         document.getElementById('forgot-pass-btn').addEventListener('click', () => {
             const email = document.getElementById('auth-email').value.trim();
-            if(!email) return alert("اكتب بريدك الإلكتروني في خانة البريد أولاً");
-            sendPasswordResetEmail(auth, email).then(() => alert("تم إرسال رابط الاستعادة لبريدك")).catch(err => alert(firebaseErrorMessage(err)));
+            if (!email) return alert("اكتب بريدك الإلكتروني في خانة البريد أولاً");
+            sendPasswordResetEmail(auth, email)
+                .then(() => alert("تم إرسال رابط الاستعادة لبريدك"))
+                .catch(err => alert(firebaseErrorMessage(err)));
         });
 
         document.getElementById('logout-btn').addEventListener('click', () => signOut(auth).then(() => location.reload()));
@@ -847,6 +867,8 @@
                     }
                 });
             } else {
+                currentUser = null;
+                userData = null;
                 document.getElementById('auth-screen').classList.remove('hidden');
             }
         });
@@ -871,7 +893,7 @@
                 });
                 if (!claim.committed) throw new Error('USERNAME_TAKEN');
                 const avatarUrl = getAvatarByPrivateGender(privateGender, username || nickname);
-                const nextUser = { ...(userData || {}), uid: currentUser.uid, nickname, username, privateGender, bio, avatarUrl, email: currentUser.email, joinedAt: userData?.joinedAt || Date.now(), points: userData?.points || 0, isOnline: true };
+                const nextUser = { ...(userData || {}), uid: currentUser.uid, nickname, username, privateGender, bio, avatarUrl, email: currentUser.email, joinedAt: userData?.joinedAt || Date.now(), points: userData?.points || 10, isOnline: true };
                 await set(ref(db, `users/${currentUser.uid}`), nextUser);
                 if (oldUsername && oldUsername !== username) {
                     const oldClaim = await get(ref(db, `usernames/${oldUsername}`));
@@ -880,7 +902,7 @@
                 userData = nextUser;
                 document.getElementById('setup-profile-screen').classList.add('hidden');
                 initAppUI();
-                alert('تم حفظ ملفك الشخصي بنجاح ✨');
+                showToast('🎉 تم حفظ حسابك بنجاح');
             } catch (err) {
                 if (err.message === 'USERNAME_TAKEN') alert('اسم المستخدم محجوز بالفعل، اختار اسماً آخر');
                 else alert(firebaseErrorMessage(err));
@@ -890,7 +912,7 @@
         function firebaseErrorMessage(err) {
             const code = err?.code || '';
             const messages = {
-                'auth/email-already-in-use': 'البريد الإلكتروني مستخدم بالفعل',
+                'auth/email-already-in-use': 'البريد الإلكتروني مستخدم بالفعل، اختر "تسجيل الدخول" بدلاً من إنشاء حساب جديد',
                 'auth/invalid-email': 'صيغة البريد الإلكتروني غير صحيحة',
                 'auth/weak-password': 'كلمة المرور ضعيفة؛ استخدم 6 أحرف على الأقل',
                 'auth/user-not-found': 'لا يوجد حساب بهذا البريد',
@@ -917,7 +939,7 @@
                 await update(ref(db, `users/${currentUser.uid}`), { nickname: next.nickname, bio: next.bio, avatarUrl });
                 userData = next;
                 initAppUI();
-                alert('تم تحديث ملفك الشخصي ✨');
+                showToast('✨ تم تحديث ملفك الشخصي');
             } catch (err) { alert(firebaseErrorMessage(err)); }
         });
 
@@ -990,11 +1012,14 @@
         document.getElementById('save-note-btn').onclick = async () => {
             const text = document.getElementById('my-note-input').value.trim();
             if(!text) await update(ref(db, `users/${currentUser.uid}`), { note: null });
-            else await update(ref(db, `users/${currentUser.uid}/note`), { text, timestamp: Date.now() });
-            alert("تم نشر النوت بنجاح! ✨");
+            else {
+                await update(ref(db, `users/${currentUser.uid}/note`), { text, timestamp: Date.now() });
+                awardExpPoints(3);
+            }
+            showToast("تم نشر النوت بنجاح! ✨");
         };
 
-        // 2) Epic NXL Love Card Builder + Rotating Admin Quotes + Reliable Image Canvas Rendering
+        // Epic NXL Love Card Builder + Rotating Quotes + Reliable Image Canvas Rendering
         document.getElementById('love-card-boy-photo')?.addEventListener('change', (e) => {
             const f = e.target.files[0];
             if (!f) return;
@@ -1046,7 +1071,8 @@
             document.getElementById('epic-card-quote-deep').innerText = copy.deepQuote;
             document.getElementById('epic-card-tags').innerText = copy.tags;
             document.getElementById('nxl-epic-love-card-preview').classList.remove('hidden');
-            showToast('💘 تم سحب جملة جديدة وإنشاء كارت NXL');
+            awardExpPoints(5);
+            showToast('💘 تم سحب جملة جديدة وإنشاء كارت NXL (+5 EXP)');
         });
 
         function wrapCanvasText(ctx, text, x, y, maxWidth, lineHeight) {
@@ -1200,7 +1226,8 @@
                     timestamp: Date.now(),
                     likeCount: 0
                 });
-                showToast('📣 تم نشر كارت الحب في المنشورات');
+                awardExpPoints(8);
+                showToast('📣 تم نشر كارت الحب في المنشورات (+8 EXP)');
             } catch (err) {
                 alert(firebaseErrorMessage(err));
             }
@@ -1245,6 +1272,7 @@
             document.getElementById('c-avatar1').innerHTML = `<img src="${escapeHTML(userData.avatarUrl || '')}" class="w-full h-full object-cover">`;
             document.getElementById('c-avatar2').innerHTML = `<img src="${escapeHTML(getAvatarByPrivateGender('male', n2))}" class="w-full h-full object-cover">`;
             document.getElementById('love-result-card').classList.remove('hidden');
+            awardExpPoints(4);
         };
 
         window.downloadCanvaCardImage = () => {
@@ -1416,7 +1444,12 @@
             if (text.length > 1000) return alert('الرسالة أقصى حد لها 1000 حرف');
             const payload = { senderId: currentUser.uid, senderNickname: userData.nickname, senderAvatar: userData.avatarUrl, text, timestamp: Date.now() };
             if (replyingGlobalMsg) payload.replyTo = replyingGlobalMsg;
-            try { await push(ref(db, 'global_chat'), payload); inp.value = ''; cancelGlobalReply(); }
+            try {
+                await push(ref(db, 'global_chat'), payload);
+                inp.value = '';
+                cancelGlobalReply();
+                awardExpPoints(2);
+            }
             catch (err) { alert(firebaseErrorMessage(err)); }
         };
         document.getElementById('global-msg-input').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('send-global-btn').click(); });
@@ -1440,6 +1473,8 @@
                 document.getElementById('post-input').value = '';
                 globalPostImageBase64 = '';
                 document.getElementById('post-preview-container').classList.add('hidden');
+                awardExpPoints(5);
+                showToast('🚀 تم نشر منشورك (+5 EXP)');
             } catch (err) { alert(firebaseErrorMessage(err)); }
         };
 
@@ -1474,6 +1509,7 @@
                 });
                 expandedPostComments[postId] = true;
                 inputEl.value = '';
+                awardExpPoints(2);
             } catch (err) {
                 alert(firebaseErrorMessage(err));
             }
@@ -1672,7 +1708,6 @@
             reader.readAsDataURL(file);
         }
 
-        // Automatic "hearts" ("قلوب") theme with floating hearts when boy and girl chat privately
         function renderHeartsFloatingOverlay() {
             const hearts = ['💖', '💕', '💗', '💘', '💞'];
             const items = hearts.map((h, idx) =>
@@ -1856,7 +1891,7 @@
             finally { sendBtn.disabled = false; }
         };
 
-        // 3) NXL AI Assistant: replies AND executes actions inside the app simultaneously
+        // NXL AI Assistant: replies AND executes actions inside the app simultaneously
         const aiBtn = document.getElementById('nxl-ai-btn'), aiPanel = document.getElementById('nxl-ai-panel'), aiBox = document.getElementById('ai-messages-box');
         aiBtn.onclick = () => aiPanel.classList.remove('hidden');
         document.getElementById('close-ai-btn').onclick = () => aiPanel.classList.add('hidden');
@@ -1877,7 +1912,6 @@
             const trimmed = String(rawText || '').trim();
             const lower = trimmed.toLowerCase();
 
-            // Action 1: Publish a note directly
             const noteMatch = trimmed.match(/^(?:انشر|نشر|حط|اعمل)\s*نوت\s*[:：\-]?\s*(.+)$/i);
             if (noteMatch && noteMatch[1] && currentUser) {
                 const noteText = noteMatch[1].trim().slice(0, 120);
@@ -1887,7 +1921,6 @@
                 return `تم نشر النوت فوراً داخل حسابك: «${noteText}» ✨`;
             }
 
-            // Action 2: Publish a post directly
             const postMatch = trimmed.match(/^(?:انشر|نشر|نزل|اعمل)\s*(?:منشور|بوست)\s*[:：\-]?\s*(.+)$/i);
             if (postMatch && postMatch[1] && currentUser && userData) {
                 const postText = postMatch[1].trim().slice(0, 2000);
@@ -1904,7 +1937,6 @@
                 return `تم نشر المنشور في الرئيسية فوراً: «${postText}» 🚀`;
             }
 
-            // Action 3: Navigate to Games / Love Card
             if (lower.includes("كارت الحب") || lower.includes("افتح الالعاب") || lower.includes("افتح الألعاب")) {
                 const gamesBtn = document.querySelectorAll('nav button')[2];
                 window.switchTab('games', gamesBtn);
@@ -1912,7 +1944,6 @@
                 return "تم فتح قسم الألعاب ومنشئ كارت الحب NXL مباشرةً 💘";
             }
 
-            // Action 4: Navigate to Global chat
             if (lower.includes("الشات العام") || lower.includes("افتح العام")) {
                 const globalBtn = document.querySelectorAll('nav button')[1];
                 window.switchTab('global', globalBtn);
@@ -1920,7 +1951,6 @@
                 return "تم نقلك إلى الشات العام المباشر 🔥";
             }
 
-            // Action 5: Navigate to Profile
             if (lower.includes("ملفي") || lower.includes("بروفايلي")) {
                 const profBtn = document.getElementById('nav-profile-btn');
                 window.switchTab('profile', profBtn);
