@@ -52,6 +52,7 @@ nav button.on{color:var(--a);font-weight:800}
 .pill{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:2px 8px;margin-top:2px;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:70px}
 #aibtn{position:fixed;bottom:76px;left:14px;width:46px;height:46px;border-radius:50%;padding:0;z-index:40}
 .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.grid img{width:100%;height:96px;object-fit:cover;border-radius:10px}
+.q{border-inline-start:3px solid var(--a);padding:2px 8px;margin-bottom:4px;font-size:12px;background:#0003;border-radius:6px}.acts{display:flex;gap:12px;font-size:11px;margin-top:4px;opacity:.85}.acts span{cursor:pointer}.rx{display:inline-block;background:#0007;border-radius:10px;padding:0 6px;font-size:12px;margin-top:3px}.bdg{background:var(--a);border-radius:10px;padding:0 8px;font-size:12px;font-weight:800}
 [hidden]{display:none!important}
 </style>
 </head>
@@ -142,7 +143,7 @@ nav button.on{color:var(--a);font-weight:800}
   <button data-tab="home" class="on">الرئيسية</button>
   <button data-tab="global">عام<i id="gdot" class="dot" hidden></i></button>
   <button data-tab="games">ألعاب</button>
-  <button data-tab="chats">شاتاتي</button>
+  <button data-tab="chats">شاتاتي<i id="cdot" class="dot" hidden></i></button>
   <button data-tab="profile">ملفي</button>
 </nav>
 
@@ -154,6 +155,7 @@ nav button.on{color:var(--a);font-weight:800}
   </div>
   <div id="pmsgs" style="width:100%"></div>
   <div style="width:100%;padding-bottom:max(10px,env(safe-area-inset-bottom))">
+    <div id="prep" class="card row" hidden style="margin:6px 0 0;padding:6px 10px"><span id="prept" style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px"></span><button id="prepx">✕</button></div>
     <div id="pimgbox" hidden>✅ صورة مرفقة <label><input id="once" type="checkbox"> تُعرض مرة واحدة</label> <button id="pimgx">✕</button></div>
     <div class="bar"><input id="pfile2" type="file" accept="image/*" hidden><button id="pimgbtn">🖼️</button><input id="pin" maxlength="1000" placeholder="اكتب رسالة..."><button id="psend" class="g">إرسال</button></div>
   </div>
@@ -210,7 +212,7 @@ $('forgot').onclick=()=>{const e=$('em').value.trim();if(!e)return toast('اكت
 $('logout').onclick=()=>signOut(auth);
 
 onAuthStateChanged(auth,u=>{
-  off.forEach(f=>f());off=[];if(chatOff)chatOff();chatOff=null;started=false;me=u;my=null;
+  off.forEach(f=>f());off=[];closeChat(true);started=false;me=u;my=null;
   $('auth').classList.toggle('on',!u);
   if(!u){$('setup').classList.remove('on');$('pchat').classList.remove('on');return}
   on(rt('users/'+u.uid),s=>{
@@ -248,6 +250,8 @@ function start(){
   // presence (only after the profile exists)
   on(rt('.info/connected'),s=>{if(s.val()){const r=rt(`users/${me.uid}/isOnline`);onDisconnect(r).set(false).then(()=>set(r,true))}});
 
+  on(rt('.info/serverTimeOffset'),s=>{skew=s.val()||0});
+
   // posts (72h window, filtered by the server query)
   on(query(rt('posts'),orderByChild('ts'),startAt(Date.now()-72*H),limitToLast(50)),s=>{posts=[];s.forEach(c=>{posts.push({...c.val(),id:c.key})});renderFeed()});
 
@@ -274,12 +278,16 @@ function start(){
     $('stories').innerHTML=a.map(u=>`<div data-act="user" data-id="${esc(u.uid)}"><img class="av" src="${av(u.username)}" alt=""><div>${esc(u.nickname.split(' ')[0])}</div><span class="pill">${esc(u.note.text)}</span></div>`).join('');
   });
 
-  // private chats list (rendered once per snapshot, stale renders dropped)
+  // private chats list
   on(rt('user_chats/'+me.uid),async s=>{
-    const t=++ct,es=[];s.forEach(c=>{es.push(c.val())});es.sort((a,b)=>(b.ts||0)-(a.ts||0));
-    const us=await Promise.all(es.map(e=>get(rt('users/'+e.with)).then(x=>x.val()&&{...x.val(),uid:e.with})));
+    const t=++ct,es=[];s.forEach(c=>{const v=c.val();if(v&&v.with)es.push({...v,cid:c.key})});
+    es.sort((a,b)=>(b.ts||0)-(a.ts||0));
+    const tot=es.reduce((n,e)=>n+(e.unread||0),0);
+    $('cdot').hidden=!tot;document.title=(tot?`(${tot}) `:'')+'NXL Ultimate';
+    if(chat)for(const e of es)if(e.cid===chat.id&&e.unread)set(rt(`user_chats/${me.uid}/${e.cid}/unread`),0).catch(()=>{});
+    const us=await Promise.all(es.map(e=>get(rt('users/'+e.with)).then(x=>x.val()?{...x.val(),...e,uid:e.with}:null).catch(()=>null)));
     if(t!==ct)return;
-    $('clist').innerHTML=us.filter(Boolean).map(u=>`<div class="card row" data-act="chat" data-id="${esc(u.uid)}" style="cursor:pointer"><img class="av" src="${av(u.username)}" alt=""><div style="flex:1"><b>${esc(u.nickname)}</b><br><small>@${esc(u.username)}</small></div></div>`).join('')||'<p class="mut">لا توجد محادثات بعد. ابحث عن صديق وابدأ.</p>';
+    $('clist').innerHTML=us.filter(Boolean).map(u=>`<div class="card row" data-act="chat" data-id="${esc(u.uid)}" style="cursor:pointer"><img class="av" src="${av(u.username)}" alt=""><div style="flex:1;min-width:0"><b>${esc(u.nickname)}</b><br><small>${esc(u.last||'@'+u.username)}</small></div>${u.unread&&!(chat&&chat.id===u.cid)?`<span class="bdg">${u.unread}</span>`:''}</div>`).join('')||'<p class="mut">لا توجد محادثات بعد. ابحث عن صديق وابدأ.</p>';
   });
 }
 
@@ -329,35 +337,96 @@ async function showUser(uid){
 $('uclose').onclick=()=>$('umodal').classList.remove('on');
 
 /* ---------- private chat ---------- */
+let reply=null,chatOffs=[],skew=0,ac;
+const fmt=t=>new Date(t).toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'});
+const beep=()=>{try{ac=ac||new(window.AudioContext||window.webkitAudioContext)();if(ac.state==='suspended')ac.resume();const o=ac.createOscillator(),g=ac.createGain();o.connect(g);g.connect(ac.destination);o.frequency.value=660;g.gain.setValueAtTime(.05,ac.currentTime);g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+.15);o.start();o.stop(ac.currentTime+.15)}catch{}};
+const setRead=()=>{if(chat&&document.visibilityState==='visible')set(rt(`chat_meta/${chat.id}/reads/${me.uid}`),serverTimestamp()).catch(()=>{})};
+document.addEventListener('visibilitychange',setRead);
+function setReply(r){reply=r;$('prep').hidden=!r;if(r)$('prept').textContent='رد على '+r.name+': '+r.text}
+$('prepx').onclick=()=>setReply(null);
+function status(){if(!chat)return;$('ps').textContent=chat.typing?'يكتب الآن...':chat.online?'متصل':'غير متصل'}
+
 async function openChat(uid){
-  const u=(await get(rt('users/'+uid))).val();if(!u)return;
-  if(chatOff)chatOff();
-  const cid=[me.uid,uid].sort().join('_');chat={id:cid,to:uid};pic.chat='';$('pimgbox').hidden=true;
-  $('pn').textContent=u.nickname;$('pa').src=av(u.username);$('ps').textContent=u.isOnline?'متصل':'غير متصل';
+  let u;try{u=(await get(rt('users/'+uid))).val()}catch{return toast('تعذر فتح المحادثة')}
+  if(!u)return toast('المستخدم غير موجود');
+  closeChat(true);
+  const cid=[me.uid,uid].sort().join('_');
+  chat={id:cid,to:uid,u,msgs:[],first:true,lastId:null,online:false,typing:false,read:0,tt:0,tsent:0};
+  setReply(null);pic.chat='';$('pimgbox').hidden=true;$('pin').value='';
+  $('pn').textContent=u.nickname;$('pa').src=av(u.username);status();
   $('umodal').classList.remove('on');$('pchat').classList.add('on');
-  chatOff=onValue(query(rt('chats/'+cid),orderByChild('ts'),startAt(Date.now()-25*H),limitToLast(200)),s=>{
-    let h='';
-    s.forEach(c=>{const m=c.val(),mine=m.from===me.uid;let b;
-      if(m.once)b=mine?'<i>👻 صورة لمرة واحدة</i>':m.image?`<button data-act="once" data-id="${esc(c.key)}">👻 اضغط للعرض</button>`:'<i>👻 تم فتحها</i>';
-      else b=(m.image?`<img class="pimg" src="${esc(m.image)}" alt="">`:'')+(m.text?`<p>${esc(m.text)}</p>`:'');
-      h+=`<div class="msg ${mine?'me':''}">${b}</div>`});
-    $('pmsgs').innerHTML=h||'<p class="mut" style="text-align:center">ابدأ المحادثة. الرسائل تُعرض لمدة 25 ساعة.</p>';scrollEnd('pmsgs');
-  },()=>toast('لا يمكن فتح المحادثة'));
+  const sub=(q,cb,er)=>chatOffs.push(onValue(q,cb,er||(()=>{})));
+  sub(rt('users/'+uid+'/isOnline'),s=>{if(chat){chat.online=!!s.val();status()}});
+  sub(rt(`chat_meta/${cid}/typing/${uid}`),s=>{if(!chat)return;const v=s.val();chat.typing=!!v&&Date.now()+skew-v<5000;status();clearTimeout(chat.tt);if(chat.typing)chat.tt=setTimeout(()=>{if(chat){chat.typing=false;status()}},5000)});
+  sub(rt(`chat_meta/${cid}/reads/${uid}`),s=>{if(chat){chat.read=s.val()||0;draw()}});
+  sub(query(rt('chats/'+cid),orderByChild('ts'),startAt(Date.now()-25*H),limitToLast(200)),s=>{
+    if(!chat||chat.id!==cid)return;
+    const a=[];s.forEach(c=>{a.push({...c.val(),id:c.key})});
+    const last=a[a.length-1];
+    if(!chat.first&&last&&last.id!==chat.lastId&&last.from!==me.uid)beep();
+    chat.msgs=a;chat.lastId=last?.id||null;draw();chat.first=false;setRead();
+  },()=>toast('لا يمكن قراءة المحادثة'));
 }
-const closeChat=()=>{if(chatOff)chatOff();chatOff=null;chat=null;$('pchat').classList.remove('on')};
-$('pback').onclick=closeChat;
-$('pdel').onclick=async()=>{if(!chat||!confirm('إزالة المحادثة من قائمتك؟ (لن تُحذف عند الطرف الآخر)'))return;await remove(rt(`user_chats/${me.uid}/${chat.id}`));closeChat()};
+
+function draw(){
+  if(!chat)return;
+  const box=$('pmsgs'),near=chat.first||box.scrollHeight-box.scrollTop-box.clientHeight<120;
+  let h='',day='';
+  for(const m of chat.msgs){
+    const mine=m.from===me.uid,t=typeof m.ts==='number'?m.ts:Date.now();
+    const d=new Date(t).toLocaleDateString('ar-EG',{weekday:'long',day:'numeric',month:'long'});
+    if(d!==day){day=d;h+=`<small style="text-align:center">${esc(d)}</small>`}
+    let b='';
+    if(m.reply)b+=`<div class="q"><b>${esc(m.reply.name)}</b><br>${esc(m.reply.text)}</div>`;
+    if(m.once)b+=mine?'<i>👻 صورة لمرة واحدة</i>':m.image?`<button data-act="once" data-id="${esc(m.id)}">👻 اضغط للعرض</button>`:'<i>👻 تم فتحها</i>';
+    else{if(m.image)b+=`<img class="pimg" src="${esc(m.image)}" alt="">`;if(m.text)b+=`<p>${esc(m.text)}</p>`}
+    const rx=Object.values(m.reactions||{});
+    const tick=mine?(chat.read&&chat.read>=t?'✓✓':'✓'):'';
+    const id=esc(m.id);
+    h+=`<div class="msg ${mine?'me':''}">${b}${rx.length?`<span class="rx">${esc(rx.join(' '))}</span>`:''}<small>${fmt(t)} ${tick}</small><div class="acts"><span data-act="reply" data-id="${id}">رد</span><span data-act="react" data-id="${id}" data-e="❤️">❤️</span><span data-act="react" data-id="${id}" data-e="🔥">🔥</span>${mine?`<span data-act="unsend" data-id="${id}">حذف</span>`:''}</div></div>`;
+  }
+  box.innerHTML=h||'<p class="mut" style="text-align:center">ابدأ المحادثة. الرسائل تُعرض لمدة 25 ساعة.</p>';
+  if(near)scrollEnd('pmsgs');
+}
+
+function closeChat(silent){
+  chatOffs.forEach(f=>f());chatOffs=[];
+  if(chat){clearTimeout(chat.tt);set(rt(`chat_meta/${chat.id}/typing/${me.uid}`),null).catch(()=>{})}
+  chat=null;if(!silent)$('pchat').classList.remove('on');
+}
+$('pback').onclick=()=>closeChat();
+$('pdel').onclick=async()=>{
+  if(!chat||!confirm('إزالة المحادثة من قائمتك؟ (لن تُحذف عند الطرف الآخر)'))return;
+  try{await remove(rt(`user_chats/${me.uid}/${chat.id}`));closeChat()}catch{toast('تعذر الحذف')}
+};
 $('pimgbtn').onclick=()=>$('pfile2').click();
 $('pfile2').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{pic.chat=await shrink(f);$('pimgbox').hidden=false}catch{toast('تعذر قراءة الصورة')}e.target.value=''};
 $('pimgx').onclick=()=>{pic.chat='';$('pimgbox').hidden=true};
+$('pin').oninput=()=>{
+  if(!chat||Date.now()-chat.tsent<2500)return;chat.tsent=Date.now();
+  set(rt(`chat_meta/${chat.id}/typing/${me.uid}`),serverTimestamp()).catch(()=>{});
+};
+
 const sendP=async()=>{
-  if(!chat)return;const text=$('pin').value.trim();if(!text&&!pic.chat)return;
-  const m={from:me.uid,ts:serverTimestamp()};if(text)m.text=text;if(pic.chat){m.image=pic.chat;if($('once').checked)m.once=true}
-  const key=push(rt('chats/'+chat.id)).key,up={};
-  up[`chats/${chat.id}/${key}`]=m;
-  up[`user_chats/${me.uid}/${chat.id}`]={with:chat.to,ts:serverTimestamp()};
-  up[`user_chats/${chat.to}/${chat.id}`]={with:me.uid,ts:serverTimestamp()};
-  try{await update(rt(''),up);$('pin').value='';pic.chat='';$('pimgbox').hidden=true;$('once').checked=false}catch{toast('تعذر الإرسال')}
+  if(!chat||$('psend').disabled)return;
+  const text=$('pin').value.trim();if(!text&&!pic.chat)return;
+  const m={from:me.uid,ts:serverTimestamp()};
+  if(text)m.text=text;
+  if(pic.chat){m.image=pic.chat;if($('once').checked)m.once=true}
+  if(reply)m.reply=reply;
+  const cid=chat.id,to=chat.to,key=push(rt('chats/'+cid)).key,up={},snip=(text||'📷 صورة').slice(0,40);
+  up[`chats/${cid}/${key}`]=m;
+  for(const[a,b]of[[me.uid,to],[to,me.uid]]){
+    up[`user_chats/${a}/${cid}/with`]=b;up[`user_chats/${a}/${cid}/ts`]=serverTimestamp();up[`user_chats/${a}/${cid}/last`]=snip;
+  }
+  $('psend').disabled=true;
+  try{
+    await update(rt(''),up);
+    runTransaction(rt(`user_chats/${to}/${cid}/unread`),n=>(n||0)+1).catch(()=>{});
+    $('pin').value='';pic.chat='';$('pimgbox').hidden=true;$('once').checked=false;setReply(null);
+    set(rt(`chat_meta/${cid}/typing/${me.uid}`),null).catch(()=>{});
+  }catch{toast('تعذر الإرسال، تأكد من الاتصال')}
+  finally{$('psend').disabled=false}
 };
 $('psend').onclick=sendP;$('pin').onkeydown=e=>{if(e.key==='Enter')sendP()};
 $('once-x').onclick=()=>{$('once-v').classList.remove('on');$('once-img').src=''};
@@ -384,20 +453,102 @@ $('q-dl').onclick=async()=>{
     const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=f.name;a.click()});
 };
 
-/* ---------- assistant (knowledge base -> Wikipedia -> honest "not found") ---------- */
-let kb=null;
-const norm=s=>s.toLowerCase().replace(/[^\p{L}\p{N}\s]/gu,'').trim();
-const say=(t,u)=>{$('amsgs').insertAdjacentHTML('beforeend',`<div class="msg ${u?'me':''}"><p>${esc(t)}</p></div>`);scrollEnd('amsgs')};
-async function wiki(q){
-  try{const j=await(await fetch(`https://ar.wikipedia.org/w/api.php?action=query&generator=search&gsrsearch=${encodeURIComponent(q)}&gsrlimit=1&prop=extracts&exintro&explaintext&format=json&origin=*`)).json();
-    const p=Object.values(j.query?.pages||{})[0];return p?.extract?p.extract.slice(0,450)+'...':null}catch{return null}}
-$('aibtn').onclick=async()=>{$('ai').classList.add('on');if(!$('amsgs').children.length)say('أهلاً! اسألني وسأبحث في قاعدة المعرفة ثم في ويكيبيديا.');
-  if(!kb)try{kb=(await get(rt('ai_knowledge_base'))).val()||{}}catch{kb={}}};
+/* ---------- assistant: قاعدة البيانات -> أدوات مدمجة -> الويب ---------- */
+let kb={},kbOk=false,asking=false;
+const DIG='٠١٢٣٤٥٦٧٨٩';
+const norm=s=>String(s).toLowerCase().replace(/[٠-٩]/g,d=>DIG.indexOf(d)).replace(/[إأآ]/g,'ا').replace(/ى/g,'ي').replace(/ة/g,'ه').replace(/[\u064B-\u0652]/g,'').replace(/[^\p{L}\p{N}\s]/gu,' ').replace(/\s+/g,' ').trim();
+const STOP=new Set('ما ماذا من هو هي هل ايه اية ازاي كيف في علي على عن الي الى هذا هذه ده دي يا لو انا انت اللي'.split(' ').map(norm));
+const toks=s=>norm(s).split(' ').filter(w=>w&&!STOP.has(w));
+const score=(a,b)=>{const A=new Set(toks(a)),B=new Set(toks(b));if(!A.size||!B.size)return 0;let i=0;A.forEach(w=>{if(B.has(w))i++});return i/(A.size+B.size-i)};
+const cover=(a,b)=>{const A=new Set(toks(a)),B=new Set(toks(b));if(!A.size)return 0;let i=0;A.forEach(w=>{if(B.has(w))i++});return i/A.size};
+
+const FAQ=[
+ ['نشر منشور بوست صوره انشر','من تبويب الرئيسية اكتب في الصندوق واضغط «نشر». المنشورات تختفي من العرض بعد 72 ساعة.'],
+ ['نوت ملاحظه ستوري','من تبويب «شاتاتي» اكتب النوت واضغط «نشر». تظهر لمدة 7 ساعات.'],
+ ['صوره تختفي مره واحده view once','في الشات الخاص اختر صورة وفعّل «تُعرض مرة واحدة». تُحذف من قاعدة البيانات بعد أن يفتحها المستلم.'],
+ ['رد على رساله reply','في الشات الخاص اضغط «رد» تحت الرسالة.'],
+ ['حذف مسح رساله unsend','اضغط «حذف» تحت رسالتك فتُحذف عند الطرفين. زر السلة أعلى الشات يزيل المحادثة من قائمتك فقط.'],
+ ['نقاط exp ترتيب لوحه الشرف','تحصل على 5 نقاط مع كل منشور وتظهر في لوحة الشرف.'],
+ ['تغيير تعديل اسم نبذه ملف','من «ملفي» ثم «تعديل». اسم المستخدم لا يمكن تغييره.'],
+ ['علامه صح قراءه seen شاف الرساله','✓ تعني أن الرسالة أُرسلت، و ✓✓ تعني أن الطرف الآخر فتح المحادثة بعد وصولها.']
+];
+
+function calc(q){
+  const raw=(q.match(/[\d٠-٩(][\d٠-٩+\-*/×÷xX().^%\s,]*/)||[''])[0];
+  if(!raw||q.replace(raw,'').length>25)return null;
+  const s=raw.replace(/[٠-٩]/g,d=>DIG.indexOf(d)).replace(/[×xX]/g,'*').replace(/÷/g,'/').replace(/[\s,]/g,'');
+  if(!/^[\d+\-*/().^%]+$/.test(s)||!/[+\-*/^%]/.test(s.replace(/^-/,'')))return null;
+  let i=0;
+  const atom=()=>{if(s[i]==='('){i++;const v=add();if(s[i++]!==')')throw 0;return v}const m=/^\d+(\.\d+)?/.exec(s.slice(i));if(!m)throw 0;i+=m[0].length;return +m[0]};
+  const un=()=>s[i]==='-'?(i++,-un()):atom();
+  const pw=()=>{const b=un();if(s[i]==='^'){i++;return Math.pow(b,pw())}return b};
+  const mul=()=>{let v=pw();while('*/%'.includes(s[i]||'#')){const o=s[i++],r=pw();v=o==='*'?v*r:o==='/'?v/r:v%r}return v};
+  const add=()=>{let v=mul();while('+-'.includes(s[i]||'#')){const o=s[i++],r=mul();v=o==='+'?v+r:v-r}return v};
+  try{const v=add();return i===s.length&&isFinite(v)?+v.toFixed(10):null}catch{return null}
+}
+function tools(q){
+  const n=norm(q);
+  if(/^(اهلا|مرحبا|السلام|هاي|هلا|hi|hello)/.test(n))return 'أهلاً بك! اسألني عن التطبيق أو أي معلومة عامة، أو اكتب مسألة حسابية.';
+  if(/(الساعه كام|كام الساعه|الوقت الان|what time)/.test(n))return 'الساعة الآن '+new Date().toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'});
+  if(/(تاريخ اليوم|النهارده كام|اليوم ايه|ايه اليوم|النهارده ايه|today)/.test(n))return 'اليوم '+new Date().toLocaleDateString('ar-EG',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  return null;
+}
+
+async function getJSON(u,ms=6000){
+  const c=new AbortController(),t=setTimeout(()=>c.abort(),ms);
+  try{const r=await fetch(u,{signal:c.signal});if(!r.ok)throw new Error(r.status);return await r.json()}finally{clearTimeout(t)}
+}
+async function wiki(q,lang){
+  const clean=toks(q).join(' ')||q;
+  const j=await getJSON(`https://${lang}.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(clean)}&srlimit=5&format=json&origin=*`);
+  const hits=(j.query?.search||[]).filter(h=>cover(clean,h.title+' '+h.snippet.replace(/<[^>]+>/g,''))>=.5);
+  if(!hits.length)return null;
+  const best=hits.map(h=>({h,s:score(clean,h.title)})).sort((a,b)=>b.s-a.s)[0].h;
+  const t=best.title.replace(/ /g,'_');
+  const s=await getJSON(`https://${lang}.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(t)}`);
+  if(!s.extract||s.type==='disambiguation')return null;
+  return{text:s.extract.length>500?s.extract.slice(0,500)+'...':s.extract,title:s.title,url:`https://${lang}.wikipedia.org/wiki/${encodeURIComponent(t)}`};
+}
+async function web(q){
+  for(const lang of /[a-z]{3}/i.test(q)?['en','ar']:['ar','en']){
+    try{const w=await wiki(q,lang);if(w)return{text:w.text,src:'ويكيبيديا: '+w.title,url:w.url}}catch{}
+  }
+  return null;
+}
+
+async function answer(q){
+  const forced=q.replace(/^(ابحث|دور|search)(\s+في)?(\s+(الويب|النت|جوجل|الانترنت))?(\s+عن)?\s+/i,'');
+  if(forced!==q){return await web(forced)||{text:'بحثت ولم أجد نتيجة موثوقة. جرّب صياغة أخرى.'}}
+  // 1) قاعدة البيانات
+  const nq=norm(q);let best=null,bs=0;
+  for(const k in kb){const s=norm(k)===nq?1:score(q,k);if(s>bs){bs=s;best=k}}
+  if(best&&bs>=.5)return{text:String(kb[best]),src:'قاعدة معرفة NXL'};
+  // 2) أدوات مدمجة (حساب، وقت، دليل التطبيق)
+  const c=calc(q);if(c!==null)return{text:'الناتج: '+c.toLocaleString('en-US',{maximumFractionDigits:10}),src:'حاسبة'};
+  const t=tools(q);if(t)return{text:t};
+  let f=null,fs=0;for(const[keys,ans]of FAQ){const s=cover(q,keys);if(s>fs){fs=s;f=ans}}
+  if(f&&fs>=.5)return{text:f,src:'دليل التطبيق'};
+  // 3) الويب
+  return await web(q)||{text:'لم أجد إجابة موثوقة. جرّب صياغة أوضح، أو اكتب «ابحث عن ...».'};
+}
+
+const say=(t,u,src,url)=>{
+  const s=src?`<small>${url?`<a href="${esc(url)}" target="_blank" rel="noopener noreferrer" style="color:var(--b)">${esc(src)}</a>`:esc(src)}</small>`:'';
+  $('amsgs').insertAdjacentHTML('beforeend',`<div class="msg ${u?'me':''}"><p>${esc(t)}</p>${s}</div>`);scrollEnd('amsgs');
+};
+$('aibtn').onclick=async()=>{
+  $('ai').classList.add('on');
+  if(!$('amsgs').children.length)say('أهلاً! أبحث أولاً في قاعدة معرفة NXL، ثم أستخدم الأدوات المدمجة، ثم ويكيبيديا. هذا ليس نموذج ذكاء اصطناعي توليدي، لذا قد لا أعرف كل شيء.');
+  if(!kbOk)try{kb=(await get(rt('ai_knowledge_base'))).val()||{};kbOk=true}catch{kb={}}
+};
 $('aix').onclick=()=>$('ai').classList.remove('on');
-const ask=async()=>{const q=$('ain').value.trim();if(!q)return;$('ain').value='';say(q,true);
-  const t=norm(q);let a=null;
-  for(const k in kb||{}){const n=norm(k);if(n.length>=3&&(t===n||t.includes(n))){a=kb[k];break}}
-  a=a||await wiki(q)||'لم أجد إجابة موثوقة لهذا السؤال.';say(a)};
+const ask=async()=>{
+  if(asking)return;const q=$('ain').value.trim();if(!q)return;
+  $('ain').value='';say(q.slice(0,300),true);asking=true;$('asend').disabled=true;
+  $('amsgs').insertAdjacentHTML('beforeend','<div id="ait" class="msg"><p>...</p></div>');scrollEnd('amsgs');
+  let r;try{r=await answer(q)}catch{r={text:'حدث خطأ غير متوقع، حاول مرة أخرى.'}}
+  $('ait')?.remove();say(r.text,false,r.src,r.url);asking=false;$('asend').disabled=false;
+};
 $('asend').onclick=ask;$('ain').onkeydown=e=>{if(e.key==='Enter')ask()};
 
 /* ---------- one delegated click handler (no inline onclick = no injection) ---------- */
@@ -410,6 +561,9 @@ document.addEventListener('click',async e=>{
     else if(act==='like'){const r=rt(`posts/${id}/likes/${me.uid}`);(posts.find(p=>p.id===id)?.likes?.[me.uid])?await remove(r):await set(r,true)}
     else if(act==='delpost'){if(confirm('حذف المنشور؟'))await remove(rt('posts/'+id))}
     else if(act==='quiz'){qType=id;$('quiz').hidden=false;$('q-res').hidden=true;$('q-t').textContent=id==='love'?'ما أكثر صفة تعجبك في شريكك؟':'ما السر الذي تود قوله بصراحة؟'}
+    else if(act==='reply'&&chat){const m=chat.msgs.find(x=>x.id===id);if(m){setReply({id,name:m.from===me.uid?'أنت':chat.u.nickname,text:(m.text||'📷 صورة').slice(0,80)});$('pin').focus()}}
+    else if(act==='react'&&chat){const m=chat.msgs.find(x=>x.id===id),r=rt(`chats/${chat.id}/${id}/reactions/${me.uid}`);m?.reactions?.[me.uid]===el.dataset.e?await remove(r):await set(r,el.dataset.e)}
+    else if(act==='unsend'&&chat){if(confirm('حذف الرسالة للطرفين؟'))await remove(rt(`chats/${chat.id}/${id}`))}
     else if(act==='once'&&chat){
       const p=`chats/${chat.id}/${id}`,img=(await get(rt(p+'/image'))).val();if(!img)return;
       $('once-img').src=img;$('once-v').classList.add('on');
