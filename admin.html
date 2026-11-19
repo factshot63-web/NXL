@@ -2,15 +2,15 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>NXL Admin Command Center - لوحة تحكم المدير</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>NXL Admin Panel - لوحة تحكم الأدمن الكاملة</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         * { box-sizing: border-box; }
         body {
             font-family: 'Cairo', sans-serif;
-            background-color: #060609;
+            background: radial-gradient(circle at top, #1b0b18 0%, #060609 65%);
             color: #ffffff;
             min-height: 100vh;
         }
@@ -20,230 +20,142 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-        .glass-panel {
-            background: rgba(18, 18, 26, 0.92);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+        .glass-card {
+            background: rgba(18, 18, 28, 0.92);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.09);
+            box-shadow: 0 14px 35px rgba(0, 0, 0, 0.55);
         }
-        .custom-scrollbar::-webkit-scrollbar { width: 5px; height: 5px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #ff2a85; border-radius: 999px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: #0c0c12; }
+        .custom-scroll::-webkit-scrollbar { width: 4px; height: 4px; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #ff2a85; border-radius: 999px; }
     </style>
 </head>
-<body class="pb-12">
+<body class="p-3 sm:p-5">
 
-    <!-- Toast Notification -->
-    <div id="admin-toast" class="fixed top-5 left-1/2 -translate-x-1/2 z-[70] bg-[#14141f] border border-[#ff2a85]/60 text-white text-xs font-bold px-5 py-2.5 rounded-full shadow-2xl hidden"></div>
+    <!-- تنبيه عائم -->
+    <div id="admin-toast" class="fixed top-5 left-1/2 -translate-x-1/2 z-50 bg-[#12121a] border border-pink-500/60 text-white text-xs font-bold px-4 py-2 rounded-full shadow-2xl hidden"></div>
 
-    <!-- Top Header -->
-    <header class="glass-panel sticky top-0 z-40 border-b border-gray-800/80 px-4 py-3">
-        <div class="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-3">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-2xl gradient-bg flex items-center justify-center font-black text-sm text-white shadow-lg shadow-[#ff2a85]/30">
-                    NXL
-                </div>
-                <div>
-                    <div class="flex items-center gap-2">
-                        <h1 class="text-sm md:text-base font-black">لوحة تحكم المدير الكاملة</h1>
-                        <span id="db-status-badge" class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 font-bold">
-                            متصل بقاعدة البيانات
-                        </span>
-                    </div>
-                    <p class="text-[11px] text-gray-400">إدارة الرسائل، المستخدمين، النقاط، المحادثات، والفرملة التلقائية</p>
-                </div>
+    <!-- شاشة تسجيل دخول الأدمن -->
+    <div id="admin-login-screen" class="min-h-[85vh] flex items-center justify-center">
+        <div class="glass-card w-full max-w-md rounded-3xl p-6 sm:p-8 border border-pink-500/30 space-y-4">
+            <div class="text-center space-y-1">
+                <div class="w-14 h-14 mx-auto rounded-2xl gradient-bg flex items-center justify-center font-black text-lg shadow-lg">NXL</div>
+                <h1 class="text-xl font-black">لوحة تحكم <span class="gradient-text">الأدمن</span></h1>
+                <p class="text-xs text-gray-400">إدارة كاملة لمنصة NXL وجمل الكروت والمنشورات والمستخدمين</p>
             </div>
 
-            <!-- Quick Auth / Session Bar -->
-            <div id="auth-bar" class="flex flex-wrap items-center gap-2 text-xs">
-                <span id="auth-user-info" class="text-[11px] text-gray-300 bg-[#0d0d14] px-3 py-1.5 rounded-xl border border-gray-800">
-                    وضع الزائر / غير مسجل
-                </span>
-                <input type="email" id="admin-email" placeholder="بريد المدير" class="bg-[#0d0d14] border border-gray-800 rounded-xl px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-[#ff2a85]">
-                <input type="password" id="admin-pass" placeholder="كلمة المرور" class="bg-[#0d0d14] border border-gray-800 rounded-xl px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-[#ff2a85]">
-                <button id="admin-login-btn" class="gradient-bg text-white font-bold px-3.5 py-1.5 rounded-xl hover:opacity-95 transition">دخول</button>
-                <button id="admin-logout-btn" class="bg-gray-800 text-gray-200 font-bold px-3 py-1.5 rounded-xl hover:bg-gray-700 transition hidden">خروج</button>
+            <div class="space-y-3">
+                <input type="email" id="admin-email" placeholder="بريد الأدمن الإلكتروني" class="w-full bg-[#0b0b12] border border-gray-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-pink-500 dir-ltr text-left">
+                <input type="password" id="admin-password" placeholder="كلمة المرور" class="w-full bg-[#0b0b12] border border-gray-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-pink-500 dir-ltr text-left">
+                <button id="admin-login-btn" class="w-full py-3 gradient-bg rounded-xl text-xs font-black text-white shadow-lg hover:opacity-95 transition">دخول لوحة الأدمن ⚡</button>
             </div>
         </div>
-    </header>
+    </div>
 
-    <main class="max-w-6xl mx-auto px-4 pt-5 space-y-5">
-
-        <!-- KPI Stats Cards -->
-        <section class="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <div class="glass-panel p-4 rounded-2xl border border-gray-800/80">
-                <p class="text-[11px] text-gray-400 font-bold">إجمالي المستخدمين</p>
-                <p id="stat-users" class="text-2xl font-black gradient-text mt-1">0</p>
-            </div>
-            <div class="glass-panel p-4 rounded-2xl border border-gray-800/80">
-                <p class="text-[11px] text-gray-400 font-bold">رسائل الشات العام</p>
-                <p id="stat-global-msgs" class="text-2xl font-black text-pink-400 mt-1">0</p>
-            </div>
-            <div class="glass-panel p-4 rounded-2xl border border-gray-800/80">
-                <p class="text-[11px] text-gray-400 font-bold">المحادثات الخاصة</p>
-                <p id="stat-chats" class="text-2xl font-black text-orange-400 mt-1">0</p>
-            </div>
-            <div class="glass-panel p-4 rounded-2xl border border-gray-800/80">
-                <p class="text-[11px] text-gray-400 font-bold">إجراءات الفرملة التلقائية</p>
-                <p id="stat-automod-actions" class="text-2xl font-black text-emerald-400 mt-1">0</p>
-            </div>
-        </section>
-
-        <!-- Navigation Tabs -->
-        <nav class="flex flex-wrap gap-2 bg-[#0d0d14] p-1.5 rounded-2xl border border-gray-800/80">
-            <button data-tab="messages" class="admin-tab-btn flex-1 min-w-[120px] py-2.5 px-3 rounded-xl text-xs font-extrabold gradient-bg text-white transition">
-                💬 الرسائل وحذف رسايل
-            </button>
-            <button data-tab="users" class="admin-tab-btn flex-1 min-w-[120px] py-2.5 px-3 rounded-xl text-xs font-extrabold text-gray-400 hover:text-white transition">
-                👥 المستخدمون والنقاط
-            </button>
-            <button data-tab="chats" class="admin-tab-btn flex-1 min-w-[120px] py-2.5 px-3 rounded-xl text-xs font-extrabold text-gray-400 hover:text-white transition">
-                🗂️ المحادثات الخاصة
-            </button>
-            <button data-tab="automod" class="admin-tab-btn flex-1 min-w-[120px] py-2.5 px-3 rounded-xl text-xs font-extrabold text-gray-400 hover:text-white transition">
-                🛡️ الفرملة التلقائية
-            </button>
-        </nav>
-
-        <!-- TAB 1: MESSAGES -->
-        <section id="panel-messages" class="admin-panel space-y-4">
-            <div class="glass-panel p-4 rounded-2xl border border-gray-800/80 flex flex-wrap items-center justify-between gap-3">
-                <div class="flex items-center gap-2">
-                    <button id="msg-source-global" class="px-3.5 py-2 rounded-xl text-xs font-bold bg-[#ff2a85] text-white">رسائل الشات العام</button>
-                    <button id="msg-source-private" class="px-3.5 py-2 rounded-xl text-xs font-bold bg-[#0d0d14] text-gray-300 border border-gray-800">رسائل محادثة خاصة</button>
-                    <select id="private-chat-selector" class="hidden bg-[#0d0d14] border border-gray-800 rounded-xl px-3 py-2 text-xs text-white max-w-[240px]">
-                        <option value="">اختر محادثة خاصة...</option>
-                    </select>
-                </div>
-
-                <div class="flex flex-wrap items-center gap-2">
-                    <input type="text" id="msg-search-input" placeholder="ابحث في الرسائل أو المرسل..." class="bg-[#0d0d14] border border-gray-800 rounded-xl px-3 py-2 text-xs text-white w-56 focus:outline-none focus:border-[#ff2a85]">
-                    <button id="clear-current-scope-btn" class="bg-red-500/15 hover:bg-red-500/25 text-red-400 border border-red-500/30 px-3.5 py-2 rounded-xl text-xs font-bold transition">
-                        🗑️ مسح كل رسائل القسم الحالي
-                    </button>
-                </div>
-            </div>
-
-            <div id="messages-list" class="space-y-2.5 max-h-[62vh] overflow-y-auto custom-scrollbar pr-1">
-                <div class="glass-panel p-8 rounded-2xl text-center text-xs text-gray-400">جاري تحميل الرسائل...</div>
-            </div>
-        </section>
-
-        <!-- TAB 2: USERS & POINTS -->
-        <section id="panel-users" class="admin-panel hidden space-y-4">
-            <div class="glass-panel p-4 rounded-2xl border border-gray-800/80 flex flex-wrap items-center justify-between gap-3">
-                <input type="text" id="user-search-input" placeholder="ابحث بالاسم، اليوزر، أو UID..." class="bg-[#0d0d14] border border-gray-800 rounded-xl px-3.5 py-2 text-xs text-white w-full sm:w-72 focus:outline-none focus:border-[#ff2a85]">
-                <div class="flex flex-wrap gap-2">
-                    <button id="reset-all-points-btn" class="bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/30 px-3.5 py-2 rounded-xl text-xs font-bold transition">
-                        ⚡ تصفير نقاط جميع المستخدمين
-                    </button>
-                </div>
-            </div>
-
-            <div id="users-list" class="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-[65vh] overflow-y-auto custom-scrollbar pr-1">
-                <div class="glass-panel p-8 rounded-2xl text-center text-xs text-gray-400 col-span-full">جاري تحميل المستخدمين...</div>
-            </div>
-        </section>
-
-        <!-- TAB 3: PRIVATE CHATS -->
-        <section id="panel-chats" class="admin-panel hidden space-y-4">
-            <div class="glass-panel p-4 rounded-2xl border border-gray-800/80 flex flex-wrap items-center justify-between gap-3">
+    <!-- لوحة الأدمن الرئيسية -->
+    <div id="admin-dashboard" class="max-w-6xl mx-auto space-y-5 hidden">
+        <!-- الهيدر -->
+        <header class="glass-card rounded-3xl p-4 flex flex-wrap items-center justify-between gap-3 border border-pink-500/25">
+            <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-2xl gradient-bg flex items-center justify-center font-black text-sm shadow-lg">NXL</div>
                 <div>
-                    <h2 class="text-sm font-extrabold">إدارة المحادثات الخاصة</h2>
-                    <p class="text-[11px] text-gray-400">يمكنك معاينة أي محادثة أو حذفها بالكامل من قاعدة البيانات ومن قوائم الطرفين</p>
+                    <h1 class="text-base sm:text-lg font-black">NXL Master Admin <span class="text-xs bg-pink-500/20 text-pink-300 border border-pink-500/40 px-2 py-0.5 rounded-full mr-1">PRO</span></h1>
+                    <p id="admin-current-user" class="text-[11px] text-gray-400">متصل الآن</p>
                 </div>
-                <input type="text" id="chat-search-input" placeholder="ابحث بمعرّف المحادثة أو UID..." class="bg-[#0d0d14] border border-gray-800 rounded-xl px-3.5 py-2 text-xs text-white w-64 focus:outline-none focus:border-[#ff2a85]">
             </div>
-
-            <div id="chats-list" class="space-y-2.5 max-h-[65vh] overflow-y-auto custom-scrollbar pr-1">
-                <div class="glass-panel p-8 rounded-2xl text-center text-xs text-gray-400">جاري تحميل المحادثات...</div>
+            <div class="flex items-center gap-2">
+                <button id="reset-used-quotes-btn" class="bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/40 text-xs font-bold px-3 py-2 rounded-xl transition">🔄 تصفير سحب الجمل</button>
+                <button id="admin-logout-btn" class="bg-red-500/15 hover:bg-red-500/25 text-red-400 border border-red-500/40 text-xs font-bold px-3 py-2 rounded-xl transition">خروج</button>
             </div>
-        </section>
+        </header>
 
-        <!-- TAB 4: AUTO-MODERATION & AUTO-THROTTLE -->
-        <section id="panel-automod" class="admin-panel hidden space-y-4">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                <!-- Controls Card -->
-                <div class="glass-panel p-5 rounded-2xl border border-gray-800/80 space-y-4">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <h2 class="text-sm font-black">محرك الفرملة التلقائية (Auto-Throttle)</h2>
-                            <p class="text-[11px] text-gray-400">يراقب الشات العام لحظياً ويفرمل أي إغراق أو مخالفة تلقائياً</p>
-                        </div>
-                        <span id="automod-live-indicator" class="text-[11px] font-bold px-3 py-1 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
-                            مفعّل ومراقب
-                        </span>
-                    </div>
-
-                    <label class="flex items-center justify-between bg-[#0d0d14] p-3.5 rounded-xl border border-gray-800 cursor-pointer">
-                        <div>
-                            <p class="text-xs font-bold text-white">فرملة تكرار الرسائل (Anti-Flood)</p>
-                            <p class="text-[10px] text-gray-400">يحذف الرسائل الزائدة تلقائياً لو نفس المستخدم بعت رسائل بسرعة</p>
-                        </div>
-                        <input type="checkbox" id="toggle-antiflood" checked class="w-4 h-4 accent-[#ff2a85]">
-                    </label>
-
-                    <div class="grid grid-cols-2 gap-3">
-                        <div class="bg-[#0d0d14] p-3 rounded-xl border border-gray-800">
-                            <label class="block text-[10px] text-gray-400 mb-1">أقصى رسائل مسموحة</label>
-                            <input type="number" id="flood-max-msgs" value="4" min="1" max="30" class="w-full bg-[#060609] border border-gray-700 rounded-lg px-2.5 py-1.5 text-xs text-white">
-                        </div>
-                        <div class="bg-[#0d0d14] p-3 rounded-xl border border-gray-800">
-                            <label class="block text-[10px] text-gray-400 mb-1">المدة الزمنية (بالثواني)</label>
-                            <input type="number" id="flood-window-sec" value="8" min="2" max="120" class="w-full bg-[#060609] border border-gray-700 rounded-lg px-2.5 py-1.5 text-xs text-white">
-                        </div>
-                    </div>
-
-                    <label class="flex items-center justify-between bg-[#0d0d14] p-3.5 rounded-xl border border-gray-800 cursor-pointer">
-                        <div>
-                            <p class="text-xs font-bold text-white">حذف الرسائل المخالفة تلقائياً (Word Filter)</p>
-                            <p class="text-[10px] text-gray-400">يحذف أي رسالة تحتوي على كلمة من القائمة أدناه</p>
-                        </div>
-                        <input type="checkbox" id="toggle-wordfilter" checked class="w-4 h-4 accent-[#ff2a85]">
-                    </label>
-
-                    <div class="bg-[#0d0d14] p-3 rounded-xl border border-gray-800">
-                        <label class="block text-[10px] text-gray-400 mb-1">الكلمات الممنوعة (افصل بينها بفاصلة أو سطر)</label>
-                        <textarea id="banned-words-input" rows="2" placeholder="كلمة1, كلمة2, سبام..." class="w-full bg-[#060609] border border-gray-700 rounded-lg p-2.5 text-xs text-white focus:outline-none"></textarea>
-                    </div>
-
-                    <label class="flex items-center justify-between bg-[#0d0d14] p-3.5 rounded-xl border border-amber-500/30 cursor-pointer">
-                        <div>
-                            <p class="text-xs font-bold text-amber-300">فرملة الطوارئ (Emergency Lock Flag)</p>
-                            <p class="text-[10px] text-gray-400">يسجّل حالة إغلاق/تهدئة في قاعدة البيانات (`admin_config/autoMod`)</p>
-                        </div>
-                        <input type="checkbox" id="toggle-emergency-lock" class="w-4 h-4 accent-amber-500">
-                    </label>
-
-                    <button id="save-automod-config-btn" class="w-full py-2.5 gradient-bg text-white font-extrabold text-xs rounded-xl shadow-lg shadow-[#ff2a85]/20 hover:opacity-95 transition">
-                        💾 حفظ إعدادات الفرملة التلقائية
-                    </button>
-                </div>
-
-                <!-- Live Action Log Card -->
-                <div class="glass-panel p-5 rounded-2xl border border-gray-800/80 flex flex-col">
-                    <div class="flex items-center justify-between mb-3">
-                        <div>
-                            <h3 class="text-sm font-black">سجل الفرملة التلقائية المباشر</h3>
-                            <p class="text-[11px] text-gray-400">كل رسالة تم إيقافها أو حذفها تلقائياً أثناء فتح اللوحة</p>
-                        </div>
-                        <button id="clear-automod-log-btn" class="text-[11px] bg-gray-800 hover:bg-gray-700 text-gray-300 px-3 py-1 rounded-lg font-bold">
-                            مسح السجل
-                        </button>
-                    </div>
-                    <div id="automod-log-list" class="flex-1 space-y-2 max-h-[420px] overflow-y-auto custom-scrollbar">
-                        <div class="text-center text-xs text-gray-500 py-10">لا توجد مخالفات مرصودة حتى الآن ✨</div>
-                    </div>
-                </div>
+        <!-- بطاقات الإحصائيات -->
+        <section class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+            <div class="glass-card rounded-2xl p-4 border border-gray-800">
+                <p class="text-[11px] text-gray-400">المستخدمون</p>
+                <p id="stat-users" class="text-2xl font-black text-white mt-1">0</p>
+            </div>
+            <div class="glass-card rounded-2xl p-4 border border-gray-800">
+                <p class="text-[11px] text-gray-400">المنشورات النشطة</p>
+                <p id="stat-posts" class="text-2xl font-black text-pink-400 mt-1">0</p>
+            </div>
+            <div class="glass-card rounded-2xl p-4 border border-gray-800">
+                <p class="text-[11px] text-gray-400">جمل كارت الحب</p>
+                <p id="stat-quotes" class="text-2xl font-black text-amber-300 mt-1">0</p>
+            </div>
+            <div class="glass-card rounded-2xl p-4 border border-gray-800">
+                <p class="text-[11px] text-gray-400">رسائل الشات العام</p>
+                <p id="stat-global" class="text-2xl font-black text-orange-400 mt-1">0</p>
             </div>
         </section>
 
-    </main>
+        <!-- أزرار التنقل بين أقسام الإدارة -->
+        <div class="flex gap-2 overflow-x-auto pb-1 custom-scroll">
+            <button data-admin-tab="quotes" class="admin-tab-btn gradient-bg text-white text-xs font-extrabold px-4 py-2.5 rounded-xl whitespace-nowrap">💘 جمل كارت الحب</button>
+            <button data-admin-tab="posts" class="admin-tab-btn glass-card text-gray-300 text-xs font-extrabold px-4 py-2.5 rounded-xl whitespace-nowrap">📰 المنشورات</button>
+            <button data-admin-tab="users" class="admin-tab-btn glass-card text-gray-300 text-xs font-extrabold px-4 py-2.5 rounded-xl whitespace-nowrap">👥 المستخدمون والنقاط</button>
+            <button data-admin-tab="global" class="admin-tab-btn glass-card text-gray-300 text-xs font-extrabold px-4 py-2.5 rounded-xl whitespace-nowrap">💬 الشات العام</button>
+            <button data-admin-tab="ai" class="admin-tab-btn glass-card text-gray-300 text-xs font-extrabold px-4 py-2.5 rounded-xl whitespace-nowrap">🤖 معرفة الذكاء الاصطناعي</button>
+        </div>
+
+        <!-- 1) قسم جمل كارت الحب -->
+        <section id="admin-section-quotes" class="admin-section glass-card rounded-3xl p-4 sm:p-5 space-y-4">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+                <div>
+                    <h2 class="text-sm sm:text-base font-black">💘 إدارة جمل كارت الحب (يسحب منها التطبيق في كل كارت)</h2>
+                    <p class="text-xs text-gray-400">أضف جملاً متنوعة ليحصل كل مستخدم ينشئ كارتاً على جملة مختلفة</p>
+                </div>
+                <span id="used-quotes-badge" class="text-[11px] bg-pink-500/15 text-pink-300 border border-pink-500/30 px-3 py-1 rounded-full font-bold">تم سحب: 0</span>
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-2">
+                <input type="text" id="new-quote-input" placeholder="اكتب جملة جديدة لكارت الحب هنا..." class="flex-1 bg-[#0b0b12] border border-gray-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-pink-500">
+                <button id="add-quote-btn" class="gradient-bg text-white text-xs font-black px-5 py-3 rounded-xl hover:opacity-95 transition">➕ إضافة جملة</button>
+            </div>
+
+            <div id="quotes-list" class="grid grid-cols-1 md:grid-cols-2 gap-2.5 max-h-[420px] overflow-y-auto custom-scroll"></div>
+        </section>
+
+        <!-- 2) قسم المنشورات -->
+        <section id="admin-section-posts" class="admin-section glass-card rounded-3xl p-4 sm:p-5 space-y-4 hidden">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+                <h2 class="text-sm sm:text-base font-black">📰 إدارة وحذف المنشورات</h2>
+                <input type="text" id="search-posts-input" placeholder="ابحث في المنشورات أو اسم الناشر..." class="bg-[#0b0b12] border border-gray-800 rounded-xl px-3 py-2 text-xs text-white w-full sm:w-64 focus:outline-none focus:border-pink-500">
+            </div>
+            <div id="admin-posts-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 max-h-[520px] overflow-y-auto custom-scroll"></div>
+        </section>
+
+        <!-- 3) قسم المستخدمين والنقاط -->
+        <section id="admin-section-users" class="admin-section glass-card rounded-3xl p-4 sm:p-5 space-y-4 hidden">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+                <h2 class="text-sm sm:text-base font-black">👥 إدارة المستخدمين ونقاط EXP</h2>
+                <input type="text" id="search-users-input" placeholder="ابحث باللقب أو @username..." class="bg-[#0b0b12] border border-gray-800 rounded-xl px-3 py-2 text-xs text-white w-full sm:w-64 focus:outline-none focus:border-pink-500">
+            </div>
+            <div id="admin-users-list" class="space-y-2 max-h-[520px] overflow-y-auto custom-scroll"></div>
+        </section>
+
+        <!-- 4) قسم الشات العام -->
+        <section id="admin-section-global" class="admin-section glass-card rounded-3xl p-4 sm:p-5 space-y-4 hidden">
+            <h2 class="text-sm sm:text-base font-black">💬 مراقبة وحذف رسائل الشات العام</h2>
+            <div id="admin-global-list" class="space-y-2 max-h-[520px] overflow-y-auto custom-scroll"></div>
+        </section>
+
+        <!-- 5) قسم معرفة الذكاء الاصطناعي -->
+        <section id="admin-section-ai" class="admin-section glass-card rounded-3xl p-4 sm:p-5 space-y-4 hidden">
+            <h2 class="text-sm sm:text-base font-black">🤖 إضافة وتعديل ردود الذكاء الاصطناعي (ai_knowledge_base)</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                <input type="text" id="ai-key-input" placeholder="الكلمة أو السؤال المفتاحي" class="bg-[#0b0b12] border border-gray-800 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-pink-500">
+                <input type="text" id="ai-val-input" placeholder="الرد المخصص من الأدمن" class="sm:col-span-2 bg-[#0b0b12] border border-gray-800 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-pink-500">
+            </div>
+            <button id="save-ai-knowledge-btn" class="gradient-bg text-white text-xs font-black px-5 py-2.5 rounded-xl">💾 حفظ الرد في قاعدة AI</button>
+            <div id="admin-ai-list" class="space-y-2 max-h-[380px] overflow-y-auto custom-scroll"></div>
+        </section>
+    </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getDatabase, ref, onValue, get, set, update, remove, query, limitToLast } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getDatabase, ref, set, update, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDQ8pJMhye-kp5-FjXzVPPw2MDFm9_0A8c",
@@ -256,622 +168,337 @@
             measurementId: "G-Z264D8R3LV"
         };
 
+        // ضع بريد الأدمن هنا إذا أردت تقييد الدخول بحسابات محددة؛ اتركها فارغة للسماح لأي حساب مسجل دخول
+        const ADMIN_EMAILS = [];
+
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getDatabase(app);
 
-        // State
-        let usersMap = {};
-        let globalMessagesList = [];
-        let privateChatsMap = {};
-        let userChatsMap = {};
-        let selectedPrivateChatId = "";
-        let selectedPrivateChatMessages = [];
-        let msgSourceMode = "global"; // 'global' | 'private'
-        let autoModActionsCount = 0;
-        const processedAutoModMsgIds = new Set();
-        const senderRecentTimestamps = new Map();
+        let adminUser = null;
+        let quotesData = [];
+        let postsData = [];
+        let usersData = [];
+        let globalData = [];
+        let aiData = {};
+        let toastTimer = null;
 
-        let autoModConfig = {
-            antiFloodEnabled: true,
-            maxMsgs: 4,
-            windowSec: 8,
-            wordFilterEnabled: true,
-            bannedWords: ["سبام", "إعلان وهمي"],
-            emergencyLock: false
-        };
-
-        // Helpers
         function escapeHTML(str) {
-            if (str === null || str === undefined) return "";
+            if (str === null || str === undefined) return '';
             return String(str).replace(/[&<>"']/g, ch => ({
-                "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
             }[ch]));
         }
 
-        function formatTime(ts) {
-            const n = Number(ts);
-            if (!Number.isFinite(n) || n <= 0) return "بدون وقت";
-            return new Date(n).toLocaleString("ar-EG", {
-                hour: "2-digit", minute: "2-digit", day: "2-digit", month: "short"
-            });
-        }
-
-        let toastTimer = null;
-        function showToast(msg, isError = false) {
-            const el = document.getElementById("admin-toast");
+        function showToast(msg) {
+            const el = document.getElementById('admin-toast');
             if (!el) return;
-            el.textContent = msg;
-            el.className = `fixed top-5 left-1/2 -translate-x-1/2 z-[70] text-white text-xs font-bold px-5 py-2.5 rounded-full shadow-2xl border ${
-                isError ? "bg-red-950/95 border-red-500/60" : "bg-[#14141f]/95 border-[#ff2a85]/60"
-            }`;
-            el.classList.remove("hidden");
+            el.innerText = msg;
+            el.classList.remove('hidden');
             clearTimeout(toastTimer);
-            toastTimer = setTimeout(() => el.classList.add("hidden"), 2400);
+            toastTimer = setTimeout(() => el.classList.add('hidden'), 2000);
         }
 
-        function updateStats() {
-            document.getElementById("stat-users").textContent = Object.keys(usersMap).length;
-            document.getElementById("stat-global-msgs").textContent = globalMessagesList.length;
-            document.getElementById("stat-chats").textContent = Object.keys(privateChatsMap).length;
-            document.getElementById("stat-automod-actions").textContent = autoModActionsCount;
-        }
-
-        // Auth Handlers
-        document.getElementById("admin-login-btn").addEventListener("click", async () => {
-            const email = document.getElementById("admin-email").value.trim();
-            const pass = document.getElementById("admin-pass").value;
-            if (!email || !pass) return showToast("أدخل البريد وكلمة المرور", true);
+        document.getElementById('admin-login-btn').addEventListener('click', async () => {
+            const email = document.getElementById('admin-email').value.trim();
+            const pass = document.getElementById('admin-password').value;
+            if (!email || !pass) return alert('أدخل البريد الإلكتروني وكلمة المرور');
             try {
                 await signInWithEmailAndPassword(auth, email, pass);
-                showToast("تم تسجيل الدخول بنجاح");
             } catch (err) {
-                showToast(err?.message || "فشل تسجيل الدخول", true);
+                alert(err.message || 'تعذر تسجيل الدخول');
             }
         });
 
-        document.getElementById("admin-logout-btn").addEventListener("click", async () => {
+        document.getElementById('admin-logout-btn').addEventListener('click', async () => {
             await signOut(auth);
-            showToast("تم تسجيل الخروج");
+            location.reload();
         });
 
         onAuthStateChanged(auth, (user) => {
-            const infoEl = document.getElementById("auth-user-info");
-            const loginBtn = document.getElementById("admin-login-btn");
-            const logoutBtn = document.getElementById("admin-logout-btn");
-            if (user) {
-                infoEl.textContent = `مسجل: ${user.email || user.uid}`;
-                loginBtn.classList.add("hidden");
-                logoutBtn.classList.remove("hidden");
-            } else {
-                infoEl.textContent = "وضع الزائر / غير مسجل";
-                loginBtn.classList.remove("hidden");
-                logoutBtn.classList.add("hidden");
-            }
-        });
-
-        // Tabs Navigation
-        document.querySelectorAll(".admin-tab-btn").forEach(btn => {
-            btn.addEventListener("click", () => {
-                const tab = btn.dataset.tab;
-                document.querySelectorAll(".admin-tab-btn").forEach(b => {
-                    b.classList.remove("gradient-bg", "text-white");
-                    b.classList.add("text-gray-400");
-                });
-                btn.classList.add("gradient-bg", "text-white");
-                btn.classList.remove("text-gray-400");
-
-                document.querySelectorAll(".admin-panel").forEach(p => p.classList.add("hidden"));
-                document.getElementById(`panel-${tab}`).classList.remove("hidden");
-            });
-        });
-
-        // Realtime Listeners
-        onValue(ref(db, ".info/connected"), (snap) => {
-            const badge = document.getElementById("db-status-badge");
-            if (snap.val() === true) {
-                badge.textContent = "متصل بقاعدة البيانات";
-                badge.className = "text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 font-bold";
-            } else {
-                badge.textContent = "غير متصل";
-                badge.className = "text-[10px] px-2 py-0.5 rounded-full bg-red-500/15 text-red-400 border border-red-500/30 font-bold";
-            }
-        });
-
-        onValue(ref(db, "users"), (snap) => {
-            usersMap = {};
-            if (snap.exists()) {
-                snap.forEach(child => {
-                    usersMap[child.key] = { uid: child.key, ...(child.val() || {}) };
-                });
-            }
-            updateStats();
-            renderUsers();
-            renderChats();
-            renderMessages();
-        });
-
-        onValue(query(ref(db, "global_chat"), limitToLast(250)), (snap) => {
-            const arr = [];
-            if (snap.exists()) {
-                snap.forEach(child => {
-                    arr.push({ id: child.key, ...(child.val() || {}) });
-                });
-            }
-            arr.sort((a, b) => (Number(b.timestamp) || 0) - (Number(a.timestamp) || 0));
-            globalMessagesList = arr;
-            runAutoModOnGlobalMessages(arr);
-            updateStats();
-            if (msgSourceMode === "global") renderMessages();
-        });
-
-        onValue(ref(db, "chats"), (snap) => {
-            privateChatsMap = {};
-            if (snap.exists()) {
-                snap.forEach(child => {
-                    privateChatsMap[child.key] = child.val() || {};
-                });
-            }
-            syncPrivateChatSelector();
-            updateStats();
-            renderChats();
-            if (msgSourceMode === "private" && selectedPrivateChatId) {
-                loadSelectedPrivateChatMessages(selectedPrivateChatId);
-            }
-        });
-
-        onValue(ref(db, "user_chats"), (snap) => {
-            userChatsMap = snap.exists() ? snap.val() : {};
-            renderChats();
-        });
-
-        onValue(ref(db, "admin_config/autoMod"), (snap) => {
-            if (!snap.exists()) return;
-            const cfg = snap.val() || {};
-            autoModConfig = {
-                antiFloodEnabled: cfg.antiFloodEnabled !== false,
-                maxMsgs: Math.max(1, Number(cfg.maxMsgs) || 4),
-                windowSec: Math.max(2, Number(cfg.windowSec) || 8),
-                wordFilterEnabled: cfg.wordFilterEnabled !== false,
-                bannedWords: Array.isArray(cfg.bannedWords) ? cfg.bannedWords : autoModConfig.bannedWords,
-                emergencyLock: !!cfg.emergencyLock
-            };
-            applyConfigToForm();
-        });
-
-        function applyConfigToForm() {
-            document.getElementById("toggle-antiflood").checked = autoModConfig.antiFloodEnabled;
-            document.getElementById("flood-max-msgs").value = autoModConfig.maxMsgs;
-            document.getElementById("flood-window-sec").value = autoModConfig.windowSec;
-            document.getElementById("toggle-wordfilter").checked = autoModConfig.wordFilterEnabled;
-            document.getElementById("banned-words-input").value = (autoModConfig.bannedWords || []).join(", ");
-            document.getElementById("toggle-emergency-lock").checked = autoModConfig.emergencyLock;
-        }
-        applyConfigToForm();
-
-        // Auto-Moderation Engine
-        function appendAutoModLog(reason, senderName, msgText) {
-            autoModActionsCount++;
-            updateStats();
-            const logBox = document.getElementById("automod-log-list");
-            if (logBox.textContent.includes("لا توجد مخالفات")) {
-                logBox.innerHTML = "";
-            }
-            const item = document.createElement("div");
-            item.className = "bg-[#0d0d14] border border-pink-500/30 rounded-xl p-3 text-xs space-y-1";
-            item.innerHTML = `
-                <div class="flex items-center justify-between gap-2">
-                    <span class="font-extrabold text-pink-400">${escapeHTML(reason)}</span>
-                    <span class="text-[10px] text-gray-500">${escapeHTML(formatTime(Date.now()))}</span>
-                </div>
-                <p class="text-[11px] text-gray-300">المستخدم: <b>${escapeHTML(senderName || "مجهول")}</b></p>
-                ${msgText ? `<p class="text-[11px] text-gray-400 truncate">النص: "${escapeHTML(msgText)}"</p>` : ""}
-            `;
-            logBox.prepend(item);
-        }
-
-        async function runAutoModOnGlobalMessages(msgs) {
-            if (!autoModConfig.antiFloodEnabled && !autoModConfig.wordFilterEnabled) return;
-            const chronological = [...msgs].sort((a, b) => (Number(a.timestamp) || 0) - (Number(b.timestamp) || 0));
-            const windowMs = autoModConfig.windowSec * 1000;
-            const banned = (autoModConfig.bannedWords || []).map(w => String(w).trim().toLowerCase()).filter(Boolean);
-
-            for (const m of chronological) {
-                if (!m.id || processedAutoModMsgIds.has(m.id)) continue;
-                const text = String(m.text || "");
-                const senderId = m.senderId || "unknown";
-                const senderName = m.senderNickname || usersMap[senderId]?.nickname || senderId;
-
-                // 1) Banned words check
-                if (autoModConfig.wordFilterEnabled && banned.length > 0 && text) {
-                    const lowerText = text.toLowerCase();
-                    const hitWord = banned.find(w => lowerText.includes(w));
-                    if (hitWord) {
-                        processedAutoModMsgIds.add(m.id);
-                        try {
-                            await remove(ref(db, `global_chat/${m.id}`));
-                            appendAutoModLog(`حذف تلقائي لكلمة ممنوعة (${hitWord})`, senderName, text);
-                        } catch (_) {}
-                        continue;
-                    }
-                }
-
-                // 2) Anti-flood rate limit check
-                if (autoModConfig.antiFloodEnabled && senderId !== "unknown") {
-                    const ts = Number(m.timestamp) || Date.now();
-                    const prev = (senderRecentTimestamps.get(senderId) || []).filter(t => ts - t <= windowMs);
-                    prev.push(ts);
-                    senderRecentTimestamps.set(senderId, prev);
-
-                    if (prev.length > autoModConfig.maxMsgs) {
-                        processedAutoModMsgIds.add(m.id);
-                        try {
-                            await remove(ref(db, `global_chat/${m.id}`));
-                            appendAutoModLog(`فرملة تلقائية لتكرار الرسائل (أكثر من ${autoModConfig.maxMsgs} في ${autoModConfig.windowSec}ث)`, senderName, text);
-                        } catch (_) {}
-                    }
-                }
-            }
-        }
-
-        document.getElementById("save-automod-config-btn").addEventListener("click", async () => {
-            const rawWords = document.getElementById("banned-words-input").value;
-            const words = rawWords.split(/[,\n،]+/).map(s => s.trim()).filter(Boolean);
-            const nextCfg = {
-                antiFloodEnabled: document.getElementById("toggle-antiflood").checked,
-                maxMsgs: Math.max(1, Number(document.getElementById("flood-max-msgs").value) || 4),
-                windowSec: Math.max(2, Number(document.getElementById("flood-window-sec").value) || 8),
-                wordFilterEnabled: document.getElementById("toggle-wordfilter").checked,
-                bannedWords: words,
-                emergencyLock: document.getElementById("toggle-emergency-lock").checked,
-                updatedAt: Date.now()
-            };
-            try {
-                await set(ref(db, "admin_config/autoMod"), nextCfg);
-                autoModConfig = nextCfg;
-                showToast("تم حفظ إعدادات الفرملة التلقائية");
-            } catch (err) {
-                showToast(err?.message || "تعذر حفظ الإعدادات", true);
-            }
-        });
-
-        document.getElementById("clear-automod-log-btn").addEventListener("click", () => {
-            autoModActionsCount = 0;
-            updateStats();
-            document.getElementById("automod-log-list").innerHTML =
-                `<div class="text-center text-xs text-gray-500 py-10">لا توجد مخالفات مرصودة حتى الآن ✨</div>`;
-            showToast("تم مسح سجل الفرملة");
-        });
-
-        // Messages Section
-        document.getElementById("msg-source-global").addEventListener("click", () => {
-            msgSourceMode = "global";
-            document.getElementById("msg-source-global").className = "px-3.5 py-2 rounded-xl text-xs font-bold bg-[#ff2a85] text-white";
-            document.getElementById("msg-source-private").className = "px-3.5 py-2 rounded-xl text-xs font-bold bg-[#0d0d14] text-gray-300 border border-gray-800";
-            document.getElementById("private-chat-selector").classList.add("hidden");
-            renderMessages();
-        });
-
-        document.getElementById("msg-source-private").addEventListener("click", () => {
-            msgSourceMode = "private";
-            document.getElementById("msg-source-private").className = "px-3.5 py-2 rounded-xl text-xs font-bold bg-[#ff2a85] text-white";
-            document.getElementById("msg-source-global").className = "px-3.5 py-2 rounded-xl text-xs font-bold bg-[#0d0d14] text-gray-300 border border-gray-800";
-            document.getElementById("private-chat-selector").classList.remove("hidden");
-            if (selectedPrivateChatId) loadSelectedPrivateChatMessages(selectedPrivateChatId);
-            else renderMessages();
-        });
-
-        function syncPrivateChatSelector() {
-            const sel = document.getElementById("private-chat-selector");
-            const currentVal = sel.value;
-            const ids = Object.keys(privateChatsMap);
-            sel.innerHTML = `<option value="">اختر محادثة خاصة...</option>` + ids.map(id =>
-                `<option value="${escapeHTML(id)}">${escapeHTML(id)}</option>`
-            ).join("");
-            if (ids.includes(currentVal)) sel.value = currentVal;
-        }
-
-        document.getElementById("private-chat-selector").addEventListener("change", (e) => {
-            selectedPrivateChatId = e.target.value;
-            if (selectedPrivateChatId) loadSelectedPrivateChatMessages(selectedPrivateChatId);
-            else {
-                selectedPrivateChatMessages = [];
-                renderMessages();
-            }
-        });
-
-        function loadSelectedPrivateChatMessages(chatId) {
-            const rawChat = privateChatsMap[chatId] || {};
-            const arr = Object.entries(rawChat).map(([id, val]) => ({ id, ...(val || {}) }));
-            arr.sort((a, b) => (Number(b.timestamp) || 0) - (Number(a.timestamp) || 0));
-            selectedPrivateChatMessages = arr;
-            renderMessages();
-        }
-
-        document.getElementById("msg-search-input").addEventListener("input", renderMessages);
-
-        function renderMessages() {
-            const container = document.getElementById("messages-list");
-            const q = document.getElementById("msg-search-input").value.trim().toLowerCase();
-            const source = msgSourceMode === "global" ? globalMessagesList : selectedPrivateChatMessages;
-
-            const filtered = source.filter(m => {
-                if (!q) return true;
-                const sender = (m.senderNickname || usersMap[m.senderId]?.nickname || m.senderId || "").toLowerCase();
-                const body = (m.text || "").toLowerCase();
-                return sender.includes(q) || body.includes(q);
-            });
-
-            if (msgSourceMode === "private" && !selectedPrivateChatId) {
-                container.innerHTML = `<div class="glass-panel p-8 rounded-2xl text-center text-xs text-gray-400">اختر محادثة خاصة من القائمة بالأعلى لعرض وحذف رسائلها</div>`;
+            if (!user) {
+                document.getElementById('admin-login-screen').classList.remove('hidden');
+                document.getElementById('admin-dashboard').classList.add('hidden');
                 return;
             }
+            if (ADMIN_EMAILS.length > 0 && !ADMIN_EMAILS.includes(String(user.email || '').toLowerCase())) {
+                alert('هذا الحساب غير مصرح له بدخول لوحة الأدمن');
+                signOut(auth);
+                return;
+            }
+            adminUser = user;
+            document.getElementById('admin-current-user').innerText = `الأدمن: ${user.email || user.uid}`;
+            document.getElementById('admin-login-screen').classList.add('hidden');
+            document.getElementById('admin-dashboard').classList.remove('hidden');
+            startAdminListeners();
+        });
+
+        // Tabs switching
+        document.querySelectorAll('.admin-tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const target = btn.getAttribute('data-admin-tab');
+                document.querySelectorAll('.admin-tab-btn').forEach(b => {
+                    b.classList.remove('gradient-bg', 'text-white');
+                    b.classList.add('glass-card', 'text-gray-300');
+                });
+                btn.classList.remove('glass-card', 'text-gray-300');
+                btn.classList.add('gradient-bg', 'text-white');
+
+                document.querySelectorAll('.admin-section').forEach(sec => sec.classList.add('hidden'));
+                document.getElementById(`admin-section-${target}`)?.classList.remove('hidden');
+            });
+        });
+
+        function startAdminListeners() {
+            // 1. Love Card Quotes
+            onValue(ref(db, 'love_card_quotes'), (snap) => {
+                quotesData = [];
+                if (snap.exists()) {
+                    snap.forEach(c => {
+                        const v = c.val();
+                        const text = typeof v === 'string' ? v : String(v?.text || '');
+                        if (text.trim()) quotesData.push({ id: c.key, text: text.trim() });
+                    });
+                }
+                document.getElementById('stat-quotes').innerText = quotesData.length;
+                renderQuotesList();
+            });
+
+            onValue(ref(db, 'used_love_quotes'), (snap) => {
+                let usedCount = 0;
+                if (snap.exists()) usedCount = Object.keys(snap.val() || {}).length;
+                document.getElementById('used-quotes-badge').innerText = `تم سحب: ${usedCount}`;
+            });
+
+            // 2. Posts
+            onValue(ref(db, 'posts'), (snap) => {
+                postsData = [];
+                if (snap.exists()) {
+                    snap.forEach(c => postsData.push({ id: c.key, ...(c.val() || {}) }));
+                }
+                postsData.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+                document.getElementById('stat-posts').innerText = postsData.length;
+                renderPostsAdmin();
+            });
+
+            // 3. Users
+            onValue(ref(db, 'users'), (snap) => {
+                usersData = [];
+                if (snap.exists()) {
+                    snap.forEach(c => usersData.push({ uid: c.key, ...(c.val() || {}) }));
+                }
+                usersData.sort((a, b) => (b.points || 0) - (a.points || 0));
+                document.getElementById('stat-users').innerText = usersData.length;
+                renderUsersAdmin();
+            });
+
+            // 4. Global Chat
+            onValue(ref(db, 'global_chat'), (snap) => {
+                globalData = [];
+                if (snap.exists()) {
+                    snap.forEach(c => globalData.push({ id: c.key, ...(c.val() || {}) }));
+                }
+                globalData.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+                document.getElementById('stat-global').innerText = globalData.length;
+                renderGlobalAdmin();
+            });
+
+            // 5. AI Knowledge
+            onValue(ref(db, 'ai_knowledge_base'), (snap) => {
+                aiData = snap.exists() ? (snap.val() || {}) : {};
+                renderAiAdmin();
+            });
+        }
+
+        // Quotes actions
+        document.getElementById('add-quote-btn').addEventListener('click', async () => {
+            const inp = document.getElementById('new-quote-input');
+            const text = inp.value.trim();
+            if (!text) return alert('اكتب الجملة أولاً');
+            await push(ref(db, 'love_card_quotes'), {
+                text,
+                addedBy: adminUser?.email || adminUser?.uid || 'admin',
+                timestamp: Date.now()
+            });
+            inp.value = '';
+            showToast('✅ تمت إضافة الجملة لكروت الحب');
+        });
+
+        document.getElementById('reset-used-quotes-btn').addEventListener('click', async () => {
+            if (!confirm('تصفير سجل الجمل المستخدمة لكي يعاد سحبها من جديد؟')) return;
+            await remove(ref(db, 'used_love_quotes'));
+            showToast('🔄 تم تصفير سجل السحب');
+        });
+
+        window.deleteLoveQuote = async (quoteId) => {
+            if (!confirm('حذف هذه الجملة من قائمة كروت الحب؟')) return;
+            await remove(ref(db, `love_card_quotes/${quoteId}`));
+            showToast('🗑️ تم حذف الجملة');
+        };
+
+        function renderQuotesList() {
+            const box = document.getElementById('quotes-list');
+            if (!box) return;
+            if (quotesData.length === 0) {
+                box.innerHTML = `<div class="col-span-full text-center text-xs text-gray-500 py-8">لا توجد جمل مضافة في قاعدة الأدمن بعد؛ أضف جملاً من الأعلى.</div>`;
+                return;
+            }
+            box.innerHTML = quotesData.map((q, idx) => `
+                <div class="bg-[#0b0b12] border border-gray-800 rounded-2xl p-3 flex items-start justify-between gap-2">
+                    <div class="text-xs text-gray-200 leading-relaxed">
+                        <span class="text-pink-400 font-black ml-1">#${idx + 1}</span>
+                        <span>${escapeHTML(q.text)}</span>
+                    </div>
+                    <button onclick="window.deleteLoveQuote('${escapeHTML(q.id)}')" class="text-red-400 hover:text-red-300 text-xs font-bold shrink-0">حذف</button>
+                </div>
+            `).join('');
+        }
+
+        // Posts actions
+        document.getElementById('search-posts-input').addEventListener('input', renderPostsAdmin);
+
+        window.adminDeletePost = async (postId) => {
+            if (!confirm('هل أنت متأكد من حذف هذا المنشور نهائياً؟')) return;
+            await remove(ref(db, `posts/${postId}`));
+            showToast('🗑️ تم حذف المنشور');
+        };
+
+        function renderPostsAdmin() {
+            const box = document.getElementById('admin-posts-list');
+            const queryText = (document.getElementById('search-posts-input')?.value || '').trim().toLowerCase();
+            if (!box) return;
+
+            const filtered = postsData.filter(p => {
+                if (!queryText) return true;
+                return String(p.text || '').toLowerCase().includes(queryText)
+                    || String(p.userNickname || '').toLowerCase().includes(queryText)
+                    || String(p.userUsername || '').toLowerCase().includes(queryText);
+            });
 
             if (filtered.length === 0) {
-                container.innerHTML = `<div class="glass-panel p-8 rounded-2xl text-center text-xs text-gray-400">لا توجد رسائل مطابقة</div>`;
+                box.innerHTML = `<div class="col-span-full text-center text-xs text-gray-500 py-8">لا توجد منشورات مطابقة.</div>`;
                 return;
             }
 
-            container.innerHTML = filtered.map(m => {
-                const senderName = m.senderNickname || usersMap[m.senderId]?.nickname || m.senderId || "مستخدم";
-                return `
-                    <div class="glass-panel p-3.5 rounded-2xl border border-gray-800/80 flex items-start justify-between gap-3">
-                        <div class="min-w-0 flex-1 space-y-1">
-                            <div class="flex flex-wrap items-center gap-2">
-                                <span class="text-xs font-extrabold text-white">${escapeHTML(senderName)}</span>
-                                <span class="text-[10px] text-gray-500 font-mono">${escapeHTML(m.senderId || "")}</span>
-                                <span class="text-[10px] text-[#ff7300]">${escapeHTML(formatTime(m.timestamp))}</span>
-                            </div>
-                            ${m.text ? `<p class="text-xs text-gray-200 break-words">${escapeHTML(m.text)}</p>` : ""}
-                            ${m.image ? `<span class="inline-block text-[10px] px-2 py-0.5 rounded-md bg-pink-500/15 text-pink-300 border border-pink-500/30">${m.viewOnce ? "👻 صورة عرض واحد" : "🖼️ صورة مرفقة"}</span>` : ""}
-                        </div>
-                        <button onclick="window.deleteSingleMessage('${encodeURIComponent(m.id)}')" class="bg-red-500/15 hover:bg-red-500/30 text-red-400 border border-red-500/30 px-3 py-1.5 rounded-xl text-xs font-bold shrink-0 transition">
-                            حذف 🗑️
-                        </button>
-                    </div>
-                `;
-            }).join("");
-        }
-
-        window.deleteSingleMessage = async (encodedMsgId) => {
-            const msgId = decodeURIComponent(encodedMsgId);
-            if (!msgId) return;
-            try {
-                if (msgSourceMode === "global") {
-                    await remove(ref(db, `global_chat/${msgId}`));
-                } else if (selectedPrivateChatId) {
-                    await remove(ref(db, `chats/${selectedPrivateChatId}/${msgId}`));
-                }
-                showToast("تم حذف الرسالة بنجاح");
-            } catch (err) {
-                showToast(err?.message || "تعذر حذف الرسالة", true);
-            }
-        };
-
-        document.getElementById("clear-current-scope-btn").addEventListener("click", async () => {
-            if (msgSourceMode === "global") {
-                if (!confirm("متأكد من مسح جميع رسائل الشات العام الظاهرة؟")) return;
-                try {
-                    await remove(ref(db, "global_chat"));
-                    showToast("تم مسح الشات العام");
-                } catch (err) {
-                    showToast(err?.message || "تعذر المسح", true);
-                }
-            } else {
-                if (!selectedPrivateChatId) return showToast("اختر محادثة أولاً", true);
-                if (!confirm(`متأكد من مسح كل رسائل المحادثة ${selectedPrivateChatId}؟`)) return;
-                try {
-                    await remove(ref(db, `chats/${selectedPrivateChatId}`));
-                    showToast("تم مسح رسائل المحادثة");
-                } catch (err) {
-                    showToast(err?.message || "تعذر المسح", true);
-                }
-            }
-        });
-
-        // Users & Points Section
-        document.getElementById("user-search-input").addEventListener("input", renderUsers);
-
-        function renderUsers() {
-            const box = document.getElementById("users-list");
-            const q = document.getElementById("user-search-input").value.trim().toLowerCase();
-            const list = Object.values(usersMap).filter(u => {
-                if (!q) return true;
-                return (u.nickname || "").toLowerCase().includes(q) ||
-                       (u.username || "").toLowerCase().includes(q) ||
-                       (u.uid || "").toLowerCase().includes(q);
-            });
-
-            if (list.length === 0) {
-                box.innerHTML = `<div class="glass-panel p-8 rounded-2xl text-center text-xs text-gray-400 col-span-full">لا يوجد مستخدمون</div>`;
-                return;
-            }
-
-            box.innerHTML = list.map(u => {
-                const isBanned = !!u.isBanned;
-                return `
-                    <div class="glass-panel p-4 rounded-2xl border ${isBanned ? "border-red-500/50" : "border-gray-800/80"} flex flex-col justify-between gap-3">
+            box.innerHTML = filtered.map(p => `
+                <div class="bg-[#0b0b12] border border-gray-800 rounded-2xl p-3 space-y-2 flex flex-col justify-between">
+                    <div class="space-y-2">
                         <div class="flex items-center justify-between gap-2">
-                            <div class="flex items-center gap-3 min-w-0">
-                                <img src="${escapeHTML(u.avatarUrl || "")}" class="w-11 h-11 rounded-full bg-gray-800 object-cover border border-gray-700 shrink-0" onerror="this.style.display='none'">
-                                <div class="min-w-0">
-                                    <div class="flex items-center gap-1.5">
-                                        <h3 class="text-xs font-extrabold text-white truncate">${escapeHTML(u.nickname || "بدون لقب")}</h3>
-                                        ${isBanned ? `<span class="text-[9px] bg-red-500/20 text-red-400 px-2 py-0.5 rounded-full font-bold">محظور</span>` : ""}
-                                    </div>
-                                    <p class="text-[11px] text-[#ff7300] truncate">@${escapeHTML(u.username || "user")}</p>
-                                    <p class="text-[10px] text-gray-500 font-mono truncate">${escapeHTML(u.uid)}</p>
-                                </div>
+                            <div class="min-w-0">
+                                <p class="text-xs font-bold text-white truncate">${escapeHTML(p.userNickname || 'مستخدم')}</p>
+                                <p class="text-[10px] text-orange-400 truncate">@${escapeHTML(p.userUsername || '')}</p>
                             </div>
-                            <div class="text-left shrink-0">
-                                <span class="text-xs font-black text-pink-400">${Number(u.points) || 0} EXP</span>
-                            </div>
+                            <button onclick="window.adminDeletePost('${escapeHTML(p.id)}')" class="bg-red-500/15 text-red-400 border border-red-500/30 text-[11px] font-bold px-2.5 py-1 rounded-lg hover:bg-red-500/25">حذف 🗑️</button>
                         </div>
-
-                        <div class="flex flex-wrap gap-1.5 pt-2 border-t border-gray-800/70 text-[11px]">
-                            <button onclick="window.editUserPoints('${encodeURIComponent(u.uid)}', ${Number(u.points) || 0})" class="bg-blue-500/15 hover:bg-blue-500/25 text-blue-300 border border-blue-500/30 px-2.5 py-1.5 rounded-xl font-bold transition">
-                                تعديل النقاط
-                            </button>
-                            <button onclick="window.resetSingleUserPoints('${encodeURIComponent(u.uid)}')" class="bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/30 px-2.5 py-1.5 rounded-xl font-bold transition">
-                                تصفير النقاط
-                            </button>
-                            <button onclick="window.toggleBanUser('${encodeURIComponent(u.uid)}', ${isBanned})" class="bg-orange-500/15 hover:bg-orange-500/25 text-orange-300 border border-orange-500/30 px-2.5 py-1.5 rounded-xl font-bold transition">
-                                ${isBanned ? "فك الحظر" : "حظر"}
-                            </button>
-                            <button onclick="window.deleteUserAccount('${encodeURIComponent(u.uid)}', '${encodeURIComponent(u.username || "")}')" class="bg-red-500/15 hover:bg-red-500/25 text-red-400 border border-red-500/30 px-2.5 py-1.5 rounded-xl font-bold transition mr-auto">
-                                حذف المستخدم 🗑️
-                            </button>
-                        </div>
+                        ${p.text ? `<p class="text-xs text-gray-200 whitespace-pre-wrap break-words">${escapeHTML(p.text)}</p>` : ''}
+                        ${p.image ? `<img src="${escapeHTML(p.image)}" class="w-full h-36 object-cover rounded-xl border border-gray-800">` : ''}
                     </div>
-                `;
-            }).join("");
+                    <div class="text-[10px] text-gray-500 pt-1 border-t border-gray-800/80 flex justify-between">
+                        <span>❤️ ${Number(p.likeCount) || 0}</span>
+                        <span>${p.timestamp ? new Date(Number(p.timestamp)).toLocaleString('ar-EG') : ''}</span>
+                    </div>
+                </div>
+            `).join('');
         }
 
-        window.editUserPoints = async (encodedUid, currentPts) => {
-            const uid = decodeURIComponent(encodedUid);
-            const val = prompt("اكتب رصيد النقاط الجديد (EXP):", String(currentPts));
+        // Users actions
+        document.getElementById('search-users-input').addEventListener('input', renderUsersAdmin);
+
+        window.adminEditPoints = async (uid, currentPts) => {
+            const val = prompt('أدخل رصيد النقاط EXP الجديد:', String(currentPts || 0));
             if (val === null) return;
             const num = Number(val);
-            if (!Number.isFinite(num)) return showToast("أدخل رقماً صحيحاً", true);
-            try {
-                await update(ref(db, `users/${uid}`), { points: num });
-                showToast("تم تحديث النقاط");
-            } catch (err) {
-                showToast(err?.message || "فشل تحديث النقاط", true);
-            }
+            if (!Number.isFinite(num)) return alert('أدخل رقماً صحيحاً');
+            await update(ref(db, `users/${uid}`), { points: num });
+            showToast('⭐ تم تحديث النقاط');
         };
 
-        window.resetSingleUserPoints = async (encodedUid) => {
-            const uid = decodeURIComponent(encodedUid);
-            try {
-                await update(ref(db, `users/${uid}`), { points: 0 });
-                showToast("تم تصفير نقاط المستخدم");
-            } catch (err) {
-                showToast(err?.message || "فشل تصفير النقاط", true);
-            }
+        window.adminDeleteUser = async (uid, username) => {
+            if (!confirm(`حذف بيانات المستخدم @${username} من قاعدة البيانات؟`)) return;
+            await remove(ref(db, `users/${uid}`));
+            if (username) await remove(ref(db, `usernames/${String(username).toLowerCase()}`));
+            showToast('🗑️ تم حذف المستخدم');
         };
 
-        document.getElementById("reset-all-points-btn").addEventListener("click", async () => {
-            if (!confirm("متأكد من تصفير نقاط (EXP) لجميع المستخدمين؟")) return;
-            try {
-                const updatesObj = {};
-                Object.keys(usersMap).forEach(uid => {
-                    updatesObj[`users/${uid}/points`] = 0;
-                });
-                await update(ref(db), updatesObj);
-                showToast("تم تصفير نقاط الجميع بنجاح");
-            } catch (err) {
-                showToast(err?.message || "فشل تصفير نقاط الجميع", true);
-            }
-        });
+        function renderUsersAdmin() {
+            const box = document.getElementById('admin-users-list');
+            const q = (document.getElementById('search-users-input')?.value || '').trim().toLowerCase().replace(/^@/, '');
+            if (!box) return;
 
-        window.toggleBanUser = async (encodedUid, currentlyBanned) => {
-            const uid = decodeURIComponent(encodedUid);
-            try {
-                await update(ref(db, `users/${uid}`), { isBanned: !currentlyBanned });
-                showToast(!currentlyBanned ? "تم حظر المستخدم" : "تم فك الحظر عن المستخدم");
-            } catch (err) {
-                showToast(err?.message || "تعذر تحديث حالة الحظر", true);
-            }
-        };
+            const filtered = usersData.filter(u => {
+                if (!q) return true;
+                return String(u.nickname || '').toLowerCase().includes(q)
+                    || String(u.username || '').toLowerCase().includes(q);
+            });
 
-        window.deleteUserAccount = async (encodedUid, encodedUsername) => {
-            const uid = decodeURIComponent(encodedUid);
-            const username = decodeURIComponent(encodedUsername);
-            if (!confirm(`متأكد من حذف بيانات المستخدم (${uid}) نهائياً من قاعدة البيانات؟`)) return;
-            try {
-                await remove(ref(db, `users/${uid}`));
-                await remove(ref(db, `user_chats/${uid}`));
-                if (username) {
-                    const unameSnap = await get(ref(db, `usernames/${username}`));
-                    if (unameSnap.val() === uid) {
-                        await remove(ref(db, `usernames/${username}`));
-                    }
-                }
-                showToast("تم حذف بيانات المستخدم");
-            } catch (err) {
-                showToast(err?.message || "تعذر حذف المستخدم", true);
-            }
-        };
-
-        // Private Chats Section
-        document.getElementById("chat-search-input").addEventListener("input", renderChats);
-
-        function renderChats() {
-            const box = document.getElementById("chats-list");
-            const q = document.getElementById("chat-search-input").value.trim().toLowerCase();
-            const chatIds = Object.keys(privateChatsMap).filter(id => !q || id.toLowerCase().includes(q));
-
-            if (chatIds.length === 0) {
-                box.innerHTML = `<div class="glass-panel p-8 rounded-2xl text-center text-xs text-gray-400">لا توجد محادثات خاصة</div>`;
-                return;
-            }
-
-            box.innerHTML = chatIds.map(chatId => {
-                const msgsObj = privateChatsMap[chatId] || {};
-                const msgsArr = Object.values(msgsObj);
-                msgsArr.sort((a, b) => (Number(b.timestamp) || 0) - (Number(a.timestamp) || 0));
-                const lastMsg = msgsArr[0]?.text || (msgsArr[0]?.image ? "🖼️ صورة" : "بدون رسائل");
-                const parts = chatId.split("_");
-                const nameA = usersMap[parts[0]]?.nickname || parts[0] || "";
-                const nameB = usersMap[parts[1]]?.nickname || parts[1] || "";
-
-                return `
-                    <div class="glass-panel p-4 rounded-2xl border border-gray-800/80 flex flex-wrap items-center justify-between gap-3">
-                        <div class="min-w-0 flex-1 space-y-1">
-                            <div class="flex flex-wrap items-center gap-2">
-                                <span class="text-xs font-extrabold text-white">${escapeHTML(nameA)} ↔ ${escapeHTML(nameB)}</span>
-                                <span class="text-[10px] font-mono text-gray-500">${escapeHTML(chatId)}</span>
-                                <span class="text-[10px] px-2 py-0.5 rounded-full bg-pink-500/15 text-pink-300 font-bold">${msgsArr.length} رسالة</span>
-                            </div>
-                            <p class="text-xs text-gray-300 truncate">آخر رسالة: ${escapeHTML(lastMsg)}</p>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <button onclick="window.inspectPrivateChat('${encodeURIComponent(chatId)}')" class="bg-blue-500/15 hover:bg-blue-500/25 text-blue-300 border border-blue-500/30 px-3 py-1.5 rounded-xl text-xs font-bold transition">
-                                عرض الرسائل
-                            </button>
-                            <button onclick="window.deleteEntirePrivateChat('${encodeURIComponent(chatId)}')" class="bg-red-500/15 hover:bg-red-500/25 text-red-400 border border-red-500/30 px-3 py-1.5 rounded-xl text-xs font-bold transition">
-                                حذف المحادثة 🗑️
-                            </button>
-                        </div>
+            box.innerHTML = filtered.map(u => `
+                <div class="bg-[#0b0b12] border border-gray-800 rounded-2xl p-3 flex flex-wrap items-center justify-between gap-2">
+                    <div class="min-w-0">
+                        <p class="text-xs font-bold text-white">${escapeHTML(u.nickname || 'بدون لقب')} <span class="text-pink-400 font-normal">(@${escapeHTML(u.username || '')})</span></p>
+                        <p class="text-[10px] text-gray-400">${escapeHTML(u.bio || 'لا توجد نبذة')} • النقاط: <b class="text-amber-300">${Number(u.points) || 0} EXP</b></p>
                     </div>
-                `;
-            }).join("");
+                    <div class="flex items-center gap-2">
+                        <button onclick="window.adminEditPoints('${escapeHTML(u.uid)}', ${Number(u.points) || 0})" class="bg-amber-500/15 text-amber-300 border border-amber-500/30 text-[11px] font-bold px-2.5 py-1 rounded-lg">تعديل النقاط</button>
+                        <button onclick="window.adminDeleteUser('${escapeHTML(u.uid)}', '${escapeHTML(u.username || '')}')" class="bg-red-500/15 text-red-400 border border-red-500/30 text-[11px] font-bold px-2.5 py-1 rounded-lg">حذف</button>
+                    </div>
+                </div>
+            `).join('');
         }
 
-        window.inspectPrivateChat = (encodedChatId) => {
-            const chatId = decodeURIComponent(encodedChatId);
-            selectedPrivateChatId = chatId;
-            document.getElementById("msg-source-private").click();
-            document.getElementById("private-chat-selector").value = chatId;
-            loadSelectedPrivateChatMessages(chatId);
-            document.querySelector('[data-tab="messages"]').click();
+        // Global chat actions
+        window.adminDeleteGlobalMsg = async (msgId) => {
+            await remove(ref(db, `global_chat/${msgId}`));
+            showToast('🗑️ تم حذف الرسالة العامة');
         };
 
-        window.deleteEntirePrivateChat = async (encodedChatId) => {
-            const chatId = decodeURIComponent(encodedChatId);
-            if (!confirm(`متأكد من حذف المحادثة (${chatId}) بالكامل من قاعدة البيانات؟`)) return;
-            try {
-                await remove(ref(db, `chats/${chatId}`));
-                const updatesObj = {};
-                Object.keys(userChatsMap).forEach(uid => {
-                    if (userChatsMap[uid] && userChatsMap[uid][chatId]) {
-                        updatesObj[`user_chats/${uid}/${chatId}`] = null;
-                    }
-                });
-                if (Object.keys(updatesObj).length > 0) {
-                    await update(ref(db), updatesObj);
-                }
-                if (selectedPrivateChatId === chatId) {
-                    selectedPrivateChatId = "";
-                    selectedPrivateChatMessages = [];
-                    renderMessages();
-                }
-                showToast("تم حذف المحادثة بالكامل");
-            } catch (err) {
-                showToast(err?.message || "تعذر حذف المحادثة", true);
-            }
+        function renderGlobalAdmin() {
+            const box = document.getElementById('admin-global-list');
+            if (!box) return;
+            box.innerHTML = globalData.slice(0, 80).map(m => `
+                <div class="bg-[#0b0b12] border border-gray-800 rounded-2xl p-3 flex items-start justify-between gap-2">
+                    <div class="min-w-0">
+                        <p class="text-xs font-bold text-pink-300">${escapeHTML(m.senderNickname || 'مستخدم')}</p>
+                        <p class="text-xs text-gray-200 break-words mt-0.5">${escapeHTML(m.text || '')}</p>
+                    </div>
+                    <button onclick="window.adminDeleteGlobalMsg('${escapeHTML(m.id)}')" class="text-red-400 text-xs font-bold shrink-0">حذف</button>
+                </div>
+            `).join('');
+        }
+
+        // AI Knowledge base actions
+        document.getElementById('save-ai-knowledge-btn').addEventListener('click', async () => {
+            const key = document.getElementById('ai-key-input').value.trim();
+            const val = document.getElementById('ai-val-input').value.trim();
+            if (!key || !val) return alert('أدخل الكلمة المفتاحية والرد');
+            await update(ref(db, 'ai_knowledge_base'), { [key]: val });
+            document.getElementById('ai-key-input').value = '';
+            document.getElementById('ai-val-input').value = '';
+            showToast('🤖 تم حفظ رد الذكاء الاصطناعي');
+        });
+
+        window.deleteAiKey = async (key) => {
+            await remove(ref(db, `ai_knowledge_base/${key}`));
+            showToast('🗑️ تم حذف الرد المخصص');
         };
+
+        function renderAiAdmin() {
+            const box = document.getElementById('admin-ai-list');
+            if (!box) return;
+            const entries = Object.entries(aiData || {});
+            if (entries.length === 0) {
+                box.innerHTML = `<div class="text-center text-xs text-gray-500 py-6">لا توجد ردود مخصصة في قاعدة معرفة AI حالياً.</div>`;
+                return;
+            }
+            box.innerHTML = entries.map(([k, v]) => `
+                <div class="bg-[#0b0b12] border border-gray-800 rounded-2xl p-3 flex items-start justify-between gap-2">
+                    <div class="text-xs space-y-1">
+                        <p class="font-bold text-orange-400">المفتاح: ${escapeHTML(k)}</p>
+                        <p class="text-gray-200">الرد: ${escapeHTML(String(v || ''))}</p>
+                    </div>
+                    <button onclick="window.deleteAiKey('${escapeHTML(k)}')" class="text-red-400 text-xs font-bold shrink-0">حذف</button>
+                </div>
+            `).join('');
+        }
     </script>
 </body>
 </html>
