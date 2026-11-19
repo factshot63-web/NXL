@@ -79,6 +79,25 @@
             box-shadow: 0 6px 16px rgba(0, 0, 0, 0.45);
         }
 
+        /* Twin Heart Photo Slots for NXL Love Card */
+        .heart-photo-frame {
+            width: 82px;
+            height: 76px;
+            clip-path: path('M41 72 C41 72 4 47 4 22 C4 10 13 2 24 2 C32 2 38 7 41 13 C44 7 50 2 58 2 C69 2 78 10 78 22 C78 47 41 72 41 72 Z');
+            background: linear-gradient(135deg, #ff2a85, #ff7300);
+            padding: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            filter: drop-shadow(0 8px 18px rgba(255, 42, 133, 0.45));
+        }
+        .heart-photo-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            clip-path: path('M39.5 68 C39.5 68 4 44.5 4 21 C4 10 12.5 2 23 2 C30.5 2 36.5 6.8 39.5 12.5 C42.5 6.8 48.5 2 56 2 C66.5 2 75 10 75 21 C75 44.5 39.5 68 39.5 68 Z');
+        }
+
         @keyframes glowingBorder {
             0% { border-color: rgba(255, 42, 133, 0.3); box-shadow: 0 0 15px rgba(255, 42, 133, 0.2); }
             50% { border-color: rgba(255, 115, 0, 0.8); box-shadow: 0 0 25px rgba(255, 115, 0, 0.4); }
@@ -132,7 +151,7 @@
 
             <div class="flex flex-col items-center mb-4">
                 <div id="setup-avatar-preview" class="w-16 h-16 rounded-full border-2 border-[#ff2a85] overflow-hidden bg-gray-800 shadow-lg"></div>
-                <span class="text-[10px] text-gray-400 mt-1.5">أفاتار تلقائي حسب النوع (خاص بك)</span>
+                <span class="text-[10px] text-gray-400 mt-1.5">أفاتار تلقائي عبر مكتبة الأفاتارات</span>
             </div>
 
             <div class="space-y-3">
@@ -176,7 +195,7 @@
                     <div class="w-9 h-9 rounded-full gradient-bg flex items-center justify-center font-black text-xs text-white shrink-0 shadow-md">NXL</div>
                     <div>
                         <h2 class="text-xs font-bold text-white">مساعد NXL الذكي</h2>
-                        <p class="text-[10px] text-gray-400">اسأل أو ابحث فوراً من الصفحة الرئيسية ⚡</p>
+                        <p class="text-[10px] text-gray-400">يساعدك داخل التطبيق في المنشورات، النوتات، وكروت الحب ⚡</p>
                     </div>
                 </div>
                 <span class="text-[10px] gradient-bg text-white font-bold px-3 py-1 rounded-xl">فتح AI ✨</span>
@@ -236,6 +255,86 @@
                     <div class="text-center text-gray-500 py-3">جاري تحميل الأبطال...</div>
                 </div>
             </div>
+
+            <!-- كارت الحب الأسطوري NXL -->
+            <div class="liquid-glass p-4 rounded-3xl border border-pink-500/50 shadow-xl space-y-3">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 class="text-sm font-black text-white flex items-center gap-1.5"><span>💘</span> منشئ كارت الحب الأسطوري <span class="gradient-text">NXL</span></h2>
+                        <p class="text-[10px] text-gray-400">قلبان بصورتَي الحبيب والحبيبة + كلام وفاء ورسائل جامدة</p>
+                    </div>
+                    <span class="text-[10px] bg-pink-500/20 text-pink-300 border border-pink-500/40 px-2.5 py-1 rounded-full font-bold">NXL VIP</span>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2.5">
+                    <input type="text" id="love-card-boy-name" placeholder="اسم الحبيب..." class="bg-[#12121a] border border-gray-700 text-xs rounded-xl px-3 py-2.5 text-white focus:outline-none focus:border-pink-500">
+                    <input type="text" id="love-card-girl-name" placeholder="اسم الحبيبة..." class="bg-[#12121a] border border-gray-700 text-xs rounded-xl px-3 py-2.5 text-white focus:outline-none focus:border-pink-500">
+                </div>
+
+                <div class="grid grid-cols-2 gap-2.5">
+                    <label class="cursor-pointer bg-[#12121a] hover:bg-gray-800/80 border border-dashed border-pink-500/50 rounded-2xl p-2.5 flex flex-col items-center justify-center gap-1 text-center transition">
+                        <span class="text-base">💙</span>
+                        <span id="love-boy-photo-label" class="text-[10px] font-bold text-pink-200 truncate max-w-full">صورة الحبيب</span>
+                        <input type="file" id="love-card-boy-photo" accept="image/*" class="hidden">
+                    </label>
+                    <label class="cursor-pointer bg-[#12121a] hover:bg-gray-800/80 border border-dashed border-orange-500/50 rounded-2xl p-2.5 flex flex-col items-center justify-center gap-1 text-center transition">
+                        <span class="text-base">💗</span>
+                        <span id="love-girl-photo-label" class="text-[10px] font-bold text-orange-200 truncate max-w-full">صورة الحبيبة</span>
+                        <input type="file" id="love-card-girl-photo" accept="image/*" class="hidden">
+                    </label>
+                </div>
+
+                <textarea id="love-card-custom-note" placeholder="رسالة إضافية من قلبك (اختياري - أو اتركها لتوليد كلام جامد تلقائياً)..." class="w-full bg-[#12121a] border border-gray-700 text-xs rounded-xl px-3 py-2 text-white h-14 resize-none focus:outline-none focus:border-pink-500"></textarea>
+
+                <div class="flex gap-2">
+                    <button id="generate-nxl-love-card-btn" class="flex-1 py-2.5 bg-gradient-to-r from-[#ff2a85] via-pink-600 to-[#ff7300] rounded-xl text-xs font-black text-white interactive-press shadow-lg shadow-pink-500/30">💘 اصنع أفخم كارت NXL الآن</button>
+                    <button type="button" onclick="window.askAiForLoveCardCopy()" class="px-3 py-2.5 bg-[#12121a] border border-pink-500/40 text-pink-300 rounded-xl text-[10px] font-bold interactive-press">✨ كلام من AI</button>
+                </div>
+
+                <!-- معاينة كارت الحب الفاخر NXL -->
+                <div id="nxl-epic-love-card-preview" class="hidden mt-3 rounded-3xl p-4 border-2 border-pink-500/70 bg-gradient-to-br from-[#2a071c] via-[#140819] to-[#281006] shadow-2xl relative overflow-hidden">
+                    <div class="flex items-center justify-between text-[10px] font-black tracking-wider mb-3">
+                        <span class="px-2.5 py-0.5 rounded-full bg-pink-500/20 text-pink-300 border border-pink-400/40">NXL • FOREVER BOND</span>
+                        <span class="text-amber-300">💖 100% SOULMATES</span>
+                    </div>
+
+                    <div class="text-center mb-3">
+                        <div class="text-2xl font-black gradient-text tracking-widest">NXL</div>
+                        <p class="text-[11px] text-pink-100 font-bold mt-0.5" id="epic-card-names"></p>
+                    </div>
+
+                    <!-- قلبان كل قلب فيه صورة شخص -->
+                    <div class="flex items-center justify-center gap-3 my-3">
+                        <div class="flex flex-col items-center gap-1">
+                            <div class="heart-photo-frame">
+                                <img id="epic-boy-img" src="" alt="صورة الحبيب">
+                            </div>
+                            <span id="epic-boy-label" class="text-[10px] font-extrabold text-sky-300 truncate max-w-[85px]">الحبيب</span>
+                        </div>
+
+                        <div class="text-2xl animate-pulse">💞</div>
+
+                        <div class="flex flex-col items-center gap-1">
+                            <div class="heart-photo-frame">
+                                <img id="epic-girl-img" src="" alt="صورة الحبيبة">
+                            </div>
+                            <span id="epic-girl-label" class="text-[10px] font-extrabold text-pink-300 truncate max-w-[85px]">الحبيبة</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-black/40 border border-pink-500/30 rounded-2xl p-3 space-y-2 text-right">
+                        <p id="epic-card-quote-main" class="text-xs font-bold text-white leading-relaxed"></p>
+                        <p id="epic-card-quote-deep" class="text-[11px] text-pink-200 leading-relaxed"></p>
+                        <div id="epic-card-tags" class="text-[10px] text-amber-200/90 font-bold pt-1 border-t border-white/10 leading-relaxed"></div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2 mt-3">
+                        <button id="download-nxl-love-card-btn" class="py-2.5 bg-gradient-to-r from-[#ff2a85] to-[#ff7300] rounded-xl text-xs font-extrabold text-white interactive-press shadow-lg">📥 حفظ الكارت صورة</button>
+                        <button type="button" onclick="window.shareEpicCardToGlobal()" class="py-2.5 bg-pink-600/30 border border-pink-400/50 rounded-xl text-xs font-extrabold text-pink-100 interactive-press">📣 مشاركة بالشات العام</button>
+                    </div>
+                </div>
+            </div>
+
             <div class="grid grid-cols-2 gap-3">
                 <div onclick="startLoveQuizCard('compatibility')" class="liquid-glass p-3.5 rounded-2xl border border-pink-500/40 text-center cursor-pointer interactive-press hover:border-pink-500">
                     <div class="text-2xl mb-1">💖</div>
@@ -303,7 +402,7 @@
                     <div class="w-10 h-10 rounded-full gradient-bg flex items-center justify-center text-white font-black text-xs shrink-0 shadow-md">NXL</div>
                     <div>
                         <h4 class="font-bold text-white text-xs">NXL AI (المساعد الذكي)</h4>
-                        <p class="text-[9px] text-[#ff7300] font-semibold">متاح دائماً للمساعدة والبحث الفوري ✨</p>
+                        <p class="text-[9px] text-[#ff7300] font-semibold">مساعدك داخل التطبيق للمحتوى والكروت والأفكار ✨</p>
                     </div>
                 </div>
                 <span class="text-[11px] bg-[#ff2a85]/20 text-[#ff2a85] px-2.5 py-1 rounded-xl font-bold">دردشة AI 🤖</span>
@@ -419,7 +518,7 @@
                     <div class="w-9 h-9 rounded-full gradient-bg flex items-center justify-center text-white font-black text-xs">NXL</div>
                     <div>
                         <h3 class="text-xs font-bold text-white">NXL Intelligent Assistant</h3>
-                        <p class="text-[9px] text-[#ff2a85] font-semibold">المساعد الذكي الفوري لخدمتك ⚡</p>
+                        <p class="text-[9px] text-[#ff2a85] font-semibold">مساعدك داخل التطبيق للمحتوى والكروت والأفكار ⚡</p>
                     </div>
                 </div>
                 <button id="close-ai-btn" class="text-gray-400 hover:text-white text-2xl font-light">&times;</button>
@@ -429,19 +528,20 @@
                 <div class="flex gap-2 w-full justify-start">
                     <div class="w-7 h-7 rounded-full gradient-bg flex items-center justify-center text-white text-[10px] font-bold shrink-0">NXL</div>
                     <div class="p-2.5 text-xs rounded-2xl bg-[#12121a] border border-gray-800 text-white rounded-tl-none max-w-[85%] leading-relaxed">
-                        أهلاً بك في منصة NXL! أنا مساعدك الذكي، تفضل بطرح أي سؤال أو استفسار وسأجيبك فوراً. 🚀
+                        أهلاً بك في منصة NXL! أساعدك داخل التطبيق في كتابة المنشورات، النوتات، وكروت الحب وإدارتها بسهولة. 🚀
                     </div>
                 </div>
             </div>
 
             <div class="flex gap-1.5 px-2.5 pt-2 bg-[#12121a] overflow-x-auto custom-scrollbar shrink-0">
                 <button type="button" onclick="window.sendQuickAiPrompt('ما هي منصة NXL؟')" class="text-[10px] bg-[#060609] text-pink-300 border border-pink-500/30 px-2.5 py-1 rounded-full whitespace-nowrap interactive-press">✨ عن NXL</button>
-                <button type="button" onclick="window.sendQuickAiPrompt('اعطني نصيحة سريعة لصناع المحتوى')" class="text-[10px] bg-[#060609] text-orange-300 border border-orange-500/30 px-2.5 py-1 rounded-full whitespace-nowrap interactive-press">🔥 نصيحة محتوى</button>
-                <button type="button" onclick="window.sendQuickAiPrompt('فكرة منشور جذاب اليوم')" class="text-[10px] bg-[#060609] text-purple-300 border border-purple-500/30 px-2.5 py-1 rounded-full whitespace-nowrap interactive-press">💡 فكرة منشور</button>
+                <button type="button" onclick="window.sendQuickAiPrompt('اكتب لي كلام رومانسي لكارت حب NXL')" class="text-[10px] bg-[#060609] text-rose-300 border border-rose-500/30 px-2.5 py-1 rounded-full whitespace-nowrap interactive-press">💘 كلام كارت حب</button>
+                <button type="button" onclick="window.sendQuickAiPrompt('اعطني فكرة منشور سريع للمنصة')" class="text-[10px] bg-[#060609] text-orange-300 border border-orange-500/30 px-2.5 py-1 rounded-full whitespace-nowrap interactive-press">🔥 فكرة منشور</button>
+                <button type="button" onclick="window.sendQuickAiPrompt('اكتب لي نوت قصيرة وحماسية')" class="text-[10px] bg-[#060609] text-purple-300 border border-purple-500/30 px-2.5 py-1 rounded-full whitespace-nowrap interactive-press">📝 نوت سريعة</button>
             </div>
 
             <div class="p-2.5 bg-[#12121a] border-t border-gray-800 flex gap-2 items-center shrink-0 mb-safe">
-                <input type="text" id="ai-msg-input" placeholder="اسأل NXL Assistant..." class="flex-1 bg-[#060609] text-xs rounded-xl px-3.5 py-3 text-white focus:outline-none border border-gray-800">
+                <input type="text" id="ai-msg-input" placeholder="اسأل NXL Assistant أو اطلب مساعدة داخل التطبيق..." class="flex-1 bg-[#060609] text-xs rounded-xl px-3.5 py-3 text-white focus:outline-none border border-gray-800">
                 <button id="send-ai-btn" class="w-10 h-10 gradient-bg rounded-xl flex items-center justify-center text-white font-bold interactive-press shadow-md">✨</button>
             </div>
         </div>
@@ -476,6 +576,8 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { getDatabase, ref, set, update, push, onValue, get, child, query, limitToLast, remove, off, onDisconnect, runTransaction } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        import { createAvatar } from "https://esm.sh/@dicebear/core@9";
+        import * as avataaars from "https://esm.sh/@dicebear/avataaars@9";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDQ8pJMhye-kp5-FjXzVPPw2MDFm9_0A8c",
@@ -496,6 +598,9 @@
         let userData = null;
         let globalPostImageBase64 = "";
         let privatePostImageBase64 = "";
+        let loveCardBoyPhotoBase64 = "";
+        let loveCardGirlPhotoBase64 = "";
+        let latestEpicCardData = null;
         let activeChatRef = null;
         let openChatId = null;
         let openChatTargetUid = null;
@@ -508,7 +613,7 @@
         const postImageRegistry = {};
         let toastTimer = null;
 
-        // 1) Private Gender helper + guaranteed instant SVG avatar generation
+        // 1) Automatic Avatar Library (@dicebear/core + @dicebear/avataaars) with guaranteed fallback
         function normalizePrivateGender(val) {
             const g = String(val || "").trim().toLowerCase();
             if (g === "female" || g === "f" || g === "أنثى" || g === "انثي" || g === "بنت") return "female";
@@ -518,14 +623,17 @@
 
         function getAvatarByPrivateGender(gender, seed = "nxl") {
             const g = normalizePrivateGender(gender);
-            const cleanSeed = String(seed || "nxl").trim();
-            const initial = escapeHTML((cleanSeed.replace(/^@/, "")[0] || "N").toUpperCase());
-            const isFemale = g === "female";
-            const bgStart = isFemale ? "%23ff2a85" : "%232563eb";
-            const bgEnd = isFemale ? "%23ff7300" : "%2306b6d4";
-            const badge = isFemale ? "🌸" : "⚡";
-            const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="${bgStart}"/><stop offset="100%" stop-color="${bgEnd}"/></linearGradient></defs><rect width="120" height="120" rx="60" fill="url(%23g)"/><circle cx="60" cy="46" r="21" fill="rgba(255,255,255,0.25)"/><path d="M24 104c4-20 18-31 36-31s32 11 36 31" fill="rgba(255,255,255,0.22)"/><text x="60" y="54" text-anchor="middle" fill="#ffffff" font-family="Cairo,sans-serif" font-size="26" font-weight="900">${initial}</text><text x="88" y="34" text-anchor="middle" font-size="18">${badge}</text></svg>`;
-            return `data:image/svg+xml;utf8,${svg}`;
+            const cleanSeed = `${g}_${String(seed || "nxl").trim() || "nxl"}`;
+            try {
+                const options = g === "female"
+                    ? { seed: cleanSeed, top: ["longHairStraight", "longHairCurvy", "bob"], hairColor: ["2c1b18", "4a312c", "724133"], backgroundColor: ["ffdfbf", "ffd5dc", "c0aede"] }
+                    : { seed: cleanSeed, top: ["shortHairShortFlat", "shortHairShortCurly", "shortHairShortWaved"], hairColor: ["2c1b18", "4a312c", "724133"], backgroundColor: ["b6e3f4", "d1d4f9", "c0aede"] };
+                return createAvatar(avataaars, options).toDataUri();
+            } catch (_) {
+                const initial = escapeHTML((cleanSeed.replace(/^@/, "")[0] || "N").toUpperCase());
+                const bg = g === "female" ? "%23ff2a85" : "%23ff7300";
+                return `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="50" fill="${bg}"/><text x="50" y="58" text-anchor="middle" fill="#fff" font-size="36" font-weight="bold">${initial}</text></svg>`;
+            }
         }
 
         function updateSetupAvatarPreview() {
@@ -798,6 +906,209 @@
             if(!text) await update(ref(db, `users/${currentUser.uid}`), { note: null });
             else await update(ref(db, `users/${currentUser.uid}/note`), { text, timestamp: Date.now() });
             alert("تم نشر النوت بنجاح! ✨");
+        };
+
+        // 2) Epic NXL Love Card Builder (Boy + Girl names & photos inside two hearts + rich romantic copy + NXL badge)
+        document.getElementById('love-card-boy-photo')?.addEventListener('change', (e) => {
+            const f = e.target.files[0];
+            if (!f) return;
+            compressImage(f, (base64) => {
+                loveCardBoyPhotoBase64 = base64;
+                document.getElementById('love-boy-photo-label').innerText = '✅ تم اختيار صورة الحبيب';
+                showToast('💙 تم تحميل صورة الحبيب');
+            });
+        });
+
+        document.getElementById('love-card-girl-photo')?.addEventListener('change', (e) => {
+            const f = e.target.files[0];
+            if (!f) return;
+            compressImage(f, (base64) => {
+                loveCardGirlPhotoBase64 = base64;
+                document.getElementById('love-girl-photo-label').innerText = '✅ تم اختيار صورة الحبيبة';
+                showToast('💗 تم تحميل صورة الحبيبة');
+            });
+        });
+
+        function buildEpicLoveCopy(boyName, girlName, customNote) {
+            const mainQuote = `بين ${boyName} و${girlName} حكاية لا يكتبها الزمن إلا بحروف من نور، قلبان ينبضان بإيقاع واحد وصداقة وعشق لا يعرفان الانكسار.`;
+            const extraPart = customNote ? ` «${customNote}»` : '';
+            const deepQuote = `مهما تباعدت المسافات أو اشتدت الأيام، يظل وجود كلٍ منكما أماناً للآخر وسنداً لا يتبدل، كأن ${boyName} و${girlName} خُلقا ليكملا أجمل فصل في قصة NXL.${extraPart}`;
+            const tags = `✨ وفاء أبدي • 💞 نبض واحد • 🌙 سند العمر • 🔥 حكاية NXL الخالدة`;
+            return { mainQuote, deepQuote, tags };
+        }
+
+        document.getElementById('generate-nxl-love-card-btn')?.addEventListener('click', () => {
+            const boyName = document.getElementById('love-card-boy-name').value.trim();
+            const girlName = document.getElementById('love-card-girl-name').value.trim();
+            const customNote = document.getElementById('love-card-custom-note').value.trim();
+            if (!boyName) return alert('اكتب اسم الحبيب أولاً');
+            if (!girlName) return alert('اكتب اسم الحبيبة أولاً');
+
+            const boyImgSrc = loveCardBoyPhotoBase64 || getAvatarByPrivateGender('male', boyName);
+            const girlImgSrc = loveCardGirlPhotoBase64 || getAvatarByPrivateGender('female', girlName);
+            const copy = buildEpicLoveCopy(boyName, girlName, customNote);
+
+            latestEpicCardData = { boyName, girlName, boyImgSrc, girlImgSrc, ...copy };
+
+            document.getElementById('epic-card-names').innerText = `${boyName}  ♥  ${girlName}`;
+            document.getElementById('epic-boy-img').src = boyImgSrc;
+            document.getElementById('epic-girl-img').src = girlImgSrc;
+            document.getElementById('epic-boy-label').innerText = boyName;
+            document.getElementById('epic-girl-label').innerText = girlName;
+            document.getElementById('epic-card-quote-main').innerText = copy.mainQuote;
+            document.getElementById('epic-card-quote-deep').innerText = copy.deepQuote;
+            document.getElementById('epic-card-tags').innerText = copy.tags;
+            document.getElementById('nxl-epic-love-card-preview').classList.remove('hidden');
+            showToast('💘 تم إنشاء كارت الحب NXL بنجاح');
+        });
+
+        function wrapCanvasText(ctx, text, x, y, maxWidth, lineHeight) {
+            const words = String(text || '').split(' ');
+            let line = '';
+            let currY = y;
+            for (let i = 0; i < words.length; i++) {
+                const testLine = line ? `${line} ${words[i]}` : words[i];
+                if (ctx.measureText(testLine).width > maxWidth && line) {
+                    ctx.fillText(line, x, currY);
+                    line = words[i];
+                    currY += lineHeight;
+                } else {
+                    line = testLine;
+                }
+            }
+            if (line) {
+                ctx.fillText(line, x, currY);
+                currY += lineHeight;
+            }
+            return currY;
+        }
+
+        function traceHeartPath(ctx, cx, cy, width, height) {
+            ctx.beginPath();
+            ctx.moveTo(cx, cy + height * 0.42);
+            ctx.bezierCurveTo(cx - width * 0.55, cy + height * 0.05, cx - width * 0.52, cy - height * 0.42, cx - width * 0.22, cy - height * 0.42);
+            ctx.bezierCurveTo(cx - width * 0.08, cy - height * 0.42, cx, cy - height * 0.25, cx, cy - height * 0.14);
+            ctx.bezierCurveTo(cx, cy - height * 0.25, cx + width * 0.08, cy - height * 0.42, cx + width * 0.22, cy - height * 0.42);
+            ctx.bezierCurveTo(cx + width * 0.52, cy - height * 0.42, cx + width * 0.55, cy + height * 0.05, cx, cy + height * 0.42);
+            ctx.closePath();
+        }
+
+        function drawPhotoInHeart(ctx, imgSrc, cx, cy, w, h) {
+            return new Promise((resolve) => {
+                const img = new Image();
+                img.crossOrigin = 'anonymous';
+                img.onload = () => {
+                    ctx.save();
+                    traceHeartPath(ctx, cx, cy, w + 10, h + 10);
+                    ctx.fillStyle = '#ff2a85';
+                    ctx.fill();
+                    traceHeartPath(ctx, cx, cy, w, h);
+                    ctx.clip();
+                    const scale = Math.max(w / (img.width || 1), h / (img.height || 1));
+                    const dw = (img.width || w) * scale;
+                    const dh = (img.height || h) * scale;
+                    ctx.drawImage(img, cx - dw / 2, cy - dh / 2, dw, dh);
+                    ctx.restore();
+                    resolve();
+                };
+                img.onerror = () => resolve();
+                img.src = imgSrc;
+            });
+        }
+
+        document.getElementById('download-nxl-love-card-btn')?.addEventListener('click', async () => {
+            if (!latestEpicCardData) return alert('أنشئ الكارت أولاً');
+            const canvas = document.createElement('canvas');
+            canvas.width = 760;
+            canvas.height = 1040;
+            const ctx = canvas.getContext('2d');
+
+            const bgGrad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+            bgGrad.addColorStop(0, '#2a071c');
+            bgGrad.addColorStop(0.55, '#120818');
+            bgGrad.addColorStop(1, '#2a1106');
+            ctx.fillStyle = bgGrad;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.strokeStyle = '#ff2a85';
+            ctx.lineWidth = 6;
+            ctx.strokeRect(24, 24, canvas.width - 48, canvas.height - 48);
+
+            ctx.textAlign = 'center';
+            ctx.fillStyle = '#ff7300';
+            ctx.font = '900 54px Cairo, sans-serif';
+            ctx.fillText('NXL', canvas.width / 2, 105);
+
+            ctx.fillStyle = '#fbcfe8';
+            ctx.font = 'bold 20px Cairo, sans-serif';
+            ctx.fillText('NXL FOREVER BOND • بطاقة عشق ووفاء استثنائية', canvas.width / 2, 145);
+
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 34px Cairo, sans-serif';
+            ctx.fillText(`${latestEpicCardData.boyName}  ♥  ${latestEpicCardData.girlName}`, canvas.width / 2, 205);
+
+            await drawPhotoInHeart(ctx, latestEpicCardData.boyImgSrc, 235, 345, 210, 195);
+            await drawPhotoInHeart(ctx, latestEpicCardData.girlImgSrc, 525, 345, 210, 195);
+
+            ctx.fillStyle = '#ff4d94';
+            ctx.font = 'bold 42px Cairo, sans-serif';
+            ctx.fillText('💞', canvas.width / 2, 360);
+
+            ctx.fillStyle = '#38bdf8';
+            ctx.font = 'bold 22px Cairo, sans-serif';
+            ctx.fillText(latestEpicCardData.boyName, 235, 472);
+
+            ctx.fillStyle = '#f472b6';
+            ctx.font = 'bold 22px Cairo, sans-serif';
+            ctx.fillText(latestEpicCardData.girlName, 525, 472);
+
+            ctx.fillStyle = 'rgba(0,0,0,0.45)';
+            ctx.fillRect(56, 515, canvas.width - 112, 445);
+
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 24px Cairo, sans-serif';
+            let nextY = wrapCanvasText(ctx, latestEpicCardData.mainQuote, canvas.width / 2, 565, canvas.width - 156, 36);
+
+            ctx.fillStyle = '#f9a8d4';
+            ctx.font = '21px Cairo, sans-serif';
+            nextY = wrapCanvasText(ctx, latestEpicCardData.deepQuote, canvas.width / 2, nextY + 14, canvas.width - 156, 33);
+
+            ctx.fillStyle = '#fde68a';
+            ctx.font = 'bold 20px Cairo, sans-serif';
+            wrapCanvasText(ctx, latestEpicCardData.tags, canvas.width / 2, Math.max(nextY + 18, 895), canvas.width - 156, 32);
+
+            const link = document.createElement('a');
+            link.download = `NXL-Love-Card-${Date.now()}.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+            showToast('📥 تم تحميل كارت الحب NXL بنجاح');
+        });
+
+        window.shareEpicCardToGlobal = async () => {
+            if (!latestEpicCardData || !currentUser || !userData) return alert('أنشئ الكارت أولاً');
+            const postText = `💘 كارت حب NXL: ${latestEpicCardData.boyName} ♥ ${latestEpicCardData.girlName}\n${latestEpicCardData.mainQuote}\n${latestEpicCardData.tags}`;
+            try {
+                await push(ref(db, 'posts'), {
+                    userId: currentUser.uid,
+                    userNickname: userData.nickname,
+                    userUsername: userData.username,
+                    userAvatar: userData.avatarUrl,
+                    text: postText,
+                    image: latestEpicCardData.girlImgSrc || latestEpicCardData.boyImgSrc || null,
+                    timestamp: Date.now(),
+                    likeCount: 0
+                });
+                showToast('📣 تم نشر كارت الحب في المنشورات');
+            } catch (err) {
+                alert(firebaseErrorMessage(err));
+            }
+        };
+
+        window.askAiForLoveCardCopy = () => {
+            const boyName = document.getElementById('love-card-boy-name')?.value.trim() || 'الحبيب';
+            const girlName = document.getElementById('love-card-girl-name')?.value.trim() || 'الحبيبة';
+            document.getElementById('nxl-ai-panel').classList.remove('hidden');
+            window.sendQuickAiPrompt(`اكتب كلام حب مؤثر وطويل لكارت NXL بين ${boyName} و${girlName}`);
         };
 
         window.startLoveQuizCard = (type) => {
@@ -1259,7 +1570,7 @@
             reader.readAsDataURL(file);
         }
 
-        // 3) Automatic "hearts" ("قلوب") theme with floating hearts when boy and girl chat privately
+        // Automatic "hearts" ("قلوب") theme with floating hearts when boy and girl chat privately
         function renderHeartsFloatingOverlay() {
             const hearts = ['💖', '💕', '💗', '💘', '💞'];
             const items = hearts.map((h, idx) =>
@@ -1443,7 +1754,7 @@
             finally { sendBtn.disabled = false; }
         };
 
-        // 2) NXL AI Assistant (short questions + questions about NXL include leadership info)
+        // 3) NXL AI Assistant helping inside the app + leadership info on short/NXL questions
         const aiBtn = document.getElementById('nxl-ai-btn'), aiPanel = document.getElementById('nxl-ai-panel'), aiBox = document.getElementById('ai-messages-box');
         aiBtn.onclick = () => aiPanel.classList.remove('hidden');
         document.getElementById('close-ai-btn').onclick = () => aiPanel.classList.add('hidden');
@@ -1458,6 +1769,20 @@
             aiBox.innerHTML += `<div id="${id}" class="flex gap-2 w-full justify-start"><div class="p-3 text-xs rounded-2xl liquid-glass border border-gray-800 text-white rounded-tl-none typing-dot"><span></span><span></span><span></span></div></div>`;
             aiBox.scrollTop = aiBox.scrollHeight;
             return id;
+        }
+
+        function buildInAppHelperResponse(queryText) {
+            const q = queryText.toLowerCase();
+            if (q.includes("كارت") || q.includes("حب") || q.includes("رومانسي")) {
+                return "💘 اقتراح لكارت NXL: «في كل نبضة قلب حكاية، ومعك يصبح للوقت معنى أجمل؛ قلبان يجمعان الوفاء والصدق تحت راية NXL للأبد.» يمكنك نسخه أو وضعه في خانة الرسالة الإضافية لكارت الحب.";
+            }
+            if (q.includes("منشور") || q.includes("بوست")) {
+                return "🔥 فكرة منشور سريع: «مش كل لحظة بتتكرر، بس اللحظة اللي بتسيب أثر في الناس بتعيش... شاركني رأيك في الكومنتات 👇»";
+            }
+            if (q.includes("نوت")) {
+                return "📝 اقتراح نوت: «جاهزين لليوم بحماس أعلى ✨ مين صاحي وشغال دلوقتي؟»";
+            }
+            return null;
         }
 
         async function fetchRealWebSearch(queryText) {
@@ -1519,7 +1844,7 @@
                 if (isNxlQuestion && !foundInDb) {
                     answer = `منصة NXL منصة اجتماعية تفاعلية للدردشة والمشاركة والمجتمع. ${leadershipNote}`;
                 } else if (!foundInDb) {
-                    answer = await fetchRealWebSearch(text);
+                    answer = buildInAppHelperResponse(text) || await fetchRealWebSearch(text);
                     if (!answer) answer = 'مش قادر أوصل لمعلومة موثوقة دلوقتي. جرّب صياغة السؤال بشكل أوضح أو راجع اتصال الإنترنت.';
                 }
                 if ((isNxlQuestion || isShortQuestion) && !answer.includes("رئيس المطورين هو حمص")) {
