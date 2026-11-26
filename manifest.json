@@ -1,22 +1,27 @@
 {
-  "name": "NXL Elmahalla",
+  "name": "NXL Ultimate Network",
   "short_name": "NXL",
-  "description": "شبكة التقارب - سهولة ارتباط .. قلوب بتتقرب",
-  "start_url": "./Nxl.html",
+  "description": "المنصة الاجتماعية التفاعلية المتكاملة NXL مع وضع أوفلاين، صراحة سرية، ونبض الوفاء.",
+  "start_url": "./Nxl",
+  "scope": "./",
   "display": "standalone",
-  "background_color": "#0d0d12",
-  "theme_color": "#16161f",
   "orientation": "portrait",
+  "background_color": "#060609",
+  "theme_color": "#060609",
+  "dir": "rtl",
+  "lang": "ar",
   "icons": [
     {
       "src": "image.PNG",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
       "src": "image.PNG",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }
