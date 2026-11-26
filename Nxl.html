@@ -54,7 +54,6 @@
         }
         .liquid-glass:hover { border-color: rgba(255, 42, 133, 0.28); }
 
-        /* Hearts Chat Theme */
         @keyframes floatHeartUp {
             0% { transform: translateY(100%) scale(0.75) rotate(-8deg); opacity: 0; }
             20% { opacity: 0.55; }
@@ -86,7 +85,6 @@
             box-shadow: 0 6px 16px rgba(0, 0, 0, 0.45);
         }
 
-        /* Twin Heart Photo Slots */
         .heart-photo-frame {
             width: 82px; height: 76px;
             clip-path: path('M41 72 C41 72 4 47 4 22 C4 10 13 2 24 2 C32 2 38 7 41 13 C44 7 50 2 58 2 C69 2 78 10 78 22 C78 47 41 72 41 72 Z');
@@ -129,7 +127,7 @@
 <body class="flex flex-col select-none">
 
     <!-- إشعار عائم أنيق -->
-    <div id="nxl-toast" class="fixed top-14 left-1/2 -translate-x-1/2 z-[80] bg-[#12121a]/95 border border-[#ff2a85]/60 text-white text-[11px] font-bold px-4 py-2 rounded-full shadow-2xl hidden pointer-events-none text-center max-w-[90vw]"></div>
+    <div id="nxl-toast" class="fixed top-14 left-1/2 -translate-x-1/2 z-[90] bg-[#12121a]/95 border border-[#ff2a85]/60 text-white text-[11px] font-bold px-4 py-2 rounded-full shadow-2xl hidden pointer-events-none text-center max-w-[90vw]"></div>
 
     <!-- شاشة تسجيل الدخول وإنشاء الحساب -->
     <div id="auth-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#060609] px-6">
@@ -168,8 +166,8 @@
             </div>
 
             <div class="space-y-3">
-                <input type="text" id="setup-nickname" placeholder="اللقب الظاهر (مثل: Creator، Hero)" class="w-full bg-[#12121a] text-xs rounded-xl px-4 py-3 text-white border border-gray-700">
-                <input type="text" id="setup-username" placeholder="اسم المستخدم بالإنجليزية (مثل: nxl_user)" class="w-full bg-[#12121a] text-xs rounded-xl px-4 py-3 text-white border border-gray-700 dir-ltr text-left">
+                <input type="text" id="setup-nickname" placeholder="اللقب الظاهر (مثل: حمص، Hero)" class="w-full bg-[#12121a] text-xs rounded-xl px-4 py-3 text-white border border-gray-700">
+                <input type="text" id="setup-username" placeholder="اسم المستخدم بالإنجليزية (مثل: hommos)" class="w-full bg-[#12121a] text-xs rounded-xl px-4 py-3 text-white border border-gray-700 dir-ltr text-left">
                 <select id="setup-private-gender" class="w-full bg-[#12121a] text-xs rounded-xl px-4 py-3 text-white border border-gray-700">
                     <option value="male">ذكر</option>
                     <option value="female">أنثى</option>
@@ -180,9 +178,10 @@
         </div>
     </div>
 
-    <!-- الهيدر العلوي -->
-    <header id="nxl-top-header" class="liquid-glass py-2.5 px-3.5 border-b border-gray-800/90 flex items-center justify-between gap-2 shrink-0 z-30 w-full">
+    <!-- الهيدر العلوي مع زر الثلاث شرطات (☰) -->
+    <header id="nxl-top-header" class="liquid-glass py-2.5 px-3 border-b border-gray-800/90 flex items-center justify-between gap-2 shrink-0 z-30 w-full">
         <div class="flex items-center gap-2 min-w-0">
+            <button type="button" id="open-settings-drawer-btn" onclick="window.openSettingsDrawer()" class="w-9 h-9 rounded-xl bg-[#12121a] border border-gray-700/80 flex items-center justify-center text-white text-base font-black interactive-press shrink-0" title="الإعدادات والملف الشخصي">☰</button>
             <div class="w-8 h-8 rounded-full gradient-bg flex items-center justify-center font-black text-xs text-white shadow-md shrink-0">NXL</div>
             <div class="min-w-0">
                 <div class="flex items-center gap-1.5">
@@ -192,6 +191,7 @@
                 <p class="text-[8px] text-gray-400 -mt-0.5 truncate" id="header-exp-text">0 EXP • جاهز للاستكشاف</p>
             </div>
         </div>
+
         <div class="flex items-center gap-1.5 shrink-0">
             <button type="button" onclick="window.openConfessionsInbox()" class="text-[10px] bg-purple-500/15 text-purple-300 border border-purple-500/35 px-2 py-1 rounded-full font-bold interactive-press relative" title="صندوق الصراحة">
                 🎭 <span id="confession-badge" class="hidden absolute -top-1 -right-1 w-2 h-2 bg-pink-500 rounded-full"></span>
@@ -204,35 +204,127 @@
         </div>
     </header>
 
+    <!-- قائمة الإعدادات المنزلقة عند الضغط على الثلاث شرطات (☰) -->
+    <div id="settings-drawer-backdrop" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex justify-start" onclick="if(event.target===this) window.closeSettingsDrawer()">
+        <aside id="settings-drawer-panel" class="w-[88vw] max-w-sm h-full bg-[#0b0b12] border-l border-gray-800 p-4 overflow-y-auto custom-scrollbar space-y-4 shadow-2xl">
+            <div class="flex items-center justify-between border-b border-gray-800 pb-3">
+                <div>
+                    <h3 class="text-sm font-black text-white">⚙️ مركز إعدادات NXL</h3>
+                    <p class="text-[10px] text-gray-400">تخصيص حسابك وخصوصيتك</p>
+                </div>
+                <button type="button" onclick="window.closeSettingsDrawer()" class="w-8 h-8 rounded-xl bg-[#12121a] border border-gray-700 text-gray-300 hover:text-white text-lg font-bold flex items-center justify-center">&times;</button>
+            </div>
+
+            <!-- قسم 1: الهوية -->
+            <div class="space-y-2.5">
+                <p class="text-[11px] font-bold text-pink-400">👤 الهوية والملف الشخصي</p>
+                <div>
+                    <label class="text-[10px] text-gray-400 block mb-1">اللقب الظاهر</label>
+                    <input type="text" id="settings-nickname" class="w-full bg-[#12121a] text-xs rounded-xl px-3 py-2.5 text-white border border-gray-700 focus:border-[#ff2a85] focus:outline-none">
+                </div>
+                <div>
+                    <label class="text-[10px] text-gray-400 block mb-1">النبذة التعريفية (Bio)</label>
+                    <textarea id="settings-bio" rows="2" maxlength="120" class="w-full bg-[#12121a] text-xs rounded-xl px-3 py-2 text-white border border-gray-700 focus:border-[#ff2a85] focus:outline-none resize-none"></textarea>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="text-[10px] text-gray-400 block mb-1">النوع</label>
+                        <select id="settings-gender" class="w-full bg-[#12121a] text-xs rounded-xl px-3 py-2 text-white border border-gray-700">
+                            <option value="male">ذكر</option>
+                            <option value="female">أنثى</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-[10px] text-gray-400 block mb-1">الحالة المزاجية</label>
+                        <select id="settings-status-mood" class="w-full bg-[#12121a] text-xs rounded-xl px-3 py-2 text-white border border-gray-700">
+                            <option value="🟢 متاح الآن">🟢 متاح الآن</option>
+                            <option value="🔥 في قمة الحماس">🔥 في قمة الحماس</option>
+                            <option value="🎧 أستمع للموسيقى">🎧 أستمع للموسيقى</option>
+                            <option value="🎮 مشغول باللعب">🎮 مشغول باللعب</option>
+                            <option value="🌙 وضع الهدوء">🌙 وضع الهدوء</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- قسم 2: الألوان والثيم -->
+            <div class="space-y-2 border-t border-gray-800 pt-3">
+                <p class="text-[11px] font-bold text-orange-400">🎨 ألوان الواجهة</p>
+                <div class="grid grid-cols-4 gap-1.5">
+                    <button type="button" onclick="window.applyAccentTheme('#ff2a85', '#ff7300', 'neon')" class="p-2 rounded-xl bg-[#12121a] border border-pink-500/40 text-[10px] font-bold text-center interactive-press">
+                        <span class="block w-4 h-4 rounded-full mx-auto mb-1" style="background:linear-gradient(135deg,#ff2a85,#ff7300)"></span>نيون
+                    </button>
+                    <button type="button" onclick="window.applyAccentTheme('#06b6d4', '#3b82f6', 'cyber')" class="p-2 rounded-xl bg-[#12121a] border border-cyan-500/40 text-[10px] font-bold text-center interactive-press">
+                        <span class="block w-4 h-4 rounded-full mx-auto mb-1" style="background:linear-gradient(135deg,#06b6d4,#3b82f6)"></span>سايبر
+                    </button>
+                    <button type="button" onclick="window.applyAccentTheme('#a855f7', '#ec4899', 'royal')" class="p-2 rounded-xl bg-[#12121a] border border-purple-500/40 text-[10px] font-bold text-center interactive-press">
+                        <span class="block w-4 h-4 rounded-full mx-auto mb-1" style="background:linear-gradient(135deg,#a855f7,#ec4899)"></span>ملكي
+                    </button>
+                    <button type="button" onclick="window.applyAccentTheme('#f59e0b', '#ef4444', 'gold')" class="p-2 rounded-xl bg-[#12121a] border border-amber-500/40 text-[10px] font-bold text-center interactive-press">
+                        <span class="block w-4 h-4 rounded-full mx-auto mb-1" style="background:linear-gradient(135deg,#f59e0b,#ef4444)"></span>ذهبي
+                    </button>
+                </div>
+            </div>
+
+            <!-- قسم 3: الخصوصية -->
+            <div class="space-y-2 border-t border-gray-800 pt-3">
+                <p class="text-[11px] font-bold text-cyan-400">🛡️ الخصوصية والصراحة</p>
+                <label class="flex items-center justify-between bg-[#12121a] p-2.5 rounded-xl border border-gray-800 cursor-pointer">
+                    <span class="text-[11px] text-gray-200">إظهار حالة الاتصال (Online)</span>
+                    <input type="checkbox" id="settings-show-online" class="accent-pink-500 w-4 h-4" checked>
+                </label>
+                <label class="flex items-center justify-between bg-[#12121a] p-2.5 rounded-xl border border-gray-800 cursor-pointer">
+                    <span class="text-[11px] text-gray-200">المؤثرات الصوتية</span>
+                    <input type="checkbox" id="settings-sound-fx" class="accent-pink-500 w-4 h-4" checked>
+                </label>
+                <label class="flex items-center justify-between bg-[#12121a] p-2.5 rounded-xl border border-gray-800 cursor-pointer">
+                    <span class="text-[11px] text-gray-200">استقبال الصراحة المجهولة 🎭</span>
+                    <input type="checkbox" id="settings-allow-confessions" class="accent-pink-500 w-4 h-4" checked>
+                </label>
+
+                <button type="button" id="save-all-settings-btn" class="w-full py-2.5 gradient-bg rounded-xl text-xs font-black text-white interactive-press shadow-lg">💾 حفظ الإعدادات</button>
+                <button type="button" id="settings-reset-pass-btn" class="w-full py-2 bg-[#12121a] border border-gray-700 rounded-xl text-[11px] font-bold text-gray-300 interactive-press">🔑 تغيير كلمة المرور عبر البريد</button>
+                <button type="button" id="drawer-logout-btn" class="w-full py-2 bg-red-500/15 border border-red-500/30 rounded-xl text-[11px] font-bold text-red-400 interactive-press">🚪 تسجيل الخروج</button>
+            </div>
+        </aside>
+    </div>
+
     <!-- المحتوى الرئيسي للمنصة -->
     <main class="flex-1 overflow-y-auto custom-scrollbar bg-[#060609] pb-24 relative">
 
         <!-- 1. تبويب الرئيسية -->
         <section id="tab-home" class="tab-content p-3 max-w-md mx-auto space-y-3">
-            <!-- شريط المهام اليومية والذكاء الاصطناعي -->
-            <div class="grid grid-cols-2 gap-2">
-                <div onclick="document.getElementById('nxl-ai-panel').classList.remove('hidden')" class="liquid-glass p-2.5 rounded-2xl border border-[#ff2a85]/40 flex items-center gap-2 cursor-pointer interactive-press">
-                    <div class="w-8 h-8 rounded-full gradient-bg flex items-center justify-center font-black text-[10px] text-white shrink-0">AI</div>
+            <!-- شريط الميزات السريعة -->
+            <div class="grid grid-cols-3 gap-2">
+                <div onclick="document.getElementById('nxl-ai-panel').classList.remove('hidden')" class="liquid-glass p-2 rounded-2xl border border-[#ff2a85]/40 flex items-center gap-1.5 cursor-pointer interactive-press">
+                    <div class="w-7 h-7 rounded-full gradient-bg flex items-center justify-center font-black text-[9px] text-white shrink-0">AI</div>
                     <div class="min-w-0">
-                        <h2 class="text-[11px] font-bold text-white truncate">مساعد NXL</h2>
-                        <p class="text-[9px] text-gray-400 truncate">ينفذ أوامرك فوراً ⚡</p>
+                        <h2 class="text-[10px] font-bold text-white truncate">مساعد NXL</h2>
+                        <p class="text-[8px] text-gray-400 truncate">ينفذ أوامرك</p>
                     </div>
                 </div>
-                <div onclick="switchTab('games', document.querySelectorAll('nav button')[2]); window.openDailyWheelModal();" class="liquid-glass p-2.5 rounded-2xl border border-amber-500/40 flex items-center gap-2 cursor-pointer interactive-press">
-                    <div class="w-8 h-8 rounded-full bg-amber-500/20 border border-amber-400/50 flex items-center justify-center text-sm shrink-0">🎡</div>
+                <div onclick="window.openConfessionsInbox()" class="liquid-glass p-2 rounded-2xl border border-purple-500/40 flex items-center gap-1.5 cursor-pointer interactive-press">
+                    <div class="w-7 h-7 rounded-full bg-purple-500/20 border border-purple-400/40 flex items-center justify-center text-xs shrink-0">🎭</div>
                     <div class="min-w-0">
-                        <h2 class="text-[11px] font-bold text-amber-200 truncate">عجلة الحظ</h2>
-                        <p class="text-[9px] text-gray-400 truncate">اكسب نقاط EXP مجاناً</p>
+                        <h2 class="text-[10px] font-bold text-purple-200 truncate">صراحة سرية</h2>
+                        <p class="text-[8px] text-gray-400 truncate">رابط ورسائل</p>
+                    </div>
+                </div>
+                <div onclick="switchTab('games', document.querySelectorAll('nav button')[2]); window.openDailyWheelModal();" class="liquid-glass p-2 rounded-2xl border border-amber-500/40 flex items-center gap-1.5 cursor-pointer interactive-press">
+                    <div class="w-7 h-7 rounded-full bg-amber-500/20 border border-amber-400/50 flex items-center justify-center text-xs shrink-0">🎡</div>
+                    <div class="min-w-0">
+                        <h2 class="text-[10px] font-bold text-amber-200 truncate">عجلة الحظ</h2>
+                        <p class="text-[8px] text-gray-400 truncate">+EXP يومي</p>
                     </div>
                 </div>
             </div>
 
-            <!-- شريط النوتس (Stories / Notes) -->
+            <!-- شريط النوتس -->
             <div id="stories-container" class="flex gap-3 overflow-x-auto pb-2 pt-1 custom-scrollbar hidden"></div>
 
             <!-- صندوق إنشاء منشور -->
             <div class="liquid-glass p-3 rounded-2xl border border-gray-800 shadow-lg space-y-2">
-                <textarea id="post-input" placeholder="شارك أفكارك، حالتك، أو اسأل المجتمع... (تختفي بعد 72 ساعة)" class="w-full bg-[#12121a] text-xs text-white rounded-xl p-3 focus:outline-none resize-none h-16 border border-gray-800 focus:border-[#ff2a85]/50"></textarea>
+                <textarea id="post-input" placeholder="شارك أفكارك، حالتك، أو اطرح سؤال للمجتمع... (72 ساعة)" class="w-full bg-[#12121a] text-xs text-white rounded-xl p-3 focus:outline-none resize-none h-16 border border-gray-800 focus:border-[#ff2a85]/50"></textarea>
                 <div class="flex justify-between items-center gap-2">
                     <div class="flex items-center gap-1.5">
                         <label class="cursor-pointer text-[11px] text-gray-300 bg-[#12121a] px-3 py-1.5 rounded-lg flex gap-1 hover:bg-gray-800 border border-gray-700 interactive-press">
@@ -242,7 +334,7 @@
                         <select id="post-mood-tag" class="bg-[#12121a] text-[10px] text-gray-300 px-2.5 py-1.5 rounded-lg border border-gray-700 focus:outline-none">
                             <option value="">بدون حالة</option>
                             <option value="🔥 طاقة عالية">🔥 طاقة عالية</option>
-                            <option value="💭 تفكير عميق">💭 تفكير عميق</option>
+                            <option value="🎭 صراحة ومجتمع">🎭 صراحة ومجتمع</option>
                             <option value="🎧 مود رايق">🎧 مود رايق</option>
                             <option value="💘 حب ووفاء">💘 حب ووفاء</option>
                             <option value="🎮 وقت اللعب">🎮 وقت اللعب</option>
@@ -291,7 +383,6 @@
 
         <!-- 3. تبويب الألعاب والترفيه -->
         <section id="tab-games" class="tab-content hidden p-3 max-w-md mx-auto space-y-4">
-            <!-- شريط الألعاب السريعة -->
             <div class="grid grid-cols-3 gap-2">
                 <button onclick="window.openDailyWheelModal()" class="liquid-glass p-3 rounded-2xl border border-amber-500/40 text-center interactive-press">
                     <div class="text-2xl mb-1">🎡</div>
@@ -326,7 +417,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <h2 class="text-sm font-black text-white flex items-center gap-1.5"><span>💘</span> منشئ كارت الحب الأسطوري <span class="gradient-text">NXL</span></h2>
-                        <p class="text-[10px] text-gray-400">قلبان بصورتَي الحبيب والحبيبة + جملة جديدة في كل مرة</p>
+                        <p class="text-[10px] text-gray-400">قلبان بصورتَي الحبيب والحبيبة + مشاركة مباشرة لواتساب وإنستجرام</p>
                     </div>
                     <span class="text-[10px] bg-pink-500/20 text-pink-300 border border-pink-500/40 px-2.5 py-1 rounded-full font-bold">NXL VIP</span>
                 </div>
@@ -386,8 +477,8 @@
                     </div>
 
                     <div class="grid grid-cols-2 gap-2 mt-3">
-                        <button id="download-nxl-love-card-btn" class="py-2.5 bg-gradient-to-r from-[#ff2a85] to-[#ff7300] rounded-xl text-xs font-extrabold text-white interactive-press shadow-lg">📥 حفظ الكارت صورة</button>
-                        <button type="button" onclick="window.shareEpicCardToGlobal()" class="py-2.5 bg-pink-600/30 border border-pink-400/50 rounded-xl text-xs font-extrabold text-pink-100 interactive-press">📣 مشاركة بالمنشورات</button>
+                        <button id="download-nxl-love-card-btn" class="py-2.5 bg-gradient-to-r from-[#ff2a85] to-[#ff7300] rounded-xl text-xs font-extrabold text-white interactive-press shadow-lg">📤 مشاركة / حفظ بالصور</button>
+                        <button type="button" onclick="window.shareEpicCardToGlobal()" class="py-2.5 bg-pink-600/30 border border-pink-400/50 rounded-xl text-xs font-extrabold text-pink-100 interactive-press">📣 نشر بالمنشورات</button>
                     </div>
                 </div>
             </div>
@@ -431,7 +522,7 @@
                     <h3 class="text-xs font-bold text-white mb-1" id="c-names"></h3>
                     <div class="text-5xl font-black gradient-text my-2" id="c-percent">98%</div>
                     <p class="text-xs text-pink-200 font-semibold mb-4 px-2" id="c-msg"></p>
-                    <button onclick="downloadCanvaCardImage()" class="w-full py-2.5 bg-gradient-to-r from-purple-600 to-[#ff2a85] rounded-xl text-xs font-bold text-white interactive-press shadow-lg">📥 تحميل الكارت كصورة</button>
+                    <button onclick="downloadCanvaCardImage()" class="w-full py-2.5 bg-gradient-to-r from-purple-600 to-[#ff2a85] rounded-xl text-xs font-bold text-white interactive-press shadow-lg">📤 مشاركة / حفظ بالصور</button>
                     <button onclick="document.getElementById('custom-love-game-box').classList.add('hidden')" class="w-full py-1.5 mt-2 bg-gray-800/80 rounded-xl text-[10px] text-gray-300 interactive-press">إغلاق ❌</button>
                 </div>
             </div>
@@ -471,11 +562,10 @@
             </div>
         </section>
 
-        <!-- 5. تبويب الملف الشخصي ومركز الإعدادات الضخم -->
+        <!-- 5. تبويب الملف الشخصي النظيف (بدون زحمة إعدادات) -->
         <section id="tab-profile" class="tab-content hidden p-3 max-w-md mx-auto space-y-3">
-            <!-- بطاقة البروفايل الرئيسية -->
             <div class="liquid-glass p-5 rounded-3xl border border-gray-800 relative shadow-xl glow-card text-center">
-                <button id="logout-btn" class="absolute top-3 left-3 text-[10px] bg-red-500/15 text-red-400 border border-red-500/30 px-2.5 py-1 rounded-lg font-bold interactive-press">خروج</button>
+                <button type="button" onclick="window.openSettingsDrawer()" class="absolute top-3 left-3 text-[10px] bg-white/10 text-white border border-white/15 px-2.5 py-1 rounded-lg font-bold interactive-press">☰ الإعدادات</button>
                 <span id="profile-status-pill" class="absolute top-3 right-3 text-[10px] bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 px-2.5 py-1 rounded-lg font-bold">🟢 متاح الآن</span>
 
                 <div class="relative w-20 h-20 mx-auto mb-2">
@@ -487,7 +577,6 @@
                 <p id="profile-username-display" class="text-xs text-[#ff7300] font-bold mb-1">@username</p>
                 <p id="profile-bio-display" class="text-[11px] text-gray-300 italic mb-3 px-3"></p>
 
-                <!-- شريط المستوى ونقاط التفاعل -->
                 <div class="bg-[#12121a] border border-gray-800 p-3 rounded-2xl text-right space-y-1.5">
                     <div class="flex justify-between items-center text-xs">
                         <span class="font-bold text-pink-400" id="profile-rank-title">🌱 عضو جديد • Level 1</span>
@@ -499,94 +588,17 @@
                     <p class="text-[9px] text-gray-400" id="profile-next-level-hint">اجمع 50 EXP للوصول للمستوى التالي</p>
                 </div>
 
-                <!-- أزرار سريعة في البروفايل -->
-                <div class="grid grid-cols-2 gap-2 mt-3">
-                    <button type="button" onclick="window.copyMyConfessionLink()" class="py-2 bg-purple-500/15 border border-purple-500/40 rounded-xl text-[11px] font-bold text-purple-200 interactive-press">🎭 نسخ رابط صراحتي</button>
-                    <button type="button" onclick="window.openConfessionsInbox()" class="py-2 bg-pink-500/15 border border-pink-500/40 rounded-xl text-[11px] font-bold text-pink-200 interactive-press">📬 رسائل الصراحة (<span id="confessions-count-btn">0</span>)</button>
-                </div>
-            </div>
-
-            <!-- مركز إعدادات الحساب الشامل -->
-            <div class="liquid-glass p-4 rounded-3xl border border-gray-800 space-y-4">
-                <div class="flex items-center justify-between border-b border-gray-800 pb-2.5">
-                    <h3 class="text-sm font-black text-white flex items-center gap-1.5">⚙️ مركز إعدادات الحساب</h3>
-                    <span class="text-[9px] text-gray-400">حفظ سحابي فوري</span>
-                </div>
-
-                <!-- قسم 1: الهوية والبيانات الشخصية -->
-                <div class="space-y-2.5">
-                    <p class="text-[11px] font-bold text-pink-400">👤 الهوية والملف الشخصي</p>
-                    <div>
-                        <label class="text-[10px] text-gray-400 block mb-1">اللقب الظاهر للجميع</label>
-                        <input type="text" id="settings-nickname" class="w-full bg-[#12121a] text-xs rounded-xl px-3 py-2.5 text-white border border-gray-700 focus:border-[#ff2a85] focus:outline-none">
+                <!-- قسم الصراحة المجهولة السريع -->
+                <div class="mt-3 bg-purple-950/30 border border-purple-500/30 p-3 rounded-2xl space-y-2 text-right">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-black text-purple-200">🎭 صندوق الصراحة المجهولة</span>
+                        <span class="text-[10px] bg-purple-500/20 text-purple-200 px-2 py-0.5 rounded-full font-bold"><span id="confessions-count-btn">0</span> رسالة</span>
                     </div>
-                    <div>
-                        <label class="text-[10px] text-gray-400 block mb-1">النبذة التعريفية (Bio)</label>
-                        <textarea id="settings-bio" rows="2" maxlength="120" class="w-full bg-[#12121a] text-xs rounded-xl px-3 py-2 text-white border border-gray-700 focus:border-[#ff2a85] focus:outline-none resize-none"></textarea>
-                    </div>
+                    <p class="text-[10px] text-gray-300">أي حد يفتح رابطك يبعتلك رسالة مجهولة الهوية بدون ما تعرف مين هو.</p>
                     <div class="grid grid-cols-2 gap-2">
-                        <div>
-                            <label class="text-[10px] text-gray-400 block mb-1">النوع (للأفاتار وثيم القلوب)</label>
-                            <select id="settings-gender" class="w-full bg-[#12121a] text-xs rounded-xl px-3 py-2.5 text-white border border-gray-700">
-                                <option value="male">ذكر</option>
-                                <option value="female">أنثى</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="text-[10px] text-gray-400 block mb-1">الحالة المزاجية</label>
-                            <select id="settings-status-mood" class="w-full bg-[#12121a] text-xs rounded-xl px-3 py-2.5 text-white border border-gray-700">
-                                <option value="🟢 متاح الآن">🟢 متاح الآن</option>
-                                <option value="🔥 في قمة الحماس">🔥 في قمة الحماس</option>
-                                <option value="🎧 أستمع للموسيقى">🎧 أستمع للموسيقى</option>
-                                <option value="🎮 مشغول باللعب">🎮 مشغول باللعب</option>
-                                <option value="🌙 وضع الهدوء">🌙 وضع الهدوء</option>
-                            </select>
-                        </div>
+                        <button type="button" onclick="window.shareMyConfessionLink()" class="py-2 gradient-bg rounded-xl text-[11px] font-black text-white interactive-press">🔗 مشاركة رابط الصراحة</button>
+                        <button type="button" onclick="window.openConfessionsInbox()" class="py-2 bg-purple-600/30 border border-purple-400/40 rounded-xl text-[11px] font-bold text-purple-100 interactive-press">📬 فتح الصندوق</button>
                     </div>
-                </div>
-
-                <!-- قسم 2: تخصيص المظهر والثيم -->
-                <div class="space-y-2 border-t border-gray-800 pt-3">
-                    <p class="text-[11px] font-bold text-orange-400">🎨 تخصيص ألوان المنصة (Theme Accent)</p>
-                    <div class="grid grid-cols-4 gap-2">
-                        <button type="button" onclick="window.applyAccentTheme('#ff2a85', '#ff7300', 'neon')" class="p-2 rounded-xl bg-[#12121a] border border-pink-500/50 text-[10px] font-bold text-center interactive-press">
-                            <span class="block w-5 h-5 rounded-full mx-auto mb-1" style="background:linear-gradient(135deg,#ff2a85,#ff7300)"></span>
-                            نيون NXL
-                        </button>
-                        <button type="button" onclick="window.applyAccentTheme('#06b6d4', '#3b82f6', 'cyber')" class="p-2 rounded-xl bg-[#12121a] border border-cyan-500/50 text-[10px] font-bold text-center interactive-press">
-                            <span class="block w-5 h-5 rounded-full mx-auto mb-1" style="background:linear-gradient(135deg,#06b6d4,#3b82f6)"></span>
-                            سايبر
-                        </button>
-                        <button type="button" onclick="window.applyAccentTheme('#a855f7', '#ec4899', 'royal')" class="p-2 rounded-xl bg-[#12121a] border border-purple-500/50 text-[10px] font-bold text-center interactive-press">
-                            <span class="block w-5 h-5 rounded-full mx-auto mb-1" style="background:linear-gradient(135deg,#a855f7,#ec4899)"></span>
-                            ملكي
-                        </button>
-                        <button type="button" onclick="window.applyAccentTheme('#f59e0b', '#ef4444', 'gold')" class="p-2 rounded-xl bg-[#12121a] border border-amber-500/50 text-[10px] font-bold text-center interactive-press">
-                            <span class="block w-5 h-5 rounded-full mx-auto mb-1" style="background:linear-gradient(135deg,#f59e0b,#ef4444)"></span>
-                            ذهبي
-                        </button>
-                    </div>
-                </div>
-
-                <!-- قسم 3: الخصوصية والتفضيلات -->
-                <div class="space-y-2.5 border-t border-gray-800 pt-3">
-                    <p class="text-[11px] font-bold text-cyan-400">🛡️ الخصوصية والأمان والتفضيلات</p>
-                    <label class="flex items-center justify-between bg-[#12121a] p-2.5 rounded-xl border border-gray-800 cursor-pointer">
-                        <span class="text-xs text-gray-200">إظهار حالة الاتصال (Online) للآخرين</span>
-                        <input type="checkbox" id="settings-show-online" class="accent-pink-500 w-4 h-4" checked>
-                    </label>
-                    <label class="flex items-center justify-between bg-[#12121a] p-2.5 rounded-xl border border-gray-800 cursor-pointer">
-                        <span class="text-xs text-gray-200">تفعيل المؤثرات الصوتية عند الضغط</span>
-                        <input type="checkbox" id="settings-sound-fx" class="accent-pink-500 w-4 h-4" checked>
-                    </label>
-                    <label class="flex items-center justify-between bg-[#12121a] p-2.5 rounded-xl border border-gray-800 cursor-pointer">
-                        <span class="text-xs text-gray-200">استقبال رسائل الصراحة المجهولة</span>
-                        <input type="checkbox" id="settings-allow-confessions" class="accent-pink-500 w-4 h-4" checked>
-                    </label>
-
-                    <button type="button" id="save-all-settings-btn" class="w-full py-3 gradient-bg rounded-xl text-xs font-black text-white interactive-press shadow-lg">💾 حفظ جميع الإعدادات</button>
-
-                    <button type="button" id="settings-reset-pass-btn" class="w-full py-2.5 bg-[#12121a] border border-gray-700 rounded-xl text-[11px] font-bold text-gray-300 interactive-press">🔑 إرسال رابط تغيير كلمة المرور لبريدي</button>
                 </div>
             </div>
 
@@ -610,8 +622,7 @@
                 <div class="min-w-0">
                     <div class="flex items-center gap-1.5">
                         <h3 id="private-target-name" class="text-xs font-bold text-white truncate">المستلم</h3>
-                        <!-- نبض الوفاء (بديل الستريك بالقلب مع إمكانية المشاركة) -->
-                        <button type="button" id="soul-pulse-badge" onclick="window.openSoulPulseModal()" class="bg-gradient-to-r from-pink-600 to-rose-500 text-white text-[9px] font-black px-2 py-0.5 rounded-full hidden cursor-pointer interactive-press pulse-heart shadow-md shadow-pink-500/30 shrink-0" title="اضغط لمشاركة نبض الوفاء">❤️ نبض 1 يوم</button>
+                        <button type="button" id="soul-pulse-badge" onclick="window.openSoulPulseModal()" class="bg-gradient-to-r from-pink-600 to-rose-500 text-white text-[9px] font-black px-2 py-0.5 rounded-full hidden cursor-pointer interactive-press pulse-heart shadow-md shadow-pink-500/30 shrink-0">❤️ نبض 1 يوم</button>
                     </div>
                     <p id="private-target-status" class="text-[9px] text-gray-400 font-bold truncate">محادثة محفوظة</p>
                 </div>
@@ -642,8 +653,8 @@
         </div>
     </div>
 
-    <!-- مودال بطاقة "نبض الوفاء" القابلة للمشاركة والحفظ -->
-    <div id="soul-pulse-modal" class="fixed inset-0 bg-black/85 z-[60] flex items-center justify-center hidden px-4 backdrop-blur-md">
+    <!-- مودال بطاقة "نبض الوفاء" -->
+    <div id="soul-pulse-modal" class="fixed inset-0 bg-black/85 z-[70] flex items-center justify-center hidden px-4 backdrop-blur-md">
         <div class="liquid-glass w-full max-w-xs rounded-3xl border-2 border-pink-500/60 p-5 text-center shadow-2xl relative overflow-hidden">
             <button onclick="document.getElementById('soul-pulse-modal').classList.add('hidden')" class="absolute top-3 left-3 text-gray-400 hover:text-white text-xl">&times;</button>
             <div class="text-[10px] font-black tracking-widest text-pink-400 mb-2">NXL SOULPULSE ❤️</div>
@@ -652,14 +663,14 @@
             <div class="text-3xl font-black gradient-text my-2" id="sp-modal-days">1 يوم نبض متصل</div>
             <p class="text-[11px] text-pink-200 mb-4 leading-relaxed" id="sp-modal-desc">تواصل مستمر ووفاء متبادل على منصة NXL!</p>
             <div class="space-y-2">
-                <button type="button" onclick="window.shareSoulPulseToPosts()" class="w-full py-2.5 gradient-bg rounded-xl text-xs font-black text-white interactive-press shadow-lg">📣 مشاركة النبض في المنشورات</button>
-                <button type="button" onclick="window.downloadSoulPulseImage()" class="w-full py-2.5 bg-pink-500/20 border border-pink-400/50 rounded-xl text-xs font-bold text-pink-100 interactive-press">📥 حفظ بطاقة النبض كصورة</button>
+                <button type="button" onclick="window.downloadSoulPulseImage()" class="w-full py-2.5 gradient-bg rounded-xl text-xs font-black text-white interactive-press shadow-lg">📤 مشاركة / حفظ بالصور (واتساب/إنستا)</button>
+                <button type="button" onclick="window.shareSoulPulseToPosts()" class="w-full py-2.5 bg-pink-500/20 border border-pink-400/50 rounded-xl text-xs font-bold text-pink-100 interactive-press">📣 مشاركة النبض في المنشورات</button>
             </div>
         </div>
     </div>
 
     <!-- مودال عجلة الحظ اليومية -->
-    <div id="daily-wheel-modal" class="fixed inset-0 bg-black/85 z-[60] flex items-center justify-center hidden px-4 backdrop-blur-md">
+    <div id="daily-wheel-modal" class="fixed inset-0 bg-black/85 z-[70] flex items-center justify-center hidden px-4 backdrop-blur-md">
         <div class="liquid-glass w-full max-w-xs rounded-3xl border border-amber-500/50 p-5 text-center shadow-2xl relative">
             <button onclick="document.getElementById('daily-wheel-modal').classList.add('hidden')" class="absolute top-3 left-3 text-gray-400 hover:text-white text-xl">&times;</button>
             <div class="text-4xl mb-2" id="wheel-spinner-icon">🎡</div>
@@ -671,7 +682,7 @@
     </div>
 
     <!-- مودال لعبة تحدي السرعة -->
-    <div id="reflex-game-modal" class="fixed inset-0 bg-black/85 z-[60] flex items-center justify-center hidden px-4 backdrop-blur-md">
+    <div id="reflex-game-modal" class="fixed inset-0 bg-black/85 z-[70] flex items-center justify-center hidden px-4 backdrop-blur-md">
         <div class="liquid-glass w-full max-w-xs rounded-3xl border border-cyan-500/50 p-5 text-center shadow-2xl relative">
             <button onclick="document.getElementById('reflex-game-modal').classList.add('hidden')" class="absolute top-3 left-3 text-gray-400 hover:text-white text-xl">&times;</button>
             <h3 class="text-sm font-black text-cyan-300 mb-1">⚡ تحدي سرعة NXL (10 ثواني)</h3>
@@ -686,14 +697,35 @@
     </div>
 
     <!-- مودال صندوق الصراحة المجهولة -->
-    <div id="confessions-modal" class="fixed inset-0 bg-black/85 z-[60] flex items-center justify-center hidden px-4 backdrop-blur-md">
-        <div class="liquid-glass w-full max-w-sm rounded-3xl border border-purple-500/50 p-5 shadow-2xl relative max-h-[80vh] flex flex-col">
+    <div id="confessions-modal" class="fixed inset-0 bg-black/85 z-[70] flex items-center justify-center hidden px-4 backdrop-blur-md">
+        <div class="liquid-glass w-full max-w-sm rounded-3xl border border-purple-500/50 p-5 shadow-2xl relative max-h-[82vh] flex flex-col">
             <button onclick="document.getElementById('confessions-modal').classList.add('hidden')" class="absolute top-3 left-3 text-gray-400 hover:text-white text-xl">&times;</button>
             <h3 class="text-sm font-black text-purple-300 mb-1 text-center">🎭 صندوق الصراحة المجهولة</h3>
-            <p class="text-[10px] text-gray-400 mb-3 text-center">رسائل سرية وصلتك من أعضاء NXL بدون كشف هويتهم</p>
+            <p class="text-[10px] text-gray-400 mb-2 text-center">رسائل سرية وصلتك بدون كشف الهوية</p>
+            <button type="button" onclick="window.shareMyConfessionLink()" class="mb-3 py-2 gradient-bg rounded-xl text-[11px] font-black text-white interactive-press">🔗 مشاركة رابط صراحتي على واتساب/إنستا</button>
             <div id="confessions-list" class="flex-1 overflow-y-auto space-y-2 custom-scrollbar text-right">
                 <p class="text-center text-xs text-gray-500 py-6">لا توجد رسائل صراحة بعد.</p>
             </div>
+        </div>
+    </div>
+
+    <!-- مودال إرسال صراحة مجهولة لرابط مباشر (?confess=username) -->
+    <div id="direct-confess-modal" class="fixed inset-0 bg-black/90 z-[80] flex items-center justify-center hidden px-4 backdrop-blur-md">
+        <div class="liquid-glass w-full max-w-sm rounded-3xl border-2 border-purple-500/60 p-5 shadow-2xl relative text-center space-y-3">
+            <button onclick="document.getElementById('direct-confess-modal').classList.add('hidden')" class="absolute top-3 left-3 text-gray-400 hover:text-white text-xl">&times;</button>
+            <div class="text-3xl">🎭</div>
+            <h3 class="text-sm font-black text-white">ابعت صراحة مجهولة إلى <span id="direct-confess-target-name" class="text-purple-300">@user</span></h3>
+            <p class="text-[10px] text-gray-400">هويتك مخفية تماماً ولن يظهر اسمك أو حسابك.</p>
+
+            <!-- قوالب صراحة جاهزة -->
+            <div class="flex flex-wrap gap-1.5 justify-center">
+                <button type="button" onclick="window.applyConfessTemplate('أكتر حاجة بحبها فيك إنك...')" class="text-[10px] bg-purple-500/15 text-purple-200 border border-purple-400/30 px-2.5 py-1 rounded-full interactive-press">💜 إعجاب</button>
+                <button type="button" onclick="window.applyConfessTemplate('بصراحة رأيي فيك إنك...')" class="text-[10px] bg-pink-500/15 text-pink-200 border border-pink-400/30 px-2.5 py-1 rounded-full interactive-press">🔥 رأي صريح</button>
+                <button type="button" onclick="window.applyConfessTemplate('نفسي أقولك حاجة من زمان وهي...')" class="text-[10px] bg-orange-500/15 text-orange-200 border border-orange-400/30 px-2.5 py-1 rounded-full interactive-press">💌 اعتراف</button>
+            </div>
+
+            <textarea id="direct-confess-textarea" rows="3" placeholder="اكتب رسالتك المجهولة هنا..." class="w-full bg-[#12121a] text-xs rounded-xl p-3 text-white border border-gray-700 focus:border-purple-500 focus:outline-none resize-none"></textarea>
+            <button type="button" id="send-direct-confess-btn" class="w-full py-3 gradient-bg rounded-xl text-xs font-black text-white interactive-press shadow-lg">🚀 إرسال الصراحة بسرية</button>
         </div>
     </div>
 
@@ -804,7 +836,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, onAuthStateChanged, signOut, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getDatabase, ref, set, update, push, onValue, get, child, query, limitToLast, orderByChild, equalTo, remove, onDisconnect, runTransaction } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        import { getDatabase, ref, set, update, push, onValue, get, child, query, limitToLast, remove, onDisconnect, runTransaction } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
         import { createAvatar } from "https://esm.sh/@dicebear/core@9";
         import * as avataaars from "https://esm.sh/@dicebear/avataaars@9";
 
@@ -818,6 +850,8 @@
             appId: "1:53405639840:web:c8ff7cce9d39ade5d555c5",
             measurementId: "G-Z264D8R3LV"
         };
+
+        const APP_BASE_URL = "https://factshot63-web.github.io/NXL/Nxl";
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
@@ -847,6 +881,7 @@
         const postImageRegistry = {};
         let toastTimer = null;
         let soundEnabled = true;
+        let pendingDirectConfessTargetUid = null;
 
         const DEFAULT_LOVE_QUOTES = [
             "قصة حب تجمع قلبين على صدق المشاعر وتجعل كل يوم جديد أجمل بوجود الطرف الآخر.",
@@ -856,6 +891,53 @@
             "أجمل ما في الحب الحقيقي أنه يمنحك طمأنينة تجعلك أقوى أمام كل ما يمر بك.",
             "بين كل الوجوه تبقى هناك عينان تفهمانك دون شرح وتمنحانك معنى حقيقي للانتماء."
         ];
+
+        // Drawer controls (☰)
+        window.openSettingsDrawer = () => {
+            document.getElementById('settings-drawer-backdrop').classList.remove('hidden');
+        };
+        window.closeSettingsDrawer = () => {
+            document.getElementById('settings-drawer-backdrop').classList.add('hidden');
+        };
+
+        // Mobile-friendly Image Share & Download (WhatsApp / Instagram / Gallery)
+        async function shareOrSaveCanvasImage(canvas, filename, shareTitle = "NXL Card") {
+            try {
+                const blob = await new Promise((resolve) => canvas.toBlob(resolve, 'image/png', 0.95));
+                if (!blob) throw new Error('BLOB_FAILED');
+                const file = new File([blob], filename, { type: 'image/png' });
+
+                if (navigator.canShare && navigator.canShare({ files: [file] }) && navigator.share) {
+                    await navigator.share({
+                        files: [file],
+                        title: shareTitle,
+                        text: `${shareTitle} • عبر منصة NXL`
+                    });
+                    showToast('📤 تم فتح قائمة المشاركة بنجاح');
+                    return;
+                }
+
+                // Fallback for browsers without file-share support: trigger download + open image view
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = filename;
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+
+                postImageRegistry['temp_card'] = canvas.toDataURL('image/png');
+                window.openPostLightbox('temp_card');
+                setTimeout(() => URL.revokeObjectURL(url), 4000);
+                showToast('📥 تم تجهيز الصورة لحفظها أو مشاركتها');
+            } catch (err) {
+                if (err?.name === 'AbortError') return;
+                const dataUrl = canvas.toDataURL('image/png');
+                postImageRegistry['temp_card'] = dataUrl;
+                window.openPostLightbox('temp_card');
+                showToast('🖼️ اضغط مطولاً على الصورة لحفظها أو مشاركتها');
+            }
+        }
 
         function getLevelInfo(points) {
             const exp = Number(points) || 0;
@@ -881,10 +963,50 @@
             el.innerText = msg;
             el.classList.remove('hidden');
             clearTimeout(toastTimer);
-            toastTimer = setTimeout(() => el.classList.add('hidden'), 2400);
+            toastTimer = setTimeout(() => el.classList.add('hidden'), 2500);
         }
 
-        // Auth mode switcher
+        // Check ?confess=username in URL
+        async function checkDirectConfessQuery() {
+            const params = new URLSearchParams(window.location.search);
+            const targetUsername = params.get('confess')?.trim().toLowerCase().replace(/^@/, '');
+            if (!targetUsername) return;
+            try {
+                const uidSnap = await get(child(ref(db), `usernames/${targetUsername}`));
+                if (!uidSnap.exists()) return;
+                const targetUid = uidSnap.val();
+                const uSnap = await get(child(ref(db), `users/${targetUid}`));
+                if (!uSnap.exists()) return;
+                const targetUser = uSnap.val();
+                if (targetUser.allowConfessions === false) return showToast('🔒 هذا المستخدم قفل رسائل الصراحة');
+                pendingDirectConfessTargetUid = targetUid;
+                document.getElementById('direct-confess-target-name').innerText = `${targetUser.nickname || targetUsername} (@${targetUsername})`;
+                document.getElementById('direct-confess-modal').classList.remove('hidden');
+            } catch (_) {}
+        }
+
+        window.applyConfessTemplate = (tpl) => {
+            const ta = document.getElementById('direct-confess-textarea');
+            if (ta) { ta.value = tpl + ' '; ta.focus(); }
+        };
+
+        document.getElementById('send-direct-confess-btn')?.addEventListener('click', async () => {
+            const ta = document.getElementById('direct-confess-textarea');
+            const text = ta?.value.trim();
+            if (!text) return showToast('⚠️ اكتب رسالتك المجهولة أولاً');
+            if (!pendingDirectConfessTargetUid) return;
+            try {
+                await push(ref(db, `confessions/${pendingDirectConfessTargetUid}`), {
+                    text,
+                    timestamp: Date.now()
+                });
+                ta.value = '';
+                document.getElementById('direct-confess-modal').classList.add('hidden');
+                awardExpPoints(3);
+                showToast('🎭 تم إرسال صراحتك المجهولة بنجاح!');
+            } catch (err) { showToast(`⚠️ ${firebaseErrorMessage(err)}`); }
+        });
+
         const modeLoginTab = document.getElementById('mode-login-tab');
         const modeSignupTab = document.getElementById('mode-signup-tab');
         const loginBtn = document.getElementById('login-btn');
@@ -1042,9 +1164,10 @@
                 .catch(err => showToast(`⚠️ ${firebaseErrorMessage(err)}`));
         });
 
-        document.getElementById('logout-btn').addEventListener('click', () => signOut(auth).then(() => location.reload()));
+        document.getElementById('drawer-logout-btn').addEventListener('click', () => signOut(auth).then(() => location.reload()));
 
         onAuthStateChanged(auth, async (user) => {
+            await checkDirectConfessQuery();
             if (user) {
                 currentUser = user;
                 document.getElementById('auth-screen').classList.add('hidden');
@@ -1138,13 +1261,12 @@
             return messages[code] || err?.message || 'حدث خطأ غير متوقع';
         }
 
-        // Theme & Settings Engine
         window.applyAccentTheme = (c1, c2, saveKey = null) => {
             document.documentElement.style.setProperty('--accent-1', c1);
             document.documentElement.style.setProperty('--accent-2', c2);
             if (saveKey && currentUser) {
                 update(ref(db, `users/${currentUser.uid}`), { themeAccent1: c1, themeAccent2: c2 }).catch(() => {});
-                showToast('🎨 تم تطبيق لون الثيم وحفظه');
+                showToast('🎨 تم تطبيق لون الثيم');
             }
         };
 
@@ -1174,6 +1296,7 @@
                     isOnline: showOnline
                 });
                 soundEnabled = soundFx;
+                window.closeSettingsDrawer();
                 showToast('💾 تم حفظ جميع إعداداتك بنجاح');
             } catch (err) {
                 showToast(`⚠️ ${firebaseErrorMessage(err)}`);
@@ -1206,7 +1329,6 @@
             document.getElementById('profile-next-level-hint').innerText = `متبقي ${lvl.remaining} EXP للوصول إلى Level ${lvl.level + 1}`;
             document.getElementById('profile-status-pill').innerText = userData.statusMood || "🟢 متاح الآن";
 
-            // Sync settings form
             document.getElementById('settings-nickname').value = userData.nickname || "";
             document.getElementById('settings-bio').value = userData.bio || "";
             document.getElementById('settings-gender').value = normalizePrivateGender(userData.privateGender);
@@ -1231,7 +1353,7 @@
             }
         }
 
-        // Anonymous Confessions System
+        // Anonymous Confessions System + Link Sharing
         function startConfessionsListener() {
             onValue(ref(db, `confessions/${currentUser.uid}`), (snap) => {
                 const listEl = document.getElementById('confessions-list');
@@ -1244,7 +1366,7 @@
                 document.getElementById('confession-badge').classList.toggle('hidden', items.length === 0);
 
                 if (items.length === 0) {
-                    listEl.innerHTML = '<p class="text-center text-xs text-gray-500 py-6">لا توجد رسائل صراحة بعد. شارك رابط صراحتك مع أصدقائك!</p>';
+                    listEl.innerHTML = '<p class="text-center text-xs text-gray-500 py-6">لا توجد رسائل صراحة بعد. شارك رابط صراحتك على واتساب أو إنستجرام!</p>';
                     return;
                 }
                 listEl.innerHTML = items.map(item => `
@@ -1264,10 +1386,20 @@
             document.getElementById('confessions-modal').classList.remove('hidden');
         };
 
-        window.copyMyConfessionLink = () => {
-            const msg = `🎭 ابعتلي رسالة صراحة مجهولة على منصة NXL! ابحث عن يوزري @${userData?.username || ''} وابعتلي رأيك بسرية تامة ✨`;
-            navigator.clipboard?.writeText(msg).catch(() => {});
-            showToast('📋 تم نسخ دعوة الصراحة المجهولة');
+        window.shareMyConfessionLink = async () => {
+            const uname = userData?.username || '';
+            const linkUrl = `${APP_BASE_URL}?confess=${encodeURIComponent(uname)}`;
+            const shareText = `🎭 ابعتلي رسالة صراحة مجهولة وهويتك سرية تماماً على NXL:\n${linkUrl}`;
+            if (navigator.share) {
+                try {
+                    await navigator.share({ title: 'صراحة مجهولة • NXL', text: shareText, url: linkUrl });
+                    return;
+                } catch (err) {
+                    if (err?.name === 'AbortError') return;
+                }
+            }
+            navigator.clipboard?.writeText(shareText).catch(() => {});
+            showToast('📋 تم نسخ رابط الصراحة المجهولة');
         };
 
         window.replyConfessionAsPost = async (encodedText) => {
@@ -1275,12 +1407,12 @@
             document.getElementById('confessions-modal').classList.add('hidden');
             switchTab('home', document.querySelectorAll('nav button')[0]);
             const postInput = document.getElementById('post-input');
-            postInput.value = `🎭 رسالة صراحة وصلتني:\n«${confessionText}»\n\nردي: `;
+            postInput.value = `🎭 صراحة مجهولة وصلتني:\n«${confessionText}»\n\nردي: `;
             postInput.focus();
             showToast('✍️ اكتب ردك واضغط نشر');
         };
 
-        // Daily Lucky Wheel
+        // Daily Wheel
         window.openDailyWheelModal = () => {
             document.getElementById('daily-wheel-modal').classList.remove('hidden');
         };
@@ -1311,7 +1443,7 @@
             }, 1100);
         };
 
-        // Reflex Speed Mini-Game
+        // Reflex Game
         let reflexScore = 0;
         let reflexTimeLeft = 10;
         let reflexActive = false;
@@ -1350,7 +1482,6 @@
             document.getElementById('reflex-score').innerText = String(reflexScore);
         };
 
-        // Leaderboard & Active Notes (Optimized query)
         function startLeaderboardAndStories() {
             onValue(query(ref(db, 'users'), limitToLast(60)), (snapshot) => {
                 let allUsers = [], activeStories = [];
@@ -1409,7 +1540,6 @@
             showToast("✨ تم تحديث النوت بنجاح");
         };
 
-        // Epic NXL Love Card
         document.getElementById('love-card-boy-photo')?.addEventListener('change', (e) => {
             const f = e.target.files[0]; if (!f) return;
             compressImage(f, (base64) => {
@@ -1515,8 +1645,7 @@
             });
         }
 
-        document.getElementById('download-nxl-love-card-btn')?.addEventListener('click', async () => {
-            if (!latestEpicCardData) return;
+        async function buildEpicCardCanvas() {
             const canvas = document.createElement('canvas');
             canvas.width = 760; canvas.height = 1040;
             const ctx = canvas.getContext('2d');
@@ -1545,12 +1674,13 @@
             nextY = wrapCanvasText(ctx, latestEpicCardData.deepQuote, canvas.width / 2, nextY + 14, canvas.width - 156, 33);
             ctx.fillStyle = '#fde68a'; ctx.font = 'bold 20px Cairo, sans-serif';
             wrapCanvasText(ctx, latestEpicCardData.tags, canvas.width / 2, Math.max(nextY + 18, 895), canvas.width - 156, 32);
+            return canvas;
+        }
 
-            const link = document.createElement('a');
-            link.download = `NXL-Love-Card-${Date.now()}.png`;
-            link.href = canvas.toDataURL('image/png');
-            link.click();
-            showToast('📥 تم حفظ كارت الحب NXL بنجاح');
+        document.getElementById('download-nxl-love-card-btn')?.addEventListener('click', async () => {
+            if (!latestEpicCardData) return;
+            const canvas = await buildEpicCardCanvas();
+            await shareOrSaveCanvasImage(canvas, `NXL-Love-Card-${Date.now()}.png`, `💘 كارت حب NXL: ${latestEpicCardData.boyName} ♥ ${latestEpicCardData.girlName}`);
         });
 
         window.shareEpicCardToGlobal = async () => {
@@ -1613,7 +1743,7 @@
             awardExpPoints(4);
         };
 
-        window.downloadCanvaCardImage = () => {
+        window.downloadCanvaCardImage = async () => {
             const canvas = document.createElement('canvas');
             canvas.width = 600; canvas.height = 700;
             const ctx = canvas.getContext('2d');
@@ -1627,14 +1757,9 @@
             ctx.fillStyle = '#fbcfe8'; ctx.font = '20px Cairo';
             ctx.fillText(document.getElementById('c-msg').innerText, canvas.width / 2, 320);
 
-            const link = document.createElement('a');
-            link.download = 'nxl-love-card.png';
-            link.href = canvas.toDataURL('image/png');
-            link.click();
-            showToast('📥 تم تنزيل الكارت كصورة بنجاح!');
+            await shareOrSaveCanvasImage(canvas, `NXL-Card-${Date.now()}.png`, '💖 كارت NXL');
         };
 
-        // Search users
         const searchInput = document.getElementById('search-username-input');
         const searchDropdown = document.getElementById('search-dropdown');
         let searchTimer = null;
@@ -1674,7 +1799,6 @@
 
         document.addEventListener('click', (e) => { if (!e.target.closest('.relative.z-20')) searchDropdown.classList.add('hidden'); });
 
-        // Private Chats List + SoulPulse display
         function startPrivateChatsList() {
             onValue(ref(db, `user_chats/${currentUser.uid}`), async (snap) => {
                 const listEl = document.getElementById('private-chats-list');
@@ -1719,7 +1843,6 @@
             });
         }
 
-        // SoulPulse (نبض الوفاء) Modal & Sharing
         window.openSoulPulseModal = () => {
             if (!openChatId || !userData) return;
             document.getElementById('sp-modal-names').innerText = `${userData.nickname} ❤️ ${openChatTargetName}`;
@@ -1749,7 +1872,7 @@
             } catch (err) { showToast(`⚠️ ${firebaseErrorMessage(err)}`); }
         };
 
-        window.downloadSoulPulseImage = () => {
+        window.downloadSoulPulseImage = async () => {
             if (!userData) return;
             const canvas = document.createElement('canvas');
             canvas.width = 640; canvas.height = 420;
@@ -1769,14 +1892,9 @@
             ctx.fillStyle = '#fbcfe8'; ctx.font = '20px Cairo, sans-serif';
             ctx.fillText('تواصل مستمر ووفاء لا ينقطع على NXL', canvas.width / 2, 315);
 
-            const link = document.createElement('a');
-            link.download = `NXL-SoulPulse-${Date.now()}.png`;
-            link.href = canvas.toDataURL('image/png');
-            link.click();
-            showToast('📥 تم حفظ بطاقة نبض الوفاء');
+            await shareOrSaveCanvasImage(canvas, `NXL-SoulPulse-${Date.now()}.png`, `❤️ نبض الوفاء (${currentSoulPulseDays} يوم)`);
         };
 
-        // Global Chat
         function startGlobalChat() {
             onValue(query(ref(db, 'global_chat'), limitToLast(100)), (snap) => {
                 const box = document.getElementById('global-messages-box');
@@ -1843,7 +1961,6 @@
         };
         document.getElementById('global-msg-input').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('send-global-btn').click(); });
 
-        // Posts Feed
         document.getElementById('post-file').onchange = e => {
             const f = e.target.files[0]; if (!f) return;
             compressImage(f, (compressedBase64) => {
@@ -2025,7 +2142,6 @@
             });
         };
 
-        // User Modal + Send Anonymous Confession
         window.openUserModal = async (uid) => {
             uid = decodeInlineArg(uid);
             const snap = await get(child(ref(db), `users/${uid}`)); if (!snap.exists()) return;
@@ -2270,7 +2386,6 @@
         };
         document.getElementById('private-msg-input').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('send-private-btn').click(); });
 
-        // NXL AI Assistant
         const aiBtn = document.getElementById('nxl-ai-btn'), aiPanel = document.getElementById('nxl-ai-panel'), aiBox = document.getElementById('ai-messages-box');
         aiBtn.onclick = () => aiPanel.classList.remove('hidden');
         document.getElementById('close-ai-btn').onclick = () => aiPanel.classList.add('hidden');
@@ -2315,10 +2430,16 @@
                 return "تم فتح قسم الألعاب ومنشئ كارت الحب NXL مباشرةً 💘";
             }
 
-            if (lower.includes("الاعدادات") || lower.includes("الإعدادات") || lower.includes("ملفي")) {
+            if (lower.includes("الاعدادات") || lower.includes("الإعدادات")) {
+                aiPanel.classList.add('hidden');
+                window.openSettingsDrawer();
+                return "تم فتح قائمة الإعدادات ⚙️";
+            }
+
+            if (lower.includes("ملفي")) {
                 window.switchTab('profile', document.getElementById('nav-profile-btn'));
                 aiPanel.classList.add('hidden');
-                return "تم نقلك إلى ملفك الشخصي ومركز الإعدادات ⚙️";
+                return "تم نقلك إلى ملفك الشخصي 👤";
             }
 
             if (lower.includes("الشات العام") || lower.includes("افتح العام")) {
@@ -2381,7 +2502,7 @@
             try {
                 const actionResult = await executeAiAppActionIfRequested(text);
                 if (actionResult) answer = actionResult;
-                else if (isNxlQuestion && !foundInDb) answer = `منصة NXL منصة اجتماعية تفاعلية متكاملة للدردشة، نبض الوفاء، والألعاب. ${leadershipNote}`;
+                else if (isNxlQuestion && !foundInDb) answer = `منصة NXL منصة اجتماعية تفاعلية متكاملة للدردشة، نبض الوفاء، الصراحة المجهولة، والألعاب. ${leadershipNote}`;
                 else if (!foundInDb) answer = await fetchRealWebSearch(text) || 'لم أجد إجابة دقيقة حالياً، جرّب صياغة السؤال بشكل آخر.';
                 if (isNxlQuestion && !answer.includes("رئيس المطورين هو حمص")) answer = `${answer} ${leadershipNote}`;
             } finally {
