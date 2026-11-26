@@ -1,4 +1,4 @@
-const CACHE_NAME = 'nxl-ultimate-cache-v2';
+const CACHE_NAME = 'nxl-ultimate-cache-v3';
 const CORE_ASSETS = [
   './',
   './Nxl',
