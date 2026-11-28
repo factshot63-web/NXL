@@ -34,7 +34,39 @@
 <body class="p-3 sm:p-5">
 
     <!-- تنبيه عائم -->
-    <div id="admin-toast" class="fixed top-5 left-1/2 -translate-x-1/2 z-50 bg-[#141420] border border-pink-500/70 text-white text-xs font-extrabold px-5 py-2.5 rounded-full shadow-2xl hidden transition-all"></div>
+    <div id="admin-toast" class="fixed top-5 left-1/2 -translate-x-1/2 z-[70] bg-[#141420] border border-pink-500/70 text-white text-xs font-extrabold px-5 py-2.5 rounded-full shadow-2xl hidden transition-all"></div>
+
+    <!-- مودال المسح الشامل لكل بيانات التطبيق -->
+    <div id="wipe-all-modal" class="fixed inset-0 z-[60] bg-black/85 backdrop-blur-md hidden items-center justify-center p-4">
+        <div class="glass-card w-full max-w-md rounded-3xl p-5 sm:p-6 border-2 border-red-500/60 space-y-4 shadow-2xl">
+            <div class="flex items-center justify-between border-b border-gray-800 pb-2.5">
+                <h3 class="text-sm sm:text-base font-black text-red-400">☢️ مسح وتصفير كل بيانات التطبيق</h3>
+                <button id="close-wipe-modal" class="text-gray-400 hover:text-white text-sm font-bold">✕</button>
+            </div>
+
+            <div class="bg-red-950/30 border border-red-500/35 rounded-2xl p-3 text-xs text-red-200 space-y-1.5 leading-relaxed">
+                <p class="font-black">⚠️ تحذير نهائي لا يمكن التراجع عنه:</p>
+                <p>• سيتم مسح كل الحسابات المسجلة واليوزرات (`users`, `usernames`, `user_auth_lookup`) بحيث لا يجد أي مستخدم حسابه ويحتاج يسجل من جديد.</p>
+                <p>• سيتم مسح كل المنشورات، التعليقات، الاستفتاءات، رسائل الشات العام، كل الشاتات الخاصة، ونبض الوفاء.</p>
+                <p>• سيتم مسح كل العملات، النقاط، سجل المحفظة، طلبات السحب، عقود الجواز، كروت الحب، والصراحة السرية.</p>
+            </div>
+
+            <label class="flex items-center gap-2 bg-[#0b0b12] border border-gray-800 rounded-xl p-3 text-xs text-gray-200 cursor-pointer">
+                <input type="checkbox" id="wipe-include-static-config" class="w-4 h-4 accent-red-500">
+                <span>مسح جمل كارت الحب، ردود AI، والإعدادات العامة أيضاً</span>
+            </label>
+
+            <div>
+                <label class="block text-[11px] text-gray-300 font-bold mb-1">اكتب كلمة <span class="text-red-400 font-black">WIPE ALL</span> للتأكيد:</label>
+                <input type="text" id="wipe-confirm-input" placeholder="WIPE ALL" class="w-full bg-[#0b0b12] border border-red-500/50 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none text-left font-black tracking-wider" dir="ltr">
+            </div>
+
+            <div class="flex gap-2 pt-1">
+                <button id="execute-wipe-all-btn" class="flex-1 bg-gradient-to-r from-red-600 to-rose-700 hover:opacity-95 text-white text-xs font-black py-3 rounded-xl shadow-lg">🔥 تنفيذ المسح الشامل الآن</button>
+                <button id="cancel-wipe-all-btn" class="bg-gray-800 hover:bg-gray-700 text-gray-200 text-xs font-bold px-4 py-3 rounded-xl">إلغاء</button>
+            </div>
+        </div>
+    </div>
 
     <!-- مودال تعديل مستخدم -->
     <div id="user-modal" class="fixed inset-0 z-40 bg-black/75 backdrop-blur-sm hidden items-center justify-center p-4">
@@ -46,7 +78,7 @@
             <p id="modal-user-sub" class="text-xs text-pink-300 font-bold"></p>
             <div class="space-y-3">
                 <div>
-                    <label class="block text-[11px] text-gray-400 mb-1">نقاط EXP</label>
+                    <label class="block text-[11px] text-gray-400 mb-1">العملات / النقاط</label>
                     <input type="number" id="modal-user-points" class="w-full bg-[#0b0b12] border border-gray-800 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-pink-500">
                 </div>
                 <div>
@@ -104,47 +136,121 @@
                 </div>
             </div>
             <div class="flex flex-wrap items-center gap-2">
+                <button id="open-wipe-all-btn" class="bg-red-600/25 hover:bg-red-600/40 text-red-300 border border-red-500/60 text-xs font-black px-3.5 py-2 rounded-xl transition">☢️ مسح كل بيانات التطبيق</button>
                 <button id="reset-used-quotes-btn" class="bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/40 text-xs font-bold px-3 py-2 rounded-xl transition">🔄 تصفير سحب الجمل</button>
-                <button id="admin-logout-btn" class="bg-red-500/15 hover:bg-red-500/25 text-red-400 border border-red-500/40 text-xs font-bold px-3 py-2 rounded-xl transition">خروج</button>
+                <button id="admin-logout-btn" class="bg-gray-800 hover:bg-gray-700 text-gray-200 border border-gray-700 text-xs font-bold px-3 py-2 rounded-xl transition">خروج</button>
             </div>
         </header>
 
         <!-- بطاقات الإحصائيات -->
-        <section class="grid grid-cols-2 lg:grid-cols-4 gap-3">
-            <div class="glass-card rounded-2xl p-4 border border-gray-800">
-                <p class="text-[11px] text-gray-400">المستخدمون</p>
-                <p id="stat-users" class="text-2xl font-black text-white mt-1">0</p>
+        <section class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+            <div class="glass-card rounded-2xl p-3.5 border border-gray-800">
+                <p class="text-[10px] text-gray-400">المستخدمون</p>
+                <p id="stat-users" class="text-xl font-black text-white mt-1">0</p>
                 <p id="stat-banned" class="text-[10px] text-red-400 mt-0.5">محظور: 0</p>
             </div>
-            <div class="glass-card rounded-2xl p-4 border border-gray-800">
-                <p class="text-[11px] text-gray-400">المنشورات النشطة</p>
-                <p id="stat-posts" class="text-2xl font-black text-pink-400 mt-1">0</p>
-                <p id="stat-likes" class="text-[10px] text-gray-400 mt-0.5">إجمالي التفاعل: 0</p>
+            <div class="glass-card rounded-2xl p-3.5 border border-gray-800">
+                <p class="text-[10px] text-gray-400">المنشورات</p>
+                <p id="stat-posts" class="text-xl font-black text-pink-400 mt-1">0</p>
+                <p id="stat-likes" class="text-[10px] text-gray-400 mt-0.5">إعجابات: 0</p>
             </div>
-            <div class="glass-card rounded-2xl p-4 border border-gray-800">
-                <p class="text-[11px] text-gray-400">جمل كارت الحب</p>
-                <p id="stat-quotes" class="text-2xl font-black text-amber-300 mt-1">0</p>
-                <p id="stat-used-quotes" class="text-[10px] text-gray-400 mt-0.5">تم سحبها: 0</p>
+            <div class="glass-card rounded-2xl p-3.5 border border-gray-800">
+                <p class="text-[10px] text-gray-400">عقود الجواز</p>
+                <p id="stat-contracts" class="text-xl font-black text-amber-300 mt-1">0</p>
+                <p id="stat-love-reqs" class="text-[10px] text-pink-300 mt-0.5">كروت حب: 0</p>
             </div>
-            <div class="glass-card rounded-2xl p-4 border border-gray-800">
-                <p class="text-[11px] text-gray-400">رسائل الشات العام</p>
-                <p id="stat-global" class="text-2xl font-black text-orange-400 mt-1">0</p>
-                <p id="stat-ai-keys" class="text-[10px] text-gray-400 mt-0.5">ردود AI: 0</p>
+            <div class="glass-card rounded-2xl p-3.5 border border-gray-800">
+                <p class="text-[10px] text-gray-400">طلبات السحب</p>
+                <p id="stat-withdraws" class="text-xl font-black text-emerald-300 mt-1">0</p>
+                <p id="stat-confessions" class="text-[10px] text-purple-300 mt-0.5">صراحة: 0</p>
+            </div>
+            <div class="glass-card rounded-2xl p-3.5 border border-gray-800">
+                <p class="text-[10px] text-gray-400">الشات العام</p>
+                <p id="stat-global" class="text-xl font-black text-orange-400 mt-1">0</p>
+                <p id="stat-quotes" class="text-[10px] text-gray-400 mt-0.5">جمل الحب: 0</p>
+            </div>
+            <div class="glass-card rounded-2xl p-3.5 border border-gray-800">
+                <p class="text-[10px] text-gray-400">معرفة AI</p>
+                <p id="stat-ai-keys" class="text-xl font-black text-cyan-300 mt-1">0</p>
+                <p id="stat-used-quotes" class="text-[10px] text-gray-400 mt-0.5">سحب الجمل: 0</p>
             </div>
         </section>
 
         <!-- أزرار التنقل بين أقسام الإدارة -->
         <div class="flex gap-2 overflow-x-auto pb-1 custom-scroll">
-            <button data-admin-tab="quotes" class="admin-tab-btn gradient-bg text-white text-xs font-extrabold px-4 py-2.5 rounded-xl whitespace-nowrap">💘 جمل كارت الحب</button>
+            <button data-admin-tab="contracts" class="admin-tab-btn gradient-bg text-white text-xs font-extrabold px-4 py-2.5 rounded-xl whitespace-nowrap">💍 العقود والكروت</button>
+            <button data-admin-tab="wallet" class="admin-tab-btn glass-card text-gray-300 text-xs font-extrabold px-4 py-2.5 rounded-xl whitespace-nowrap">🪙 المحفظة والسحب</button>
+            <button data-admin-tab="users" class="admin-tab-btn glass-card text-gray-300 text-xs font-extrabold px-4 py-2.5 rounded-xl whitespace-nowrap">👥 المستخدمون والعملات</button>
             <button data-admin-tab="posts" class="admin-tab-btn glass-card text-gray-300 text-xs font-extrabold px-4 py-2.5 rounded-xl whitespace-nowrap">📰 المنشورات</button>
-            <button data-admin-tab="users" class="admin-tab-btn glass-card text-gray-300 text-xs font-extrabold px-4 py-2.5 rounded-xl whitespace-nowrap">👥 المستخدمون والنقاط</button>
+            <button data-admin-tab="confessions" class="admin-tab-btn glass-card text-gray-300 text-xs font-extrabold px-4 py-2.5 rounded-xl whitespace-nowrap">🎭 الصراحة السرية</button>
             <button data-admin-tab="global" class="admin-tab-btn glass-card text-gray-300 text-xs font-extrabold px-4 py-2.5 rounded-xl whitespace-nowrap">💬 الشات العام</button>
+            <button data-admin-tab="quotes" class="admin-tab-btn glass-card text-gray-300 text-xs font-extrabold px-4 py-2.5 rounded-xl whitespace-nowrap">💘 جمل كارت الحب</button>
             <button data-admin-tab="ai" class="admin-tab-btn glass-card text-gray-300 text-xs font-extrabold px-4 py-2.5 rounded-xl whitespace-nowrap">🤖 معرفة الذكاء الاصطناعي</button>
-            <button data-admin-tab="settings" class="admin-tab-btn glass-card text-gray-300 text-xs font-extrabold px-4 py-2.5 rounded-xl whitespace-nowrap">⚙️ إعدادات وإعلانات</button>
+            <button data-admin-tab="settings" class="admin-tab-btn glass-card text-gray-300 text-xs font-extrabold px-4 py-2.5 rounded-xl whitespace-nowrap">⚙️ إعدادات وسؤال اليوم</button>
         </div>
 
-        <!-- 1) قسم جمل كارت الحب -->
-        <section id="admin-section-quotes" class="admin-section glass-card rounded-3xl p-4 sm:p-5 space-y-4">
+        <!-- 1) قسم عقود الجواز وكروت الحب -->
+        <section id="admin-section-contracts" class="admin-section glass-card rounded-3xl p-4 sm:p-5 space-y-5">
+            <div class="space-y-3">
+                <h2 class="text-sm sm:text-base font-black text-amber-300">💍 إدارة عقود الجواز الإلكترونية (`wedding_contracts`)</h2>
+                <div id="admin-contracts-list" class="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-[380px] overflow-y-auto custom-scroll"></div>
+            </div>
+
+            <div class="space-y-3 pt-3 border-t border-gray-800">
+                <h2 class="text-sm sm:text-base font-black text-pink-300">💘 طلبات كروت الحب المشتركة (`love_card_requests`)</h2>
+                <div id="admin-love-requests-list" class="grid grid-cols-1 md:grid-cols-2 gap-2.5 max-h-[300px] overflow-y-auto custom-scroll"></div>
+            </div>
+        </section>
+
+        <!-- 2) قسم المحفظة وطلبات السحب -->
+        <section id="admin-section-wallet" class="admin-section glass-card rounded-3xl p-4 sm:p-5 space-y-4 hidden">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+                <div>
+                    <h2 class="text-sm sm:text-base font-black text-emerald-300">🪙 طلبات سحب العملات عبر إنستجرام (`coin_withdraw_requests`)</h2>
+                    <p class="text-xs text-gray-400">عند رفض أي طلب يتم إرجاع العملات لرصيد المستخدم تلقائياً</p>
+                </div>
+            </div>
+            <div id="admin-withdraws-list" class="space-y-2.5 max-h-[520px] overflow-y-auto custom-scroll"></div>
+        </section>
+
+        <!-- 3) قسم المستخدمين والعملات -->
+        <section id="admin-section-users" class="admin-section glass-card rounded-3xl p-4 sm:p-5 space-y-4 hidden">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+                <h2 class="text-sm sm:text-base font-black">👥 إدارة المستخدمين والحظر والعملات</h2>
+                <input type="text" id="search-users-input" placeholder="ابحث باللقب أو @username..." class="bg-[#0b0b12] border border-gray-800 rounded-xl px-3.5 py-2 text-xs text-white w-full sm:w-72 focus:outline-none focus:border-pink-500">
+            </div>
+            <div id="admin-users-list" class="space-y-2 max-h-[540px] overflow-y-auto custom-scroll"></div>
+        </section>
+
+        <!-- 4) قسم المنشورات -->
+        <section id="admin-section-posts" class="admin-section glass-card rounded-3xl p-4 sm:p-5 space-y-4 hidden">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+                <h2 class="text-sm sm:text-base font-black">📰 إدارة وحذف المنشورات</h2>
+                <input type="text" id="search-posts-input" placeholder="ابحث بالنص أو اسم الناشر أو @username..." class="bg-[#0b0b12] border border-gray-800 rounded-xl px-3.5 py-2 text-xs text-white w-full sm:w-72 focus:outline-none focus:border-pink-500">
+            </div>
+            <div id="admin-posts-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 max-h-[540px] overflow-y-auto custom-scroll"></div>
+        </section>
+
+        <!-- 5) قسم الصراحة السرية -->
+        <section id="admin-section-confessions" class="admin-section glass-card rounded-3xl p-4 sm:p-5 space-y-4 hidden">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+                <h2 class="text-sm sm:text-base font-black text-purple-300">🎭 رسائل الصراحة السرية (`confessions`)</h2>
+                <button id="clear-confessions-btn" class="bg-red-500/15 hover:bg-red-500/25 text-red-400 border border-red-500/40 text-xs font-bold px-3.5 py-2 rounded-xl transition">🧹 مسح كل رسائل الصراحة</button>
+            </div>
+            <div id="admin-confessions-list" class="space-y-2 max-h-[520px] overflow-y-auto custom-scroll"></div>
+        </section>
+
+        <!-- 6) قسم الشات العام -->
+        <section id="admin-section-global" class="admin-section glass-card rounded-3xl p-4 sm:p-5 space-y-4 hidden">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+                <h2 class="text-sm sm:text-base font-black">💬 مراقبة وإدارة الشات العام</h2>
+                <button id="clear-global-chat-btn" class="bg-red-500/15 hover:bg-red-500/25 text-red-400 border border-red-500/40 text-xs font-bold px-3.5 py-2 rounded-xl transition">🧹 تفريغ الشات العام</button>
+            </div>
+            <div id="admin-global-list" class="space-y-2 max-h-[540px] overflow-y-auto custom-scroll"></div>
+        </section>
+
+        <!-- 7) قسم جمل كارت الحب -->
+        <section id="admin-section-quotes" class="admin-section glass-card rounded-3xl p-4 sm:p-5 space-y-4 hidden">
             <div class="flex flex-wrap items-center justify-between gap-2">
                 <div>
                     <h2 class="text-sm sm:text-base font-black">💘 إدارة جمل كارت الحب</h2>
@@ -169,34 +275,7 @@
             <div id="quotes-list" class="grid grid-cols-1 md:grid-cols-2 gap-2.5 max-h-[420px] overflow-y-auto custom-scroll"></div>
         </section>
 
-        <!-- 2) قسم المنشورات -->
-        <section id="admin-section-posts" class="admin-section glass-card rounded-3xl p-4 sm:p-5 space-y-4 hidden">
-            <div class="flex flex-wrap items-center justify-between gap-2">
-                <h2 class="text-sm sm:text-base font-black">📰 إدارة وحذف المنشورات</h2>
-                <input type="text" id="search-posts-input" placeholder="ابحث بالنص أو اسم الناشر أو @username..." class="bg-[#0b0b12] border border-gray-800 rounded-xl px-3.5 py-2 text-xs text-white w-full sm:w-72 focus:outline-none focus:border-pink-500">
-            </div>
-            <div id="admin-posts-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 max-h-[540px] overflow-y-auto custom-scroll"></div>
-        </section>
-
-        <!-- 3) قسم المستخدمين والنقاط -->
-        <section id="admin-section-users" class="admin-section glass-card rounded-3xl p-4 sm:p-5 space-y-4 hidden">
-            <div class="flex flex-wrap items-center justify-between gap-2">
-                <h2 class="text-sm sm:text-base font-black">👥 إدارة المستخدمين والحظر والنقاط EXP</h2>
-                <input type="text" id="search-users-input" placeholder="ابحث باللقب أو @username..." class="bg-[#0b0b12] border border-gray-800 rounded-xl px-3.5 py-2 text-xs text-white w-full sm:w-72 focus:outline-none focus:border-pink-500">
-            </div>
-            <div id="admin-users-list" class="space-y-2 max-h-[540px] overflow-y-auto custom-scroll"></div>
-        </section>
-
-        <!-- 4) قسم الشات العام -->
-        <section id="admin-section-global" class="admin-section glass-card rounded-3xl p-4 sm:p-5 space-y-4 hidden">
-            <div class="flex flex-wrap items-center justify-between gap-2">
-                <h2 class="text-sm sm:text-base font-black">💬 مراقبة وإدارة الشات العام</h2>
-                <button id="clear-global-chat-btn" class="bg-red-500/15 hover:bg-red-500/25 text-red-400 border border-red-500/40 text-xs font-bold px-3.5 py-2 rounded-xl transition">🧹 تفريغ الشات العام</button>
-            </div>
-            <div id="admin-global-list" class="space-y-2 max-h-[540px] overflow-y-auto custom-scroll"></div>
-        </section>
-
-        <!-- 5) قسم معرفة الذكاء الاصطناعي -->
+        <!-- 8) قسم معرفة الذكاء الاصطناعي -->
         <section id="admin-section-ai" class="admin-section glass-card rounded-3xl p-4 sm:p-5 space-y-4 hidden">
             <h2 class="text-sm sm:text-base font-black">🤖 إضافة وتعديل ردود الذكاء الاصطناعي (ai_knowledge_base)</h2>
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
@@ -207,11 +286,19 @@
             <div id="admin-ai-list" class="space-y-2 max-h-[380px] overflow-y-auto custom-scroll"></div>
         </section>
 
-        <!-- 6) قسم إعدادات التطبيق والإعلانات -->
+        <!-- 9) قسم إعدادات التطبيق وسؤال اليوم -->
         <section id="admin-section-settings" class="admin-section glass-card rounded-3xl p-4 sm:p-5 space-y-4 hidden">
             <div>
-                <h2 class="text-sm sm:text-base font-black">⚙️ إعدادات التطبيق والرسائل التنبيهية (app_settings)</h2>
-                <p class="text-xs text-gray-400">تحكم في رسالة التنبيه العامة أو تفعيل وضع الصيانة في التطبيق</p>
+                <h2 class="text-sm sm:text-base font-black">⚙️ إعدادات التطبيق وسؤال اليوم</h2>
+                <p class="text-xs text-gray-400">تحكم في سؤال اليوم المباشر ورسائل التنبيه العامة</p>
+            </div>
+
+            <div class="bg-[#0b0b12] border border-pink-500/30 rounded-2xl p-3.5 space-y-2">
+                <label class="block text-xs font-black text-pink-300">💬 سؤال اليوم على الرئيسية (`daily_question`)</label>
+                <div class="flex flex-col sm:flex-row gap-2">
+                    <input type="text" id="setting-daily-question" placeholder="اكتب سؤال اليوم ليظهر لكل المستخدمين..." class="flex-1 bg-[#12121d] border border-gray-800 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-pink-500">
+                    <button id="save-daily-question-btn" class="bg-pink-600/30 hover:bg-pink-600/45 text-pink-100 border border-pink-400/40 text-xs font-black px-4 py-2.5 rounded-xl">تحديث السؤال</button>
+                </div>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -234,7 +321,7 @@
 
             <div class="space-y-2">
                 <label class="block text-xs font-bold text-gray-300">نص التنبيه أو الإعلان العام</label>
-                <input type="text" id="setting-banner-text" placeholder="مثال: 🔥 تحديث جديد في NXL — جرب كروت الحب والشات دلوقتي!" class="w-full bg-[#0b0b12] border border-gray-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-pink-500">
+                <input type="text" id="setting-banner-text" placeholder="مثال: 🔥 تحديث جديد في NXL — جرب عقود الجواز وكروت الحب دلوقتي!" class="w-full bg-[#0b0b12] border border-gray-800 rounded-xl px-4 py-3 text-xs text-white focus:outline-none focus:border-pink-500">
             </div>
 
             <button id="save-app-settings-btn" class="gradient-bg text-white text-xs font-black px-5 py-2.5 rounded-xl hover:opacity-95 transition">💾 حفظ الإعدادات</button>
@@ -244,7 +331,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getDatabase, ref, set, update, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        import { getDatabase, ref, set, update, push, onValue, remove, runTransaction } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDQ8pJMhye-kp5-FjXzVPPw2MDFm9_0A8c",
@@ -257,7 +344,6 @@
             measurementId: "G-Z264D8R3LV"
         };
 
-        // ضع إيميلات الأدمن هنا بحروف صغيرة إذا أردت قصر الدخول على حسابات محددة
         const ADMIN_EMAILS = [];
 
         const app = initializeApp(firebaseConfig);
@@ -269,6 +355,10 @@
         let postsData = [];
         let usersData = [];
         let globalData = [];
+        let contractsData = [];
+        let loveRequestsData = [];
+        let withdrawsData = [];
+        let confessionsFlatData = [];
         let aiData = {};
         let editingUserUid = null;
         let listenersStarted = false;
@@ -281,17 +371,13 @@
             }[ch]));
         }
 
-        // ترميز آمن لمفاتيح Firebase التي قد تحتوي على رموز ممنوعة مثل . # $ [ ] /
         function encodeFirebaseKey(key) {
             return encodeURIComponent(String(key || '').trim()).replace(/\./g, '%2E');
         }
 
         function decodeFirebaseKey(encodedKey) {
-            try {
-                return decodeURIComponent(String(encodedKey || ''));
-            } catch {
-                return String(encodedKey || '');
-            }
+            try { return decodeURIComponent(String(encodedKey || '')); }
+            catch { return String(encodedKey || ''); }
         }
 
         function showToast(msg) {
@@ -300,7 +386,7 @@
             el.textContent = msg;
             el.classList.remove('hidden');
             clearTimeout(toastTimer);
-            toastTimer = setTimeout(() => el.classList.add('hidden'), 2200);
+            toastTimer = setTimeout(() => el.classList.add('hidden'), 2600);
         }
 
         // تسجيل الدخول
@@ -366,8 +452,73 @@
             });
         });
 
+        // ================= زر المسح الشامل لكل بيانات التطبيق =================
+        const wipeModal = document.getElementById('wipe-all-modal');
+        document.getElementById('open-wipe-all-btn').addEventListener('click', () => {
+            document.getElementById('wipe-confirm-input').value = '';
+            wipeModal.classList.remove('hidden');
+            wipeModal.classList.add('flex');
+        });
+        function closeWipeModal() {
+            wipeModal.classList.add('hidden');
+            wipeModal.classList.remove('flex');
+        }
+        document.getElementById('close-wipe-modal').addEventListener('click', closeWipeModal);
+        document.getElementById('cancel-wipe-all-btn').addEventListener('click', closeWipeModal);
+
+        document.getElementById('execute-wipe-all-btn').addEventListener('click', async () => {
+            const phrase = (document.getElementById('wipe-confirm-input').value || '').trim();
+            if (phrase !== 'WIPE ALL') {
+                return showToast('⚠️ اكتب WIPE ALL بالضبط لتأكيد المسح الشامل');
+            }
+
+            const btn = document.getElementById('execute-wipe-all-btn');
+            btn.disabled = true;
+            btn.textContent = 'جاري مسح كل البيانات...';
+
+            try {
+                const wipeTargets = [
+                    'users',
+                    'usernames',
+                    'user_auth_lookup',
+                    'posts',
+                    'global_chat',
+                    'chats',
+                    'user_chats',
+                    'confessions',
+                    'confession_outbox',
+                    'activities',
+                    'love_card_requests',
+                    'wedding_contracts',
+                    'coin_ledger',
+                    'coin_withdraw_requests',
+                    'used_love_quotes'
+                ];
+
+                if (document.getElementById('wipe-include-static-config')?.checked) {
+                    wipeTargets.push('love_card_quotes', 'ai_knowledge_base', 'app_settings', 'daily_question');
+                }
+
+                await Promise.all(wipeTargets.map(path => remove(ref(db, path)).catch(() => {})));
+
+                try {
+                    Object.keys(localStorage).forEach(k => {
+                        if (k.startsWith('nxl_')) localStorage.removeItem(k);
+                    });
+                } catch (_) {}
+
+                closeWipeModal();
+                showToast('☢️ تم مسح كل بيانات التطبيق بالكامل');
+            } catch (err) {
+                showToast(`⚠️ حدث خطأ أثناء المسح: ${err.message || err}`);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '🔥 تنفيذ المسح الشامل الآن';
+            }
+        });
+
         function startAdminListeners() {
-            // 1. Love Card Quotes
+            // 1. Quotes & Used Quotes
             onValue(ref(db, 'love_card_quotes'), (snap) => {
                 quotesData = [];
                 if (snap.exists()) {
@@ -377,14 +528,14 @@
                         if (text.trim()) quotesData.push({ id: c.key, text: text.trim() });
                     });
                 }
-                document.getElementById('stat-quotes').textContent = quotesData.length;
+                document.getElementById('stat-quotes').textContent = `جمل الحب: ${quotesData.length}`;
                 renderQuotesList();
             });
 
             onValue(ref(db, 'used_love_quotes'), (snap) => {
                 const usedCount = snap.exists() ? Object.keys(snap.val() || {}).length : 0;
                 document.getElementById('used-quotes-badge').textContent = `تم سحب: ${usedCount}`;
-                document.getElementById('stat-used-quotes').textContent = `تم سحبها: ${usedCount}`;
+                document.getElementById('stat-used-quotes').textContent = `سحب الجمل: ${usedCount}`;
             });
 
             // 2. Posts
@@ -394,13 +545,14 @@
                 if (snap.exists()) {
                     snap.forEach(c => {
                         const val = c.val() || {};
-                        totalLikes += Number(val.likeCount) || 0;
+                        const likesObjCount = val.likes && typeof val.likes === 'object' ? Object.keys(val.likes).length : 0;
+                        totalLikes += Number(val.likeCount) || likesObjCount;
                         postsData.push({ id: c.key, ...val });
                     });
                 }
                 postsData.sort((a, b) => (Number(b.timestamp) || 0) - (Number(a.timestamp) || 0));
                 document.getElementById('stat-posts').textContent = postsData.length;
-                document.getElementById('stat-likes').textContent = `إجمالي اللايكات: ${totalLikes}`;
+                document.getElementById('stat-likes').textContent = `إعجابات: ${totalLikes}`;
                 renderPostsAdmin();
             });
 
@@ -432,91 +584,281 @@
                 renderGlobalAdmin();
             });
 
-            // 5. AI Knowledge Base
+            // 5. Wedding Contracts & Love Requests
+            onValue(ref(db, 'wedding_contracts'), (snap) => {
+                contractsData = [];
+                if (snap.exists()) snap.forEach(c => contractsData.push({ id: c.key, ...(c.val() || {}) }));
+                contractsData.sort((a, b) => (Number(b.timestamp) || 0) - (Number(a.timestamp) || 0));
+                document.getElementById('stat-contracts').textContent = contractsData.length;
+                renderContractsAdmin();
+            });
+
+            onValue(ref(db, 'love_card_requests'), (snap) => {
+                loveRequestsData = [];
+                if (snap.exists()) snap.forEach(c => loveRequestsData.push({ id: c.key, ...(c.val() || {}) }));
+                loveRequestsData.sort((a, b) => (Number(b.timestamp) || 0) - (Number(a.timestamp) || 0));
+                document.getElementById('stat-love-reqs').textContent = `كروت حب: ${loveRequestsData.length}`;
+                renderLoveRequestsAdmin();
+            });
+
+            // 6. Withdraw Requests
+            onValue(ref(db, 'coin_withdraw_requests'), (snap) => {
+                withdrawsData = [];
+                if (snap.exists()) snap.forEach(c => withdrawsData.push({ id: c.key, ...(c.val() || {}) }));
+                withdrawsData.sort((a, b) => (Number(b.timestamp) || 0) - (Number(a.timestamp) || 0));
+                document.getElementById('stat-withdraws').textContent = withdrawsData.length;
+                renderWithdrawsAdmin();
+            });
+
+            // 7. Confessions
+            onValue(ref(db, 'confessions'), (snap) => {
+                confessionsFlatData = [];
+                if (snap.exists()) {
+                    snap.forEach(ownerSnap => {
+                        const ownerUid = ownerSnap.key;
+                        ownerSnap.forEach(itemSnap => {
+                            confessionsFlatData.push({
+                                id: itemSnap.key,
+                                ownerUid,
+                                ...(itemSnap.val() || {})
+                            });
+                        });
+                    });
+                }
+                confessionsFlatData.sort((a, b) => (Number(b.timestamp) || 0) - (Number(a.timestamp) || 0));
+                document.getElementById('stat-confessions').textContent = `صراحة: ${confessionsFlatData.length}`;
+                renderConfessionsAdmin();
+            });
+
+            // 8. AI Knowledge Base
             onValue(ref(db, 'ai_knowledge_base'), (snap) => {
                 aiData = snap.exists() ? (snap.val() || {}) : {};
-                document.getElementById('stat-ai-keys').textContent = `ردود AI: ${Object.keys(aiData).length}`;
+                document.getElementById('stat-ai-keys').textContent = Object.keys(aiData).length;
                 renderAiAdmin();
             });
 
-            // 6. App Settings
+            // 9. App Settings & Daily Question
             onValue(ref(db, 'app_settings'), (snap) => {
                 const s = snap.exists() ? (snap.val() || {}) : {};
                 document.getElementById('setting-banner-enabled').checked = Boolean(s.bannerEnabled);
                 document.getElementById('setting-maintenance').checked = Boolean(s.maintenanceMode);
                 document.getElementById('setting-banner-text').value = s.bannerText || '';
             });
-        }
 
-        // ================= 1) QUOTES =================
-        async function addSingleQuote() {
-            const inp = document.getElementById('new-quote-input');
-            const text = inp.value.trim();
-            if (!text) return showToast('⚠️ اكتب الجملة أولاً');
-            await push(ref(db, 'love_card_quotes'), {
-                text,
-                addedBy: adminUser?.email || adminUser?.uid || 'admin',
-                timestamp: Date.now()
+            onValue(ref(db, 'daily_question'), (snap) => {
+                const q = snap.exists() ? snap.val() : '';
+                const text = typeof q === 'string' ? q : String(q?.question || q?.text || '');
+                document.getElementById('setting-daily-question').value = text;
             });
-            inp.value = '';
-            showToast('✅ تمت إضافة الجملة لكروت الحب');
         }
 
-        document.getElementById('add-quote-btn').addEventListener('click', addSingleQuote);
-        document.getElementById('new-quote-input').addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                addSingleQuote();
-            }
-        });
-
-        document.getElementById('add-bulk-quotes-btn').addEventListener('click', async () => {
-            const area = document.getElementById('bulk-quotes-input');
-            const lines = area.value.split('\n').map(l => l.trim()).filter(Boolean);
-            if (lines.length === 0) return showToast('⚠️ اكتب جملاً في المربع أولاً');
-
-            for (const line of lines) {
-                await push(ref(db, 'love_card_quotes'), {
-                    text: line,
-                    addedBy: adminUser?.email || adminUser?.uid || 'admin',
-                    timestamp: Date.now()
-                });
-            }
-            area.value = '';
-            showToast(`✅ تمت إضافة ${lines.length} جملة بنجاح`);
-        });
-
-        document.getElementById('reset-used-quotes-btn').addEventListener('click', async () => {
-            if (!confirm('تصفير سجل الجمل المستخدمة لكي يعاد سحبها من جديد؟')) return;
-            await remove(ref(db, 'used_love_quotes'));
-            showToast('🔄 تم تصفير سجل السحب');
-        });
-
-        window.deleteLoveQuote = async (quoteId) => {
-            if (!confirm('حذف هذه الجملة من قائمة كروت الحب؟')) return;
-            await remove(ref(db, `love_card_quotes/${quoteId}`));
-            showToast('🗑️ تم حذف الجملة');
+        // ================= 1) CONTRACTS & LOVE REQUESTS =================
+        window.adminVerifyContract = async (contractId) => {
+            const certSerial = `CERT-${Date.now().toString().slice(-6)}`;
+            await update(ref(db, `wedding_contracts/${contractId}`), {
+                adminVerified: true,
+                adminSeal: `🛡️ موثق ومختوم من إدارة NXL • ${certSerial}`,
+                verifiedAt: Date.now()
+            });
+            showToast(`🛡️ تم توثيق العقد (${certSerial})`);
         };
 
-        function renderQuotesList() {
-            const box = document.getElementById('quotes-list');
+        window.adminDeleteContract = async (contractId) => {
+            if (!confirm('حذف هذا العقد نهائياً؟')) return;
+            await remove(ref(db, `wedding_contracts/${contractId}`));
+            showToast('🗑️ تم حذف العقد');
+        };
+
+        function renderContractsAdmin() {
+            const box = document.getElementById('admin-contracts-list');
             if (!box) return;
-            if (quotesData.length === 0) {
-                box.innerHTML = `<div class="col-span-full text-center text-xs text-gray-500 py-8">لا توجد جمل مضافة بعد؛ أضف جملة أو مجموعة جمل من الأعلى.</div>`;
+            if (contractsData.length === 0) {
+                box.innerHTML = `<div class="col-span-full text-center text-xs text-gray-500 py-6">لا توجد عقود جواز حالياً.</div>`;
                 return;
             }
-            box.innerHTML = quotesData.map((q, idx) => `
-                <div class="bg-[#0b0b12] border border-gray-800 rounded-2xl p-3 flex items-start justify-between gap-2">
-                    <div class="text-xs text-gray-200 leading-relaxed break-words">
-                        <span class="text-pink-400 font-black ml-1">#${idx + 1}</span>
-                        <span>${escapeHTML(q.text)}</span>
+            box.innerHTML = contractsData.map(c => `
+                <div class="bg-[#0b0b12] border ${c.adminVerified ? 'border-emerald-500/40' : 'border-amber-500/35'} rounded-2xl p-3.5 space-y-2">
+                    <div class="flex items-center justify-between text-[11px]">
+                        <span class="font-black text-amber-300">💍 ${escapeHTML(c.contractCode || c.id)}</span>
+                        <span class="${c.adminVerified ? 'text-emerald-400' : 'text-amber-300'} font-bold">${c.adminVerified ? '🛡️ موثق' : '⏳ غير موثق'}</span>
                     </div>
-                    <button onclick="window.deleteLoveQuote('${escapeHTML(q.id)}')" class="text-red-400 hover:text-red-300 text-xs font-bold shrink-0">حذف</button>
+                    <p class="text-xs font-bold text-white">${escapeHTML(c.firstName)} (${escapeHTML(c.firstUser)}) 💞 ${escapeHTML(c.secondName)} (${escapeHTML(c.secondUser)})</p>
+                    <p class="text-[11px] text-gray-300">«${escapeHTML(c.clause || '')}»</p>
+                    <div class="text-[10px] text-gray-400 flex justify-between">
+                        <span>الطرف الأول: ${c.firstApproved ? '✅ موقع' : '⏳'}</span>
+                        <span>الطرف الثاني: ${c.secondApproved ? '✅ موقع' : '⏳'}</span>
+                    </div>
+                    <div class="flex gap-2 pt-1">
+                        ${!c.adminVerified ? `<button onclick="window.adminVerifyContract('${escapeHTML(c.id)}')" class="flex-1 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-200 border border-emerald-400/40 text-xs font-black py-1.5 rounded-xl">🛡️ توثيق وختم</button>` : ''}
+                        <button onclick="window.adminDeleteContract('${escapeHTML(c.id)}')" class="bg-red-500/15 hover:bg-red-500/25 text-red-400 border border-red-500/30 text-xs font-bold px-3 py-1.5 rounded-xl">حذف</button>
+                    </div>
                 </div>
             `).join('');
         }
 
-        // ================= 2) POSTS =================
+        window.adminDeleteLoveRequest = async (reqId) => {
+            await remove(ref(db, `love_card_requests/${reqId}`));
+            showToast('🗑️ تم حذف طلب كارت الحب');
+        };
+
+        function renderLoveRequestsAdmin() {
+            const box = document.getElementById('admin-love-requests-list');
+            if (!box) return;
+            if (loveRequestsData.length === 0) {
+                box.innerHTML = `<div class="col-span-full text-center text-xs text-gray-500 py-5">لا توجد طلبات كروت حب حالياً.</div>`;
+                return;
+            }
+            box.innerHTML = loveRequestsData.map(r => `
+                <div class="bg-[#0b0b12] border border-gray-800 rounded-2xl p-3 flex items-center justify-between gap-2">
+                    <div class="text-xs min-w-0">
+                        <p class="font-bold text-white truncate">💘 ${escapeHTML(r.requesterName)} (@${escapeHTML(r.requesterUsername)}) ⬅️ ${escapeHTML(r.partnerName)} (@${escapeHTML(r.partnerUsername)})</p>
+                        <p class="text-[10px] text-pink-300 mt-0.5">الحالة: ${escapeHTML(r.status || 'pending')}</p>
+                    </div>
+                    <button onclick="window.adminDeleteLoveRequest('${escapeHTML(r.id)}')" class="text-red-400 hover:text-red-300 text-xs font-bold shrink-0">حذف</button>
+                </div>
+            `).join('');
+        }
+
+        // ================= 2) WITHDRAWALS =================
+        window.adminApproveWithdraw = async (reqId) => {
+            await update(ref(db, `coin_withdraw_requests/${reqId}`), {
+                status: 'approved_by_admin',
+                processedAt: Date.now()
+            });
+            showToast('✅ تم تأكيد طلب السحب');
+        };
+
+        window.adminRejectWithdraw = async (reqId, uid, coinsAmount) => {
+            if (!confirm('رفض طلب السحب وإرجاع العملات لحساب المستخدم؟')) return;
+            await update(ref(db, `coin_withdraw_requests/${reqId}`), {
+                status: 'rejected_refunded',
+                processedAt: Date.now()
+            });
+            if (uid && Number(coinsAmount) > 0) {
+                await runTransaction(ref(db, `users/${uid}/points`), (curr) => (Number(curr) || 0) + Number(coinsAmount));
+            }
+            showToast('↩️ تم رفض الطلب وإرجاع العملات');
+        };
+
+        function renderWithdrawsAdmin() {
+            const box = document.getElementById('admin-withdraws-list');
+            if (!box) return;
+            if (withdrawsData.length === 0) {
+                box.innerHTML = `<div class="text-center text-xs text-gray-500 py-8">لا توجد طلبات سحب عملات حالياً.</div>`;
+                return;
+            }
+            box.innerHTML = withdrawsData.map(w => {
+                const isPending = w.status === 'pending_badge_review';
+                return `
+                    <div class="bg-[#0b0b12] border border-gray-800 rounded-2xl p-3.5 flex flex-wrap items-center justify-between gap-3">
+                        <div class="text-xs space-y-0.5">
+                            <p class="font-black text-white">${escapeHTML(w.nickname)} (@${escapeHTML(w.username)}) • <span class="text-pink-400">إنستجرام: ${escapeHTML(w.instagram || '')}</span></p>
+                            <p class="text-[11px] text-amber-300 font-bold">الكمية: ${Number(w.coinsAmount) || 0} عملة (رمزي: ${escapeHTML(w.symbolicEgp || '0')} ج.م) • الحالة: ${escapeHTML(w.status)}</p>
+                        </div>
+                        ${isPending ? `
+                            <div class="flex gap-2">
+                                <button onclick="window.adminApproveWithdraw('${escapeHTML(w.id)}')" class="bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-200 border border-emerald-400/40 text-xs font-black px-3 py-1.5 rounded-xl">تأكيد ✓</button>
+                                <button onclick="window.adminRejectWithdraw('${escapeHTML(w.id)}', '${escapeHTML(w.uid || '')}', ${Number(w.coinsAmount) || 0})" class="bg-red-500/20 hover:bg-red-500/30 text-red-200 border border-red-400/40 text-xs font-bold px-3 py-1.5 rounded-xl">رفض وإرجاع</button>
+                            </div>` : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // ================= 3) USERS =================
+        document.getElementById('search-users-input').addEventListener('input', renderUsersAdmin);
+
+        window.openUserModal = (uid) => {
+            const u = usersData.find(x => x.uid === uid);
+            if (!u) return;
+            editingUserUid = uid;
+            document.getElementById('modal-user-sub').textContent = `${u.nickname || 'بدون لقب'} (@${u.username || uid})`;
+            document.getElementById('modal-user-points').value = Number(u.points) || 0;
+            document.getElementById('modal-user-nickname').value = u.nickname || '';
+            document.getElementById('modal-user-bio').value = u.bio || '';
+            document.getElementById('modal-user-banned').value = u.isBanned ? 'true' : 'false';
+
+            const modal = document.getElementById('user-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        };
+
+        function closeUserModal() {
+            editingUserUid = null;
+            const modal = document.getElementById('user-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        document.getElementById('close-user-modal').addEventListener('click', closeUserModal);
+        document.getElementById('cancel-user-modal-btn').addEventListener('click', closeUserModal);
+
+        document.getElementById('save-user-modal-btn').addEventListener('click', async () => {
+            if (!editingUserUid) return;
+            const pts = Number(document.getElementById('modal-user-points').value);
+            if (!Number.isFinite(pts)) return showToast('⚠️ أدخل رقم عملات صحيح');
+
+            await update(ref(db, `users/${editingUserUid}`), {
+                points: pts,
+                nickname: document.getElementById('modal-user-nickname').value.trim(),
+                bio: document.getElementById('modal-user-bio').value.trim(),
+                isBanned: document.getElementById('modal-user-banned').value === 'true'
+            });
+            showToast('✅ تم تحديث بيانات المستخدم');
+            closeUserModal();
+        });
+
+        window.adminToggleBan = async (uid, currentBanned) => {
+            await update(ref(db, `users/${uid}`), { isBanned: !currentBanned });
+            showToast(!currentBanned ? '🚫 تم حظر المستخدم' : '✅ تم فك الحظر');
+        };
+
+        window.adminDeleteUser = async (uid, username) => {
+            if (!confirm(`حذف بيانات المستخدم @${username || uid} من قاعدة البيانات؟`)) return;
+            await remove(ref(db, `users/${uid}`));
+            if (username) {
+                await remove(ref(db, `usernames/${String(username).toLowerCase()}`));
+                await remove(ref(db, `user_auth_lookup/${String(username).toLowerCase()}`));
+            }
+            showToast('🗑️ تم حذف المستخدم');
+        };
+
+        function renderUsersAdmin() {
+            const box = document.getElementById('admin-users-list');
+            const q = (document.getElementById('search-users-input')?.value || '').trim().toLowerCase().replace(/^@/, '');
+            if (!box) return;
+
+            const filtered = usersData.filter(u => {
+                if (!q) return true;
+                return String(u.nickname || '').toLowerCase().includes(q)
+                    || String(u.username || '').toLowerCase().includes(q);
+            });
+
+            if (filtered.length === 0) {
+                box.innerHTML = `<div class="text-center text-xs text-gray-500 py-8">لا يوجد مستخدمون مطابقون.</div>`;
+                return;
+            }
+
+            box.innerHTML = filtered.map(u => `
+                <div class="bg-[#0b0b12] border ${u.isBanned ? 'border-red-500/40' : 'border-gray-800'} rounded-2xl p-3 flex flex-wrap items-center justify-between gap-2">
+                    <div class="min-w-0">
+                        <p class="text-xs font-bold text-white flex items-center gap-1.5 flex-wrap">
+                            <span>${escapeHTML(u.nickname || 'بدون لقب')}</span>
+                            <span class="text-pink-400 font-normal">(@${escapeHTML(u.username || '')})</span>
+                            ${u.isBanned ? '<span class="text-[10px] bg-red-500/20 text-red-400 border border-red-500/40 px-2 py-0.5 rounded-full">محظور</span>' : ''}
+                        </p>
+                        <p class="text-[10px] text-gray-400 mt-0.5">${escapeHTML(u.bio || 'لا توجد نبذة')} • العملات: <b class="text-amber-300">${Number(u.points) || 0} عملة</b></p>
+                    </div>
+                    <div class="flex items-center gap-1.5 flex-wrap">
+                        <button onclick="window.openUserModal('${escapeHTML(u.uid)}')" class="bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/30 text-[11px] font-bold px-2.5 py-1 rounded-lg">تعديل</button>
+                        <button onclick="window.adminToggleBan('${escapeHTML(u.uid)}', ${Boolean(u.isBanned)})" class="bg-purple-500/15 hover:bg-purple-500/25 text-purple-300 border border-purple-500/30 text-[11px] font-bold px-2.5 py-1 rounded-lg">${u.isBanned ? 'فك الحظر' : 'حظر'}</button>
+                        <button onclick="window.adminDeleteUser('${escapeHTML(u.uid)}', '${escapeHTML(u.username || '')}')" class="bg-red-500/15 hover:bg-red-500/25 text-red-400 border border-red-500/30 text-[11px] font-bold px-2.5 py-1 rounded-lg">حذف</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // ================= 4) POSTS =================
         document.getElementById('search-posts-input').addEventListener('input', renderPostsAdmin);
 
         window.adminDeletePost = async (postId) => {
@@ -555,105 +897,42 @@
                         ${p.text ? `<p class="text-xs text-gray-200 whitespace-pre-wrap break-words">${escapeHTML(p.text)}</p>` : ''}
                         ${p.image ? `<img src="${escapeHTML(p.image)}" class="w-full h-36 object-cover rounded-xl border border-gray-800" loading="lazy">` : ''}
                     </div>
-                    <div class="text-[10px] text-gray-500 pt-1.5 border-t border-gray-800/80 flex justify-between">
-                        <span>❤️ ${Number(p.likeCount) || 0}</span>
-                        <span>${p.timestamp ? new Date(Number(p.timestamp)).toLocaleString('ar-EG') : ''}</span>
-                    </div>
                 </div>
             `).join('');
         }
 
-        // ================= 3) USERS =================
-        document.getElementById('search-users-input').addEventListener('input', renderUsersAdmin);
-
-        window.openUserModal = (uid) => {
-            const u = usersData.find(x => x.uid === uid);
-            if (!u) return;
-            editingUserUid = uid;
-            document.getElementById('modal-user-sub').textContent = `${u.nickname || 'بدون لقب'} (@${u.username || uid})`;
-            document.getElementById('modal-user-points').value = Number(u.points) || 0;
-            document.getElementById('modal-user-nickname').value = u.nickname || '';
-            document.getElementById('modal-user-bio').value = u.bio || '';
-            document.getElementById('modal-user-banned').value = u.isBanned ? 'true' : 'false';
-
-            const modal = document.getElementById('user-modal');
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
+        // ================= 5) CONFESSIONS =================
+        window.adminDeleteConfession = async (ownerUid, confId) => {
+            await remove(ref(db, `confessions/${ownerUid}/${confId}`));
+            showToast('🗑️ تم حذف رسالة الصراحة');
         };
 
-        function closeUserModal() {
-            editingUserUid = null;
-            const modal = document.getElementById('user-modal');
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
-        }
-
-        document.getElementById('close-user-modal').addEventListener('click', closeUserModal);
-        document.getElementById('cancel-user-modal-btn').addEventListener('click', closeUserModal);
-
-        document.getElementById('save-user-modal-btn').addEventListener('click', async () => {
-            if (!editingUserUid) return;
-            const pts = Number(document.getElementById('modal-user-points').value);
-            if (!Number.isFinite(pts)) return showToast('⚠️ أدخل رقم نقاط صحيح');
-
-            await update(ref(db, `users/${editingUserUid}`), {
-                points: pts,
-                nickname: document.getElementById('modal-user-nickname').value.trim(),
-                bio: document.getElementById('modal-user-bio').value.trim(),
-                isBanned: document.getElementById('modal-user-banned').value === 'true'
-            });
-            showToast('✅ تم تحديث بيانات المستخدم');
-            closeUserModal();
+        document.getElementById('clear-confessions-btn').addEventListener('click', async () => {
+            if (!confirm('مسح كل رسائل الصراحة السرية؟')) return;
+            await remove(ref(db, 'confessions'));
+            await remove(ref(db, 'confession_outbox'));
+            showToast('🧹 تم مسح رسائل الصراحة');
         });
 
-        window.adminToggleBan = async (uid, currentBanned) => {
-            await update(ref(db, `users/${uid}`), { isBanned: !currentBanned });
-            showToast(!currentBanned ? '🚫 تم حظر المستخدم' : '✅ تم فك الحظر');
-        };
-
-        window.adminDeleteUser = async (uid, username) => {
-            if (!confirm(`حذف بيانات المستخدم @${username || uid} من قاعدة البيانات؟`)) return;
-            await remove(ref(db, `users/${uid}`));
-            if (username) await remove(ref(db, `usernames/${String(username).toLowerCase()}`));
-            showToast('🗑️ تم حذف المستخدم');
-        };
-
-        function renderUsersAdmin() {
-            const box = document.getElementById('admin-users-list');
-            const q = (document.getElementById('search-users-input')?.value || '').trim().toLowerCase().replace(/^@/, '');
+        function renderConfessionsAdmin() {
+            const box = document.getElementById('admin-confessions-list');
             if (!box) return;
-
-            const filtered = usersData.filter(u => {
-                if (!q) return true;
-                return String(u.nickname || '').toLowerCase().includes(q)
-                    || String(u.username || '').toLowerCase().includes(q);
-            });
-
-            if (filtered.length === 0) {
-                box.innerHTML = `<div class="text-center text-xs text-gray-500 py-8">لا يوجد مستخدمون مطابقون.</div>`;
+            if (confessionsFlatData.length === 0) {
+                box.innerHTML = `<div class="text-center text-xs text-gray-500 py-8">لا توجد رسائل صراحة حالياً.</div>`;
                 return;
             }
-
-            box.innerHTML = filtered.map(u => `
-                <div class="bg-[#0b0b12] border ${u.isBanned ? 'border-red-500/40' : 'border-gray-800'} rounded-2xl p-3 flex flex-wrap items-center justify-between gap-2">
-                    <div class="min-w-0">
-                        <p class="text-xs font-bold text-white flex items-center gap-1.5 flex-wrap">
-                            <span>${escapeHTML(u.nickname || 'بدون لقب')}</span>
-                            <span class="text-pink-400 font-normal">(@${escapeHTML(u.username || '')})</span>
-                            ${u.isBanned ? '<span class="text-[10px] bg-red-500/20 text-red-400 border border-red-500/40 px-2 py-0.5 rounded-full">محظور</span>' : ''}
-                        </p>
-                        <p class="text-[10px] text-gray-400 mt-0.5">${escapeHTML(u.bio || 'لا توجد نبذة')} • النقاط: <b class="text-amber-300">${Number(u.points) || 0} EXP</b></p>
+            box.innerHTML = confessionsFlatData.slice(0, 80).map(c => `
+                <div class="bg-[#0b0b12] border border-purple-500/25 rounded-2xl p-3 flex items-start justify-between gap-2">
+                    <div class="text-xs min-w-0">
+                        <p class="font-bold text-purple-300">إلى UID: ${escapeHTML(c.ownerUid)} • الحالة: ${escapeHTML(c.revealStatus || 'hidden')}</p>
+                        <p class="text-gray-200 break-words mt-0.5">${escapeHTML(c.text || '')}</p>
                     </div>
-                    <div class="flex items-center gap-1.5 flex-wrap">
-                        <button onclick="window.openUserModal('${escapeHTML(u.uid)}')" class="bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/30 text-[11px] font-bold px-2.5 py-1 rounded-lg">تعديل</button>
-                        <button onclick="window.adminToggleBan('${escapeHTML(u.uid)}', ${Boolean(u.isBanned)})" class="bg-purple-500/15 hover:bg-purple-500/25 text-purple-300 border border-purple-500/30 text-[11px] font-bold px-2.5 py-1 rounded-lg">${u.isBanned ? 'فك الحظر' : 'حظر'}</button>
-                        <button onclick="window.adminDeleteUser('${escapeHTML(u.uid)}', '${escapeHTML(u.username || '')}')" class="bg-red-500/15 hover:bg-red-500/25 text-red-400 border border-red-500/30 text-[11px] font-bold px-2.5 py-1 rounded-lg">حذف</button>
-                    </div>
+                    <button onclick="window.adminDeleteConfession('${escapeHTML(c.ownerUid)}', '${escapeHTML(c.id)}')" class="text-red-400 hover:text-red-300 text-xs font-bold shrink-0">حذف</button>
                 </div>
             `).join('');
         }
 
-        // ================= 4) GLOBAL CHAT =================
+        // ================= 6) GLOBAL CHAT =================
         window.adminDeleteGlobalMsg = async (msgId) => {
             await remove(ref(db, `global_chat/${msgId}`));
             showToast('🗑️ تم حذف الرسالة العامة');
@@ -683,7 +962,72 @@
             `).join('');
         }
 
-        // ================= 5) AI KNOWLEDGE BASE =================
+        // ================= 7) QUOTES =================
+        async function addSingleQuote() {
+            const inp = document.getElementById('new-quote-input');
+            const text = inp.value.trim();
+            if (!text) return showToast('⚠️ اكتب الجملة أولاً');
+            await push(ref(db, 'love_card_quotes'), {
+                text,
+                addedBy: adminUser?.email || adminUser?.uid || 'admin',
+                timestamp: Date.now()
+            });
+            inp.value = '';
+            showToast('✅ تمت إضافة الجملة لكروت الحب');
+        }
+
+        document.getElementById('add-quote-btn').addEventListener('click', addSingleQuote);
+        document.getElementById('new-quote-input').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') { e.preventDefault(); addSingleQuote(); }
+        });
+
+        document.getElementById('add-bulk-quotes-btn').addEventListener('click', async () => {
+            const area = document.getElementById('bulk-quotes-input');
+            const lines = area.value.split('\n').map(l => l.trim()).filter(Boolean);
+            if (lines.length === 0) return showToast('⚠️ اكتب جملاً في المربع أولاً');
+
+            for (const line of lines) {
+                await push(ref(db, 'love_card_quotes'), {
+                    text: line,
+                    addedBy: adminUser?.email || adminUser?.uid || 'admin',
+                    timestamp: Date.now()
+                });
+            }
+            area.value = '';
+            showToast(`✅ تمت إضافة ${lines.length} جملة بنجاح`);
+        });
+
+        document.getElementById('reset-used-quotes-btn').addEventListener('click', async () => {
+            if (!confirm('تصفير سجل الجمل المستخدمة لكي يعاد سحبها من جديد؟')) return;
+            await remove(ref(db, 'used_love_quotes'));
+            showToast('🔄 تم تصفير سجل السحب');
+        });
+
+        window.deleteLoveQuote = async (quoteId) => {
+            if (!confirm('حذف هذه الجملة من قائمة كروت الحب؟')) return;
+            await remove(ref(db, `love_card_quotes/${quoteId}`));
+            showToast('🗑️ تم حذف الجملة');
+        };
+
+        function renderQuotesList() {
+            const box = document.getElementById('quotes-list');
+            if (!box) return;
+            if (quotesData.length === 0) {
+                box.innerHTML = `<div class="col-span-full text-center text-xs text-gray-500 py-8">لا توجد جمل مضافة بعد.</div>`;
+                return;
+            }
+            box.innerHTML = quotesData.map((q, idx) => `
+                <div class="bg-[#0b0b12] border border-gray-800 rounded-2xl p-3 flex items-start justify-between gap-2">
+                    <div class="text-xs text-gray-200 leading-relaxed break-words">
+                        <span class="text-pink-400 font-black ml-1">#${idx + 1}</span>
+                        <span>${escapeHTML(q.text)}</span>
+                    </div>
+                    <button onclick="window.deleteLoveQuote('${escapeHTML(q.id)}')" class="text-red-400 hover:text-red-300 text-xs font-bold shrink-0">حذف</button>
+                </div>
+            `).join('');
+        }
+
+        // ================= 8) AI KNOWLEDGE BASE =================
         document.getElementById('save-ai-knowledge-btn').addEventListener('click', async () => {
             const key = document.getElementById('ai-key-input').value.trim();
             const val = document.getElementById('ai-val-input').value.trim();
@@ -734,7 +1078,14 @@
             }).join('');
         }
 
-        // ================= 6) APP SETTINGS =================
+        // ================= 9) SETTINGS & DAILY QUESTION =================
+        document.getElementById('save-daily-question-btn').addEventListener('click', async () => {
+            const qText = (document.getElementById('setting-daily-question').value || '').trim();
+            if (!qText) return showToast('⚠️ اكتب سؤال اليوم أولاً');
+            await set(ref(db, 'daily_question'), qText);
+            showToast('💬 تم تحديث سؤال اليوم في التطبيق');
+        });
+
         document.getElementById('save-app-settings-btn').addEventListener('click', async () => {
             const bannerEnabled = document.getElementById('setting-banner-enabled').checked;
             const maintenanceMode = document.getElementById('setting-maintenance').checked;
