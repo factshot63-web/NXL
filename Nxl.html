@@ -56,37 +56,6 @@
         }
         .liquid-glass:hover { border-color: rgba(255, 42, 133, 0.3); }
 
-        @keyframes floatHeartUp {
-            0% { transform: translateY(100%) scale(0.75) rotate(-8deg); opacity: 0; }
-            20% { opacity: 0.55; }
-            80% { opacity: 0.45; }
-            100% { transform: translateY(-120%) scale(1.15) rotate(12deg); opacity: 0; }
-        }
-        .hearts-chat-theme {
-            position: relative;
-            background: radial-gradient(circle at top, rgba(255, 42, 133, 0.22), rgba(24, 6, 17, 0.96) 65%, #0c0409 100%) !important;
-        }
-        .hearts-floating-layer {
-            position: sticky;
-            top: 0; left: 0; right: 0; height: 0;
-            overflow: visible; pointer-events: none; z-index: 0;
-        }
-        .floating-heart-item {
-            position: absolute; top: 260px; font-size: 18px;
-            animation: floatHeartUp 5.5s linear infinite;
-            filter: drop-shadow(0 0 8px rgba(255, 42, 133, 0.55));
-        }
-        .hearts-bubble-me {
-            background: linear-gradient(135deg, #ff2a85 0%, #f43f5e 100%) !important;
-            border: 1px solid rgba(255, 182, 213, 0.45) !important;
-            box-shadow: 0 8px 20px rgba(255, 42, 133, 0.35);
-        }
-        .hearts-bubble-other {
-            background: rgba(45, 11, 29, 0.88) !important;
-            border: 1px solid rgba(255, 105, 180, 0.35) !important;
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.45);
-        }
-
         .heart-photo-frame {
             width: 86px; height: 80px;
             clip-path: path('M43 76 C43 76 4 50 4 23 C4 10 13 2 25 2 C33 2 40 7 43 13 C46 7 53 2 61 2 C73 2 82 10 82 23 C82 50 43 76 43 76 Z');
@@ -128,13 +97,13 @@
 </head>
 <body class="select-none">
 
-    <!-- إشعار عائم واضح أسفل الهيدر -->
+    <!-- تنبيه نظيف عند الحاجة فقط -->
     <div id="nxl-toast" class="fixed top-20 left-1/2 -translate-x-1/2 z-[95] bg-[#12121a]/95 border border-[#ff2a85]/70 text-white text-[11px] font-bold px-4 py-2 rounded-full shadow-2xl hidden pointer-events-none text-center max-w-[90vw]"></div>
 
     <!-- شاشة تسجيل الدخول وإنشاء الحساب -->
     <div id="auth-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#060609] px-6">
         <div class="text-center max-w-sm w-full liquid-glass p-7 rounded-3xl glow-card">
-            <div class="w-16 h-16 mx-auto rounded-full gradient-bg flex items-center justify-center mb-3 shadow-xl shadow-[#ff2a85]/40 animate-pulse">
+            <div class="w-16 h-16 mx-auto rounded-full gradient-bg flex items-center justify-center mb-3 shadow-xl shadow-[#ff2a85]/40">
                 <span class="text-xl font-black tracking-wider text-white">NXL</span>
             </div>
             <h1 class="text-xl font-bold mb-1">مرحباً بك في <span class="gradient-text">NXL Ultimate</span></h1>
@@ -181,7 +150,7 @@
         </div>
     </div>
 
-    <!-- الهيدر العلوي الواضح والثابت -->
+    <!-- الهيدر العلوي -->
     <header id="nxl-top-header" class="liquid-glass py-2.5 px-3 border-b border-pink-500/25 flex items-center justify-between gap-2 shrink-0 z-40 w-full relative">
         <div class="flex items-center gap-2 min-w-0">
             <button type="button" id="open-settings-drawer-btn" onclick="window.openSettingsDrawer()" class="w-9 h-9 rounded-xl bg-[#12121a] border border-gray-700/80 flex items-center justify-center text-white text-base font-black interactive-press shrink-0" title="الإعدادات والملف الشخصي">☰</button>
@@ -191,12 +160,12 @@
                     <h1 class="text-xs font-extrabold tracking-wide truncate text-white">NXL ULTIMATE</h1>
                     <span id="header-streak-badge" class="text-[8px] bg-amber-500/20 text-amber-300 border border-amber-500/40 px-1.5 py-0.5 rounded-md font-black">🔥 1d</span>
                 </div>
-                <p class="text-[9px] text-gray-300 truncate" id="header-exp-text">0 EXP • LVL 1</p>
+                <p class="text-[9px] text-gray-300 truncate" id="header-exp-text">0 عملة • LVL 1</p>
             </div>
         </div>
 
         <div class="flex items-center gap-1.5 shrink-0">
-            <button type="button" onclick="window.openActivityModal()" class="text-[10px] bg-cyan-500/15 text-cyan-300 border border-cyan-500/35 px-2.5 py-1.5 rounded-full font-bold interactive-press relative" title="الإشعارات والطلبات">
+            <button type="button" onclick="window.openActivityModal()" class="text-[10px] bg-cyan-500/15 text-cyan-300 border border-cyan-500/35 px-2.5 py-1.5 rounded-full font-bold interactive-press relative" title="الطلبات والتنبيهات">
                 🔔 <span id="activity-unread-dot" class="hidden absolute -top-1 -right-1 w-2 h-2 bg-cyan-400 rounded-full"></span>
             </button>
             <button type="button" onclick="window.openConfessionsInbox()" class="text-[10px] bg-purple-500/15 text-purple-300 border border-purple-500/35 px-2.5 py-1.5 rounded-full font-bold interactive-press relative" title="صندوق الصراحة">
@@ -209,7 +178,7 @@
         </div>
     </header>
 
-    <!-- قائمة الإعدادات المنظمة بتبويبات عند الضغط على الثلاث شرطات (☰) -->
+    <!-- قائمة الإعدادات الجانبية -->
     <div id="settings-drawer-backdrop" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex justify-start" onclick="if(event.target===this) window.closeSettingsDrawer()">
         <aside id="settings-drawer-panel" class="w-[90vw] max-w-sm h-full bg-[#0b0b12] border-l border-gray-800 p-4 overflow-y-auto custom-scrollbar space-y-3.5 shadow-2xl">
             <div class="flex items-center justify-between border-b border-gray-800 pb-2.5">
@@ -228,8 +197,8 @@
 
             <div id="ssec-account" class="space-y-2.5">
                 <div class="bg-[#12121a] border border-gray-800 rounded-2xl p-2.5 flex justify-between items-center text-[10px]">
-                    <span class="text-gray-400">الرصيد الحالي:</span>
-                    <span id="drawer-exp-pill" class="font-black text-pink-400">0 EXP</span>
+                    <span class="text-gray-400">رصيد العملات:</span>
+                    <span id="drawer-exp-pill" class="font-black text-amber-300">0 عملة</span>
                 </div>
                 <div>
                     <label class="text-[10px] text-gray-400 block mb-1">اللقب الظاهر</label>
@@ -342,15 +311,15 @@
                 <div class="grid grid-cols-3 gap-1.5 text-[9px]">
                     <div id="quest-item-post" class="bg-[#12121a] border border-gray-800 rounded-xl p-2 text-center">
                         <div class="font-bold text-white">✍️ منشور أو استفتاء</div>
-                        <div class="text-amber-300 font-black mt-0.5">+15 EXP</div>
+                        <div class="text-amber-300 font-black mt-0.5">+15 عملة</div>
                     </div>
                     <div id="quest-item-engage" class="bg-[#12121a] border border-gray-800 rounded-xl p-2 text-center">
                         <div class="font-bold text-white">💬 3 تفاعلات/تصويت</div>
-                        <div class="text-amber-300 font-black mt-0.5">+12 EXP</div>
+                        <div class="text-amber-300 font-black mt-0.5">+12 عملة</div>
                     </div>
                     <div id="quest-item-confess" class="bg-[#12121a] border border-gray-800 rounded-xl p-2 text-center">
                         <div class="font-bold text-white">🎭 مشاركة صراحة</div>
-                        <div class="text-amber-300 font-black mt-0.5">+10 EXP</div>
+                        <div class="text-amber-300 font-black mt-0.5">+10 عملات</div>
                     </div>
                 </div>
             </div>
@@ -360,7 +329,7 @@
                     <div class="w-7 h-7 rounded-full gradient-bg flex items-center justify-center font-black text-[9px] text-white shrink-0">AI</div>
                     <div class="min-w-0">
                         <h2 class="text-[10px] font-bold text-white truncate">مساعد NXL</h2>
-                        <p class="text-[8px] text-gray-400 truncate">أدمن + ويب</p>
+                        <p class="text-[8px] text-gray-400 truncate">حوار + ويب</p>
                     </div>
                 </div>
                 <div onclick="window.openConfessionsInbox()" class="liquid-glass p-2 rounded-2xl border border-purple-500/40 flex items-center gap-1.5 cursor-pointer interactive-press">
@@ -373,8 +342,8 @@
                 <div onclick="window.openActivityModal()" class="liquid-glass p-2 rounded-2xl border border-cyan-500/40 flex items-center gap-1.5 cursor-pointer interactive-press">
                     <div class="w-7 h-7 rounded-full bg-cyan-500/20 border border-cyan-400/50 flex items-center justify-center text-xs shrink-0">🔔</div>
                     <div class="min-w-0">
-                        <h2 class="text-[10px] font-bold text-cyan-200 truncate">الإشعارات</h2>
-                        <p class="text-[8px] text-gray-400 truncate">كشف وطلبات كروت</p>
+                        <h2 class="text-[10px] font-bold text-cyan-200 truncate">الطلبات</h2>
+                        <p class="text-[8px] text-gray-400 truncate">عقود وكروت</p>
                     </div>
                 </div>
             </div>
@@ -429,10 +398,10 @@
         <section id="tab-global" class="tab-content hidden h-full flex flex-col max-w-md mx-auto">
             <div class="mx-3 mt-2.5 liquid-glass rounded-2xl px-3.5 py-2 border border-gray-800/90 flex items-center justify-between shrink-0">
                 <div class="flex items-center gap-2">
-                    <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
+                    <span class="w-2 h-2 rounded-full bg-green-400"></span>
                     <span class="text-xs font-bold text-white">المجتمع العام المباشر</span>
                 </div>
-                <span class="text-[10px] text-[#ff7300] font-bold bg-[#ff7300]/10 px-2.5 py-0.5 rounded-full border border-[#ff7300]/25">تختفي بعد 24 ساعة 🔥</span>
+                <span class="text-[10px] text-[#ff7300] font-bold bg-[#ff7300]/10 px-2.5 py-0.5 rounded-full border border-[#ff7300]/25">تختفي بعد 24 ساعة</span>
             </div>
 
             <div id="global-messages-box" class="flex-1 overflow-y-auto px-3 py-2.5 space-y-2.5 custom-scrollbar"></div>
@@ -449,8 +418,42 @@
             </div>
         </section>
 
-        <!-- 3. تبويب الألعاب وكارت الحب وعقد الجواز الإلكتروني -->
+        <!-- 3. تبويب الألعاب والعملات وعقد الجواز الإلكتروني -->
         <section id="tab-games" class="tab-content hidden p-3 max-w-md mx-auto space-y-4">
+            <!-- محفظة عملات NXL (تحويل بعمولة + سحب عبر بادج إنستجرام + حماية ضد التلاعب) -->
+            <div class="liquid-glass p-4 rounded-3xl border border-amber-500/45 shadow-xl space-y-3">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 class="text-sm font-black text-amber-300 flex items-center gap-1.5"><span>🪙</span> محفظة عملات NXL</h2>
+                        <p id="wallet-rate-info" class="text-[10px] text-gray-400">سعر رمزي: 100 عملة = 5 ج.م • عمولة التحويل: 10%</p>
+                    </div>
+                    <span id="wallet-balance-badge" class="text-xs bg-amber-500/20 text-amber-200 border border-amber-400/40 px-3 py-1 rounded-full font-black">0 عملة</span>
+                </div>
+
+                <div class="grid grid-cols-1 gap-2 bg-[#12121a] p-3 rounded-2xl border border-gray-800">
+                    <span class="text-[11px] font-bold text-white">💸 تحويل عملات لمستخدم آخر (بعمولة آمنة)</span>
+                    <input type="text" id="transfer-target-username" placeholder="يوزرنيم المستلم (مثال: @ahmed)" class="w-full bg-[#060609] border border-gray-700 text-xs rounded-xl px-3 py-2 text-white dir-ltr text-left focus:outline-none focus:border-amber-400">
+                    <div class="grid grid-cols-2 gap-2">
+                        <input type="number" id="transfer-amount-input" min="10" max="5000" placeholder="عدد العملات (10 - 5000)" class="w-full bg-[#060609] border border-gray-700 text-xs rounded-xl px-3 py-2 text-white focus:outline-none focus:border-amber-400">
+                        <button type="button" id="send-coins-transfer-btn" class="py-2 gradient-bg rounded-xl text-xs font-black text-white interactive-press">تحويل الآن</button>
+                    </div>
+                    <p id="transfer-fee-preview" class="text-[10px] text-amber-300/90">أدخل المبلغ لحساب العمولة الصافية والوصول للمستلم.</p>
+                </div>
+
+                <div class="bg-[#12121a] p-3 rounded-2xl border border-pink-500/30 space-y-2">
+                    <div class="flex items-center justify-between">
+                        <span class="text-[11px] font-bold text-pink-200">🏦 طلب سحب العملات عبر بادج إنستجرام</span>
+                        <span class="text-[9px] text-gray-400">الحد الأدنى: 100 عملة</span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <input type="number" id="withdraw-amount-input" min="100" placeholder="كمية العملات للسحب" class="w-full bg-[#060609] border border-gray-700 text-xs rounded-xl px-3 py-2 text-white focus:outline-none focus:border-pink-500">
+                        <input type="text" id="withdraw-ig-handle" placeholder="حسابك على إنستجرام (@...)" class="w-full bg-[#060609] border border-gray-700 text-xs rounded-xl px-3 py-2 text-white dir-ltr text-left focus:outline-none focus:border-pink-500">
+                    </div>
+                    <button type="button" id="request-coins-withdraw-btn" class="w-full py-2 bg-pink-600/30 border border-pink-400/50 rounded-xl text-xs font-black text-pink-100 interactive-press">📲 إصدار طلب سحب وتجهيز رسالة بادج إنستجرام</button>
+                    <div id="withdraw-receipt-box" class="hidden bg-[#060609] border border-emerald-500/40 rounded-xl p-2.5 text-[10px] text-emerald-200 space-y-1.5"></div>
+                </div>
+            </div>
+
             <div class="grid grid-cols-3 gap-2">
                 <button onclick="window.openReflexGameModal()" class="liquid-glass p-3 rounded-2xl border border-cyan-500/40 text-center interactive-press">
                     <div class="text-2xl mb-1">⚡</div>
@@ -480,33 +483,39 @@
                 </div>
             </div>
 
-            <!-- كارت الحب / عقد الجواز الإلكتروني 😂💍 -->
+            <!-- عقد الجواز الإلكتروني الاحترافي بموافقة الطرفين وتوثيق الأدمن والإمضاء -->
             <div class="liquid-glass p-4 rounded-3xl border border-pink-500/50 shadow-xl space-y-3">
                 <div class="flex items-center justify-between">
                     <div>
                         <h2 class="text-sm font-black text-white flex items-center gap-1.5"><span>💍</span> عقد الجواز الإلكتروني <span class="gradient-text">NXL</span></h2>
-                        <p class="text-[10px] text-gray-400">كارت حب وعقد جواز إلكتروني رسمي بين طرفين مع ختم وتوثيق 😂</p>
+                        <p class="text-[10px] text-gray-400">اسم ويوزر الطرفين + موافقة وإمضاء الطرفين + توثيق وختم الأدمن</p>
                     </div>
-                    <span class="text-[10px] bg-pink-500/20 text-pink-300 border border-pink-500/40 px-2.5 py-1 rounded-full font-bold">CONTRACT + CARD</span>
+                    <span class="text-[10px] bg-pink-500/20 text-pink-300 border border-pink-500/40 px-2.5 py-1 rounded-full font-bold">OFFICIAL BOND</span>
                 </div>
 
-                <!-- قسم إنشاء عقد جواز إلكتروني سريع بأي اسمين أو مع الطرف المختار -->
                 <div class="bg-[#12121a] p-3 rounded-2xl border border-amber-500/35 space-y-2">
                     <div class="flex items-center justify-between">
-                        <span class="text-[11px] font-black text-amber-300">📜 إصدار عقد جواز إلكتروني</span>
-                        <button type="button" onclick="window.fillClauseFromAdminQuotes()" class="text-[10px] bg-amber-500/20 text-amber-200 border border-amber-400/40 px-2 py-0.5 rounded-full font-bold interactive-press">✨ جملة من الأدمن</button>
+                        <span class="text-[11px] font-black text-amber-300">📜 إنشاء عقد جواز إلكتروني</span>
+                        <button type="button" onclick="window.fillClauseFromAdminQuotes()" class="text-[10px] bg-amber-500/20 text-amber-200 border border-amber-400/40 px-2 py-0.5 rounded-full font-bold interactive-press">✨ بند من الأدمن</button>
                     </div>
+
                     <div class="grid grid-cols-2 gap-2">
-                        <input type="text" id="wedding-groom-input" placeholder="الطرف الأول (مثلاً: حمص)" class="bg-[#060609] border border-gray-700 text-xs rounded-xl px-3 py-2 text-white focus:outline-none focus:border-pink-500">
-                        <input type="text" id="wedding-bride-input" placeholder="الطرف الثاني..." class="bg-[#060609] border border-gray-700 text-xs rounded-xl px-3 py-2 text-white focus:outline-none focus:border-pink-500">
+                        <input type="text" id="wedding-first-name" placeholder="اسم الطرف الأول" class="bg-[#060609] border border-gray-700 text-xs rounded-xl px-3 py-2 text-white focus:outline-none focus:border-pink-500">
+                        <input type="text" id="wedding-first-user" placeholder="يوزر الطرف الأول (@...)" class="bg-[#060609] border border-gray-700 text-xs rounded-xl px-3 py-2 text-white dir-ltr text-left focus:outline-none focus:border-pink-500">
                     </div>
-                    <input type="text" id="wedding-clause-input" placeholder="بند العقد أو ميثاق الجواز..." class="w-full bg-[#060609] border border-gray-700 text-xs rounded-xl px-3 py-2 text-white focus:outline-none focus:border-pink-500">
-                    <button type="button" id="create-wedding-contract-btn" class="w-full py-2.5 bg-gradient-to-r from-amber-500 via-pink-600 to-[#ff2a85] rounded-xl text-xs font-black text-white interactive-press shadow-lg">💍 توثيق وإصدار عقد الجواز الإلكتروني</button>
+
+                    <div class="grid grid-cols-2 gap-2">
+                        <input type="text" id="wedding-second-name" placeholder="اسم الطرف الثاني" class="bg-[#060609] border border-gray-700 text-xs rounded-xl px-3 py-2 text-white focus:outline-none focus:border-pink-500">
+                        <input type="text" id="wedding-second-user" placeholder="يوزر الطرف الثاني (@...)" class="bg-[#060609] border border-gray-700 text-xs rounded-xl px-3 py-2 text-white dir-ltr text-left focus:outline-none focus:border-pink-500">
+                    </div>
+
+                    <input type="text" id="wedding-clause-input" placeholder="بند العقد أو ميثاق الارتباط..." class="w-full bg-[#060609] border border-gray-700 text-xs rounded-xl px-3 py-2 text-white focus:outline-none focus:border-pink-500">
+                    <button type="button" id="create-wedding-contract-btn" class="w-full py-2.5 bg-gradient-to-r from-amber-500 via-pink-600 to-[#ff2a85] rounded-xl text-xs font-black text-white interactive-press shadow-lg">💍 إرسال العقد للموافقة والتوثيق</button>
                 </div>
 
-                <div id="wedding-contracts-feed" class="space-y-2"></div>
+                <div id="wedding-contracts-feed" class="space-y-2.5"></div>
 
-                <!-- الطرف الأول (أنت) لطلب كارت الحب -->
+                <!-- كارت الحب التفاعلي بين مستخدمين -->
                 <div class="bg-[#12121a] p-2.5 rounded-2xl border border-gray-800 flex items-center justify-between">
                     <div class="flex items-center gap-2">
                         <img id="love-req-my-avatar" src="" class="w-9 h-9 rounded-full border border-pink-500/60 object-cover bg-gray-800">
@@ -518,9 +527,8 @@
                     <span class="text-[9px] bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded-full font-bold">الطرف الأول</span>
                 </div>
 
-                <!-- اختيار الطرف الثاني من مستخدمي NXL -->
                 <div class="space-y-1.5">
-                    <label class="text-[10px] text-pink-200 font-bold block">ابحث أو اختار المستخدم الطرف الثاني على NXL:</label>
+                    <label class="text-[10px] text-pink-200 font-bold block">ابحث أو اختار المستخدم الطرف الثاني لكارت الحب:</label>
                     <input type="text" id="love-partner-search-input" placeholder="اكتب @username أو اسم المستخدم..." class="w-full bg-[#12121a] border border-gray-700 text-xs rounded-xl px-3 py-2.5 text-white focus:outline-none focus:border-pink-500">
                     <div id="love-partner-results" class="space-y-1 max-h-32 overflow-y-auto custom-scrollbar"></div>
                 </div>
@@ -542,7 +550,6 @@
 
                 <div id="love-card-requests-list" class="space-y-2 pt-1"></div>
 
-                <!-- معاينة الكارت الأسطوري (يظهر فقط بعد موافقة الطرف الآخر) -->
                 <div id="nxl-epic-love-card-preview" class="hidden mt-3 rounded-3xl p-4 border-2 border-pink-500/70 bg-gradient-to-br from-[#2a071c] via-[#140819] to-[#281006] shadow-2xl relative overflow-hidden">
                     <div class="flex items-center justify-between text-[10px] font-black tracking-wider mb-3">
                         <span class="px-2.5 py-0.5 rounded-full bg-pink-500/20 text-pink-300 border border-pink-400/40">NXL • VERIFIED BOND</span>
@@ -559,7 +566,7 @@
                             <div class="heart-photo-frame"><img id="epic-boy-img" src="" alt="الطرف الأول"></div>
                             <span id="epic-boy-label" class="text-[10px] font-extrabold text-sky-300 truncate max-w-[85px]">الطرف الأول</span>
                         </div>
-                        <div class="text-2xl animate-pulse">💞</div>
+                        <div class="text-2xl">💞</div>
                         <div class="flex flex-col items-center gap-1">
                             <div class="heart-photo-frame"><img id="epic-girl-img" src="" alt="الطرف الثاني"></div>
                             <span id="epic-girl-label" class="text-[10px] font-extrabold text-pink-300 truncate max-w-[85px]">الطرف الثاني</span>
@@ -580,7 +587,7 @@
                 </div>
             </div>
 
-            <!-- ألعاب الأسئلة والتوافق الموزون -->
+            <!-- ألعاب الأسئلة والتوافق -->
             <div class="grid grid-cols-2 gap-3">
                 <div onclick="startLoveQuizCard('compatibility')" class="liquid-glass p-3.5 rounded-2xl border border-pink-500/40 text-center cursor-pointer interactive-press hover:border-pink-500">
                     <div class="text-2xl mb-1">💖</div>
@@ -648,7 +655,7 @@
                     <div class="w-10 h-10 rounded-full gradient-bg flex items-center justify-center text-white font-black text-xs shrink-0 shadow-md">NXL</div>
                     <div>
                         <h4 class="font-bold text-white text-xs">NXL AI (المساعد الذكي)</h4>
-                        <p class="text-[9px] text-[#ff7300] font-semibold">يرد من الأدمن أو يبحث في الويب ويلخّص + ينفذ أوامرك ⚡</p>
+                        <p class="text-[9px] text-[#ff7300] font-semibold">يسأل ويؤكد قبل نشر النوت ويجمع بيانات الكارت في الشات ⚡</p>
                     </div>
                 </div>
                 <span class="text-[11px] bg-[#ff2a85]/20 text-[#ff2a85] px-2.5 py-1 rounded-xl font-bold">دردشة AI 🤖</span>
@@ -694,13 +701,13 @@
                 <div class="bg-[#12121a] border border-gray-800 p-3 rounded-2xl text-right space-y-1.5">
                     <div class="flex justify-between items-center text-xs">
                         <span class="font-bold text-pink-400" id="profile-rank-title">🌱 عضو جديد • Level 1</span>
-                        <span class="font-black gradient-text" id="profile-points">0 EXP</span>
+                        <span class="font-black gradient-text" id="profile-points">0 عملة</span>
                     </div>
                     <div class="w-full h-2 bg-gray-800 rounded-full overflow-hidden">
                         <div id="profile-level-bar" class="h-full gradient-bg transition-all duration-500" style="width: 15%;"></div>
                     </div>
                     <div class="flex justify-between text-[9px] text-gray-400">
-                        <span id="profile-next-level-hint">متبقي 50 EXP للمستوى التالي</span>
+                        <span id="profile-next-level-hint">متبقي 50 عملة للمستوى التالي</span>
                         <span id="profile-streak-text" class="text-amber-300 font-bold">🔥 سلسلة 1 يوم</span>
                     </div>
                 </div>
@@ -734,14 +741,14 @@
         </section>
     </main>
 
-    <!-- مودال الإشعارات والفضول وطلبات كروت الحب -->
+    <!-- مودال الطلبات والتنبيهات -->
     <div id="activity-modal" class="fixed inset-0 bg-black/85 z-[70] flex items-center justify-center hidden px-4 backdrop-blur-md">
         <div class="liquid-glass w-full max-w-sm rounded-3xl border border-cyan-500/50 p-5 shadow-2xl relative max-h-[82vh] flex flex-col">
             <button onclick="document.getElementById('activity-modal').classList.add('hidden')" class="absolute top-3 left-3 text-gray-400 hover:text-white text-xl">&times;</button>
-            <h3 class="text-sm font-black text-cyan-300 mb-1 text-center">🔔 الإشعارات، الفضول، وطلبات الكروت</h3>
-            <p class="text-[10px] text-gray-400 mb-3 text-center">التفاعلات المخفية تكشفها بـ 10 EXP — وطلبات كارت الحب المعتمدة تقدر تصنع كارتها فوراً</p>
+            <h3 class="text-sm font-black text-cyan-300 mb-1 text-center">🔔 الطلبات والتنبيهات</h3>
+            <p class="text-[10px] text-gray-400 mb-3 text-center">طلبات العقود، كروت الحب، والعمليات — كشف المجهول بـ 10 عملات</p>
             <div id="activity-feed-list" class="flex-1 overflow-y-auto space-y-2 custom-scrollbar text-right text-xs">
-                <p class="text-center text-xs text-gray-500 py-6">لا توجد إشعارات حديثة بعد.</p>
+                <p class="text-center text-xs text-gray-500 py-6">لا توجد طلبات أو تنبيهات جديدة.</p>
             </div>
         </div>
     </div>
@@ -894,7 +901,7 @@
         <img id="view-once-img" class="max-w-full max-h-[80vh] rounded-2xl border border-orange-500 shadow-2xl object-contain">
     </div>
 
-    <!-- مودال معلومات المستخدم + إرسال صراحة مجهولة + طلب كارت حب -->
+    <!-- مودال معلومات المستخدم -->
     <div id="user-modal" class="fixed inset-0 bg-black/80 z-50 flex items-center justify-center hidden px-4 backdrop-blur-md">
         <div class="liquid-glass w-full max-w-xs rounded-3xl border border-gray-800 p-5 relative text-center shadow-2xl" id="user-modal-content">
             <button id="close-modal-btn" class="absolute top-3 left-3 text-gray-400 hover:text-white text-xl">&times;</button>
@@ -906,7 +913,7 @@
             <p id="modal-username-txt" class="text-xs text-[#ff7300] mb-1 font-medium">@username</p>
             <span id="modal-mood-txt" class="inline-block text-[10px] text-emerald-300 bg-emerald-500/10 px-2 py-0.5 rounded-full mb-2">🟢 متاح الآن</span>
             <p id="modal-bio" class="text-[11px] text-gray-400 italic mb-3 px-2 line-clamp-3">لا توجد نبذة شخصية.</p>
-            <div class="bg-[#12121a] p-1.5 rounded-xl mb-3 text-[11px] text-[#ff2a85] font-bold" id="modal-points">0 EXP • LVL 1</div>
+            <div class="bg-[#12121a] p-1.5 rounded-xl mb-3 text-[11px] text-[#ff2a85] font-bold" id="modal-points">0 عملة • LVL 1</div>
             <div id="modal-note-area" class="hidden bg-white text-black p-2.5 rounded-xl text-[11px] font-bold mb-3 text-right shadow-md note-bubble"></div>
             <div class="space-y-2">
                 <button id="modal-chat-btn" class="w-full py-2.5 gradient-bg rounded-xl text-xs font-bold text-white interactive-press shadow-md">مراسلة خاصة 💬</button>
@@ -920,7 +927,7 @@
     </div>
 
     <!-- زر المساعد الذكي -->
-    <button id="nxl-ai-btn" class="fixed bottom-20 left-4 z-40 w-12 h-12 rounded-full gradient-bg flex items-center justify-center shadow-lg shadow-[#ff2a85]/40 animate-bounce transition interactive-press border-2 border-[#060609]">
+    <button id="nxl-ai-btn" class="fixed bottom-20 left-4 z-40 w-12 h-12 rounded-full gradient-bg flex items-center justify-center shadow-lg shadow-[#ff2a85]/40 transition interactive-press border-2 border-[#060609]">
         <span class="text-white font-black text-sm tracking-wider">NXL</span>
     </button>
 
@@ -932,7 +939,7 @@
                     <div class="w-9 h-9 rounded-full gradient-bg flex items-center justify-center text-white font-black text-xs">NXL</div>
                     <div>
                         <h3 class="text-xs font-bold text-white">NXL Intelligent Assistant</h3>
-                        <p class="text-[9px] text-[#ff2a85] font-semibold">يرد من الأدمن أو يبحث في الويب ويلخّص + ينفذ أوامرك ⚡</p>
+                        <p class="text-[9px] text-[#ff2a85] font-semibold">يؤكد قبل نشر النوت ويجمع بيانات الكارت في المحادثة ⚡</p>
                     </div>
                 </div>
                 <button id="close-ai-btn" class="text-gray-400 hover:text-white text-2xl font-light">&times;</button>
@@ -942,20 +949,19 @@
                 <div class="flex gap-2 w-full justify-start">
                     <div class="w-7 h-7 rounded-full gradient-bg flex items-center justify-center text-white text-[10px] font-bold shrink-0">NXL</div>
                     <div class="p-2.5 text-xs rounded-2xl bg-[#12121a] border border-gray-800 text-white rounded-tl-none max-w-[85%] leading-relaxed">
-                        أهلاً بك في منصة NXL! أرد أولاً من معلومات الأدمن، ولو ملاقيتش ببحث في الويب وألخّص لك، وبنفّذ أوامرك فوراً مثل: «انشر نوت: ...» أو «انشر منشور: ...» أو «افتح كارت الحب». 🚀
+                        أهلاً بك في NXL! لو طلبت نشر نوت بسألك الأول عن محتواه وأطلب تأكيدك قبل النشر، ولو طلبت كارت حب هجمع بياناته منك في المحادثة وأجهزهولك هنا. 🚀
                     </div>
                 </div>
             </div>
 
             <div class="flex gap-1.5 px-2.5 pt-2 bg-[#12121a] overflow-x-auto custom-scrollbar shrink-0">
+                <button type="button" onclick="window.sendQuickAiPrompt('انشر نوت')" class="text-[10px] bg-[#060609] text-orange-300 border border-orange-500/30 px-2.5 py-1 rounded-full whitespace-nowrap interactive-press">📝 انشر نوت</button>
+                <button type="button" onclick="window.sendQuickAiPrompt('عايز كارت حب')" class="text-[10px] bg-[#060609] text-rose-300 border border-rose-500/30 px-2.5 py-1 rounded-full whitespace-nowrap interactive-press">💘 كارت حب في المحادثة</button>
                 <button type="button" onclick="window.sendQuickAiPrompt('ما هي منصة NXL؟')" class="text-[10px] bg-[#060609] text-pink-300 border border-pink-500/30 px-2.5 py-1 rounded-full whitespace-nowrap interactive-press">✨ عن NXL</button>
-                <button type="button" onclick="window.sendQuickAiPrompt('افتح كارت الحب')" class="text-[10px] bg-[#060609] text-rose-300 border border-rose-500/30 px-2.5 py-1 rounded-full whitespace-nowrap interactive-press">💍 كارت الحب / العقد</button>
-                <button type="button" onclick="window.sendQuickAiPrompt('انشر نوت: مساء الفل على أحلى ناس في NXL ✨')" class="text-[10px] bg-[#060609] text-orange-300 border border-orange-500/30 px-2.5 py-1 rounded-full whitespace-nowrap interactive-press">📝 انشر نوت</button>
-                <button type="button" onclick="window.sendQuickAiPrompt('افتح الإعدادات')" class="text-[10px] bg-[#060609] text-cyan-300 border border-cyan-500/30 px-2.5 py-1 rounded-full whitespace-nowrap interactive-press">⚙️ الإعدادات</button>
             </div>
 
             <div class="p-2.5 bg-[#12121a] border-t border-gray-800 flex gap-2 items-center shrink-0 mb-safe">
-                <input type="text" id="ai-msg-input" placeholder="اسأل عن أي حاجة أو اطلب تنفيذ أمر..." class="flex-1 bg-[#060609] nxl-scalable-text rounded-xl px-3.5 py-3 text-white focus:outline-none border border-gray-800">
+                <input type="text" id="ai-msg-input" placeholder="اكتب رسالتك أو ردك..." class="flex-1 bg-[#060609] nxl-scalable-text rounded-xl px-3.5 py-3 text-white focus:outline-none border border-gray-800">
                 <button id="send-ai-btn" class="w-10 h-10 gradient-bg rounded-xl flex items-center justify-center text-white font-bold interactive-press shadow-md">✨</button>
             </div>
         </div>
@@ -970,7 +976,7 @@
         <button onclick="switchTab('global', this)" class="nav-btn text-gray-400 font-extrabold text-[10px] flex flex-col items-center gap-1 transition-all relative">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
             عام
-            <span id="global-unread-dot" class="hidden absolute top-0 right-3 w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
+            <span id="global-unread-dot" class="hidden absolute top-0 right-3 w-2 h-2 bg-red-500 rounded-full"></span>
         </button>
         <button onclick="switchTab('games', this)" class="nav-btn text-gray-400 font-extrabold text-[10px] flex flex-col items-center gap-1 transition-all">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
@@ -1005,11 +1011,17 @@
         };
 
         const APP_BASE_URL = "https://factshot63-web.github.io/NXL/Nxl";
-        const REVEAL_ACTOR_COST_EXP = 10;
+        const INSTAGRAM_BADGE_HANDLE = "@nxl.official";
+        const REVEAL_ACTOR_COST_COINS = 10;
+        const TRANSFER_FEE_RATE = 0.10;
+        const MIN_TRANSFER_COINS = 10;
+        const MAX_TRANSFER_COINS = 5000;
+        const MIN_WITHDRAW_COINS = 100;
+        const COINS_PER_100_EGP = 5;
 
         const OFFLINE_KEYS = {
-            user: 'nxl_offline_user_v4',
-            posts: 'nxl_offline_posts_v4'
+            user: 'nxl_offline_user_v5',
+            posts: 'nxl_offline_posts_v5'
         };
 
         const app = initializeApp(firebaseConfig);
@@ -1050,6 +1062,7 @@
         let incomingConfessionsList = [];
         let outgoingConfessionsList = [];
         let weddingContractsList = [];
+        let aiPendingState = null;
 
         const DEFAULT_LOVE_QUOTES = [
             "قصة حب تجمع قلبين على صدق المشاعر وتجعل كل يوم جديد أجمل بوجود الطرف الآخر.",
@@ -1121,7 +1134,6 @@
         });
         window.addEventListener('online', () => {
             setOfflineBanner(false);
-            showToast('⚡ عاد الاتصال بالإنترنت — جاري مزامنة البيانات');
         });
 
         window.setQuickMood = async (moodText) => {
@@ -1165,6 +1177,16 @@
         function getTodayDateKey() { return new Date().toISOString().slice(0, 10); }
         function getYesterdayDateKey() { return new Date(Date.now() - 86400000).toISOString().slice(0, 10); }
 
+        async function recordCoinLedger(uid, type, deltaCoins, meta = {}) {
+            if (!uid) return;
+            await push(ref(db, `coin_ledger/${uid}`), {
+                type,
+                deltaCoins: Number(deltaCoins) || 0,
+                timestamp: Date.now(),
+                ...meta
+            }).catch(() => {});
+        }
+
         async function syncDailyStreak(uid, existingData) {
             const today = getTodayDateKey();
             const yesterday = getYesterdayDateKey();
@@ -1179,19 +1201,21 @@
                 streakCount: nextStreak,
                 dailyQuests: { date: today, postDone: false, engageCount: 0, confessShared: false }
             });
-            await awardStructuredExp(streakBonus, `🔥 سلسلة ${nextStreak} يوم متواصل`);
+            await awardStructuredExp(streakBonus, `🔥 سلسلة ${nextStreak} يوم متواصل`, 'streak_bonus');
         }
 
-        async function awardStructuredExp(amount, reasonLabel = "") {
+        async function awardStructuredExp(amount, reasonLabel = "", ledgerType = 'reward') {
             if (!currentUser || !Number.isFinite(Number(amount)) || Number(amount) <= 0) return;
-            const addVal = Math.round(Number(amount));
+            const addVal = Math.min(100, Math.round(Number(amount)));
             await runTransaction(ref(db, `users/${currentUser.uid}/points`), (curr) => (Number(curr) || 0) + addVal).catch(() => {});
-            if (reasonLabel) showToast(`${reasonLabel} (+${addVal} EXP)`);
+            await recordCoinLedger(currentUser.uid, ledgerType, addVal, { note: reasonLabel });
+            if (reasonLabel) showToast(`${reasonLabel} (+${addVal} عملة)`);
         }
 
-        async function spendExpPoints(cost) {
+        async function spendExpPoints(cost, ledgerType = 'spend', note = '') {
             if (!currentUser) return false;
-            const need = Math.max(0, Number(cost) || 0);
+            const need = Math.max(0, Math.round(Number(cost) || 0));
+            if (need <= 0) return true;
             let ok = false;
             await runTransaction(ref(db, `users/${currentUser.uid}/points`), (curr) => {
                 const bal = Number(curr) || 0;
@@ -1199,24 +1223,130 @@
                 ok = true;
                 return bal - need;
             });
+            if (ok) await recordCoinLedger(currentUser.uid, ledgerType, -need, { note });
             return ok;
         }
 
-        async function completeDailyQuest(questKey, expReward, label) {
+        // ================= التحويل بعمولة + السحب عبر بادج إنستجرام =================
+        const transferAmountInput = document.getElementById('transfer-amount-input');
+        transferAmountInput?.addEventListener('input', () => {
+            const raw = Math.floor(Number(transferAmountInput.value) || 0);
+            const feePreview = document.getElementById('transfer-fee-preview');
+            if (!feePreview) return;
+            if (raw <= 0) {
+                feePreview.innerText = 'أدخل المبلغ لحساب العمولة الصافية والوصول للمستلم.';
+                return;
+            }
+            const fee = Math.max(1, Math.round(raw * TRANSFER_FEE_RATE));
+            const net = Math.max(0, raw - fee);
+            feePreview.innerText = `المخصوم: ${raw} عملة • العمولة (10%): ${fee} عملة • يصل للمستلم: ${net} عملة`;
+        });
+
+        document.getElementById('send-coins-transfer-btn')?.addEventListener('click', async () => {
+            if (!currentUser || !userData) return;
+            const cleanTarget = (document.getElementById('transfer-target-username')?.value || '').trim().toLowerCase().replace(/^@/, '');
+            const amount = Math.floor(Number(document.getElementById('transfer-amount-input')?.value) || 0);
+
+            if (!cleanTarget) return showToast('⚠️ اكتب يوزرنيم المستلم');
+            if (amount < MIN_TRANSFER_COINS || amount > MAX_TRANSFER_COINS) {
+                return showToast(`⚠️ التحويل مسموح من ${MIN_TRANSFER_COINS} إلى ${MAX_TRANSFER_COINS} عملة`);
+            }
+            if (cleanTarget === (userData.username || '').toLowerCase()) {
+                return showToast('⚠️ لا يمكنك التحويل لنفسك');
+            }
+
+            const uidSnap = await get(child(ref(db), `usernames/${cleanTarget}`));
+            if (!uidSnap.exists()) return showToast('⚠️ هذا اليوزرنيم غير موجود');
+            const targetUid = uidSnap.val();
+            if (!targetUid || targetUid === currentUser.uid) return showToast('⚠️ مستلم غير صالح');
+
+            const fee = Math.max(1, Math.round(amount * TRANSFER_FEE_RATE));
+            const netToRecipient = Math.max(1, amount - fee);
+
+            let senderDeducted = false;
+            await runTransaction(ref(db, `users/${currentUser.uid}/points`), (curr) => {
+                const bal = Number(curr) || 0;
+                if (bal < amount) return;
+                senderDeducted = true;
+                return bal - amount;
+            });
+
+            if (!senderDeducted) return showToast('⚠️ رصيد العملات غير كافٍ لإتمام التحويل');
+
+            await runTransaction(ref(db, `users/${targetUid}/points`), (curr) => (Number(curr) || 0) + netToRecipient);
+
+            await recordCoinLedger(currentUser.uid, 'transfer_out', -amount, { toUid: targetUid, toUsername: cleanTarget, fee, netToRecipient });
+            await recordCoinLedger(targetUid, 'transfer_in', netToRecipient, { fromUid: currentUser.uid, fromUsername: userData.username });
+            await pushUserActivity(
+                targetUid,
+                'وصلك تحويل عملات 🪙',
+                `حوّل لك ${userData.nickname} (@${userData.username}) عدد ${netToRecipient} عملة (بعد خصم العمولة)`,
+                { forceVisible: true }
+            );
+
+            document.getElementById('transfer-target-username').value = '';
+            document.getElementById('transfer-amount-input').value = '';
+            document.getElementById('transfer-fee-preview').innerText = 'أدخل المبلغ لحساب العمولة الصافية والوصول للمستلم.';
+            showToast(`✅ تم تحويل ${netToRecipient} عملة لـ @${cleanTarget} (عمولة ${fee} عملة)`);
+        });
+
+        document.getElementById('request-coins-withdraw-btn')?.addEventListener('click', async () => {
+            if (!currentUser || !userData) return;
+            const amount = Math.floor(Number(document.getElementById('withdraw-amount-input')?.value) || 0);
+            const igHandle = (document.getElementById('withdraw-ig-handle')?.value || '').trim().replace(/^@/, '');
+
+            if (amount < MIN_WITHDRAW_COINS) return showToast(`⚠️ الحد الأدنى للسحب ${MIN_WITHDRAW_COINS} عملة`);
+            if (!igHandle || igHandle.length < 2) return showToast('⚠️ اكتب حسابك على إنستجرام لاستلام السحب');
+
+            const locked = await spendExpPoints(amount, 'withdraw_hold', `طلب سحب إلى @${igHandle}`);
+            if (!locked) return showToast('⚠️ رصيد العملات غير كافٍ لطلب السحب');
+
+            const approxEgp = ((amount / 100) * COINS_PER_100_EGP).toFixed(2);
+            const reqRef = await push(ref(db, 'coin_withdraw_requests'), {
+                uid: currentUser.uid,
+                nickname: userData.nickname,
+                username: userData.username,
+                instagram: `@${igHandle}`,
+                coinsAmount: amount,
+                symbolicEgp: approxEgp,
+                status: 'pending_badge_review',
+                timestamp: Date.now()
+            });
+
+            const ticketId = reqRef.key.slice(-6).toUpperCase();
+            const badgeMsg = `طلب سحب عملات NXL #${ticketId}\nالحساب: ${userData.nickname} (@${userData.username})\nالكمية: ${amount} عملة (قيمة رمزية: ${approxEgp} ج.م)\nإنستجرام المستلم: @${igHandle}`;
+
+            navigator.clipboard?.writeText(badgeMsg).catch(() => {});
+            const box = document.getElementById('withdraw-receipt-box');
+            if (box) {
+                box.classList.remove('hidden');
+                box.innerHTML = `
+                    <div class="font-black text-emerald-300">✅ تم تسجيل طلب السحب #${escapeHTML(ticketId)} (القيمة الرمزية: ${escapeHTML(approxEgp)} ج.م)</div>
+                    <p class="text-gray-300">تم نسخ تفاصيل الطلب تلقائياً. تواصل مع بادج إنستجرام (${escapeHTML(INSTAGRAM_BADGE_HANDLE)}) لإتمام السحب:</p>
+                    <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="inline-block mt-1 px-3 py-1.5 rounded-lg bg-pink-600 text-white font-black">فتح إنستجرام للتواصل مع البادج 📲</a>
+                `;
+            }
+
+            document.getElementById('withdraw-amount-input').value = '';
+            document.getElementById('withdraw-ig-handle').value = '';
+            showToast(`📲 تم تسجيل طلب السحب #${ticketId} ونسخ الرسالة للبادج`);
+        });
+
+        async function completeDailyQuest(questKey, coinReward, label) {
             if (!currentUser || !userData) return;
             const today = getTodayDateKey();
             const q = userData.dailyQuests?.date === today ? userData.dailyQuests : { date: today, postDone: false, engageCount: 0, confessShared: false };
 
             if (questKey === 'post' && !q.postDone) {
                 await update(ref(db, `users/${currentUser.uid}/dailyQuests`), { date: today, postDone: true });
-                await awardStructuredExp(expReward, `🎯 مهمة: ${label}`);
+                await awardStructuredExp(coinReward, `🎯 مهمة: ${label}`, 'quest_post');
             } else if (questKey === 'confess' && !q.confessShared) {
                 await update(ref(db, `users/${currentUser.uid}/dailyQuests`), { date: today, confessShared: true });
-                await awardStructuredExp(expReward, `🎯 مهمة: ${label}`);
+                await awardStructuredExp(coinReward, `🎯 مهمة: ${label}`, 'quest_confess');
             } else if (questKey === 'engage' && (q.engageCount || 0) < 3) {
                 const nextCount = (q.engageCount || 0) + 1;
                 await update(ref(db, `users/${currentUser.uid}/dailyQuests`), { date: today, engageCount: nextCount });
-                if (nextCount === 3) await awardStructuredExp(expReward, `🎯 مهمة مكتملة: ${label}`);
+                if (nextCount === 3) await awardStructuredExp(coinReward, `🎯 مهمة مكتملة: ${label}`, 'quest_engage');
             }
         }
 
@@ -1244,106 +1374,222 @@
 
         window.revealActivityActor = async (actId) => {
             if (!currentUser || !actId) return;
-            const paid = await spendExpPoints(REVEAL_ACTOR_COST_EXP);
-            if (!paid) return showToast(`⚠️ تحتاج ${REVEAL_ACTOR_COST_EXP} EXP لكشف هوية المتفاعل`);
+            const paid = await spendExpPoints(REVEAL_ACTOR_COST_COINS, 'reveal_actor', 'كشف هوية متفاعل');
+            if (!paid) return showToast(`⚠️ تحتاج ${REVEAL_ACTOR_COST_COINS} عملة لكشف الهوية`);
             await update(ref(db, `activities/${currentUser.uid}/${actId}`), { revealed: true });
-            showToast(`🕵️ تم كشف هوية المتفاعل (-${REVEAL_ACTOR_COST_EXP} EXP)`);
+            showToast(`🕵️ تم كشف الهوية (-${REVEAL_ACTOR_COST_COINS} عملة)`);
         };
 
-        // ================= عقد الجواز الإلكتروني =================
+        // ================= عقد الجواز الإلكتروني الاحترافي =================
         window.fillClauseFromAdminQuotes = () => {
             const q = pickNextLoveQuote();
             const inp = document.getElementById('wedding-clause-input');
             if (inp) inp.value = q;
-            showToast('✨ تم سحب جملة من قاعدة الأدمن للعقد');
+            showToast('✨ تم إضافة بند من قاعدة الأدمن');
         };
+
+        function normalizeHandle(h) {
+            const clean = String(h || '').trim().replace(/^@/, '').toLowerCase();
+            return clean ? `@${clean}` : '@user';
+        }
 
         document.getElementById('create-wedding-contract-btn')?.addEventListener('click', async () => {
             if (!currentUser || !userData) return;
-            const groom = document.getElementById('wedding-groom-input')?.value.trim() || userData.nickname || 'الطرف الأول';
-            const bride = document.getElementById('wedding-bride-input')?.value.trim() || selectedLovePartner?.nickname || '';
-            if (!bride) return showToast('⚠️ اكتب اسم الطرف الثاني في عقد الجواز الإلكتروني');
+            const firstName = (document.getElementById('wedding-first-name')?.value || '').trim() || userData.nickname || 'الطرف الأول';
+            const firstUser = normalizeHandle((document.getElementById('wedding-first-user')?.value || '').trim() || userData.username || 'first');
+            const secondName = (document.getElementById('wedding-second-name')?.value || '').trim() || selectedLovePartner?.nickname || '';
+            const secondUser = normalizeHandle((document.getElementById('wedding-second-user')?.value || '').trim() || selectedLovePartner?.username || '');
 
-            const clause = document.getElementById('wedding-clause-input')?.value.trim() || pickNextLoveQuote();
-            const contractCode = `NXL-W-${Math.floor(100000 + Math.random() * 900000)}`;
+            if (!secondName || secondUser === '@user') {
+                return showToast('⚠️ اكتب اسم ويوزر الطرف الثاني لإصدار العقد');
+            }
 
-            await push(ref(db, 'wedding_contracts'), {
+            const clause = (document.getElementById('wedding-clause-input')?.value || '').trim() || pickNextLoveQuote();
+            const contractCode = `NXL-MAR-${Math.floor(100000 + Math.random() * 900000)}`;
+            const cleanSecondHandle = secondUser.replace(/^@/, '');
+            let secondUid = null;
+            try {
+                const uSnap = await get(child(ref(db), `usernames/${cleanSecondHandle}`));
+                if (uSnap.exists()) secondUid = uSnap.val();
+            } catch (_) {}
+
+            const newContractRef = await push(ref(db, 'wedding_contracts'), {
                 contractCode,
-                groom,
-                bride,
+                firstName,
+                firstUser,
+                firstUid: currentUser.uid,
+                secondName,
+                secondUser,
+                secondUid,
                 clause,
-                sealed: false,
+                firstApproved: true,
+                firstSignature: `✍️ ${firstName} (${firstUser})`,
+                secondApproved: false,
+                secondSignature: '',
+                adminVerified: false,
+                adminSeal: '',
                 creatorUid: currentUser.uid,
                 timestamp: Date.now()
             });
 
-            document.getElementById('wedding-groom-input').value = '';
-            document.getElementById('wedding-bride-input').value = '';
+            if (secondUid && secondUid !== currentUser.uid) {
+                await pushUserActivity(
+                    secondUid,
+                    'دعوة توقيع عقد جواز إلكتروني 💍',
+                    `أرسل ${firstName} (${firstUser}) عقد جواز برقم ${contractCode} ويحتاج موافقتك وإمضاءك`,
+                    { forceVisible: true, kind: 'wedding_contract', contractId: newContractRef.key }
+                );
+            }
+
+            document.getElementById('wedding-first-name').value = '';
+            document.getElementById('wedding-first-user').value = '';
+            document.getElementById('wedding-second-name').value = '';
+            document.getElementById('wedding-second-user').value = '';
             document.getElementById('wedding-clause-input').value = '';
-            await awardStructuredExp(15, '💍 إصدار عقد جواز إلكتروني');
+            showToast(`💍 تم إنشاء العقد ${contractCode} — بانتظار موافقة الطرف الثاني وتوثيق الأدمن`);
         });
 
-        window.sealWeddingContract = async (contractId) => {
+        window.approveWeddingContractParty = async (contractId) => {
+            if (!contractId || !userData) return;
+            const c = weddingContractsList.find(x => x.id === contractId);
+            if (!c) return;
+            const signerLabel = userData.nickname || c.secondName || 'الطرف الثاني';
+            const signerHandle = userData.username ? `@${userData.username}` : c.secondUser;
+            await update(ref(db, `wedding_contracts/${contractId}`), {
+                secondApproved: true,
+                secondSignature: `✍️ ${signerLabel} (${signerHandle})`,
+                secondApprovedAt: Date.now()
+            });
+            showToast('✅ تمت موافقة الطرف الثاني وإمضاؤه على العقد');
+        };
+
+        window.adminVerifyWeddingContract = async (contractId) => {
             if (!contractId) return;
-            await update(ref(db, `wedding_contracts/${contractId}`), { sealed: true, sealedAt: Date.now() });
-            showToast('🔏 تم ختم وتوثيق عقد الجواز الإلكتروني رسمياً!');
+            const c = weddingContractsList.find(x => x.id === contractId);
+            if (!c) return;
+            if (!c.firstApproved || !c.secondApproved) {
+                return showToast('⚠️ يجب موافقة وإمضاء الطرفين أولاً قبل توثيق الأدمن');
+            }
+            const certSerial = `CERT-${Date.now().toString().slice(-6)}`;
+            await update(ref(db, `wedding_contracts/${contractId}`), {
+                adminVerified: true,
+                adminSeal: `🛡️ موثق ومعتمد من إدارة NXL • ${certSerial}`,
+                verifiedAt: Date.now()
+            });
+            showToast(`🛡️ تم توثيق وختم العقد رسمياً (${certSerial})`);
         };
 
         window.shareWeddingContractCard = async (contractId) => {
             const c = weddingContractsList.find(x => x.id === contractId);
             if (!c) return;
+
             const canvas = document.createElement('canvas');
             canvas.width = 720;
             canvas.height = 1280;
             const ctx = canvas.getContext('2d');
 
             const grad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-            grad.addColorStop(0, '#27091d');
-            grad.addColorStop(0.5, '#110819');
-            grad.addColorStop(1, '#261006');
+            grad.addColorStop(0, '#24081a');
+            grad.addColorStop(0.5, '#100818');
+            grad.addColorStop(1, '#261005');
             ctx.fillStyle = grad;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
             ctx.strokeStyle = '#f59e0b';
             ctx.lineWidth = 8;
-            ctx.strokeRect(28, 28, canvas.width - 56, canvas.height - 56);
+            ctx.strokeRect(26, 26, canvas.width - 52, canvas.height - 52);
+
+            ctx.strokeStyle = 'rgba(255, 42, 133, 0.55)';
+            ctx.lineWidth = 3;
+            ctx.strokeRect(42, 42, canvas.width - 84, canvas.height - 84);
 
             ctx.textAlign = 'center';
             ctx.fillStyle = '#fbbf24';
-            ctx.font = '900 44px Cairo, sans-serif';
-            ctx.fillText('💍 عقد جواز إلكتروني • NXL', canvas.width / 2, 140);
+            ctx.font = '900 42px Cairo, sans-serif';
+            ctx.fillText('💍 وثيقة عقد جواز إلكتروني • NXL', canvas.width / 2, 115);
 
             ctx.fillStyle = '#f9a8d4';
-            ctx.font = 'bold 24px Cairo, sans-serif';
-            ctx.fillText(`رقم العقد: ${c.contractCode || 'NXL'}`, canvas.width / 2, 200);
+            ctx.font = 'bold 22px Cairo, sans-serif';
+            ctx.fillText(`رقم العقد: ${c.contractCode || 'NXL'}  |  التاريخ: ${new Date(c.timestamp || Date.now()).toLocaleDateString('ar-EG')}`, canvas.width / 2, 162);
 
-            ctx.fillStyle = '#ffffff';
-            ctx.font = '900 42px Cairo, sans-serif';
-            ctx.fillText(`${c.groom}  💞  ${c.bride}`, canvas.width / 2, 340);
-
-            ctx.fillStyle = 'rgba(0,0,0,0.45)';
-            ctx.fillRect(60, 420, canvas.width - 120, 440);
+            ctx.fillStyle = 'rgba(18, 18, 26, 0.85)';
+            ctx.fillRect(62, 200, canvas.width - 124, 180);
             ctx.strokeStyle = '#ff2a85';
-            ctx.lineWidth = 4;
-            ctx.strokeRect(60, 420, canvas.width - 120, 440);
+            ctx.lineWidth = 3;
+            ctx.strokeRect(62, 200, canvas.width - 124, 180);
+
+            ctx.fillStyle = '#38bdf8';
+            ctx.font = '900 30px Cairo, sans-serif';
+            ctx.fillText(`${c.firstName}  (${c.firstUser})`, canvas.width / 2, 265);
+
+            ctx.fillStyle = '#ff2a85';
+            ctx.font = '900 28px Cairo, sans-serif';
+            ctx.fillText('💞 يرتبط بعقد جواز إلكتروني مع 💞', canvas.width / 2, 312);
+
+            ctx.fillStyle = '#f472b6';
+            ctx.font = '900 30px Cairo, sans-serif';
+            ctx.fillText(`${c.secondName}  (${c.secondUser})`, canvas.width / 2, 358);
+
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.45)';
+            ctx.fillRect(62, 410, canvas.width - 124, 210);
+            ctx.strokeStyle = 'rgba(251, 191, 36, 0.5)';
+            ctx.lineWidth = 3;
+            ctx.strokeRect(62, 410, canvas.width - 124, 210);
+
+            ctx.fillStyle = '#fde68a';
+            ctx.font = 'bold 22px Cairo, sans-serif';
+            ctx.fillText('📜 بنود العقد والميثاق:', canvas.width / 2, 455);
 
             ctx.fillStyle = '#ffffff';
-            ctx.font = 'bold 28px Cairo, sans-serif';
-            wrapCanvasText(ctx, `«${c.clause || ''}»`, canvas.width / 2, 520, canvas.width - 170, 42);
+            ctx.font = 'bold 25px Cairo, sans-serif';
+            wrapCanvasText(ctx, `«${c.clause || ''}»`, canvas.width / 2, 505, canvas.width - 160, 38);
 
-            ctx.fillStyle = c.sealed ? '#34d399' : '#fde68a';
-            ctx.font = '900 30px Cairo, sans-serif';
-            ctx.fillText(c.sealed ? '🔏 مختوم وموثق رسمياً' : '⏳ بانتظار الختم والتوثيق', canvas.width / 2, 810);
+            // خانة الإمضاءات
+            ctx.fillStyle = 'rgba(18, 18, 26, 0.9)';
+            ctx.fillRect(62, 650, canvas.width - 124, 230);
+            ctx.strokeStyle = '#38bdf8';
+            ctx.lineWidth = 3;
+            ctx.strokeRect(62, 650, canvas.width - 124, 230);
+
+            ctx.fillStyle = '#f9a8d4';
+            ctx.font = 'bold 22px Cairo, sans-serif';
+            ctx.fillText('✍️ سجل الموافقات والإمضاء الإلكتروني', canvas.width / 2, 692);
+
+            const sig1 = c.firstApproved ? (c.firstSignature || `✍️ ${c.firstName}`) : '⏳ بانتظار إمضاء الطرف الأول';
+            const sig2 = c.secondApproved ? (c.secondSignature || `✍️ ${c.secondName}`) : '⏳ بانتظار موافقة وإمضاء الطرف الثاني';
+
+            ctx.fillStyle = c.firstApproved ? '#34d399' : '#fbbf24';
+            ctx.font = 'bold 22px Cairo, sans-serif';
+            ctx.fillText(`الطرف الأول: ${sig1}`, canvas.width / 2, 745);
+
+            ctx.fillStyle = c.secondApproved ? '#34d399' : '#fbbf24';
+            ctx.font = 'bold 22px Cairo, sans-serif';
+            ctx.fillText(`الطرف الثاني: ${sig2}`, canvas.width / 2, 795);
+
+            ctx.fillStyle = '#9ca3af';
+            ctx.font = '19px Cairo, sans-serif';
+            ctx.fillText('________________________________________', canvas.width / 2, 845);
+
+            // ختم وتوثيق الأدمن
+            ctx.fillStyle = c.adminVerified ? 'rgba(16, 185, 129, 0.16)' : 'rgba(245, 158, 11, 0.12)';
+            ctx.fillRect(62, 910, canvas.width - 124, 130);
+            ctx.strokeStyle = c.adminVerified ? '#34d399' : '#fbbf24';
+            ctx.lineWidth = 4;
+            ctx.strokeRect(62, 910, canvas.width - 124, 130);
+
+            ctx.fillStyle = c.adminVerified ? '#34d399' : '#fde68a';
+            ctx.font = '900 25px Cairo, sans-serif';
+            ctx.fillText(c.adminVerified ? (c.adminSeal || '🛡️ موثق ومختوم من الأدمن') : '⏳ بانتظار توثيق وختم الأدمن', canvas.width / 2, 985);
 
             ctx.fillStyle = '#38bdf8';
             ctx.font = 'bold 20px Cairo, sans-serif';
-            ctx.fillText(APP_BASE_URL, canvas.width / 2, 1080);
+            ctx.fillText(APP_BASE_URL, canvas.width / 2, 1140);
 
             await shareOrSaveCanvasImage(
                 canvas,
-                `NXL-Wedding-Contract-${c.contractCode || Date.now()}.png`,
-                `💍 عقد جواز إلكتروني: ${c.groom} 💞 ${c.bride}`,
-                `💍 عقد جواز إلكتروني (${c.contractCode}) بين ${c.groom} و ${c.bride}:\n«${c.clause}»\n${APP_BASE_URL}`
+                `NXL-Marriage-Contract-${c.contractCode || Date.now()}.png`,
+                `💍 عقد جواز إلكتروني: ${c.firstName} (${c.firstUser}) 💞 ${c.secondName} (${c.secondUser})`,
+                `💍 عقد جواز إلكتروني (${c.contractCode})\n${c.firstName} (${c.firstUser}) 💞 ${c.secondName} (${c.secondUser})\n${APP_BASE_URL}`
             );
         };
 
@@ -1361,22 +1607,43 @@
                     return;
                 }
 
-                box.innerHTML = arr.slice(0, 5).map(c => `
-                    <div class="bg-[#0b0b12] border ${c.sealed ? 'border-emerald-400/50' : 'border-amber-500/35'} rounded-2xl p-3 space-y-2 text-right">
-                        <div class="flex items-center justify-between text-[10px]">
-                            <span class="font-black text-amber-300">💍 عقد جواز • ${escapeHTML(c.contractCode || 'NXL')}</span>
-                            <span class="${c.sealed ? 'text-emerald-400 font-bold' : 'text-pink-300'}">${c.sealed ? '🔏 مختوم' : '⏳ غير مختوم'}</span>
+                box.innerHTML = arr.slice(0, 5).map(c => {
+                    const bothApproved = Boolean(c.firstApproved && c.secondApproved);
+                    const fullySealed = Boolean(bothApproved && c.adminVerified);
+
+                    let statusBadge = '<span class="text-amber-300 font-bold">⏳ بانتظار الطرف الثاني</span>';
+                    if (fullySealed) statusBadge = '<span class="text-emerald-400 font-black">🛡️ موثق ومختوم</span>';
+                    else if (bothApproved) statusBadge = '<span class="text-cyan-300 font-bold">✍️ وافق الطرفان • بانتظار توثيق الأدمن</span>';
+
+                    return `
+                        <div class="bg-[#0b0b12] border ${fullySealed ? 'border-emerald-400/55' : 'border-amber-500/35'} rounded-2xl p-3 space-y-2 text-right">
+                            <div class="flex items-center justify-between text-[10px]">
+                                <span class="font-black text-amber-300">💍 عقد ${escapeHTML(c.contractCode || 'NXL')}</span>
+                                ${statusBadge}
+                            </div>
+                            <p class="text-xs font-black text-white text-center">${escapeHTML(c.firstName)} <span class="text-sky-300">${escapeHTML(c.firstUser)}</span> 💞 ${escapeHTML(c.secondName)} <span class="text-pink-300">${escapeHTML(c.secondUser)}</span></p>
+                            <p class="text-[11px] text-gray-300 leading-relaxed text-center">«${escapeHTML(c.clause || '')}»</p>
+
+                            <div class="bg-[#12121a] rounded-xl p-2 text-[10px] space-y-1 border border-gray-800/80">
+                                <div class="${c.firstApproved ? 'text-emerald-300' : 'text-gray-400'}">${escapeHTML(c.firstSignature || `⏳ طرف أول: ${c.firstName}`)}</div>
+                                <div class="${c.secondApproved ? 'text-emerald-300' : 'text-amber-300'}">${escapeHTML(c.secondSignature || `⏳ طرف ثاني: ${c.secondName} (لم يوافق بعد)`)}</div>
+                                <div class="${c.adminVerified ? 'text-cyan-300 font-bold' : 'text-gray-400'}">${escapeHTML(c.adminSeal || '🛡️ توثيق الأدمن: غير موثق بعد')}</div>
+                            </div>
+
+                            <div class="grid grid-cols-3 gap-1.5 pt-1">
+                                ${!c.secondApproved
+                                    ? `<button type="button" onclick="window.approveWeddingContractParty('${escapeHTML(c.id)}')" class="py-1.5 bg-pink-600/30 border border-pink-400/50 rounded-xl text-[10px] font-black text-pink-100 interactive-press">✍️ موافقة وإمضاء</button>`
+                                    : `<div class="py-1.5 bg-emerald-500/10 rounded-xl text-[10px] font-bold text-emerald-300 text-center">✅ موافق</div>`}
+
+                                ${!c.adminVerified
+                                    ? `<button type="button" onclick="window.adminVerifyWeddingContract('${escapeHTML(c.id)}')" class="py-1.5 bg-amber-500/20 border border-amber-400/50 rounded-xl text-[10px] font-black text-amber-200 interactive-press">🛡️ توثيق الأدمن</button>`
+                                    : `<div class="py-1.5 bg-cyan-500/10 rounded-xl text-[10px] font-bold text-cyan-300 text-center">🛡️ مختوم</div>`}
+
+                                <button type="button" onclick="window.shareWeddingContractCard('${escapeHTML(c.id)}')" class="py-1.5 gradient-bg rounded-xl text-[10px] font-black text-white interactive-press">📲 صورة العقد</button>
+                            </div>
                         </div>
-                        <p class="text-xs font-black text-white text-center">${escapeHTML(c.groom)} 💞 ${escapeHTML(c.bride)}</p>
-                        <p class="text-[11px] text-gray-300 leading-relaxed text-center">«${escapeHTML(c.clause || '')}»</p>
-                        <div class="grid grid-cols-2 gap-1.5 pt-1">
-                            ${!c.sealed
-                                ? `<button type="button" onclick="window.sealWeddingContract('${escapeHTML(c.id)}')" class="py-1.5 bg-emerald-500/20 border border-emerald-400/40 rounded-xl text-[10px] font-black text-emerald-200 interactive-press">🔏 ختم العقد</button>`
-                                : `<div class="py-1.5 bg-emerald-500/10 rounded-xl text-[10px] font-bold text-emerald-300 text-center">✅ موثق</div>`}
-                            <button type="button" onclick="window.shareWeddingContractCard('${escapeHTML(c.id)}')" class="py-1.5 gradient-bg rounded-xl text-[10px] font-black text-white interactive-press">📲 استوري العقد</button>
-                        </div>
-                    </div>
-                `).join('');
+                    `;
+                }).join('');
             });
         }
 
@@ -1433,8 +1700,11 @@
             document.getElementById('selected-love-partner-box')?.classList.remove('hidden');
             document.getElementById('love-partner-results').innerHTML = '';
             document.getElementById('love-partner-search-input').value = '';
-            const brideInp = document.getElementById('wedding-bride-input');
-            if (brideInp && !brideInp.value.trim()) brideInp.value = selectedLovePartner.nickname;
+
+            const sName = document.getElementById('wedding-second-name');
+            const sUser = document.getElementById('wedding-second-user');
+            if (sName && !sName.value.trim()) sName.value = selectedLovePartner.nickname;
+            if (sUser && !sUser.value.trim()) sUser.value = `@${selectedLovePartner.username}`;
         };
 
         document.getElementById('send-love-card-request-btn')?.addEventListener('click', async () => {
@@ -1547,14 +1817,44 @@
             });
         }
 
+        function createLoveCardPayload(u1Name, u1Handle, u2Name, u2Handle, note = '') {
+            const u1Avatar = getAvatarByPrivateGender('male', u1Handle || u1Name);
+            const u2Avatar = getAvatarByPrivateGender('female', u2Handle || u2Name);
+            const fullU1 = u1Handle ? `${u1Name} (${normalizeHandle(u1Handle)})` : u1Name;
+            const fullU2 = u2Handle ? `${u2Name} (${normalizeHandle(u2Handle)})` : u2Name;
+            const copy = buildEpicLoveCopy(fullU1, fullU2, note);
+            const cardLink = `${APP_BASE_URL}?loveCard=custom`;
+
+            latestEpicCardData = {
+                boyName: fullU1,
+                girlName: fullU2,
+                boyImgSrc: u1Avatar,
+                girlImgSrc: u2Avatar,
+                cardLink,
+                ...copy
+            };
+
+            document.getElementById('epic-card-names').innerText = `${fullU1}  ♥  ${fullU2}`;
+            document.getElementById('epic-boy-img').src = u1Avatar;
+            document.getElementById('epic-girl-img').src = u2Avatar;
+            document.getElementById('epic-boy-label').innerText = fullU1;
+            document.getElementById('epic-girl-label').innerText = fullU2;
+            document.getElementById('epic-card-quote-main').innerText = copy.mainQuote;
+            document.getElementById('epic-card-quote-deep').innerText = copy.deepQuote;
+            document.getElementById('epic-card-tags').innerText = copy.tags;
+            document.getElementById('epic-card-link-box').innerText = `🔗 ${cardLink}`;
+            document.getElementById('nxl-epic-love-card-preview').classList.remove('hidden');
+            return latestEpicCardData;
+        }
+
         window.buildApprovedLoveCard = (requestId) => {
             const req = loveCardRequestsMap[requestId];
             if (!req || req.status !== 'approved') return showToast('⚠️ الكارت متاح فقط بعد موافقة الطرف الآخر');
 
-            const u1Name = req.requesterName;
-            const u2Name = req.partnerName;
-            const u1Avatar = req.requesterAvatar || getAvatarByPrivateGender('male', u1Name);
-            const u2Avatar = req.partnerAvatar || getAvatarByPrivateGender('female', u2Name);
+            const u1Name = `${req.requesterName} (@${req.requesterUsername})`;
+            const u2Name = `${req.partnerName} (@${req.partnerUsername})`;
+            const u1Avatar = req.requesterAvatar || getAvatarByPrivateGender('male', req.requesterUsername || req.requesterName);
+            const u2Avatar = req.partnerAvatar || getAvatarByPrivateGender('female', req.partnerUsername || req.partnerName);
             const copy = buildEpicLoveCopy(u1Name, u2Name, req.note || '');
             const cardLink = `${APP_BASE_URL}?loveCard=${encodeURIComponent(requestId)}`;
 
@@ -1594,7 +1894,7 @@
                 if (items.length > 0) document.getElementById('activity-unread-dot')?.classList.remove('hidden');
 
                 if (items.length === 0) {
-                    listEl.innerHTML = '<p class="text-center text-xs text-gray-500 py-6">لا توجد إشعارات بعد. شارك منشورات أو استفتاءات لجذب التفاعل!</p>';
+                    listEl.innerHTML = '<p class="text-center text-xs text-gray-500 py-6">لا توجد طلبات أو تنبيهات حديثة.</p>';
                     return;
                 }
 
@@ -1617,8 +1917,10 @@
                         }
                     } else if (it.kind === 'love_approved' && it.requestId) {
                         actionBtnHtml = `<button type="button" onclick="window.buildApprovedLoveCard('${escapeHTML(it.requestId)}')" class="text-[9px] gradient-bg text-white px-2.5 py-1 rounded-lg font-black interactive-press shrink-0">صنع الكارت 💘</button>`;
+                    } else if (it.kind === 'wedding_contract' && it.contractId) {
+                        actionBtnHtml = `<button type="button" onclick="document.getElementById('activity-modal').classList.add('hidden'); window.switchTab('games', document.querySelectorAll('nav button')[2]);" class="text-[9px] bg-amber-500/20 text-amber-200 border border-amber-400/40 px-2.5 py-1 rounded-lg font-black interactive-press shrink-0">عرض العقد 💍</button>`;
                     } else if (!isRevealed) {
-                        actionBtnHtml = `<button type="button" onclick="window.revealActivityActor('${escapeHTML(it.id)}')" class="text-[9px] bg-amber-500/20 text-amber-300 border border-amber-400/40 px-2 py-1 rounded-lg font-black interactive-press shrink-0">كشف (${REVEAL_ACTOR_COST_EXP} EXP)</button>`;
+                        actionBtnHtml = `<button type="button" onclick="window.revealActivityActor('${escapeHTML(it.id)}')" class="text-[9px] bg-amber-500/20 text-amber-300 border border-amber-400/40 px-2 py-1 rounded-lg font-black interactive-press shrink-0">كشف (${REVEAL_ACTOR_COST_COINS} عملة)</button>`;
                     } else {
                         actionBtnHtml = `<span class="text-[9px] text-emerald-400 font-bold shrink-0">ظاهر</span>`;
                     }
@@ -1628,7 +1930,7 @@
                             <div class="flex items-center gap-2 min-w-0 flex-1">
                                 <img src="${escapeHTML(avatarSrc)}" class="w-8 h-8 rounded-full bg-gray-800 object-cover shrink-0">
                                 <div class="min-w-0 flex-1">
-                                    <p class="text-xs font-bold text-white truncate">${escapeHTML(displayActor)} • <span class="text-cyan-300">${escapeHTML(it.actionType || 'إشعار')}</span></p>
+                                    <p class="text-xs font-bold text-white truncate">${escapeHTML(displayActor)} • <span class="text-cyan-300">${escapeHTML(it.actionType || 'تنبيه')}</span></p>
                                     <p class="text-[10px] text-gray-400 truncate">${escapeHTML(it.detail || '')}</p>
                                 </div>
                             </div>
@@ -1679,7 +1981,6 @@
                         title: shareTitle,
                         text: copyText || `${shareTitle} • عبر منصة NXL`
                     });
-                    showToast('📲 تم فتح المشاركة — الرابط منسوخ أيضاً في الحافظة');
                     return;
                 }
 
@@ -1694,13 +1995,11 @@
                 postImageRegistry['temp_card'] = canvas.toDataURL('image/png');
                 window.openPostLightbox('temp_card');
                 setTimeout(() => URL.revokeObjectURL(url), 4000);
-                showToast('📲 الصورة جاهزة للاستوري والرابط منسوخ في الحافظة');
             } catch (err) {
                 if (err?.name === 'AbortError') return;
                 const dataUrl = canvas.toDataURL('image/png');
                 postImageRegistry['temp_card'] = dataUrl;
                 window.openPostLightbox('temp_card');
-                showToast('📲 الصورة جاهزة للاستوري والرابط منسوخ في الحافظة');
             }
         }
 
@@ -1776,26 +2075,26 @@
         };
 
         function getLevelInfo(points) {
-            const exp = Math.max(0, Number(points) || 0);
-            const level = Math.floor(exp / 50) + 1;
-            const currentLevelExp = exp % 50;
-            const progressPct = Math.min(100, Math.round((currentLevelExp / 50) * 100));
+            const coins = Math.max(0, Math.floor(Number(points) || 0));
+            const level = Math.floor(coins / 50) + 1;
+            const currentLevelCoins = coins % 50;
+            const progressPct = Math.min(100, Math.round((currentLevelCoins / 50) * 100));
             let title = "🌱 عضو جديد";
             if (level >= 20) title = "👑 أسطورة NXL";
             else if (level >= 10) title = "💎 نجم متألق";
             else if (level >= 5) title = "🔥 متفاعل نشط";
             else if (level >= 2) title = "⚡ مستكشف NXL";
-            return { exp, level, progressPct, remaining: 50 - currentLevelExp, title };
+            return { coins, level, progressPct, remaining: 50 - currentLevelCoins, title };
         }
 
         function computeBadges(uData, postsArr) {
-            const exp = Number(uData?.points) || 0;
+            const coins = Number(uData?.points) || 0;
             const streak = Number(uData?.streakCount) || 1;
             const myPostsCount = postsArr.filter(p => p.userId === currentUser?.uid).length;
             const bestReflex = Number(uData?.bestReflexScore) || 0;
 
             return [
-                { id: 'b1', name: '🌟 شرارة البداية', unlocked: exp >= 25, desc: '25+ EXP' },
+                { id: 'b1', name: '🌟 شرارة البداية', unlocked: coins >= 25, desc: '25+ عملة' },
                 { id: 'b2', name: '🔥 بطل الاستمرارية', unlocked: streak >= 3, desc: 'سلسلة 3 أيام' },
                 { id: 'b3', name: '✍️ صانع المحتوى', unlocked: myPostsCount >= 2, desc: 'منشوران أو أكثر' },
                 { id: 'b4', name: '⚡ برق السرعة', unlocked: bestReflex >= 18, desc: '+18 نقطة سرعة' }
@@ -2212,12 +2511,12 @@
                     themeAccent2: "#ff7300"
                 };
                 await set(ref(db, `users/${currentUser.uid}`), nextUser);
+                await recordCoinLedger(currentUser.uid, 'welcome_bonus', 15, { note: 'رصيد ترحيبي' });
                 if (currentUser.email) await set(ref(db, `user_auth_lookup/${username}`), currentUser.email);
                 userData = nextUser;
                 saveOfflineData(OFFLINE_KEYS.user, userData);
                 document.getElementById('setup-profile-screen').classList.add('hidden');
                 initAppUI();
-                showToast('🎉 أهلاً بك في NXL! رصيد البداية +15 EXP');
             } catch (err) {
                 showToast(err.message === 'USERNAME_TAKEN' ? '⚠️ اسم المستخدم محجوز' : `⚠️ ${firebaseErrorMessage(err)}`);
             } finally { saveBtn.disabled = false; }
@@ -2302,17 +2601,18 @@
             const lvl = getLevelInfo(userData.points);
             const streak = Math.max(1, Number(userData.streakCount) || 1);
             document.getElementById('header-streak-badge').innerText = `🔥 ${streak}d`;
-            document.getElementById('header-exp-text').innerText = `${lvl.exp} EXP • LVL ${lvl.level}`;
-            document.getElementById('drawer-exp-pill').innerText = `${lvl.exp} EXP`;
+            document.getElementById('header-exp-text').innerText = `${lvl.coins} عملة • LVL ${lvl.level}`;
+            document.getElementById('drawer-exp-pill').innerText = `${lvl.coins} عملة`;
+            document.getElementById('wallet-balance-badge').innerText = `${lvl.coins} عملة`;
             document.getElementById('drawer-account-summary').innerText = `@${userData.username || 'user'} • ${userData.statusMood || '🟢 متاح'}`;
 
             document.getElementById('profile-nickname').innerText = userData.nickname;
             document.getElementById('profile-username-display').innerText = `@${userData.username}`;
             document.getElementById('profile-bio-display').innerText = userData.bio || "";
-            document.getElementById('profile-points').innerText = `${lvl.exp} EXP`;
+            document.getElementById('profile-points').innerText = `${lvl.coins} عملة`;
             document.getElementById('profile-rank-title').innerText = `${lvl.title} • Level ${lvl.level}`;
             document.getElementById('profile-level-bar').style.width = `${lvl.progressPct}%`;
-            document.getElementById('profile-next-level-hint').innerText = `متبقي ${lvl.remaining} EXP للمستوى التالي`;
+            document.getElementById('profile-next-level-hint').innerText = `متبقي ${lvl.remaining} عملة للمستوى التالي`;
             document.getElementById('profile-streak-text').innerText = `🔥 سلسلة ${streak} يوم`;
             document.getElementById('profile-status-pill').innerText = userData.statusMood || "🟢 متاح الآن";
             document.getElementById('reflex-best').innerText = String(Number(userData.bestReflexScore) || 0);
@@ -2380,7 +2680,6 @@
             `).join('');
         }
 
-        // Anonymous Confessions: unreplied items disappear from incoming pending list once replied, while secret thread stays open until reveal
         function renderCombinedConfessionThreads() {
             const listEl = document.getElementById('confessions-list');
             const chatThreadsBox = document.getElementById('confession-chat-threads-list');
@@ -2640,7 +2939,6 @@
             showToast('📋 تم نسخ رابط الصراحة المجهولة');
         };
 
-        // Reflex Game
         let reflexScore = 0;
         let reflexTimeLeft = 10;
         let reflexActive = false;
@@ -2669,7 +2967,7 @@
                     const prevBest = Number(userData?.bestReflexScore) || 0;
                     if (reflexScore > prevBest && currentUser) {
                         await update(ref(db, `users/${currentUser.uid}`), { bestReflexScore: reflexScore });
-                        await awardStructuredExp(10, `🏆 رقم قياسي جديد (${reflexScore})`);
+                        await awardStructuredExp(10, `🏆 رقم قياسي جديد (${reflexScore})`, 'reflex_record');
                     } else {
                         showToast(`⚡ انتهى الوقت! نتيجتك ${reflexScore}`);
                     }
@@ -2727,7 +3025,7 @@
                                 <span class="block text-[8px] text-gray-400">@${escapeHTML(u.username)}</span>
                             </div>
                         </div>
-                        <span class="text-xs font-black text-[#ff2a85]">${u.points || 0} EXP</span>
+                        <span class="text-xs font-black text-amber-300">${lvl.coins} عملة</span>
                     </div>`;
                 }).join('');
             });
@@ -2817,15 +3115,15 @@
             ctx.fillText('NXL LOVE CARD', canvas.width / 2, 120);
             ctx.fillStyle = '#fbcfe8'; ctx.font = 'bold 22px Cairo, sans-serif';
             ctx.fillText('بطاقة ارتباط معتمدة بين مستخدمَي NXL', canvas.width / 2, 165);
-            ctx.fillStyle = '#ffffff'; ctx.font = 'bold 34px Cairo, sans-serif';
+            ctx.fillStyle = '#ffffff'; ctx.font = 'bold 30px Cairo, sans-serif';
             ctx.fillText(`${latestEpicCardData.boyName}  ♥  ${latestEpicCardData.girlName}`, canvas.width / 2, 230);
 
             await drawPhotoInHeart(ctx, latestEpicCardData.boyImgSrc, 220, 380, 200, 185, latestEpicCardData.boyName);
             await drawPhotoInHeart(ctx, latestEpicCardData.girlImgSrc, 500, 380, 200, 185, latestEpicCardData.girlName);
 
             ctx.fillStyle = '#ff4d94'; ctx.font = 'bold 42px Cairo, sans-serif'; ctx.fillText('💞', canvas.width / 2, 395);
-            ctx.fillStyle = '#38bdf8'; ctx.font = 'bold 22px Cairo, sans-serif'; ctx.fillText(latestEpicCardData.boyName, 220, 500);
-            ctx.fillStyle = '#f472b6'; ctx.font = 'bold 22px Cairo, sans-serif'; ctx.fillText(latestEpicCardData.girlName, 500, 500);
+            ctx.fillStyle = '#38bdf8'; ctx.font = 'bold 20px Cairo, sans-serif'; ctx.fillText(latestEpicCardData.boyName, 220, 500);
+            ctx.fillStyle = '#f472b6'; ctx.font = 'bold 20px Cairo, sans-serif'; ctx.fillText(latestEpicCardData.girlName, 500, 500);
 
             ctx.fillStyle = 'rgba(0,0,0,0.48)'; ctx.fillRect(54, 545, canvas.width - 108, 450);
             ctx.fillStyle = '#ffffff'; ctx.font = 'bold 23px Cairo, sans-serif';
@@ -2998,11 +3296,9 @@
                     const lastMsgText = entry.lastMessage ? escapeHTML(entry.lastMessage) : 'محادثة محفوظة';
                     const timeText = entry.lastTimestamp ? formatRelativeTime(entry.lastTimestamp) : '';
                     const pulseDays = Math.max(1, Number(entry.pulseDays) || 1);
-                    const hrsSinceLast = entry.lastTimestamp ? (Date.now() - Number(entry.lastTimestamp)) / 3600000 : 0;
-                    const atRisk = pulseDays > 1 && hrsSinceLast >= 18;
 
                     listEl.innerHTML += `
-                        <div class="liquid-glass p-2.5 rounded-xl border ${atRisk ? 'border-amber-500/60' : 'border-gray-800'} flex items-center justify-between gap-2 cursor-pointer hover:border-pink-500/50 transition interactive-press" onclick="openPrivateChat('${encodeURIComponent(u.uid || '')}', '${encodeURIComponent(u.nickname || '')}', '${encodeURIComponent(av)}')">
+                        <div class="liquid-glass p-2.5 rounded-xl border border-gray-800 flex items-center justify-between gap-2 cursor-pointer hover:border-pink-500/50 transition interactive-press" onclick="openPrivateChat('${encodeURIComponent(u.uid || '')}', '${encodeURIComponent(u.nickname || '')}', '${encodeURIComponent(av)}')">
                             <div class="flex items-center gap-2.5 min-w-0 flex-1">
                                 <img src="${escapeHTML(av)}" class="w-10 h-10 rounded-full bg-gray-800 object-cover border border-gray-700 shrink-0" loading="lazy">
                                 <div class="min-w-0 flex-1">
@@ -3010,7 +3306,6 @@
                                         <div class="flex items-center gap-1.5 min-w-0">
                                             <h4 class="font-bold text-white text-xs truncate">${escapeHTML(u.nickname)}</h4>
                                             <span class="text-[8px] bg-pink-500/20 text-pink-300 border border-pink-500/30 px-1.5 py-0.5 rounded-full font-black shrink-0">❤️ ${pulseDays}</span>
-                                            ${atRisk ? `<span class="text-[8px] bg-amber-500/20 text-amber-300 px-1.5 rounded font-bold shrink-0">⏳ قرب ينتهي</span>` : ''}
                                         </div>
                                         ${timeText ? `<span class="text-[9px] text-gray-500 shrink-0">${escapeHTML(timeText)}</span>` : ''}
                                     </div>
@@ -3101,452 +3396,462 @@
                             <img src="${escapeHTML(m.senderAvatar || '')}" class="w-7 h-7 rounded-full bg-gray-800 shrink-0 cursor-pointer border border-gray-700/80" onclick="window.openUserModal('${encodeURIComponent(m.senderId || '')}')">
                             <div class="max-w-[80%] flex flex-col ${isMe ? 'items-end' : 'items-start'}">
                                 <div class="flex items-center gap-1.5 px-1 mb-0.5">
-                                    <span class="text-[9px] text-gray-400 font-bold cursor-pointer hover:underline" onclick="window.openUserModal('${encodeURIComponent(m.senderId || '')}')">${escapeHTML(m.senderNickname)}</span>
+                                    <span class="text-[9px] text-gray-400 font-semibold">${escapeHTML(m.senderNickname)}</span>
                                     ${timeLabel ? `<span class="text-[8px] text-gray-500">${escapeHTML(timeLabel)}</span>` : ''}
                                 </div>
-                                <div class="px-3 py-2 nxl-scalable-text rounded-2xl ${isMe ? 'gradient-bg text-white rounded-tr-none shadow-md' : 'liquid-glass border border-gray-800 text-white rounded-tl-none'} break-words relative">
+                                <div class="p-2.5 nxl-scalable-text rounded-2xl ${isMe ? 'gradient-bg text-white rounded-tr-none' : 'bg-[#12121a] border border-gray-800/90 text-white rounded-tl-none'} break-words shadow-md">
                                     ${replyHtml}
-                                    ${escapeHTML(m.text)}
-                                    ${reactionsHtml ? `<span class="absolute -bottom-2 ${isMe ? 'left-2' : 'right-2'} bg-[#12121a] border border-gray-700 rounded-full px-1.5 py-0.5 text-[10px] shadow">${reactionsHtml}</span>` : ''}
+                                    <div>${escapeHTML(m.text)}</div>
                                 </div>
-                                <div class="flex gap-2.5 text-[9px] text-gray-400 mt-1.5 px-1">
-                                    <button onclick="setGlobalReply('${encodeURIComponent(mId)}', '${encodeURIComponent(m.text || '')}', '${encodeURIComponent(m.senderNickname || '')}')" class="hover:text-pink-400 transition">💬 رد</button>
-                                    <button onclick="reactGlobalMsg('${mId}', '❤️')" class="hover:text-red-500 transition">❤️</button>
-                                    <button onclick="reactGlobalMsg('${mId}', '🔥')" class="hover:text-orange-500 transition">🔥</button>
+                                <div class="flex items-center gap-1.5 mt-1 px-1">
+                                    <button onclick="setGlobalReply('${escapeHTML(m.senderNickname)}', '${escapeHTML(m.text)}')" class="text-[9px] text-gray-400 hover:text-white">↩️ رد</button>
+                                    <button onclick="toggleReaction('global_chat/${escapeHTML(mId)}', '❤️')" class="text-[10px] hover:scale-125 transition">❤️</button>
+                                    <button onclick="toggleReaction('global_chat/${escapeHTML(mId)}', '😂')" class="text-[10px] hover:scale-125 transition">😂</button>
+                                    <button onclick="toggleReaction('global_chat/${escapeHTML(mId)}', '🔥')" class="text-[10px] hover:scale-125 transition">🔥</button>
+                                    <span class="text-[10px] mr-1">${reactionsHtml}</span>
                                 </div>
                             </div>
                         </div>`;
                 });
                 box.scrollTop = box.scrollHeight;
-                if (window.activeTabId !== 'global' && lastId && lastId !== currentUser.uid) document.getElementById('global-unread-dot').classList.remove('hidden');
+                if (lastId && lastId !== currentUser.uid && window.activeTabId !== 'global') document.getElementById('global-unread-dot').classList.remove('hidden');
             });
         }
 
-        window.setGlobalReply = (id, text, name) => {
-            id = decodeInlineArg(id); text = decodeInlineArg(text); name = decodeInlineArg(name);
-            replyingGlobalMsg = { id, text, senderName: name };
-            document.getElementById('global-reply-text').innerText = `الرد على ${name}: ${text}`;
+        window.setGlobalReply = (name, text) => {
+            replyingGlobalMsg = { senderName: name, text };
             document.getElementById('global-reply-preview').classList.remove('hidden');
+            document.getElementById('global-reply-text').innerText = `الرد على ${name}: ${text}`;
+            document.getElementById('global-msg-input').focus();
         };
         window.cancelGlobalReply = () => { replyingGlobalMsg = null; document.getElementById('global-reply-preview').classList.add('hidden'); };
-        window.reactGlobalMsg = async (msgId, emoji) => {
-            await update(ref(db, `global_chat/${msgId}/reactions`), { [currentUser.uid]: emoji });
+
+        window.toggleReaction = async (path, emoji) => {
+            if (!currentUser || !path || !emoji) return;
+            const rRef = ref(db, `${path}/reactions/${currentUser.uid}`);
+            const snap = await get(rRef);
+            if (snap.exists() && snap.val() === emoji) await remove(rRef);
+            else await set(rRef, emoji);
             await completeDailyQuest('engage', 12, '3 تفاعلات أو أصوات');
         };
 
-        document.getElementById('send-global-btn').onclick = async () => {
-            const inp = document.getElementById('global-msg-input');
-            const text = inp.value.trim();
-            if (!currentUser || !userData || !text) return;
-            if (text.length > 1000) return showToast('⚠️ الرسالة طويلة جداً');
+        document.getElementById('send-global-btn').onclick = sendGlobalMessage;
+        document.getElementById('global-msg-input').addEventListener('keydown', (e) => { if (e.key === 'Enter') sendGlobalMessage(); });
+        async function sendGlobalMessage() {
+            const text = document.getElementById('global-msg-input').value.trim();
+            if (!text || !userData) return;
             const payload = { senderId: currentUser.uid, senderNickname: userData.nickname, senderAvatar: userData.avatarUrl, text, timestamp: Date.now() };
             if (replyingGlobalMsg) payload.replyTo = replyingGlobalMsg;
-            try {
-                await push(ref(db, 'global_chat'), payload);
-                inp.value = ''; cancelGlobalReply();
-            } catch (err) { showToast(`⚠️ ${firebaseErrorMessage(err)}`); }
-        };
-        document.getElementById('global-msg-input').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('send-global-btn').click(); });
+            await push(ref(db, 'global_chat'), payload);
+            document.getElementById('global-msg-input').value = '';
+            window.cancelGlobalReply();
+        }
 
-        document.getElementById('post-file').onchange = e => {
-            const f = e.target.files[0]; if (!f) return;
-            compressImage(f, (compressedBase64) => {
-                globalPostImageBase64 = compressedBase64;
-                document.getElementById('post-img-preview').src = globalPostImageBase64;
-                document.getElementById('post-preview-container').classList.remove('hidden');
-            });
-        };
-        document.getElementById('cancel-post-img').onclick = () => { globalPostImageBase64 = ""; document.getElementById('post-preview-container').classList.add('hidden'); };
+        const postFileInput = document.getElementById('post-file');
+        postFileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0]; if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    let w = img.width, h = img.height, max = 720;
+                    if (w > max || h > max) { if (w > h) { h = Math.round((h * max) / w); w = max; } else { w = Math.round((w * max) / h); h = max; } }
+                    canvas.width = w; canvas.height = h;
+                    canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+                    globalPostImageBase64 = canvas.toDataURL('image/jpeg', 0.65);
+                    document.getElementById('post-img-preview').src = globalPostImageBase64;
+                    document.getElementById('post-preview-container').classList.remove('hidden');
+                };
+                img.src = ev.target.result;
+            };
+            reader.readAsDataURL(file);
+        });
+        document.getElementById('cancel-post-img').onclick = () => { globalPostImageBase64 = ""; postFileInput.value = ""; document.getElementById('post-preview-container').classList.add('hidden'); };
 
-        document.getElementById('submit-post-btn').onclick = async () => {
+        document.getElementById('submit-post-btn').addEventListener('click', async () => {
+            if (!userData) return;
             const text = document.getElementById('post-input').value.trim();
-            const moodTag = document.getElementById('post-mood-tag').value;
-            if (!currentUser || !userData || (!text && !globalPostImageBase64 && !pollCreatorVisible)) return;
+            const moodTag = document.getElementById('post-mood-tag')?.value || "";
 
             let pollData = null;
             if (pollCreatorVisible) {
-                const o1 = document.getElementById('poll-opt-1').value.trim();
-                const o2 = document.getElementById('poll-opt-2').value.trim();
-                const o3 = document.getElementById('poll-opt-3').value.trim();
-                const opts = [o1, o2, o3].filter(Boolean);
-                if (opts.length < 2) return showToast('⚠️ اكتب خيارين على الأقل للاستفتاء');
+                const opts = [
+                    document.getElementById('poll-opt-1')?.value.trim(),
+                    document.getElementById('poll-opt-2')?.value.trim(),
+                    document.getElementById('poll-opt-3')?.value.trim()
+                ].filter(Boolean);
+                if (opts.length < 2) return showToast('⚠️ أضف خيارين على الأقل للاستفتاء');
                 pollData = { options: opts, votes: {} };
             }
 
+            if (!text && !globalPostImageBase64 && !pollData) return showToast("⚠️ اكتب نصاً أو أضف صورة أو استفتاءً");
             try {
                 await push(ref(db, 'posts'), {
-                    userId: currentUser.uid,
-                    userNickname: userData.nickname,
-                    userUsername: userData.username,
-                    userAvatar: userData.avatarUrl,
-                    moodTag: moodTag || (pollData ? "📊 استفتاء" : null),
-                    text: text || (pollData ? "شارك برأيك في الاستفتاء:" : ""),
-                    image: globalPostImageBase64 || null,
-                    poll: pollData,
-                    timestamp: Date.now(),
-                    likeCount: 0
+                    userId: currentUser.uid, userNickname: userData.nickname, userUsername: userData.username, userAvatar: userData.avatarUrl,
+                    moodTag, text, image: globalPostImageBase64 || null, poll: pollData, timestamp: Date.now(), likeCount: 0
                 });
                 document.getElementById('post-input').value = '';
-                document.getElementById('post-mood-tag').value = '';
                 document.getElementById('poll-opt-1').value = '';
                 document.getElementById('poll-opt-2').value = '';
                 document.getElementById('poll-opt-3').value = '';
                 window.togglePollCreator(false);
-                globalPostImageBase64 = '';
-                document.getElementById('post-preview-container').classList.add('hidden');
+                document.getElementById('cancel-post-img').click();
                 await completeDailyQuest('post', 15, 'نشر منشور أو استفتاء');
-                showToast('🚀 تم النشر بنجاح');
+                showToast("✨ تم نشر منشورك بنجاح");
             } catch (err) { showToast(`⚠️ ${firebaseErrorMessage(err)}`); }
-        };
+        });
 
-        let postsFeedMode = 'trending';
         let cachedPosts = [];
-        let postsFeedUnsubscribe = null;
-        document.getElementById('filter-smart-btn').onclick = () => { postsFeedMode = 'trending'; renderPostsFeed(); };
-        document.getElementById('filter-recent-btn').onclick = () => { postsFeedMode = 'recent'; renderPostsFeed(); };
-
-        window.toggleComments = (postId) => {
-            postId = decodeInlineArg(postId);
-            if (!postId) return;
-            expandedPostComments[postId] = !expandedPostComments[postId];
+        let postFilterMode = 'smart';
+        document.getElementById('filter-smart-btn').addEventListener('click', () => {
+            postFilterMode = 'smart';
+            document.getElementById('filter-smart-btn').className = "px-4 py-1.5 rounded-xl bg-[#ff2a85] text-white font-bold transition interactive-press shadow-md";
+            document.getElementById('filter-recent-btn').className = "px-4 py-1.5 rounded-xl bg-[#12121a] text-gray-400 font-bold transition interactive-press";
             renderPostsFeed();
-        };
-
-        window.submitComment = async (postId) => {
-            postId = decodeInlineArg(postId);
-            if (!currentUser || !userData || !postId) return;
-            const inputEl = document.getElementById(`comment-input-${postId}`);
-            if (!inputEl) return;
-            const text = inputEl.value.trim();
-            if (!text) return;
-            try {
-                await push(ref(db, `posts/${postId}/comments`), {
-                    userId: currentUser.uid,
-                    nickname: userData.nickname,
-                    text,
-                    timestamp: Date.now()
-                });
-                expandedPostComments[postId] = true;
-                inputEl.value = '';
-                await completeDailyQuest('engage', 12, '3 تفاعلات أو أصوات');
-                const postSnap = await get(child(ref(db), `posts/${postId}`));
-                if (postSnap.exists()) {
-                    await pushUserActivity(postSnap.val().userId, 'علّق على منشورك 💬', text);
-                }
-            } catch (err) { showToast(`⚠️ ${firebaseErrorMessage(err)}`); }
-        };
-
-        window.deleteComment = async (postId, commentId) => {
-            postId = decodeInlineArg(postId); commentId = decodeInlineArg(commentId);
-            if (!currentUser || !postId || !commentId) return;
-            const cRef = ref(db, `posts/${postId}/comments/${commentId}`);
-            const snap = await get(cRef);
-            if (snap.exists() && snap.val().userId === currentUser.uid) await remove(cRef);
-        };
+        });
+        document.getElementById('filter-recent-btn').addEventListener('click', () => {
+            postFilterMode = 'recent';
+            document.getElementById('filter-recent-btn').className = "px-4 py-1.5 rounded-xl bg-[#ff2a85] text-white font-bold transition interactive-press shadow-md";
+            document.getElementById('filter-smart-btn').className = "px-4 py-1.5 rounded-xl bg-[#12121a] text-gray-400 font-bold transition interactive-press";
+            renderPostsFeed();
+        });
 
         function startPostsFeed() {
-            if (postsFeedUnsubscribe) return;
-            postsFeedUnsubscribe = onValue(query(ref(db, 'posts'), limitToLast(60)), (snap) => {
-                const now = Date.now();
+            onValue(query(ref(db, 'posts'), limitToLast(100)), (snapshot) => {
                 cachedPosts = [];
-                snap.forEach(c => {
-                    const p = c.val();
-                    if (p && Number.isFinite(Number(p.timestamp)) && now - Number(p.timestamp) < 72 * 3600 * 1000) cachedPosts.push({ ...p, id: c.key });
+                const now = Date.now();
+                snapshot.forEach(c => {
+                    const p = c.val(); const pId = c.key;
+                    if (!p || (now - p.timestamp > 72 * 3600 * 1000)) return;
+                    const likesMap = p.likes && typeof p.likes === 'object' ? p.likes : {};
+                    const commentsMap = p.comments && typeof p.comments === 'object' ? p.comments : {};
+                    cachedPosts.push({
+                        id: pId, ...p,
+                        likeCount: Object.keys(likesMap).length,
+                        isLiked: Boolean(likesMap[currentUser.uid]),
+                        commentCount: Object.keys(commentsMap).length,
+                        commentsArray: Object.values(commentsMap).sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0))
+                    });
                 });
-                saveOfflineData(OFFLINE_KEYS.posts, cachedPosts);
+                saveOfflineData(OFFLINE_KEYS.posts, cachedPosts.slice(-40));
                 renderPostsFeed();
+                renderProfilePostsGrid();
                 renderBadgesUI(cachedPosts);
                 updateProfileStatsSummary();
             });
         }
 
-        function renderPollHtml(post) {
-            if (!post.poll || !Array.isArray(post.poll.options) || post.poll.options.length < 2) return '';
-            const votesObj = post.poll.votes && typeof post.poll.votes === 'object' ? post.poll.votes : {};
-            const myChoice = votesObj[currentUser?.uid];
-            const counts = post.poll.options.map((_, idx) => Object.values(votesObj).filter(v => Number(v) === idx).length);
-            const totalVotes = counts.reduce((acc, n) => acc + n, 0);
-
-            return `
-                <div class="bg-[#12121a] p-2.5 rounded-xl border border-pink-500/25 space-y-1.5">
-                    ${post.poll.options.map((opt, idx) => {
-                        const pct = totalVotes > 0 ? Math.round((counts[idx] / totalVotes) * 100) : 0;
-                        const isMine = Number(myChoice) === idx;
-                        return `
-                            <button type="button" onclick="window.votePollOption('${encodeURIComponent(post.id)}', ${idx})" class="w-full text-right p-2 rounded-lg border ${isMine ? 'border-pink-500 bg-pink-500/20' : 'border-gray-800 bg-[#060609]/60'} relative overflow-hidden interactive-press">
-                                <div class="flex justify-between items-center text-[11px] relative z-10">
-                                    <span class="font-bold text-white">${isMine ? '✅ ' : ''}${escapeHTML(opt)}</span>
-                                    <span class="text-pink-300 font-black">${pct}% (${counts[idx]})</span>
-                                </div>
-                            </button>
-                        `;
-                    }).join('')}
-                    <div class="text-[9px] text-gray-400 text-left">إجمالي الأصوات: ${totalVotes}</div>
-                </div>
-            `;
+        function renderProfilePostsGrid() {
+            const grid = document.getElementById('profile-posts-grid');
+            if (!grid || !currentUser) return;
+            const myPhotoPosts = cachedPosts.filter(p => p.userId === currentUser.uid && p.image);
+            if (myPhotoPosts.length === 0) {
+                grid.innerHTML = '<div class="col-span-3 text-center text-[11px] text-gray-500 py-5 bg-[#12121a] rounded-2xl border border-gray-800">لا توجد صور منشورة حتى الآن.</div>';
+                return;
+            }
+            grid.innerHTML = myPhotoPosts.map(p => {
+                postImageRegistry[p.id] = p.image;
+                return `<div class="aspect-square rounded-xl overflow-hidden border border-gray-800 bg-[#12121a] cursor-pointer" onclick="window.openPostLightbox('${encodeURIComponent(p.id)}')">
+                    <img src="${escapeHTML(p.image)}" class="w-full h-full object-cover hover:scale-105 transition" loading="lazy">
+                </div>`;
+            }).join('');
         }
 
         function renderPostsFeed() {
             const feed = document.getElementById('home-posts-feed');
-            const grid = document.getElementById('profile-posts-grid');
-            if (!feed || !grid || !currentUser) return;
-            feed.innerHTML = ''; grid.innerHTML = '';
-            const arr = [...cachedPosts];
-            if (postsFeedMode === 'recent') arr.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-            else arr.sort((a, b) => ((b.likeCount || 0) * 3 + (b.timestamp || 0) / 1e12) - ((a.likeCount || 0) * 3 + (a.timestamp || 0) / 1e12));
+            feed.innerHTML = '';
+            const sorted = [...cachedPosts].sort((a, b) => {
+                if (postFilterMode === 'recent') return (b.timestamp || 0) - (a.timestamp || 0);
+                const ageA = Math.max(1, (Date.now() - (a.timestamp || 0)) / 3600000);
+                const ageB = Math.max(1, (Date.now() - (b.timestamp || 0)) / 3600000);
+                const scoreA = ((a.likeCount || 0) * 3 + (a.commentCount || 0) * 4) / Math.pow(ageA + 1.5, 1.15);
+                const scoreB = ((b.likeCount || 0) * 3 + (b.commentCount || 0) * 4) / Math.pow(ageB + 1.5, 1.15);
+                return scoreB - scoreA;
+            });
 
-            arr.forEach(p => {
-                const isLiked = !!(p.likes && p.likes[currentUser.uid]);
-                const commentsMap = p.comments && typeof p.comments === 'object' ? p.comments : {};
-                const commentEntries = Object.entries(commentsMap).map(([cid, cval]) => ({ id: cid, ...(cval || {}) })).sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
-                const isCommentsOpen = !!expandedPostComments[p.id];
+            if (sorted.length === 0) {
+                feed.innerHTML = `<div class="text-center text-gray-500 py-8 text-xs">لا توجد منشورات بعد. كن أول من يشارك! ✨</div>`;
+                return;
+            }
+
+            sorted.forEach(p => {
+                const isMine = p.userId === currentUser.uid;
+                const isCommentsOpen = Boolean(expandedPostComments[p.id]);
+                const timeAgo = formatRelativeTime(p.timestamp);
                 if (p.image) postImageRegistry[p.id] = p.image;
 
-                const commentsSectionHtml = isCommentsOpen ? `
-                    <div class="mt-2 pt-2 border-t border-gray-800/80 space-y-2">
-                        <div class="space-y-1.5 max-h-40 overflow-y-auto custom-scrollbar">
-                            ${commentEntries.length > 0 ? commentEntries.map(cm => `
-                                <div class="bg-[#12121a] px-2.5 py-1.5 rounded-xl border border-gray-800/70 flex justify-between items-start gap-2">
-                                    <div class="text-[11px] leading-relaxed break-words">
-                                        <span class="font-bold text-[#ff7300]">${escapeHTML(cm.nickname || 'مستخدم')}:</span>
-                                        <span class="text-gray-200 mr-1">${escapeHTML(cm.text || '')}</span>
-                                        <span class="text-[9px] text-gray-500 mr-1">${escapeHTML(formatRelativeTime(cm.timestamp))}</span>
+                let pollHtml = '';
+                if (p.poll && Array.isArray(p.poll.options) && p.poll.options.length >= 2) {
+                    const votesObj = p.poll.votes && typeof p.poll.votes === 'object' ? p.poll.votes : {};
+                    const myVoteIdx = votesObj[currentUser.uid];
+                    const totalVotes = Object.keys(votesObj).length;
+                    const counts = p.poll.options.map((_, idx) => Object.values(votesObj).filter(v => Number(v) === idx).length);
+
+                    pollHtml = `
+                        <div class="mt-2 bg-[#0b0b12] border border-pink-500/25 rounded-2xl p-2.5 space-y-1.5">
+                            <div class="flex items-center justify-between text-[10px] text-pink-300 font-bold">
+                                <span>📊 استفتاء المجتمع</span>
+                                <span>${totalVotes} صوت</span>
+                            </div>
+                            ${p.poll.options.map((optText, idx) => {
+                                const cVal = counts[idx] || 0;
+                                const pct = totalVotes > 0 ? Math.round((cVal / totalVotes) * 100) : 0;
+                                const isChosen = Number(myVoteIdx) === idx;
+                                return `
+                                    <button type="button" onclick="window.votePollOption('${encodeURIComponent(p.id)}', ${idx})" class="w-full relative overflow-hidden text-right rounded-xl p-2 border ${isChosen ? 'border-pink-400 bg-pink-500/20' : 'border-gray-800 bg-[#12121a]'} interactive-press">
+                                        <div class="flex items-center justify-between text-[11px] font-bold text-white relative z-10">
+                                            <span>${escapeHTML(optText)} ${isChosen ? '✓' : ''}</span>
+                                            <span class="text-pink-300">${pct}% (${cVal})</span>
+                                        </div>
+                                    </button>`;
+                            }).join('')}
+                        </div>`;
+                }
+
+                const commentsHtml = isCommentsOpen ? `
+                    <div class="mt-2.5 pt-2.5 border-t border-gray-800/80 space-y-2">
+                        <div class="space-y-1.5 max-h-36 overflow-y-auto custom-scrollbar pr-1">
+                            ${p.commentsArray.length > 0 ? p.commentsArray.map(cm => `
+                                <div class="bg-[#0b0b12] border border-gray-800/70 rounded-xl px-2.5 py-1.5 text-[11px]">
+                                    <div class="flex items-center justify-between gap-2">
+                                        <span class="font-bold text-pink-300 text-[10px]">${escapeHTML(cm.userNickname)}</span>
+                                        <span class="text-[8px] text-gray-500">${escapeHTML(formatRelativeTime(cm.timestamp))}</span>
                                     </div>
-                                    ${cm.userId === currentUser.uid ? `<button onclick="window.deleteComment('${encodeURIComponent(p.id)}', '${encodeURIComponent(cm.id)}')" class="text-red-400 text-[10px] shrink-0">✕</button>` : ''}
-                                </div>
-                            `).join('') : `<p class="text-[10px] text-gray-500 text-center py-1">لا توجد تعليقات بعد 💬</p>`}
+                                    <p class="text-gray-200 mt-0.5 break-words">${escapeHTML(cm.text)}</p>
+                                </div>`).join('') : '<p class="text-[10px] text-gray-500 text-center py-1">لا توجد تعليقات بعد.</p>'}
                         </div>
                         <div class="flex gap-1.5 items-center">
-                            <input type="text" id="comment-input-${escapeHTML(p.id)}" placeholder="اكتب تعليقك..." onkeydown="if(event.key==='Enter'){event.preventDefault();window.submitComment('${encodeURIComponent(p.id)}');}" class="flex-1 bg-[#12121a] text-[11px] rounded-xl px-3 py-1.5 text-white border border-gray-800 focus:outline-none">
-                            <button onclick="window.submitComment('${encodeURIComponent(p.id)}')" class="gradient-bg text-white text-[10px] font-bold px-3 py-1.5 rounded-xl interactive-press">إرسال</button>
+                            <input type="text" id="comment-input-${escapeHTML(p.id)}" placeholder="اكتب تعليقاً..." class="flex-1 bg-[#12121a] text-xs rounded-xl px-3 py-2 text-white focus:outline-none border border-gray-800" onkeydown="if(event.key==='Enter') window.addPostComment('${encodeURIComponent(p.id)}')">
+                            <button onclick="window.addPostComment('${encodeURIComponent(p.id)}')" class="gradient-bg text-white text-[11px] font-bold px-3 py-2 rounded-xl interactive-press shrink-0">إرسال</button>
                         </div>
                     </div>` : '';
 
-                feed.insertAdjacentHTML('beforeend', `
-                    <div class="liquid-glass p-3 rounded-2xl border border-gray-800 space-y-2">
+                feed.innerHTML += `
+                    <div class="liquid-glass p-3.5 rounded-2xl border border-gray-800/90 space-y-2.5 shadow-lg">
                         <div class="flex items-center justify-between gap-2">
                             <div class="flex items-center gap-2 cursor-pointer" onclick="window.openUserModal('${encodeURIComponent(p.userId || '')}')">
-                                <img src="${escapeHTML(p.userAvatar || '')}" class="w-7 h-7 rounded-full bg-gray-800 object-cover" onerror="this.style.display='none'">
+                                <img src="${escapeHTML(p.userAvatar || '')}" class="w-8 h-8 rounded-full bg-gray-800 object-cover border border-gray-700" loading="lazy">
                                 <div>
-                                    <div class="flex items-center gap-1.5">
-                                        <h4 class="text-xs font-bold text-white hover:underline">${escapeHTML(p.userNickname)}</h4>
-                                        ${p.moodTag ? `<span class="text-[9px] bg-pink-500/15 text-pink-300 border border-pink-500/30 px-1.5 py-0.2 rounded-full">${escapeHTML(p.moodTag)}</span>` : ''}
-                                    </div>
-                                    <span class="text-[9px] text-[#ff7300]">@${escapeHTML(p.userUsername)}</span>
+                                    <h4 class="font-bold text-white text-xs">${escapeHTML(p.userNickname)}</h4>
+                                    <span class="text-[9px] text-[#ff7300]">@${escapeHTML(p.userUsername || 'member')}</span>
                                 </div>
                             </div>
-                            <span class="text-[9px] text-gray-500 font-semibold">${escapeHTML(formatRelativeTime(p.timestamp))}</span>
-                        </div>
-                        ${p.text ? `<p class="nxl-scalable-text text-gray-200 whitespace-pre-wrap break-words">${escapeHTML(p.text)}</p>` : ''}
-                        ${renderPollHtml(p)}
-                        ${p.image ? `<img src="${escapeHTML(p.image)}" onclick="window.openPostLightbox('${encodeURIComponent(p.id)}')" class="w-full rounded-xl border border-gray-800 cursor-pointer hover:opacity-95 transition" loading="lazy">` : ''}
-                        <div class="flex justify-between items-center text-xs pt-2 border-t border-gray-800">
-                            <div class="flex items-center gap-3">
-                                <button onclick="window.likePost('${p.id}')" class="flex items-center gap-1 font-bold ${isLiked ? 'text-[#ff2a85]' : 'text-gray-400'}"><span>${isLiked ? '❤️' : '🤍'}</span><span>${Number(p.likeCount) || 0}</span></button>
-                                <button onclick="window.toggleComments('${encodeURIComponent(p.id)}')" class="flex items-center gap-1 font-bold ${isCommentsOpen ? 'text-[#ff7300]' : 'text-gray-400'}"><span>💬</span><span>${commentEntries.length}</span></button>
+                            <div class="flex items-center gap-2">
+                                ${p.moodTag ? `<span class="text-[9px] bg-pink-500/15 text-pink-200 border border-pink-500/30 px-2 py-0.5 rounded-full font-bold">${escapeHTML(p.moodTag)}</span>` : ''}
+                                ${timeAgo ? `<span class="text-[9px] text-gray-500">${escapeHTML(timeAgo)}</span>` : ''}
+                                ${isMine ? `<button onclick="window.deletePost('${encodeURIComponent(p.id)}')" class="text-[10px] text-red-400 hover:text-red-300 px-1.5 py-0.5 rounded bg-red-500/10">حذف</button>` : ''}
                             </div>
-                            ${p.userId === currentUser.uid ? `<button onclick="window.deleteOwnPost('${p.id}')" class="text-red-400 text-[10px] font-bold">حذف 🗑️</button>` : ''}
                         </div>
-                        ${commentsSectionHtml}
-                    </div>`);
-                if (p.userId === currentUser.uid && p.image) grid.insertAdjacentHTML('beforeend', `<img src="${escapeHTML(p.image)}" onclick="window.openPostLightbox('${encodeURIComponent(p.id)}')" class="w-full h-24 object-cover rounded-xl border border-gray-800 cursor-pointer" loading="lazy">`);
+                        ${p.text ? `<p class="nxl-scalable-text text-gray-200 leading-relaxed whitespace-pre-wrap break-words">${escapeHTML(p.text)}</p>` : ''}
+                        ${pollHtml}
+                        ${p.image ? `<img src="${escapeHTML(p.image)}" onclick="window.openPostLightbox('${encodeURIComponent(p.id)}')" class="w-full rounded-xl border border-gray-800/90 object-cover max-h-72 cursor-pointer" loading="lazy">` : ''}
+                        <div class="flex items-center gap-4 pt-1 border-t border-gray-800/70 text-[11px]">
+                            <button onclick="window.togglePostLike('${encodeURIComponent(p.id)}')" class="flex items-center gap-1 font-bold ${p.isLiked ? 'text-[#ff2a85]' : 'text-gray-400 hover:text-white'} interactive-press">
+                                <span>${p.isLiked ? '❤️' : '🤍'}</span>
+                                <span>${p.likeCount || 0}</span>
+                            </button>
+                            <button onclick="window.togglePostComments('${encodeURIComponent(p.id)}')" class="flex items-center gap-1 font-bold text-gray-400 hover:text-white interactive-press">
+                                <span>💬</span>
+                                <span>${p.commentCount || 0} تعليق</span>
+                            </button>
+                        </div>
+                        ${commentsHtml}
+                    </div>`;
             });
-            document.getElementById('filter-smart-btn').classList.toggle('bg-[#ff2a85]', postsFeedMode === 'trending');
-            document.getElementById('filter-smart-btn').classList.toggle('text-white', postsFeedMode === 'trending');
-            document.getElementById('filter-recent-btn').classList.toggle('bg-[#ff2a85]', postsFeedMode === 'recent');
-            document.getElementById('filter-recent-btn').classList.toggle('text-white', postsFeedMode === 'recent');
         }
 
-        window.deleteOwnPost = async (id) => {
-            if (!currentUser || !id) return;
-            const postRef = ref(db, `posts/${id}`);
-            const snap = await get(postRef);
-            if (snap.exists() && snap.val().userId === currentUser.uid) {
-                await remove(postRef);
-                showToast('🗑️ تم حذف المنشور');
-            }
-        };
-
-        window.likePost = async (id) => {
-            if (!currentUser || !id) return;
-            let addedLike = false;
-            let ownerUid = null;
-            let postSnippet = "";
-            await runTransaction(ref(db, `posts/${id}`), post => {
-                if (!post || !post.userId) return post;
-                ownerUid = post.userId;
-                postSnippet = post.text || "منشور";
-                post.likes = post.likes || {};
-                if (post.likes[currentUser.uid]) {
-                    delete post.likes[currentUser.uid];
-                    addedLike = false;
-                } else {
-                    post.likes[currentUser.uid] = true;
-                    addedLike = true;
-                }
-                post.likeCount = Object.keys(post.likes).length;
-                return post;
-            });
-            if (addedLike) {
+        window.togglePostLike = async (postId) => {
+            postId = decodeInlineArg(postId);
+            if (!currentUser || !postId) return;
+            const likeRef = ref(db, `posts/${postId}/likes/${currentUser.uid}`);
+            const snap = await get(likeRef);
+            if (snap.exists()) await remove(likeRef);
+            else {
+                await set(likeRef, true);
                 await completeDailyQuest('engage', 12, '3 تفاعلات أو أصوات');
-                await pushUserActivity(ownerUid, 'أعجب بمنشورك ❤️', postSnippet);
+                const pSnap = await get(child(ref(db), `posts/${postId}`));
+                if (pSnap.exists()) await pushUserActivity(pSnap.val().userId, 'أعجب بمنشورك ❤️', pSnap.val().text || 'منشور مصور');
             }
         };
 
-        window.openUserModal = async (uid) => {
-            uid = decodeInlineArg(uid);
-            const snap = await get(child(ref(db), `users/${uid}`)); if (!snap.exists()) return;
+        window.togglePostComments = (postId) => {
+            postId = decodeInlineArg(postId);
+            expandedPostComments[postId] = !expandedPostComments[postId];
+            renderPostsFeed();
+        };
+
+        window.addPostComment = async (postId) => {
+            postId = decodeInlineArg(postId);
+            if (!currentUser || !userData || !postId) return;
+            const inputEl = document.getElementById(`comment-input-${postId}`);
+            const commentText = inputEl?.value.trim();
+            if (!commentText) return;
+            expandedPostComments[postId] = true;
+            await push(ref(db, `posts/${postId}/comments`), {
+                userId: currentUser.uid, userNickname: userData.nickname, text: commentText, timestamp: Date.now()
+            });
+            if (inputEl) inputEl.value = '';
+            await completeDailyQuest('engage', 12, '3 تفاعلات أو أصوات');
+            const pSnap = await get(child(ref(db), `posts/${postId}`));
+            if (pSnap.exists()) await pushUserActivity(pSnap.val().userId, 'علّق على منشورك 💬', commentText);
+        };
+
+        window.deletePost = async (postId) => {
+            postId = decodeInlineArg(postId);
+            if (!currentUser || !postId) return;
+            await remove(ref(db, `posts/${postId}`));
+            delete postImageRegistry[postId];
+        };
+
+        window.openUserModal = async (targetUid) => {
+            targetUid = decodeInlineArg(targetUid);
+            if (!targetUid) return;
+            const snap = await get(child(ref(db), `users/${targetUid}`));
+            if (!snap.exists()) return;
             const u = snap.val();
             const av = u.avatarUrl || getAvatarByPrivateGender(u.privateGender, u.username || u.nickname || u.uid);
             const lvl = getLevelInfo(u.points);
+            document.getElementById('modal-avatar').innerHTML = `<img src="${escapeHTML(av)}" class="w-full h-full object-cover">`;
             document.getElementById('modal-nickname').innerText = u.nickname;
             document.getElementById('modal-username-txt').innerText = `@${u.username}`;
             document.getElementById('modal-mood-txt').innerText = u.statusMood || "🟢 متاح الآن";
             document.getElementById('modal-bio').innerText = u.bio || "لا توجد نبذة شخصية.";
-            document.getElementById('modal-points').innerText = `${lvl.exp} EXP • Level ${lvl.level} (${lvl.title})`;
-            document.getElementById('modal-avatar').innerHTML = `<img src="${escapeHTML(av)}" class="w-full h-full object-cover">`;
-            document.getElementById('modal-online-dot').classList.toggle('hidden', !u.isOnline);
+            document.getElementById('modal-points').innerText = `${lvl.coins} عملة • LVL ${lvl.level}`;
+
+            const onlineDot = document.getElementById('modal-online-dot');
+            if (onlineDot) onlineDot.classList.toggle('hidden', !(u.showOnline !== false && u.isOnline));
 
             const noteArea = document.getElementById('modal-note-area');
-            if (u.note && u.note.text) { noteArea.innerText = "💬 " + u.note.text; noteArea.classList.remove('hidden'); }
-            else noteArea.classList.add('hidden');
+            if (u.note && u.note.text && (Date.now() - u.note.timestamp < 7 * 3600 * 1000)) {
+                noteArea.classList.remove('hidden'); noteArea.innerText = `💬 ${u.note.text}`;
+            } else noteArea.classList.add('hidden');
 
-            const isSelf = currentUser && currentUser.uid === uid;
-            document.getElementById('modal-chat-btn').classList.toggle('hidden', isSelf);
-            document.getElementById('modal-love-req-btn').classList.toggle('hidden', isSelf);
-            document.getElementById('modal-confess-box').classList.toggle('hidden', isSelf || u.allowConfessions === false);
+            const chatBtn = document.getElementById('modal-chat-btn');
+            const loveReqBtn = document.getElementById('modal-love-req-btn');
+            const confessBox = document.getElementById('modal-confess-box');
 
-            document.getElementById('modal-chat-btn').onclick = () => { document.getElementById('user-modal').classList.add('hidden'); openPrivateChat(uid, u.nickname, av); };
-            document.getElementById('modal-love-req-btn').onclick = async () => {
-                if (!currentUser || !userData) return;
-                document.getElementById('user-modal').classList.add('hidden');
-                const reqRef = await push(ref(db, 'love_card_requests'), {
-                    requesterUid: currentUser.uid,
-                    requesterName: userData.nickname,
-                    requesterUsername: userData.username,
-                    requesterAvatar: userData.avatarUrl || getAvatarByPrivateGender(userData.privateGender, userData.username),
-                    partnerUid: uid,
-                    partnerName: u.nickname,
-                    partnerUsername: u.username,
-                    partnerAvatar: av,
-                    note: "",
-                    status: 'pending',
-                    timestamp: Date.now()
-                });
-                await pushUserActivity(uid, 'طلب كارت حب معك 💘', 'يرغب في إنشاء كارت حب مشترك معك على NXL', { forceVisible: true, kind: 'love_request', requestId: reqRef.key });
-                showToast(`💌 تم إرسال طلب كارت الحب إلى ${u.nickname}`);
-            };
-
-            document.getElementById('modal-send-confess-btn').onclick = async () => {
-                const inp = document.getElementById('modal-confess-input');
-                const cText = inp.value.trim();
-                if (!cText) return showToast('⚠️ اكتب رسالة الصراحة أولاً');
-                try {
-                    await createAnonymousConfessionThread(uid, cText);
-                    inp.value = '';
-                    showToast('🎭 تم إرسال الصراحة — وفتح خط محادثة سري في شاتاتي');
-                } catch (err) { showToast(`⚠️ ${firebaseErrorMessage(err)}`); }
-            };
+            if (targetUid === currentUser.uid) {
+                chatBtn.classList.add('hidden');
+                loveReqBtn.classList.add('hidden');
+                confessBox.classList.add('hidden');
+            } else {
+                chatBtn.classList.remove('hidden');
+                loveReqBtn.classList.remove('hidden');
+                confessBox.classList.toggle('hidden', u.allowConfessions === false);
+                chatBtn.onclick = () => {
+                    document.getElementById('user-modal').classList.add('hidden');
+                    window.openPrivateChat(u.uid, u.nickname, av);
+                };
+                loveReqBtn.onclick = () => {
+                    document.getElementById('user-modal').classList.add('hidden');
+                    window.selectLovePartner(u.uid);
+                    window.switchTab('games', document.querySelectorAll('nav button')[2]);
+                    showToast(`💘 تم اختيار ${u.nickname} للطلب المشترك`);
+                };
+                document.getElementById('modal-send-confess-btn').onclick = async () => {
+                    const cInp = document.getElementById('modal-confess-input');
+                    const txt = cInp?.value.trim();
+                    if (!txt) return showToast("⚠️ اكتب رسالة صراحة أولاً");
+                    await createAnonymousConfessionThread(targetUid, txt);
+                    cInp.value = '';
+                    showToast("🎭 تم إرسال صراحتك وفتح شات سري لك وللطرف الآخر");
+                };
+            }
             document.getElementById('user-modal').classList.remove('hidden');
         };
         document.getElementById('close-modal-btn').onclick = () => document.getElementById('user-modal').classList.add('hidden');
+
+        function calculateSoulPulseStatus(data) {
+            const now = Date.now();
+            const dayMs = 24 * 3600 * 1000;
+            let pulseDays = Math.max(1, Number(data?.pulseDays) || 1);
+            const lastMsgTs = Number(data?.lastMsgTimestamp) || 0;
+            if (lastMsgTs > 0 && (now - lastMsgTs > dayMs)) pulseDays = 1;
+            return { pulseDays, isActiveToday: lastMsgTs > 0 && (now - lastMsgTs <= dayMs) };
+        }
 
         window.openPrivateChat = async (targetUid, targetName, targetAvatar) => {
             targetUid = decodeInlineArg(targetUid);
             targetName = decodeInlineArg(targetName);
             targetAvatar = decodeInlineArg(targetAvatar);
             if (!currentUser || !targetUid || targetUid === currentUser.uid) return;
-
+            openChatId = currentUser.uid < targetUid ? `${currentUser.uid}_${targetUid}` : `${targetUid}_${currentUser.uid}`;
             openChatTargetUid = targetUid;
             openChatTargetName = targetName;
-            openChatId = currentUser.uid < targetUid ? `${currentUser.uid}_${targetUid}` : `${targetUid}_${currentUser.uid}`;
 
             document.getElementById('private-target-name').innerText = targetName;
             document.getElementById('private-target-avatar').innerHTML = `<img src="${escapeHTML(targetAvatar)}" class="w-full h-full object-cover">`;
             document.getElementById('private-chat-window').classList.remove('hidden');
 
-            const targetUserSnap = await get(child(ref(db), `users/${targetUid}`));
-            if (targetUserSnap.exists()) {
-                const tu = targetUserSnap.val();
-                const isOnline = tu.showOnline !== false && Boolean(tu.isOnline);
-                document.getElementById('private-target-online-dot').classList.toggle('hidden', !isOnline);
-                document.getElementById('private-target-status').innerText = isOnline ? `🟢 متصل الآن • ${tu.statusMood || ''}` : `آخر نشاط: ${formatRelativeTime(tu.lastActiveDate || Date.now()) || 'غير متصل'}`;
-            }
+            try {
+                const targetSnap = await get(child(ref(db), `users/${targetUid}`));
+                if (targetSnap.exists()) {
+                    const tu = targetSnap.val();
+                    const onlineDot = document.getElementById('private-target-online-dot');
+                    const statusEl = document.getElementById('private-target-status');
+                    const isOnlineNow = Boolean(tu.showOnline !== false && tu.isOnline);
+                    if (onlineDot) onlineDot.classList.toggle('hidden', !isOnlineNow);
+                    if (statusEl) statusEl.innerText = isOnlineNow ? `🟢 ${tu.statusMood || 'متصل الآن'}` : `⚫ ${tu.statusMood || 'غير متصل'}`;
+                }
+            } catch (_) {}
 
-            if (activeChatRef) { activeChatRef(); activeChatRef = null; }
-            if (activeTypingRef) { activeTypingRef(); activeTypingRef = null; }
+            onValue(ref(db, `typing/${openChatId}/${targetUid}`), (tSnap) => {
+                const typingEl = document.getElementById('private-typing-indicator');
+                const isTyping = Boolean(tSnap.exists() && tSnap.val() === true);
+                if (typingEl) typingEl.classList.toggle('hidden', !isTyping);
+            });
 
-            const myChatMetaRef = ref(db, `user_chats/${currentUser.uid}/${openChatId}`);
-            onValue(myChatMetaRef, (metaSnap) => {
+            if (activeChatRef) activeChatRef();
+
+            const pulseRef = ref(db, `chat_pulse/${openChatId}`);
+            onValue(pulseRef, (pSnap) => {
                 const badge = document.getElementById('soul-pulse-badge');
-                if (metaSnap.exists()) {
-                    const mData = metaSnap.val();
-                    currentSoulPulseDays = Math.max(1, Number(mData.pulseDays) || 1);
-                    isCurrentPrivateChatHearts = Boolean(mData.heartsThemeEnabled);
-                    badge.innerText = `❤️ نبض ${currentSoulPulseDays} يوم`;
+                if (pSnap.exists()) {
+                    const status = calculateSoulPulseStatus(pSnap.val());
+                    currentSoulPulseDays = status.pulseDays;
+                    isCurrentPrivateChatHearts = true;
                     badge.classList.remove('hidden');
+                    badge.innerText = `❤️ نبض ${currentSoulPulseDays} يوم`;
                 } else {
                     currentSoulPulseDays = 1;
                     isCurrentPrivateChatHearts = false;
-                    badge.innerText = `❤️ نبض 1 يوم`;
-                    badge.classList.remove('hidden');
+                    badge.classList.add('hidden');
                 }
-                applyHeartsChatVisuals(isCurrentPrivateChatHearts);
-            });
-
-            activeTypingRef = onValue(ref(db, `chat_typing/${openChatId}/${targetUid}`), (tSnap) => {
-                const typingEl = document.getElementById('private-typing-indicator');
-                if (typingEl) typingEl.classList.toggle('hidden', !(tSnap.exists() && tSnap.val() === true));
             });
 
             activeChatRef = onValue(query(ref(db, `chats/${openChatId}`), limitToLast(100)), (snap) => {
                 const box = document.getElementById('private-messages-box');
                 box.innerHTML = '';
-                if (isCurrentPrivateChatHearts) {
-                    box.innerHTML += `
-                        <div class="hearts-floating-layer">
-                            <span class="floating-heart-item" style="left: 8%; animation-delay: 0s;">❤️</span>
-                            <span class="floating-heart-item" style="left: 26%; animation-delay: 1.4s;">💖</span>
-                            <span class="floating-heart-item" style="left: 48%; animation-delay: 2.8s;">💕</span>
-                            <span class="floating-heart-item" style="left: 70%; animation-delay: 0.9s;">❤️</span>
-                            <span class="floating-heart-item" style="left: 88%; animation-delay: 2.1s;">💘</span>
-                        </div>`;
-                }
-
                 snap.forEach(c => {
                     const m = c.val(); const mId = c.key;
                     const isMe = m.senderId === currentUser.uid;
-                    let contentHtml = '';
-
-                    if (m.replyTo) {
-                        contentHtml += `<div class="bg-black/35 border-r-2 border-pink-400 px-2 py-1 mb-1.5 rounded-lg text-[9px] text-gray-200"><b>${escapeHTML(m.replyTo.senderName)}:</b> ${escapeHTML(m.replyTo.text)}</div>`;
+                    if (m.viewOnce && m.viewed && !isMe) {
+                        box.innerHTML += `<div class="p-2.5 bg-gray-900 text-gray-500 rounded-2xl text-[10px] self-center border border-gray-800">👻 صورة عرض واحد انتهت صلاحيتها</div>`;
+                        return;
                     }
+                    let replyHtml = m.replyTo ? `<div class="bg-black/35 border-r-2 border-white px-2 py-1 mb-1 rounded-lg text-[9px] text-white/90"><b>${escapeHTML(m.replyTo.senderName)}:</b> ${escapeHTML(m.replyTo.text)}</div>` : '';
+                    let imgHtml = '';
                     if (m.image) {
-                        if (m.viewOnce && !isMe) {
-                            if (m.viewedBy && m.viewedBy[currentUser.uid]) contentHtml += `<span class="italic text-gray-400 text-[10px]">👻 تم فتح الصورة واختفت</span>`;
-                            else contentHtml += `<button onclick="window.openViewOnce('${encodeURIComponent(openChatId)}', '${encodeURIComponent(mId)}', '${encodeURIComponent(m.image)}')" class="bg-orange-500/20 border border-orange-500/40 text-orange-300 px-3 py-1.5 rounded-xl text-[10px] font-bold">👻 اضغط لعرض الصورة (تختفي)</button>`;
+                        if (m.viewOnce) {
+                            imgHtml = `<button onclick="openViewOnceImage('${encodeURIComponent(openChatId || '')}', '${encodeURIComponent(mId)}')" class="bg-orange-500/20 border border-orange-500 text-orange-300 font-bold p-2.5 rounded-xl text-[11px] flex items-center gap-1.5 mt-1 interactive-press"><span>👻</span> اضغط للمشاهدة مرة واحدة</button>`;
                         } else {
-                            if (m.image) postImageRegistry[`pmsg_${mId}`] = m.image;
-                            contentHtml += `<img src="${escapeHTML(m.image)}" onclick="window.openPostLightbox('pmsg_${encodeURIComponent(mId)}')" class="max-w-[180px] rounded-xl border border-gray-700/80 mb-1 cursor-pointer hover:opacity-95 transition" loading="lazy">`;
+                            postImageRegistry[mId] = m.image;
+                            imgHtml = `<img src="${escapeHTML(m.image)}" onclick="window.openPostLightbox('${encodeURIComponent(mId)}')" class="max-w-[200px] rounded-xl mt-1 border border-gray-700 object-cover cursor-pointer">`;
                         }
                     }
-                    if (m.text) contentHtml += `<span class="nxl-scalable-text leading-relaxed break-words">${escapeHTML(m.text)}</span>`;
-                    let reactionsHtml = m.reactions ? Object.values(m.reactions).map(escapeHTML).join(' ') : '';
-                    const bubbleClass = isMe
-                        ? (isCurrentPrivateChatHearts ? 'hearts-bubble-me text-white rounded-tr-none' : 'gradient-bg text-white rounded-tr-none shadow-md')
-                        : (isCurrentPrivateChatHearts ? 'hearts-bubble-other text-white rounded-tl-none' : 'liquid-glass border border-gray-800 text-white rounded-tl-none');
 
+                    const timeLabel = formatRelativeTime(m.timestamp);
                     box.innerHTML += `
-                        <div class="flex flex-col ${isMe ? 'items-end' : 'items-start'} max-w-[82%] ${isMe ? 'self-end' : 'self-start'} relative z-10">
-                            <div class="px-3 py-2 rounded-2xl ${bubbleClass} break-words relative">
-                                ${contentHtml}
-                                ${reactionsHtml ? `<span class="absolute -bottom-2 ${isMe ? 'left-2' : 'right-2'} bg-[#12121a] border border-gray-700 rounded-full px-1.5 py-0.5 text-[10px] shadow">${reactionsHtml}</span>` : ''}
+                        <div class="flex flex-col ${isMe ? 'items-end' : 'items-start'} max-w-[82%] ${isMe ? 'self-end' : 'self-start'}">
+                            <div class="p-2.5 nxl-scalable-text rounded-2xl ${isMe ? 'gradient-bg text-white rounded-tr-none' : 'bg-[#12121a] border border-gray-800 text-white rounded-tl-none'} break-words shadow-md">
+                                ${replyHtml}
+                                ${m.text ? `<div>${escapeHTML(m.text)}</div>` : ''}
+                                ${imgHtml}
                             </div>
-                            <div class="flex gap-2.5 text-[9px] text-gray-400 mt-1 px-1">
-                                <button onclick="setPrivateReply('${encodeURIComponent(mId)}', '${encodeURIComponent(m.text || (m.image ? 'صورة' : ''))}', '${encodeURIComponent(isMe ? (userData?.nickname || 'أنت') : openChatTargetName)}')" class="hover:text-pink-400 transition">💬 رد</button>
-                                <button onclick="reactPrivateMsg('${encodeURIComponent(mId)}', '❤️')" class="hover:text-red-500 transition">❤️</button>
-                                <button onclick="reactPrivateMsg('${encodeURIComponent(mId)}', '😂')" class="hover:text-yellow-400 transition">😂</button>
-                                ${formatRelativeTime(m.timestamp) ? `<span class="text-gray-500">${escapeHTML(formatRelativeTime(m.timestamp))}</span>` : ''}
+                            <div class="flex items-center gap-2 mt-1 px-1">
+                                <button onclick="setPrivateReply('${escapeHTML(isMe ? 'أنت' : targetName)}', '${escapeHTML(m.text || 'صورة')}')" class="text-[9px] text-gray-400 hover:text-white">↩️ رد</button>
+                                ${timeLabel ? `<span class="text-[8px] text-gray-500">${escapeHTML(timeLabel)}</span>` : ''}
                             </div>
                         </div>`;
                 });
@@ -3554,295 +3859,267 @@
             });
         };
 
-        function applyHeartsChatVisuals(enabled) {
-            const box = document.getElementById('private-messages-box');
-            if (!box) return;
-            box.classList.toggle('hearts-chat-theme', Boolean(enabled));
-        }
-
-        document.getElementById('private-msg-input').addEventListener('input', (e) => {
-            if (!currentUser || !openChatId) return;
-            const hasText = e.target.value.trim().length > 0;
-            set(ref(db, `chat_typing/${openChatId}/${currentUser.uid}`), hasText).catch(() => {});
+        let typingClearTimer = null;
+        document.getElementById('private-msg-input').addEventListener('input', () => {
+            if (!openChatId || !currentUser) return;
+            const tRef = ref(db, `typing/${openChatId}/${currentUser.uid}`);
+            set(tRef, true).catch(() => {});
+            clearTimeout(typingClearTimer);
+            typingClearTimer = setTimeout(() => remove(tRef).catch(() => {}), 1500);
         });
 
-        window.setPrivateReply = (id, text, name) => {
-            id = decodeInlineArg(id); text = decodeInlineArg(text); name = decodeInlineArg(name);
-            replyingPrivateMsg = { id, text, senderName: name };
-            document.getElementById('private-reply-text').innerText = `الرد على ${name}: ${text}`;
+        window.openViewOnceImage = async (chatId, mId) => {
+            chatId = decodeInlineArg(chatId);
+            mId = decodeInlineArg(mId);
+            const snap = await get(child(ref(db), `chats/${chatId}/${mId}`));
+            if (!snap.exists()) return;
+            const m = snap.val();
+            document.getElementById('view-once-img').src = m.image;
+            document.getElementById('view-once-modal').classList.remove('hidden');
+            await update(ref(db, `chats/${chatId}/${mId}`), { viewed: true });
+        };
+        document.getElementById('close-view-once').onclick = () => {
+            document.getElementById('view-once-modal').classList.add('hidden');
+            document.getElementById('view-once-img').src = "";
+        };
+
+        window.setPrivateReply = (sender, text) => {
+            replyingPrivateMsg = { senderName: sender, text };
             document.getElementById('private-reply-preview').classList.remove('hidden');
+            document.getElementById('private-reply-text').innerText = `الرد على ${sender}: ${text}`;
+            document.getElementById('private-msg-input').focus();
         };
         window.cancelPrivateReply = () => { replyingPrivateMsg = null; document.getElementById('private-reply-preview').classList.add('hidden'); };
-        window.reactPrivateMsg = async (msgId, emoji) => {
-            msgId = decodeInlineArg(msgId);
-            if (!openChatId || !currentUser || !msgId) return;
-            await update(ref(db, `chats/${openChatId}/${msgId}/reactions`), { [currentUser.uid]: emoji });
-            await completeDailyQuest('engage', 12, '3 تفاعلات أو أصوات');
-        };
 
-        document.getElementById('close-private-chat').onclick = () => {
-            if (currentUser && openChatId) set(ref(db, `chat_typing/${openChatId}/${currentUser.uid}`), false).catch(() => {});
-            document.getElementById('private-chat-window').classList.add('hidden');
-            if (activeChatRef) { activeChatRef(); activeChatRef = null; }
-            if (activeTypingRef) { activeTypingRef(); activeTypingRef = null; }
-            openChatId = null; openChatTargetUid = null;
-        };
+        const privateImgInput = document.getElementById('private-img-input');
+        document.getElementById('private-img-btn').onclick = () => privateImgInput.click();
+        privateImgInput.addEventListener('change', (e) => {
+            const file = e.target.files[0]; if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    let w = img.width, h = img.height, max = 720;
+                    if (w > max || h > max) { if (w > h) { h = Math.round((h * max) / w); w = max; } else { w = Math.round((w * max) / h); h = max; } }
+                    canvas.width = w; canvas.height = h;
+                    canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+                    privatePostImageBase64 = canvas.toDataURL('image/jpeg', 0.65);
+                    document.getElementById('private-img-preview').src = privatePostImageBase64;
+                    document.getElementById('private-img-preview-container').classList.remove('hidden');
+                };
+                img.src = ev.target.result;
+            };
+            reader.readAsDataURL(file);
+        });
+        document.getElementById('cancel-private-img').onclick = () => { privatePostImageBase64 = ""; privateImgInput.value = ""; document.getElementById('view-once-check').checked = false; document.getElementById('private-img-preview-container').classList.add('hidden'); };
 
-        document.getElementById('private-img-btn').onclick = () => document.getElementById('private-img-input').click();
-        document.getElementById('private-img-input').onchange = e => {
-            const f = e.target.files[0]; if (!f) return;
-            compressImage(f, (compressedBase64) => {
-                privatePostImageBase64 = compressedBase64;
-                document.getElementById('private-img-preview').src = privatePostImageBase64;
-                document.getElementById('private-img-preview-container').classList.remove('hidden');
-            });
-        };
-        document.getElementById('cancel-private-img').onclick = () => { privatePostImageBase64 = ""; document.getElementById('private-img-preview-container').classList.add('hidden'); };
-
-        document.getElementById('send-private-btn').onclick = async () => {
-            const inp = document.getElementById('private-msg-input');
-            const text = inp.value.trim();
-            const isViewOnce = document.getElementById('view-once-check').checked;
-            if (!openChatId || !openChatTargetUid || (!text && !privatePostImageBase64)) return;
-            if (text.length > 1000) return showToast('⚠️ الرسالة طويلة جداً');
+        document.getElementById('send-private-btn').onclick = sendPrivateMessage;
+        document.getElementById('private-msg-input').addEventListener('keydown', (e) => { if (e.key === 'Enter') sendPrivateMessage(); });
+        async function sendPrivateMessage() {
+            const text = document.getElementById('private-msg-input').value.trim();
+            const viewOnce = document.getElementById('view-once-check').checked;
+            if (!text && !privatePostImageBase64) return;
+            if (!openChatId || !openChatTargetUid) return;
 
             const nowTs = Date.now();
-            const msgData = { senderId: currentUser.uid, text: text || "", image: privatePostImageBase64 || null, viewOnce: isViewOnce, timestamp: nowTs };
-            if (replyingPrivateMsg) msgData.replyTo = replyingPrivateMsg;
+            const payload = { senderId: currentUser.uid, text: text || null, image: privatePostImageBase64 || null, viewOnce: Boolean(privatePostImageBase64 && viewOnce), viewed: false, timestamp: nowTs };
+            if (replyingPrivateMsg) payload.replyTo = replyingPrivateMsg;
 
-            try {
-                await push(ref(db, `chats/${openChatId}`), msgData);
-                await set(ref(db, `chat_typing/${openChatId}/${currentUser.uid}`), false).catch(() => {});
+            await push(ref(db, `chats/${openChatId}`), payload);
+            await remove(ref(db, `typing/${openChatId}/${currentUser.uid}`)).catch(() => {});
 
-                const previewLabel = text || (privatePostImageBase64 ? (isViewOnce ? '👻 صورة تختفي' : '🖼️ صورة') : 'رسالة');
-                const myMetaSnap = await get(child(ref(db), `user_chats/${currentUser.uid}/${openChatId}`));
-                let nextPulseDays = 1;
-                if (myMetaSnap.exists()) {
-                    const prev = myMetaSnap.val();
-                    const prevDays = Math.max(1, Number(prev.pulseDays) || 1);
-                    const lastTs = Number(prev.lastTimestamp) || nowTs;
-                    const hoursDiff = (nowTs - lastTs) / 3600000;
-                    if (hoursDiff > 24) nextPulseDays = 1;
-                    else if (hoursDiff >= 12) nextPulseDays = prevDays + 1;
-                    else nextPulseDays = prevDays;
+            const summaryMsg = viewOnce ? '👻 صورة تختفي' : (text || '📷 صورة');
+
+            const pulseRef = ref(db, `chat_pulse/${openChatId}`);
+            const pSnap = await get(pulseRef);
+            let nextPulseDays = 1;
+            if (pSnap.exists()) {
+                const pData = pSnap.val();
+                const dayMs = 24 * 3600 * 1000;
+                const prevDays = Math.max(1, Number(pData?.pulseDays) || 1);
+                const lastSender = pData?.lastSenderId || "";
+                const lastMsgTs = Number(pData?.lastMsgTimestamp) || 0;
+
+                if (nowTs - lastMsgTs > dayMs) {
+                    nextPulseDays = 1;
+                } else if (lastSender && lastSender !== currentUser.uid) {
+                    nextPulseDays = prevDays + 1;
+                } else {
+                    nextPulseDays = prevDays;
                 }
+            }
+            await set(pulseRef, {
+                pulseDays: nextPulseDays,
+                lastSenderId: currentUser.uid,
+                lastMsgTimestamp: nowTs
+            });
 
-                await update(ref(db), {
-                    [`user_chats/${currentUser.uid}/${openChatId}`]: { targetUid: openChatTargetUid, lastMessage: previewLabel, lastTimestamp: nowTs, pulseDays: nextPulseDays },
-                    [`user_chats/${openChatTargetUid}/${openChatId}`]: { targetUid: currentUser.uid, lastMessage: previewLabel, lastTimestamp: nowTs, pulseDays: nextPulseDays }
-                });
-
-                inp.value = ''; privatePostImageBase64 = '';
-                document.getElementById('view-once-check').checked = false;
-                document.getElementById('private-img-preview-container').classList.add('hidden');
-                cancelPrivateReply();
-            } catch (err) { showToast(`⚠️ ${firebaseErrorMessage(err)}`); }
+            await update(ref(db), {
+                [`user_chats/${currentUser.uid}/${openChatId}`]: { targetUid: openChatTargetUid, lastMessage: summaryMsg, lastTimestamp: nowTs, pulseDays: nextPulseDays },
+                [`user_chats/${openChatTargetUid}/${openChatId}`]: { targetUid: currentUser.uid, lastMessage: summaryMsg, lastTimestamp: nowTs, pulseDays: nextPulseDays }
+            });
+            document.getElementById('private-msg-input').value = '';
+            window.cancelPrivateReply();
+            document.getElementById('cancel-private-img').click();
+        }
+        document.getElementById('close-private-chat').onclick = () => {
+            if (openChatId && currentUser) remove(ref(db, `typing/${openChatId}/${currentUser.uid}`)).catch(() => {});
+            document.getElementById('private-chat-window').classList.add('hidden');
+            if (activeChatRef) activeChatRef();
         };
-        document.getElementById('private-msg-input').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('send-private-btn').click(); });
 
-        window.openViewOnce = async (cId, mId, img) => {
-            cId = decodeInlineArg(cId); mId = decodeInlineArg(mId); img = decodeInlineArg(img);
-            document.getElementById('view-once-img').src = img;
-            document.getElementById('view-once-modal').classList.remove('hidden');
-            await update(ref(db, `chats/${cId}/${mId}/viewedBy`), { [currentUser.uid]: true });
-        };
-        document.getElementById('close-view-once').onclick = () => { document.getElementById('view-once-modal').classList.add('hidden'); document.getElementById('view-once-img').src = ""; };
-
-        // ================= الذكاء الاصطناعي: الأدمن أولاً ثم البحث في الويب والتلخيص =================
-        const aiBtn = document.getElementById('nxl-ai-btn');
+        // ================= المساعد الذكي: تأكيد النوت + جمع بيانات الكارت في المحادثة =================
         const aiPanel = document.getElementById('nxl-ai-panel');
-        const closeAiBtn = document.getElementById('close-ai-btn');
-        const aiBox = document.getElementById('ai-messages-box');
-        const aiInput = document.getElementById('ai-msg-input');
-        const sendAiBtn = document.getElementById('send-ai-btn');
+        document.getElementById('nxl-ai-btn').onclick = () => aiPanel.classList.remove('hidden');
+        document.getElementById('close-ai-btn').onclick = () => aiPanel.classList.add('hidden');
+        document.getElementById('send-ai-btn').onclick = sendAiMessage;
+        document.getElementById('ai-msg-input').addEventListener('keydown', (e) => { if (e.key === 'Enter') sendAiMessage(); });
 
-        aiBtn.onclick = () => { aiPanel.classList.remove('hidden'); aiInput.focus(); };
-        closeAiBtn.onclick = () => aiPanel.classList.add('hidden');
+        window.sendQuickAiPrompt = (txt) => {
+            document.getElementById('ai-msg-input').value = txt;
+            sendAiMessage();
+        };
 
-        function appendAiMessage(sender, text, isBot = false) {
-            const div = document.createElement('div');
-            div.className = `flex gap-2 w-full ${isBot ? 'justify-start' : 'justify-end'}`;
-            if (isBot) div.innerHTML = `<div class="w-7 h-7 rounded-full gradient-bg flex items-center justify-center text-white text-[10px] font-bold shrink-0">NXL</div><div class="p-2.5 nxl-scalable-text rounded-2xl bg-[#12121a] border border-gray-800 text-white rounded-tl-none max-w-[85%] leading-relaxed whitespace-pre-line">${escapeHTML(text)}</div>`;
-            else div.innerHTML = `<div class="p-2.5 nxl-scalable-text rounded-2xl gradient-bg text-white rounded-tr-none max-w-[85%] leading-relaxed">${escapeHTML(text)}</div>`;
-            aiBox.appendChild(div);
-            aiBox.scrollTop = aiBox.scrollHeight;
+        function appendAiBubble(text, isUser = false) {
+            const box = document.getElementById('ai-messages-box');
+            if (isUser) {
+                box.innerHTML += `<div class="flex gap-2 w-full justify-end"><div class="p-2.5 text-xs rounded-2xl bg-gradient-to-r from-[#ff2a85] to-[#ff7300] text-white rounded-tr-none max-w-[85%] break-words">${escapeHTML(text)}</div></div>`;
+            } else {
+                box.innerHTML += `<div class="flex gap-2 w-full justify-start"><div class="w-7 h-7 rounded-full gradient-bg flex items-center justify-center text-white text-[10px] font-bold shrink-0">NXL</div><div class="p-2.5 text-xs rounded-2xl bg-[#12121a] border border-gray-800 text-white rounded-tl-none max-w-[85%] whitespace-pre-line break-words leading-relaxed">${escapeHTML(text)}</div></div>`;
+            }
+            box.scrollTop = box.scrollHeight;
         }
 
-        function lookupAdminKnowledgeBase(queryStr) {
-            const q = String(queryStr || '').trim().toLowerCase();
-            if (!q || !dynamicAiKnowledge || typeof dynamicAiKnowledge !== 'object') return null;
-
-            const entries = Object.values(dynamicAiKnowledge);
-            for (const item of entries) {
-                if (!item || typeof item !== 'object') continue;
-                const keys = Array.isArray(item.keywords)
-                    ? item.keywords
-                    : String(item.question || item.keyword || item.title || '').split(/[,،|]/);
-                const ans = String(item.answer || item.reply || item.text || '').trim();
-                if (!ans) continue;
-                const matched = keys.some(k => {
-                    const cleanK = String(k || '').trim().toLowerCase();
-                    return cleanK.length >= 2 && (q.includes(cleanK) || cleanK.includes(q));
-                });
-                if (matched) return ans;
-            }
-            return null;
+        async function publishNoteFromAi(noteContent) {
+            if (!currentUser || !noteContent) return;
+            await update(ref(db, `users/${currentUser.uid}/note`), { text: noteContent, timestamp: Date.now() });
+            const nInp = document.getElementById('my-note-input');
+            if (nInp) nInp.value = noteContent;
+            showToast('✨ تم نشر النوت بنجاح بعد تأكيدك');
         }
 
-        async function searchWebAndSummarize(queryStr) {
-            const cleaned = String(queryStr || '').replace(/^(ما هي|ما هو|من هو|معلومات عن|ابحث عن|بحث)\s+/i, '').trim();
-            if (!cleaned) return null;
+        async function sendAiMessage() {
+            const input = document.getElementById('ai-msg-input');
+            const msg = input.value.trim();
+            if (!msg) return;
+            input.value = '';
+            appendAiBubble(msg, true);
 
-            // 1. Wikipedia Arabic summary
-            try {
-                const wikiRes = await fetch(`https://ar.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(cleaned)}`);
-                if (wikiRes.ok) {
-                    const wikiJson = await wikiRes.json();
-                    if (wikiJson?.extract) {
-                        const sentences = String(wikiJson.extract).split(/(?<=[.؟!])\s+/).slice(0, 3).join(' ');
-                        return `🌐 ملخص من الويب (${wikiJson.title || cleaned}):\n${sentences}`;
-                    }
-                }
-            } catch (_) {}
-
-            // 2. DuckDuckGo instant answer fallback
-            try {
-                const ddgRes = await fetch(`https://api.duckduckgo.com/?q=${encodeURIComponent(cleaned)}&format=json&no_html=1&skip_disambig=1`);
-                if (ddgRes.ok) {
-                    const ddgJson = await ddgRes.json();
-                    const abstract = String(ddgJson?.AbstractText || ddgJson?.RelatedTopics?.[0]?.Text || '').trim();
-                    if (abstract) {
-                        const summary = abstract.split(/(?<=[.!?])\s+/).slice(0, 3).join(' ');
-                        return `🌐 ملخص من الويب:\n${summary}`;
-                    }
-                }
-            } catch (_) {}
-
-            return null;
-        }
-
-        async function executeAppActionFromAi(rawText) {
-            const t = rawText.trim();
-            const noteMatch = t.match(/^(?:انشر|حط|اكتب|نزل)\s*(?:نوت|ستوري|حالة)\s*[:：\-]?\s*(.+)$/i);
-            if (noteMatch && noteMatch[1] && currentUser) {
-                const noteText = noteMatch[1].trim();
-                await update(ref(db, `users/${currentUser.uid}/note`), { text: noteText, timestamp: Date.now() });
-                document.getElementById('my-note-input').value = noteText;
-                return `✅ تم نشر النوت فوراً: «${noteText}»`;
-            }
-
-            const postMatch = t.match(/^(?:انشر|نزل)\s*(?:منشور|بوست)\s*[:：\-]?\s*(.+)$/i);
-            if (postMatch && postMatch[1] && currentUser && userData) {
-                const postText = postMatch[1].trim();
-                await push(ref(db, 'posts'), {
-                    userId: currentUser.uid, userNickname: userData.nickname, userUsername: userData.username,
-                    userAvatar: userData.avatarUrl, text: postText, image: null, timestamp: Date.now(), likeCount: 0
-                });
-                await completeDailyQuest('post', 15, 'نشر منشور أو استفتاء');
-                return `✅ تم نشر منشورك في الرئيسية: «${postText}»`;
-            }
-
-            if (/كارت\s*الحب|عقد\s*الجواز/i.test(t) && /افتح|روح|شغل/i.test(t)) {
-                aiPanel.classList.add('hidden');
-                window.switchTab('games', document.querySelectorAll('nav button')[2]);
-                return `💘 تم فتح قسم الألعاب وكارت الحب / عقد الجواز الإلكتروني!`;
-            }
-
-            if (/الاعدادات|الإعدادات/i.test(t) && /افتح|روح|شغل/i.test(t)) {
-                aiPanel.classList.add('hidden');
-                window.openSettingsDrawer();
-                return `⚙️ تم فتح مركز إعدادات NXL!`;
-            }
-
-            return null;
-        }
-
-        async function generateSmartAiReply(rawText) {
-            const actionReply = await executeAppActionFromAi(rawText);
-            if (actionReply) return actionReply;
-
-            const adminAnswer = lookupAdminKnowledgeBase(rawText);
-            if (adminAnswer) return `📌 من قاعدة أدمن NXL:\n${adminAnswer}`;
-
-            const webSummary = await searchWebAndSummarize(rawText);
-            if (webSummary) return webSummary;
-
-            const t = rawText.trim().toLowerCase();
-            if (t.includes('نقط') || t.includes('exp') || t.includes('مستو')) {
-                const lvl = getLevelInfo(userData?.points);
-                return `رصيدك الحالي ${lvl.exp} EXP وأنت في المستوى ${lvl.level} (${lvl.title}).`;
-            }
-            if (t.includes('منصة') || t.includes('nxl')) {
-                return `منصة NXL Ultimate تجمع المنشورات، الاستفتاءات، الشات العام والخاص، نبض الوفاء، الصراحة المجهولة، وكارت الحب وعقد الجواز الإلكتروني.`;
-            }
-            return `لم أجد إجابة في بيانات الأدمن ولا ملخصاً مباشراً في الويب لـ «${rawText}». جرّب صياغة السؤال بشكل أوضح أو اكتب أمراً مثل «انشر نوت: ...».`;
-        }
-
-        async function handleAiSubmit() {
-            const text = aiInput.value.trim();
-            if (!text) return;
-            appendAiMessage(userData?.nickname || "أنت", text, false);
-            aiInput.value = "";
-
+            const box = document.getElementById('ai-messages-box');
             const typingId = "ai-typing-" + Date.now();
-            const typingDiv = document.createElement('div');
-            typingDiv.id = typingId;
-            typingDiv.className = "flex gap-2 w-full justify-start";
-            typingDiv.innerHTML = `<div class="w-7 h-7 rounded-full gradient-bg flex items-center justify-center text-white text-[10px] font-bold shrink-0">NXL</div><div class="p-2.5 rounded-2xl bg-[#12121a] border border-gray-800 rounded-tl-none flex items-center"><div class="typing-dot"><span></span><span></span><span></span></div></div>`;
-            aiBox.appendChild(typingDiv);
-            aiBox.scrollTop = aiBox.scrollHeight;
+            box.innerHTML += `<div id="${typingId}" class="flex gap-2 items-center"><div class="w-6 h-6 rounded-full gradient-bg flex items-center justify-center text-[9px] font-bold">AI</div><div class="typing-dot bg-[#12121a] p-2 rounded-xl border border-gray-800"><span></span><span></span><span></span></div></div>`;
+            box.scrollTop = box.scrollHeight;
 
-            const reply = await generateSmartAiReply(text);
+            await new Promise(r => setTimeout(r, 450));
             document.getElementById(typingId)?.remove();
-            appendAiMessage("NXL AI", reply, true);
-        }
 
-        window.sendQuickAiPrompt = (promptText) => {
-            aiInput.value = promptText;
-            handleAiSubmit();
-        };
+            const low = msg.toLowerCase();
+            const isConfirmWord = /^(تمام|اه|أه|نعم|ايوه|أيوة|موافق|انشر|نعم انشر|تمام انشر|ok|yes)$/i.test(msg.trim());
 
-        sendAiBtn.onclick = handleAiSubmit;
-        aiInput.addEventListener('keydown', e => { if (e.key === 'Enter') handleAiSubmit(); });
-
-        window.switchTab = (tabId, btn) => {
-            window.activeTabId = tabId;
-            document.querySelectorAll('.tab-content').forEach(s => s.classList.add('hidden'));
-            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
-            document.querySelectorAll('.nav-btn').forEach(b => { b.classList.remove('text-[#ff2a85]'); b.classList.add('text-gray-400'); });
-            if (btn) { btn.classList.remove('text-gray-400'); btn.classList.add('text-[#ff2a85]'); }
-            if (tabId === 'global') document.getElementById('global-unread-dot').classList.add('hidden');
-            if (tabId === 'profile') {
-                renderBadgesUI(cachedPosts);
-                updateProfileStatsSummary();
+            // 1) لو فيه حالة انتظار تأكيد نشر النوت
+            if (aiPendingState?.mode === 'await_note_confirm') {
+                if (isConfirmWord) {
+                    const finalNote = aiPendingState.noteText;
+                    aiPendingState = null;
+                    await publishNoteFromAi(finalNote);
+                    appendAiBubble(`✅ تم نشر النوت فوراً بالمحتوى:\n«${finalNote}»\n(يختفي تلقائياً بعد 7 ساعات).`);
+                    return;
+                } else {
+                    aiPendingState.noteText = msg;
+                    appendAiBubble(`تمام، محتوى النوت المقترح الآن هو:\n«${msg}»\nهل أؤكد وأقول «تمام انشر» لنشره؟`);
+                    return;
+                }
             }
-        };
+
+            // 2) لو فيه حالة انتظار محتوى النوت قبل التأكيد
+            if (aiPendingState?.mode === 'await_note_content') {
+                aiPendingState = { mode: 'await_note_confirm', noteText: msg };
+                appendAiBubble(`محتوى النوت سيكون:\n«${msg}»\nاكتب «تمام انشر» عشان أنشره فعلياً.`);
+                return;
+            }
+
+            // 3) لو فيه حالة جمع بيانات كارت الحب في المحادثة
+            if (aiPendingState?.mode === 'await_love_card_info') {
+                const parts = msg.split(/[،,\n|-]+/).map(s => s.trim()).filter(Boolean);
+                if (parts.length < 2) {
+                    appendAiBubble(`اكتبلي المعلومات في رسالة واحدة بالشكل ده:\nاسم ويوزر الطرف الأول، اسم ويوزر الطرف الثاني، والرسالة (اختياري)\nمثال: حمص @hommos، سلمى @salma، ربنا يخليك ليا`);
+                    return;
+                }
+                const parseParty = (raw) => {
+                    const handleMatch = raw.match(/@([a-z0-9_]+)/i);
+                    const handle = handleMatch ? `@${handleMatch[1].toLowerCase()}` : '';
+                    const name = raw.replace(/@[a-z0-9_]+/gi, '').trim() || (handle ? handle.replace('@', '') : 'الطرف');
+                    return { name, handle };
+                };
+                const p1 = parseParty(parts[0]);
+                const p2 = parseParty(parts[1]);
+                const extraNote = parts.slice(2).join(' ').trim();
+                aiPendingState = null;
+
+                const cardObj = createLoveCardPayload(p1.name, p1.handle, p2.name, p2.handle, extraNote);
+                appendAiBubble(`💖 تم تجهيز كارت الحب داخل المحادثة بدون تحويل مفاجئ:\n• الطرف الأول: ${cardObj.boyName}\n• الطرف الثاني: ${cardObj.girlName}\n• الجملة: ${cardObj.mainQuote}\n\nلو تحب تشوف الكارت وتنزله استوري اضغط على زر «ألعاب» أو افتح معاينة الكارت.`);
+                return;
+            }
+
+            // 4) بدء طلب نشر نوت
+            if (msg.includes('انشر نوت') || msg.includes('نشر نوت') || low.includes('post note')) {
+                aiPendingState = { mode: 'await_note_content' };
+                appendAiBubble(`تحب محتوى النوت يكون إيه بالظبط؟ اكتبلي النص الأول وهسألك للتأكيد قبل النشر.`);
+                return;
+            }
+
+            // 5) بدء طلب كارت حب في المحادثة
+            if (msg.includes('كارت حب') || msg.includes('كارت') || low.includes('love card')) {
+                aiPendingState = { mode: 'await_love_card_info' };
+                appendAiBubble(`عشان أعملك كارت الحب هنا في المحادثة، اكتبلي:\n1️⃣ اسم ويوزر الطرف الأول\n2️⃣ اسم ويوزر الطرف الثاني\n3️⃣ رسالة أو جملة للكارت (اختياري)`);
+                return;
+            }
+
+            // 6) ردود معرفية عامة
+            let reply = "أهلاً بك في NXL! أقدر أساعدك في نشر نوت (بعد سؤالك وتأكيدك) أو جمع بيانات كارت الحب هنا في المحادثة، أو أجاوبك على أي سؤال.";
+            for (let key in dynamicAiKnowledge) {
+                if (key && msg.toLowerCase().includes(key.toLowerCase())) {
+                    reply = dynamicAiKnowledge[key];
+                    break;
+                }
+            }
+            if (msg.includes('نقاط') || msg.includes('عملات')) reply = "العملات بتجمعها من المهام اليومية والألعاب، وتقدر تحوّلها لغيرك بعمولة بسيطة أو تطلب سحبها عبر بادج إنستجرام.";
+            appendAiBubble(reply);
+        }
 
         function decodeInlineArg(val) {
-            if (typeof val !== 'string') return '';
+            if (typeof val !== "string" || !val) return val || "";
             try { return decodeURIComponent(val); } catch (_) { return val; }
         }
 
         function escapeHTML(str) {
-            return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+            if (!str) return "";
+            return String(str).replace(/[&<>'"]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[m]));
         }
 
-        function compressImage(file, callback) {
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                const img = new Image();
-                img.onload = () => {
-                    const canvas = document.createElement('canvas');
-                    let w = img.width, h = img.height, max = 500;
-                    if (w > h && w > max) { h *= max / w; w = max; } else if (h > max) { w *= max / h; h = max; }
-                    canvas.width = w; canvas.height = h;
-                    canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-                    callback(canvas.toDataURL('image/jpeg', 0.7));
-                };
-                img.src = event.target.result;
-            };
-            reader.readAsDataURL(file);
-        }
+        window.switchTab = (tabId, btnEl) => {
+            window.activeTabId = tabId;
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            const targetSec = document.getElementById('tab-' + tabId);
+            if (targetSec) targetSec.classList.remove('hidden');
+
+            document.querySelectorAll('.nav-btn').forEach(b => {
+                b.classList.remove('text-[#ff2a85]', 'font-extrabold');
+                b.classList.add('text-gray-400');
+            });
+            const activeNavBtn = btnEl || Array.from(document.querySelectorAll('.nav-btn')).find(b => b.getAttribute('onclick')?.includes(`'${tabId}'`));
+            if (activeNavBtn) {
+                activeNavBtn.classList.remove('text-gray-400');
+                activeNavBtn.classList.add('text-[#ff2a85]', 'font-extrabold');
+            }
+            if (tabId === 'global') document.getElementById('global-unread-dot')?.classList.add('hidden');
+            if (tabId === 'profile') {
+                renderProfilePostsGrid();
+                renderBadgesUI(cachedPosts);
+                updateProfileStatsSummary();
+            }
+        };
     </script>
 </body>
 </html>
